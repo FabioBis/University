@@ -1,0 +1,93 @@
+\hyphenation{
+sil-la-ba-zio-ne
+JSetL
+Choco
+JacoP
+}
+
+\chapter*{Introduzione\markboth{Introduzione}{}}
+La \emph{programmazione a vincoli} (\emph{Constraint Programming} o \emph{CP}) 
+è un paradigma che offre strumenti per modellare e risolvere 
+efficacemente problemi di soddisfacimento ed ottimizzazione con vincoli.
+Questa consiste nell'integrazione di vincoli all'interno di un linguaggio che 
+funge da host. I primi linguaggi usati a tale scopo furono linguaggi di tipo 
+logico, il più famoso è indubbiamente Prolog. Tali linguaggi differiscono 
+fortemente da quelli imperativi come C, C++ o Java, poiché permettono al
+programmatore di specificare cosa fare e non come farlo.
+
+In questo lavoro di tesi ci si occuperà di implementare delle specifiche 
+che consentono di fornire al linguaggio Java alcuni vantaggi del paradigma
+dei linguaggi logici mediante l'implementazione dello standard JSR-331.
+
+Java è un software multipiattaforma, ovvero progettato per funzionare su 
+macchine
+che possono essere di diversa natura. Tale piattaforma ha come caratteristica 
+peculiare il fatto di rendere possibile la scrittura e l'esecuzione di 
+applicazioni che siano indipendenti dall'hardware sul quale poi sono eseguite.
+
+Di fatto, la portabilità, è quell'aspetto del linguaggio che ne ha
+decretato il grande successo, insieme all'approccio object-oriented 
+che consente un forte
+ riuso del codice. Tali peculiarità sono valorizzate 
+dall'introduzione delle API Java (Application Programming Interface), una 
+collezione di componenti software  già scritti e pronti all'uso.
+
+Lo sviluppo delle API è delegato ad una comunità di sviluppo aperta, essendo
+il codice di Java open-source, denominata \emph{JCP} (\emph{Java Community 
+Process}) che
+detiene la responsabilità dello sviluppo della tecnologia Java guidando
+l'implementazione e l'approvazione delle specifiche tecniche del linguaggio. 
+Tali specifiche vengono richieste e descritte mediante i \emph{JSR}.
+
+Con l'acronimo \emph{JSR} (\emph{Java Specification Requests}) 
+si indicano
+le descrizioni proposte o finali per le specifiche della piattaforma Java.
+In qualsiasi momento vi sono più processi di revisione ed approvazione in 
+corso, ogni processo viene denominato con la sigla JSR seguita da un numero 
+identificativo (vedi \cite{specifiche}).
+
+Il lavoro di tesi svolto si riferisce alle proposte relative al
+JSR-331 in merito alla standardizzazione della programmazione a vincoli.
+Partendo dalle specifiche richieste da tale documento si è realizzata 
+un'interfaccia basata sulla libreria JSetL e sviluppata dal 
+Dipartimento di Matematica dell'Università degli Studi di Parma.
+
+Il lavoro di tesi è strutturato nel seguente modo:
+%\vspace{5pt}
+
+Il Capitolo \ref{capCP} introduce brevemente il concetto di programmazione
+con vincoli e di soluzione di un problema, si fornisce quindi un semplice 
+esempio.
+%\vspace{5pt}
+
+Il Capitolo \ref{capJSR} è dedicato al JSR-331, nel quale si 
+riassumono i concetti principali del documento di specifica per quanto riguarda
+gli obiettivi e la struttura dello standard proposto.
+%\vspace{5pt}
+
+Il Capitolo \ref{jsetl} descrive brevemente le funzionalità offerte dal solver
+JSetL per quanto riguarda i costrutti utilizzati per la realizzazione
+dell'implementazione concreta delle specifiche.
+%\vspace{5pt}
+
+Il Capitolo \ref{capImpl} riguarda l'implementazione vera e propria della parte
+relativa alla definizione del problema. Ogni sezione del capitolo
+è incentrata su un concetto ed una classe specifica, nella quale verrà 
+introdotta
+l'interfaccia, la classe realizzata e l'eventuale classe astratta
+o implementazione di base, ove utilizzata.
+%\vspace{5pt}
+
+Il Capitolo \ref{capImpl2}, analogamente al precedente, descrive nel dettaglio
+l'implementazione della parte  relativa alla risoluzione del problema.
+%\vspace{5pt}
+
+Nel Capitolo \ref{conclusioni} si darà spazio alle conclusioni del lavoro svolto
+e ai possibili lavori futuri.
+%\vspace{5pt}
+
+Infine due appendici approfondiranno due aspetti affrontati
+durante lo sviluppo. L'appendice \ref{cardinality} riguarda un vincolo la cui
+trattazione non è stata banale, uno specifico vincolo di cardinalità richiesto
+dalla specifica. L'appendice \ref{test}
+invece riguarda i test svolti ed i relativi risultati.

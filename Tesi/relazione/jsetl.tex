@@ -1,0 +1,555 @@
+\hyphenation{
+un'es-pres-sio-ne
+JSetL
+Choco
+JaCoP
+}
+\chapter{La Libreria JSetL}\label{jsetl}
+In questo capitolo verrà descritta brevemente la libreria JSetL, soffermandosi
+principalmente sull'utilizzo, ovvero sui costrutti e i metodi utilizzati
+nell'implementazione concreta di JSR-331. 
+
+JSetL è una libreria Java che combina il paradigma di programmazione orientato 
+agli oggetti con i concetti dei linguaggi \emph{CLP} (\emph{Constraint Logic 
+Programming}), 
+come variabili logiche, elenchi,
+unificazione, risoluzione di vincoli, non determinismo.
+
+Tra le caratteristiche di interesse per l'implementazione JSR-331 troviamo le
+variabili logiche (\files{IntLVar} e \files{SetLVar}), i vincoli 
+(\files{Constraint}) ed il meccanismo di risoluzione dei vincoli 
+(\files{SolverClass}).
+
+\section{Variabili logiche}
+JSetL supporta la nozione di variabile logica come quella che si trova in
+Logica e nei linguaggi di programmazione funzionale. Le variabili logiche 
+possono essere sia \emph{inizializzate} che \emph{non inizializzate}.
+Il valore di una variabile logica in JSetL può essere di qualsiasi tipo.
+Un valore può essere assegnato ad una variabile logica (non inizializzata) come
+risultato dell'elaborazione dei vincoli che la coinvolgono.
+
+\begin{flushleft}\textbf{Variabile logica.}\\
+Una \emph{variabile logica} è un'istanza della classe \files{LVar}, creata
+dalla seguente chiamata:
+\begin{center}
+\lstinline[language = Java]$LVar varName = new LVar(ExtVarName, VarValue);$
+\end{center}
+dove \files{varName} è il nome della variabile, \files{ExtVarName} è il nome
+opzionale esterno e \files{VarValue} è un parametro opzionale che ne
+rappresenta il valore.
+\end{flushleft}
+
+Il nome esterno è una stringa che può essere utile quando occorre stampare la
+variabile ed i possibili vincoli che la coinvolgono. 
+
+\begin{nota}
+Durante la fase di sviluppo dell'implementazione la stampa è stata una parte 
+fondamentale per il debugging, sia per quanto riguarda le prove d'esecuzione che
+per i test con JUnit e con il TCK. Ovviamente il nome esterno non definisce
+una variabile (essendo opzionale) e sarebbe possibile creare variabili con
+il medesimo \files{ExtVarName} ma indipendenti. Tuttavia, per 
+facilitare il riconoscimento all'occhio umano è buona norma definire nomi
+significativi, per quanto riguarda i nomi delle variabili temporanee interne
+si rimanda alla sezione \ref{problem}.
+\end{nota}
+
+\section{Variabili logiche intere}
+Le variabili logiche intere sono quelle d'interesse al fine di implementare le 
+classi  \files{Var} e \files{VarBool} per l'attuale implementazione JSR-331. 
+
+In JSetL le variabili intere sono rappresentate
+dalla classe \files{IntLVar}, che di fatto estende la
+classe \files{LVar} ereditandone metodi e costruttori.
+
+\begin{flushleft}\textbf{Variabile logica intera.}\\
+Una \emph{variabile logica intera} è un'istanza della classe \files{IntLVar}, 
+creata dalla seguente chiamata:
+\begin{center}
+\lstinline[language = Java]$IntLVar varName = new IntLVar(name);$
+\end{center}
+dove  \files{varName} è il nome della variabile e \files{name} è il nome
+esterno opzionale.
+\end{flushleft}
+
+\subsection{Dominio}
+Ogni variabile logica intera ha un dominio ad essa associato, nel caso di
+\files{IntLVar} il dominio è rappresentato da un multi-intervallo di interi.
+
+Il concetto di multi-intervallo è definito in \cite{tesiAmadini} e, in breve, è
+costituito dall'unione disgiunta di intervalli di interi. Ogni volta che
+la variabile in questione viene modificata tramite vincoli che la coinvolgono
+il relativo dominio viene modificato di conseguenza.
+
+\subsection{Metodi utili}
+La classe \files{IntLVar} fornisce alcuni metodi di utilità, quelli più
+utilizzati nell'implementazione sono:
+\begin{itemize}
+\item[-]\files{MultiInterval getDomain()}: restituisce il
+dominio della variabile intera.
+\item[-]\files{Boolean isBound()}: restituisce 
+\verb true  se
+il dominio è ristretto ad un solo elemento, \verb false  in caso contrario.
+\end{itemize}
+
+\subsection{Operazioni aritmetiche}
+\`E possibile creare variabili vincolate intere anche partendo da una
+variabile d'invocazione (\files{this}), mediante le comuni operazioni
+aritmetiche. Siano $X_0$ la variabile d'invocazione \files{x0}, $\mathcal{C}_0$ 
+i vincoli ad essa associati, $X_1$ la variabile data dal parametro \files{x1}, 
+$\mathcal{C}_1$ i vincoli ad essa associati, $X_2$ la nuova variabile \files{x2}
+ottenuta dalle seguenti operazioni:
+\begin{itemize}
+\item[-]\files{IntLVar sum(Integer k)}: crea una variabile logica intera 
+vincolata \files{x2} tale che se \files{x2 = x0.sum(k)}, allora:
+\[
+X_2 = X_0 + k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{IntLVar sum(IntLVar x1)}: crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.sum(x1)}, allora:
+\[
+X_2 = X_0 + X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{IntLVar sub(Integer k)}: crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.sub(k)}, allora:
+\[
+X_2 = X_0 - k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{IntLVar sub(IntLVar x1)}: crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.sub(x1)}, allora:
+\[
+X_2 = X_0 - X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{IntLVar mul(Integer k)}: crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.mul(k)}, allora:
+\[
+X_2 = X_0 \cdot k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{IntLVar mul(IntLVar x1)}:  crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.mul(x1)}, allora:
+\[
+X_2 = X_0 \cdot X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\] 
+\item[-]\files{IntLVar div(Integer k)}: crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.div(k)}, allora:
+\[
+X_2 = \frac{X_0}{k} \wedge k \neq 0 \wedge \mathcal{C}_0.
+\]
+\item[-]\files{IntLVar div(IntLVar x1)}:  crea una variabile logica intera 
+vincolata tale che se \files{x2 = x0.div(x1)}, allora:
+\[
+X_2 = \frac{X_0}{X_1} \wedge X_1 \neq 0 \wedge \mathcal{C}_0 \wedge 
+\mathcal{C}_1.
+\]
+\end{itemize}
+
+\subsection{Vincoli}
+La classe \files{IntLVar} fornisce metodi per la creazione dei comuni vincoli
+che rappresentano le relazione su interi ($<$, $=$, $\neq$, \ldots). 
+Inoltre fornisce altri
+vincoli comunemente usati come \emph{AllDifferent}, vincoli di dominio e di
+appartenenza.
+
+Di seguito si elencano e descrivono brevemente i vincoli utilizzati 
+nell'implementazione, siano
+$X_0$ la variabile d'invocazione \files{this}, $\mathcal{C}_0$ i vincoli ad 
+essa associati, $X_1$ la variabile data dal parametro \files{x1} e 
+$\mathcal{C}_1$ i relativi vincoli associati:
+\begin{itemize}
+\item[-]\files{Constraint eq(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 = k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint eq(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 = X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{Constraint neq(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 \neq k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint neq(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 \neq X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{Constraint le(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 \leq k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint le(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 \leq X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{Constraint lt(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 < k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint lt(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 < X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{Constraint ge(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 \geq k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint ge(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 \geq X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\item[-]\files{Constraint gt(Integer k)}: 
+crea un nuovo vincolo $\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 > k \wedge \mathcal{C}_0.
+\]
+\item[-]\files{Constraint gt(IntLVar x1)}: crea un nuovo vincolo $\mathcal{C}$ 
+tale che:
+\[
+\mathcal{C} \leftarrow X_0 > X_1 \wedge \mathcal{C}_0 \wedge \mathcal{C}_1.
+\]
+\end{itemize}
+
+Sia \files{vars} un vettore di $n+1$ variabili logiche intere tale che $X_0$
+rappresenti \files{vars[0]}, $X_1$ rappresenti \files{vars[1]}, etc.
+Il vincolo ``AllDifferent'' è descrivibile come:
+\begin{itemize}
+\item[-]\files{Constraint AllDifferent(IntLVar[] vars)}: crea un nuovo vincolo 
+$\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow X_0 \neq X_1 \wedge X_0 \neq X_2 \wedge \cdots \wedge X_0
+\neq X_n \wedge X_1 \neq X_2 \wedge \cdots \wedge X_1 \neq X_n \wedge \cdots
+\]
+è possibile scrivere in modo più compatto il vincolo:
+\[
+\mathcal{C} \leftarrow \left(\bigwedge_{0 \leq i < j \leq n} X_i \neq X_j\right)
+\wedge \bigwedge_{i = 0}^{n}\mathcal{C}_i.
+\]
+\end{itemize}
+
+\section{Variabili logiche su insiemi di interi}
+Le variabili logiche di interesse al fine di implementare la classe 
+\files{VarSet} per l'attuale implementazione JSR-331 sono
+quelle di insiemi di interi. 
+
+In JSetL le variabili di insiemi di interi sono rappresentate dalla classe
+\files{SetLVar}, che estende la classe \files{LVar} ereditandone metodi e 
+costruttori.
+
+\begin{flushleft}\textbf{Variabile logica su insiemi di interi.}
+Una variabile logica su \emph{insiemi di interi} (più brevemente un 
+\emph{insieme di interi}) è un'istanza di
+\files{SetLVar}, 
+creata dalla seguente chiamata:
+\begin{center}
+\lstinline[language = Java]!SetLVar varName = new SetLVar(name);!
+\end{center}
+dove  \files{varName} è il nome della variabile e \files{name} è il nome
+opzionale esterno.
+\end{flushleft}
+
+\subsection{Dominio}
+Il dominio di un \files{SetLVar} è rappresentato da un'istanza di
+\files{SetInterval} che di fatto è un reticolo\footnote{Un reticolo è un 
+insieme parzialmente ordinato in cui ogni coppia di elementi ha sia un estremo 
+inferiore che un estremo superiore.} di insiemi di interi 
+(\files{Set<Integer>}).
+
+Il dominio di una variabile di insiemi di interi può essere specificato alla
+creazione della variabile, ed è modificato automaticamente quando vengono
+risolti i vincoli ad essa associati.
+
+Quando il dominio di una variabile si restringe fino ad essere rappresentato da
+un singoletto, la variabile viene detta \emph{bound}, se
+invece il dominio si restringe all'insieme vuoto significa che i vincoli ad
+essa associati sono insoddisfacibili.
+
+Sia \files{s} un'istanza della classe \files{MultiInterval} che rappresenta un
+insieme di interi $S$, la variabile logica che ha come dominio $S$ è creata 
+dalla seguente chiamata:
+\begin{center}
+\lstinline[language = Java]!SetLVar varName = new SetLVar(s);!
+\end{center}
+
+\subsection{Metodi utili}
+La classe \files{SetLVar} fornisce alcuni metodi utili ereditati dalla classe
+\files{LVar}, adattati per supportare i tipi di ritorno 
+\files{MultiInterval}, \files{SetLVar} e per i vincoli su insiemi e domini.
+\begin{itemize}
+\item[-]\files{Constraints getConstraints()}: restituisce la congiunzione di
+tutti i vincoli associati alla variabile;
+\item[-]\files{MultiInterval getDomain()}: restituisce il
+dominio della variabile;
+\item[-]\files{Boolean isBound()}: restituisce 
+\files{true}  se
+il dominio è ristretto ad un solo elemento, \files{false}  in caso contrario.
+\end{itemize}
+
+\subsection{Operazioni insiemistiche}
+Come nel caso delle variabili intere, è possibile creare nuove
+variabili insiemistiche utilizzando metodi che riproducono le comuni operazioni
+sugli insiemi. Sia $S_0$ l'insieme rappresentante la variabile d'invocazione
+\files{s},
+$\mathcal{C}_0$ i vincoli ad essa associati, siano $S_1$, $S_2$ gli insiemi
+rappresentanti i parametri \files{SetLVar x} e \files{y}, $\mathcal{C}_1$ e
+$\mathcal{C}_2$  i vincoli ad esse associati, si definiscono le seguenti 
+operazioni:
+\begin{itemize}
+\item[-]\files{SetLVar compl()}: 
+crea un nuovo insieme di interi tale che, se \files{x = s.compl()}
+allora:
+\[
+S_1 = S_0^c \wedge \neg  \mathcal{C}_0;
+\]
+\item[-]\files{SetLVar intersect(SetLVar y)}: crea un nuovo insieme di interi
+tale che, se \files{x = s.intersect(y)} allora:
+\[
+S_1 = S_0 \cap S_2 \wedge \mathcal{C}_0 \wedge \mathcal{C}_2;
+\]
+\item[-]\files{SetLVar union(SetLVar y)}: crea un nuovo insieme di interi
+tale che, se \files{x = s.union(y)} allora:
+\[
+S_1 = S_0 \cup S_2 \wedge \mathcal{C}_0 \vee \mathcal{C}_2;
+\]
+\item[-]\files{SetLVar diff(SetLVar y)}: crea un nuovo insieme di interi
+tale che, se \files{x = s.diff(y)} allora:
+\[
+S_1 = S_0 \setminus S_2 \wedge \mathcal{C}_0 \wedge \neg \mathcal{C}_2.
+\]
+\end{itemize}
+
+
+%% Vincoli
+\section{Vincoli}
+JSetL fornisce vincoli per specificare condizioni su variabili logiche e 
+insiemi. Questi vincoli sono manipolati da un \emph{risolutore di vincoli} 
+(un'istanza della classe \files{SolverClass}) che implementa le specifiche
+strategie di risoluzione.
+
+Il \emph{dominio dei vincoli} in JSetL è il dominio $\mathcal{SET}$ definito
+in \cite{artClp}, esteso con alcuni nuovi vincoli per la comparazione tra 
+interi.
+\begin{flushleft}\textbf{Vincolo atomico}.\\
+Un \emph{vincolo atomico} in JSetL è un'espressione in una delle 
+seguenti forme:
+\begin{itemize}
+\item[-] $e_1.\texttt{op}(e_2)$;
+\item[-] $e_1.\texttt{op}(e_2, e_3)$;
+\end{itemize}
+dove \files{op}  è uno dei metodi predefiniti (\files{eq, neq, in, nin},
+\ldots) ed $e_1$, $e_2$, $e_3$ sono espressioni il cui tipo dipende da 
+\files{op}.
+\end{flushleft}
+
+Il significato di questi metodi è associato in modo naturale al loro stesso 
+nome, ovvero \files{eq} e \files{neq} stanno ad indicare l'uguaglianza e la
+disuguaglianza rispettivamente (dall'inglese equal e not equal),
+\files{in} e \files{nin} per l'appartenenza e la non appartenenza, etc.
+
+\begin{flushleft}\textbf{Vincolo}.\\
+Un \emph{vincolo} è un vincolo atomico o (ricorsivamente) un'espressione
+del tipo:
+\[
+c_1.\files{and}(c_2.\files{and}(\cdots c_{n-1}.\files{and}(c_n) \cdots)
+\]
+\[
+\textrm{oppure}
+\]
+\[
+c_1.\files{and}(c_2). \ldots .\files{and}(c_n)
+\]
+dove $c_1, c_2, \ldots, c_n$ sono vincoli atomici.
+\end{flushleft} 
+Il significato di $c_1.\files{and}(c_2). \ldots .\files{and}(c_n)$ è la 
+congiunzione logica $\mathcal{C}_1 \wedge \mathcal{C}_2 \wedge \cdots 
+\wedge \mathcal{C}_n$, in cui i $\mathcal{C}_i$ sono le espressioni logiche
+rappresentanti i vincoli atomici $c_i$.
+
+\begin{flushleft}\textbf{Constraint.}\\
+Un \emph{Constraint} JSetL è un'istanza della classe \files{Constraint}, creata
+dalla seguente chiamata:
+\begin{center}
+\lstinline[language = Java]
+$Constraint constraintName = new Constraint();$
+\end{center}
+dove \files{constraintName} è il nome del vincolo.
+\end{flushleft}
+
+\subsection{Operazioni logiche}
+\`E possibile creare vincoli anche partendo da un
+vincolo d'invocazione (\files{this}), mediante le comuni operazioni
+logiche. Siano  $\mathcal{C}_1$, 
+$\mathcal{C}_2$ i vincoli rappresentanti le istanze dei \files{Constraint c1}
+e \files{c2}. Si definiscono le seguenti operazioni logiche:
+\begin{itemize}
+\item[-]\files{Constraint c = c1.and(c2)}: crea un nuovo vincolo $\mathcal{C}$
+tale che:
+\[
+\mathcal{C} \leftarrow \mathcal{C}_1 \wedge \mathcal{C}_2;
+\]
+\item[-]\files{Constraint c = c1.or(c2)}: crea un nuovo vincolo $\mathcal{C}$
+tale che:
+\[
+\mathcal{C} \leftarrow \mathcal{C}_1 \vee \mathcal{C}_2;
+\]
+\item[-]\files{Constraint c = c1.orTest(c2)}: crea un nuovo vincolo 
+$\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow \mathcal{C}_1 \vee \mathcal{C}_2;
+\]
+\item[-]\files{Constraint c = c1.notTest()}: crea un nuovo vincolo 
+$\mathcal{C}$ tale che:
+\[
+\mathcal{C} \leftarrow \neg \mathcal{C}_1;
+\]
+\item[-]\files{Constraint c = c1.impliesTest(c2)}: crea un nuovo vincolo 
+$\mathcal{C}$
+tale che:
+\[
+\mathcal{C} \leftarrow \mathcal{C}_1 \Rightarrow \mathcal{C}_2.
+\]
+\end{itemize}
+Il vincoli \files{or} viene risolto in modo non deterministico\footnote{Per 
+risoluzione non deterministica si intende che il vincolo crea un punto
+di scelta copiando il contenuto del constraint store. In pratica aprendo più
+computazioni parallele.}, mentre \files{and}  e i vincoli i cui nomi finiscono 
+con la
+sottostringa ``\files{Test}'' (\files{impliesTest} ad esempio) vengono risolti
+in modo determistico\footnote{Viceversa il metodo deterministico non crea
+punti di scelta e si limita a propagare il vincolo finchè non viene effettuato 
+il labeling sulle variabili è un metodo più efficiente, ma non garantisce
+una soluzione senza labeling.}.
+
+%% Soluzione
+\section{Meccanismi di risoluzione}
+I vincoli creati utilizzando la classe \files{Constraint} o mediante i metodi
+propri delle variabili logiche vengono passati ad un solver, un'istanza 
+della classe \files{SolverClass}, che li aggiunge al proprio \emph{constraint
+store}, il quale contiene tutti i vincoli attivi.
+
+La risoluzione dei vincoli è attuata mediante la chiamata di uno dei metodi
+della classe \files{SolverClass} come \files{solve()} o \files{nextSolution()}.
+
+\subsection{Constraint store}
+Il \files{constraint store} di un'istanza del solver contiene tutti i 
+vincoli attivi per il programma in esecuzione. JSetL fornisce alcuni
+metodi con i quali aggiungere nuovi vincoli ad uno specifico constraint store,
+visualizzarne il contenuto o rimuovere tutti i vincoli presenti.
+
+Per aggiungere un vincolo \files{c} al constraint store \files{S} è 
+sufficiente utilizzare il metodo \files{add} nel seguente modo:
+\begin{center}
+\files{S.add(c);}
+\end{center}
+La collezione dei vincoli nello store è considerata come una congiunzione di
+vincoli atomici, se $\Gamma$ è il contenuto del constraint store del
+solver \files{S}, con la chiamata \files{S.add(c)} si ottiene il vincolo
+$\Gamma \wedge \mathcal{C}$, dove $\mathcal{C}$ rappresenta 
+\files{c}. 
+
+\begin{ese}
+Siano \files{x}, \files{y} e \files{z} variabili logiche, sia \files{solver}
+un'istanza della classe \files{SolverClass}.
+\begin{lstlisting}[language = Java, frame = single]
+    solver.add(x.eq(3));    // x = 3
+    solver.add(y.neg(x));   // y != x
+    solver.add(x.eq(z));    // x = z
+\end{lstlisting}
+Il vincolo aggiunto allo store è $x = 3 \wedge y \neq x \wedge x = z$. Il
+medesimo risultato si sarebbe potuto ottenere con la seguente chiamata:
+\begin{center}
+\lstinline$solver.add(x.eq(3).and(y.neq(x)).and(x.eq(z)));$
+\end{center}
+\end{ese}
+
+\subsection{Risoluzione dei vincoli}
+La risoluzione dei vincoli in JSetL è basata sulla riduzione di ogni 
+congiunzione di vincoli atomici ad una forma semplificata denominata 
+\emph{solved form}.
+
+Senza entrare nel dettaglio, si può affermare che una solved form è una
+congiunzione di vincoli irriducibili e che, se non vuota, rappresenta una 
+soluzione per i vincoli aggiunti allo store.
+
+Il metodo (inteso come funzione Java) principale per ottenere una soluzione
+da un'istanza \files{solver} di \files{SolverClass} è \files{solve}, il quale
+lancia un'eccezione se i vincoli non sono soddisfacibili, altrimenti trasforma
+il constraint store in modo non deterministico affinchè i vincoli
+assumano una  forma semplificata.
+
+\subsection{Labeling}
+Come spesso si verifica nei risolutori di vincoli su domini finiti, il
+solver di JSetL non può considerarsi \emph{completo} nel momento in cui i
+vincoli del constraint store coinvolgono istanze di \files{IntLVar} o
+\files{SetLVar}. Per controllare la soddisfacibilità dello store e per
+trovare una o tutte le soluzioni, in questo caso, può rendersi
+necessario introdurre strategie di ricerca, una di queste è il
+\emph{labeling}.
+
+Il labeling si effettua su variabili logiche, alle quali viene cercato di
+assegnare un valore del proprio dominio.
+Ovviamente considerare ogni possibile valore del dominio risulterebbe molto
+gravoso in termini di computazione ed efficienza, sono state introdotte quindi
+delle euristiche per ridurre lo spazio di ricerca:
+\begin{itemize}
+\item[-]\emph{Scelta delle variabili}: determina in quale ordine vengono 
+scelte le variabili a cui si cerca di assegnare un valore.
+\item[-]\emph{Scelta dei valori}: determina quale valore assegnare alle 
+variabili.
+\end{itemize}
+
+Di seguito si elencano le possibili euristiche attualmente presenti in JSetL:
+\begin{lstlisting}[language = Java,
+                   caption = {euristiche dei valori.}]
+public enum ValHeuristic {
+	GLB,            // da sinistra a destra.
+	LUB,            // da destra a sinistra.
+	MID_MOST,       // dal centro.
+	MEDIAN,         // dal valore medio.
+	EQUI_RANDOM,    // metodi casuali.
+	RANGE_RANDOM,
+	MID_RANDOM
+}
+\end{lstlisting}
+\begin{lstlisting}[language = Java,
+                   caption = {euristiche delle variabili.}]
+public enum VarHeuristic {
+	RIGHT_MOST,   // da destra a sinistra.
+	LEFT_MOST,    // da sinistra a destra.
+	MID_MOST,     // dal centro.
+	MIN,          // dal dominio con valore minimo.
+	MAX,          // dal dominio con valore massimo.
+	FIRST_FAIL,   // dal dominio minimo.
+	RANDOM        // casuale.
+}
+\end{lstlisting}
+
+Per applicare un'euristica occorre aggiungerla sotto forma di vincolo
+all'interno del constraint store. Siano \files{x}, \files{y} variabili logiche,
+sia \files{vars} un array di variabili logiche (omogenee),
+le sintassi possibili sono le seguenti:
+\begin{lstlisting}[caption = {opzioni di labeling.}]
+solver.add(x.label());
+
+solver.add(y.label(ValHeuristic.LUB));
+
+LabelingOptions lop = new LabelingOptions();
+lop.val = ValHeuristic.MEDIAN;
+lop.var = VarHeuristic.MID_MOST;
+solver.add(label(vars, lop));
+\end{lstlisting}
+Come si vede è possibile utilizzare il metodo \files{label()} senza parametri,
+che utilizza un'euristica di default, oppure è possibile specificare 
+un metodo per le scelte mediante la chiamata con parametro 
+\files{label(ValHeuristic)}. L'ultima opzione è quella di utilizzare una 
+struttura di supporto chiamata \files{LabelingOptions}, che consente di 
+specificare 
+entrambe le scelte per un array di variabili (ma è anche disponibile il metodo 
+per una variabile singola).

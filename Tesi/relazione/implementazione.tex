@@ -1,0 +1,1477 @@
+\hyphenation{
+JSetL
+Java
+IntLVar
+SetLVar
+Constraint
+JUnit
+TCK
+}
+
+\chapter{Implementazione di JSR-331}\label{capImpl}
+In questo capitolo verranno descritte le classi Java implementate per la
+specifica JSR-331. Il capitolo è diviso in due parti, seguendo l'approccio
+descritto nel capitolo \ref{capJSR}. La prima, dalla sezione \ref{intProblem}
+alla \ref{constraint}, descrive la rappresentazione del problema, la seconda, 
+dalla sezione \ref{solver} alla \ref{solIter}, riguarda la rappresentazione
+della risoluzione.
+
+Per ogni classe descritta verrà introdotta l'interfaccia fornita dalla 
+specifica e quindi, con maggior dettaglio, l'implementazione che riguarda
+il solver JSetL.
+
+\subsubsection{Definizione del problema}
+Nella specifica JSR-331 la definizione del problema utilizza le seguenti 
+interfacce:
+\begin{itemize}
+\item[-]\files{Problem};
+\item[-]\files{Var};
+\item[-]\files{VarBool};
+\item[-]\files{VarReal};
+\item[-]\files{VarSet};
+\item[-]\files{Constraint}.
+\end{itemize}
+Nelle prossime sezioni  
+verranno descritte le suddette classi (implementazioni) 
+con i principali metodi, tra
+queste non è implementata la classe \files{VarReal} poiché JSetL non supporta,
+allo stato attuale del progetto, vincoli su variabili logiche reali 
+(\files{double}).
+
+\subsubsection{Risoluzione del problema}
+Per rappresentare la risoluzione di un qualsiasi problema, la specifica JSR-331
+utilizza le seguenti interfacce: 
+\begin{itemize}
+\item[-]\files{Solver};
+\item[-]\files{SearchStrategy};
+\item[-]\files{Solution};
+\item[-]\files{SolutionIterator}.
+\end{itemize}
+Nelle prossime sezioni verranno descritte le suddette classi (implementazioni)
+con i principali metodi.
+
+\section{Interfaccia Problem}\label{intProblem}
+La specifica prevede una generica interfaccia \files{Problem} che permette
+agli utenti di creare ed accedere ai comuni ``oggetti'' del CSP. Un 
+\files{problem} funziona come una ``factory'' per la creazione di variabili e
+vincoli. Ogni variabile ed ogni vincolo appartengono ad uno ed un solo problema,
+ad esempio:
+\begin{lstlisting}[language = Java]
+Problem p = ProblemFactory.newProblem("Test");
+Var x = p.variable("X",1,10);
+\end{lstlisting}
+crea un istanza \files{p} della classe \files{Problem} (definita da una
+specifica implementazione, JSetL nel nostro caso) e quindi, tramite \files{p},
+viene creata una nuova variabile vincolata \files{x} di dominio $[1,10]$ e 
+con un nome esterno ``X''. Il dominio di \files{x} è quindi composto da ogni
+intero tra $1$ e $10$, senza omissioni. La variabile è automaticamente aggiunta
+al problema.
+
+\subsection{Creare variabili}
+Tutti i metodi per creare variabili iniziano con la parola ``\files{variable}''
+e la nuova variabile creata con tale metodo viene automaticamente aggiunta 
+al problema, ovvero viene inserita nel vettore delle variabili definito
+nel problema astratto (come vedremo in seguito) o nell'implementazione
+specifica JSetL.
+
+Un metodo alternativo per creare variabili è quello di utilizzare un costruttore
+della classe \files{Var} (o \files{VarBool}, \files{VarSet}, etc) definito
+nella relativa implementazione, ad esempio:
+\begin{lstlisting}[language = Java]
+Problem p = ProblemFactory.newProblem("Test");
+Var x = new Var(p,"X",1,10);
+\end{lstlisting}
+in questo caso la variabile creata sarà sempre relativa al problema \files{p},
+ma non verrà aggiunta alla lista delle variabili del problema (in pratica è
+una variabile di supporto). Per aggiungere la variabile al problema in un 
+momento successivo è possibile usare il metodo \files{add}:
+\begin{center}
+\lstinline$p.add(x);$
+\end{center}
+
+\subsection{Creare ed aggiungere vincoli}
+Tutti i metodi per creare ---ed aggiungere--- vincoli iniziano con la parola 
+``\files{post}''. Anche in questo caso il vincolo creato viene automaticamente
+aggiunto alla lista dei vincoli del problema. 
+\begin{lstlisting}[language = Java]
+Problem p = ProblemFactory.newProblem("Test");
+Var x = p.variable("X",1,10);
+Var y = new Var(p,"Y",1,10);
+
+p.post(x,"<",y);  // x < y.
+\end{lstlisting}
+In questo semplice esempio viene creata una variabile legata al problema 
+\files{x} ed una di supporto \files{y}, viene quindi aggiunto al problema
+il vincolo $\mathtt{x} < \mathtt{y}$. Quando verrà generata una soluzione
+per \files{p} sia \files{x} che \files{y} dovranno soddisfare il vincolo, ma
+ad esempio alla stampa della soluzione solo \files{x} verrà presa in 
+considerazione.
+
+Come per la creazione delle variabili anche i vincoli posso essere creati
+senza l'utilizzo di metodi ``factory'' dell'interfaccia \files{Problem},
+utilizzando un costruttore della classe \files{Constraint} oppure
+di classi più specifiche che specializzano \files{Constraint} come
+verrà mostrato in \ref{constraint}.
+
+\subsection{Metodi generici}
+L'interfaccia \files{Problem} specifica anche metodi generici per la stampa,
+per ottenere la versione, il solver ed altri di utilità generica, alcuni di
+questi sono:
+\begin{center}
+\begin{longtable}{|l|l|}
+\hline
+\textrm{\textbf{Metodo}} & \textrm{\textbf{Descrizione}} \\
+\hline 
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public String getImplVersion();$ } & 
+\parbox{200pt}{\vspace{5pt}Questo metodo restituisce la versione corrente
+dell'implementazione concreta di JSR-331, JSetL nel nostro caso.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Solver getSolver();$ } & 
+\parbox{200pt}{\vspace{5pt}Questo metodo restituisce la versione un'istanza
+del \files{Solver} associato al problema di invocazione che verrà utilizzato
+per risolvere il problema. Se un solver non è già definito questo metodo ne
+crea uno nuovo e lo associa al problema.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public void log(String text);$ } & 
+\parbox{200pt}{\vspace{5pt}Questo metodo stampa il testo ``passato'' come
+parametro sul display di default (come definito nell'implementazione).
+\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Var scalProd(int[] values, Var[] vars);$ } & 
+\parbox{200pt}{\vspace{5pt}Questo metodo crea una nuova variabile (\files{Var})
+ vincolata ad essere il prodotto scalare dell'array di valori interi e
+delle variabili date.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Var element(int[] values, Var indexVar);$ } 
+& 
+\parbox{200pt}{\vspace{5pt}Questo metodo crea una nuova variabile vincolata
+che sia un elemento dell'array \files{values} con un indice definito da una
+variabile vincolara \files{indexVar}.\vspace{5pt}}\\
+\hline
+\end{longtable}
+\end{center}
+
+\section{Classe JSetLProblem}\label{problem}
+La classe \files{JSetLProblem} implementa l'interfaccia standard \files{Problem}
+estendendo la classe \files{AbstractProblem} dell'implementazione comune.
+\begin{lstlisting}[language = Java]
+public class JSetLProblem extends AbstractProblem {
+\end{lstlisting}
+
+Questo approccio permette di ereditare tutti i metodi astratti puri (con
+l'ide Eclipse possono venire generate automaticamente tutte le definizioni) da 
+implementare e, dove necessario, è possibile ridefinire i metodi non astratti.
+
+\subsection{AbstractProblem}
+\files{AbstractProblem} è una classe astratta fornita dell'implementazione 
+comune (\files{javax.constraints.impl}) che implementa l'interfaccia
+\files{Problem}:
+\begin{lstlisting}[language = Java]
+abstract public class AbstractProblem implements Problem {
+\end{lstlisting}
+definendo ogni metodo ed attributo di utilità generica. Non è una classe
+astratta pura, poiché fornisce molte implementazioni di base, sia per gli 
+attributi che per i metodi.
+
+\subsubsection{Attributi}
+Tra gli attributi più importanti si evidenziano:
+\begin{lstlisting}[language = Java]
+  String name;
+  ArrayList<Var> vars;
+  ArrayList<VarBool> varBools;
+  ArrayList<Constraint> constraints;
+  Solver solver;
+\end{lstlisting}
+La stringa \files{name} rappresenta il nome del problema, \files{vars} è
+la lista delle variabili logiche intere inserite nel problema, analogamente
+\files{varsBool} è la lista delle variabili booleane e \files{constraints} la
+lista dei vincoli del problema.
+
+Come si può notare nell'implementazione di base mancano le liste per 
+\files{VarReal} e \files{VarSet}. Per quanto riguarda le variabili reali, allo
+stato attuale dello sviluppo non sono supportate, mentre per le variabili 
+insiemistiche viene fornita un'implementazione che sfrutta le variabili intere.
+JSetL tuttavia fornisce direttamente il supporto alle variabili insiemistiche 
+e quindi si è naturalmente deciso di non sfruttare l'implementazione comune 
+fornita per queste variabili, come si vedrà più avanti nel capitolo.
+
+\subsubsection{Metodi comuni}
+I metodi più comuni, che non hanno bisogno di un'implementazione specifica
+come quella fornita da JSetL o Choco, vengono implementati direttamente
+all'interno della classe \files{AbstractProblem}. Tra quelli più utilizzati
+si evidenziano:
+\begin{center}
+\begin{longtable}{|l|l|}
+\hline
+\textrm{\textbf{Metodo}} & \textrm{\textbf{Descrizione}} \\
+\hline 
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Var add(Var var)$ } & 
+\parbox{200pt}{\vspace{5pt}Aggiunge la variabile intera passata come parametro 
+alle variabili del problema e restituisce la variabile stessa.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Var add(VarBool var)$ } & 
+\parbox{200pt}{\vspace{5pt}Aggiunge la variabile booleana passata come parametro
+ alle variabili del problema e restituisce la variabile stessa.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public void remove(String name)$ } & 
+\parbox{200pt}{\vspace{5pt}Rimuove la variabile passata come parametro
+ dalle variabili del problema. Allo stato attuale è possibile rimuovere
+solo variabili intere.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$
+public Var[] variableArray(String name, int min, int max, int size)$ } & 
+\parbox{200pt}{\vspace{5pt}Crea ed aggiunge al problema un array di variabili
+intere il cui nome è specificato dalla stringa \files{name} a cui
+è concatenato l'indice della variabile (``\files{name}-i''). Il dominio
+di ogni variabile è $[\textrm{min}, \textrm{max}]$ e la diminsione dell'array 
+è definita dal parametro \files{size}.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$
+public Var[] getVars()$ } & 
+\parbox{200pt}{\vspace{5pt}Restituisce l'array di variabili intere
+associate al problema.\vspace{5pt}}\\
+\hline
+\end{longtable}
+\end{center}
+
+Altri metodi definiti nella classe astratta vanno comunque ridefiniti
+nell'implementazione, poiché rappresentano delle funzionalità specifiche
+di un solver. Tra questi metodi si elencano:
+\begin{itemize}
+\item[-]\lstinline[language = Java]$public VarSet variableSet(String name, int min, int max);$ che crea una variabile insiemistica di interi e la aggiunge al 
+problema;
+\item[-]\lstinline[language = Java]$public Constraint postAllDifferent(Var[] vars);$ che, dato un vettore di variabili intere, le vincola ad essere tutte
+differenti;
+\item[-]\lstinline[language = Java]$public Constraint postCardinality(Var[] vars, Var cardVar, String oper, Var var);$ che crea un particolare vincolo di 
+cardinalità tra l'array di variabili passate come parametro e una data 
+relazione.
+\end{itemize}
+
+\subsection{Implementazione}
+Una volta definito il nome della classe e cosa estende, come visto all'inizio 
+della sezione \ref{problem}, grazie alle funzionalità dell'ide Eclipse è stato
+possibile inserire automaticamente tutte le definizioni dei metodi astratti
+di \files{Problem} non definiti nell'implementazione di base. 
+
+Si descrivono ora gli attributi ed i metodi definiti, basati sul solver JSetL.
+
+\subsubsection{Attributi}
+Come descritto in precedenza, l'implementazione di base fornisce attributi
+di classe per la gestione di variabili inetere, booleane e per i vincoli, ma
+non prevede nulla per quelle insiemistiche. Sono stati quindi aggiunti,
+basandosi sul medesimo meccanismo di \files{AbstractProblem}, degli attributi
+per la gestione di queste variabili.
+\begin{lstlisting}[language = Java,
+                   caption = {Attributi di JSetLProblem.}]
+ArrayList<VarSet> varSets;
+ArrayList<VarSet> auxiliarySets;
+
+private static final int OPER_EQ = 1, OPER_UNKNOWN = 0, OPER_NEQ = 2, OPER_LT = 3, OPER_LEQ = 4, OPER_GT = 5, OPER_GEQ = 6;
+
+private static int counter = 0;
+private static int counterSet = 0;
+\end{lstlisting}
+\files{varSets} è la lista delle variabili insiemistiche appartenneti al
+problema, \files{auxiliarySets} invece rappresenta una lista di variabili
+insiemistiche di supporto utili per il solver di JSetL ma non inerenti
+direttamente al CSP definito. 
+
+Sono stati poi definite delle costanti utili per identificare gli operatori
+(``$=$'', ``$\leq$'', ``$\geq$'', $\ldots$) 
+mediante il costrutto \files{switch} (che vuole come parametro un intero) e
+delle variabili globali utilizzate per contare variabili interne al fine di 
+assegnare un nome univoco alle stesse.
+
+\subsubsection{Costruttori} 
+I costruttori richiesti sono due: uno senza parametro ed uno con un parametro
+\files{String} che ne rappresenta il nome:
+\begin{lstlisting}[language = Java,
+                   caption = {Costruttore con parametro.}]
+public JSetLProblem(String name) {
+	super(name);
+	varSets = new ArrayList<VarSet>();
+	auxiliarySets = new ArrayList<VarSet>();
+}
+\end{lstlisting}
+
+In entrambi i casi viene chiamato il costruttore della classe astratta di base
+con la sola differenza che quello senza parametro assegna un valore di
+default al nome:
+\begin{lstlisting}[language = Java, frame = single]
+	super("_P"+(counter++));
+\end{lstlisting} 
+e quindi vengono inizializzate le liste delle variabili proprie della classe.
+
+\subsubsection{postElement}
+L'interfaccia \files{Problem} specifica anche metodi comodi per creare vincoli 
+che hanno a che fare con elementi di array di interi o di variabili vincolate
+intere. Se una variabile logica intera \files{indexVar} ha la funzione di
+indice all'interno di un array \files{v}, il risultato di un'operazione
+\files{v[indexvar]} è un'altra variabile vincolata. Dal fatto che Java
+non supporta l'overloading dell'operatore ``\files{[]}'' l'interfaccia
+standard utilizza questo metodo.
+
+Vi sono quattro possibili definizioni di questo metodo:
+\begin{lstlisting}[language = Java, frame = single]
+public Constraint postElement(int[], Var, String, int);
+public Constraint postElement(int[], Var, String, Var);
+public Constraint postElement(Var[], Var, String, int);
+public Constraint postElement(Var[], Var, String, Var);
+\end{lstlisting}
+
+Vediamo nel dettaglio solo due di questi poiché due sono di fatto gli algoritmi
+utilizzati, il primo per manipolare array di interi ed il secondo per
+quello di variabili.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{postElement}, array di interi.}]
+public Constraint postElement(int[] array, Var indexVar, String oper, Var var) {
+	if (indexVar.getMin() > array.length - 1 || indexVar.getMax() < 0)
+		throw new RuntimeException("elementAt: invalid index variable");
+	MultiInterval indexDom = ((IntLVar) indexVar.getImpl()).getDomain();
+	MultiInterval dom = new MultiInterval();
+	for (int i = 0; i <= indexDom.getLub(); i++)
+		if (indexDom.contains(i))
+			dom.add(array[i]);
+	IntLVar domain = new IntLVar(dom);
+	JSetLVar result = new JSetLVar(this,domain);
+	return post(result, oper, var);
+}
+\end{lstlisting}
+Innanzitutto viene controllato che il dominio della variabile indice sia
+compatibile con il ``range'' dell'array, altrimenti viene lanciata un'eccezione.
+Viene quindi costruito il dominio (\files{dom}) di una variabile intera
+JSetL al quale vengono aggiunti tutti gli interi presenti nell'array che sono
+inclusi nel dominio della variabile \files{indexVar}. Infine viene creata una
+nuova variabile JSR-331 da quella JSetL e viene quindi aggiunto il vincolo
+richiesto.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{postElement}, array di variabili.}]
+public Constraint postElement(Var[] vars, Var indexVar, String oper, int value) {
+	if (indexVar.getMin() > vars.length - 1 || indexVar.getMax() < 0)
+		throw new RuntimeException("elementAt: invalid index variable");
+	MultiInterval indexDom = ((IntLVar) indexVar.getImpl()).getDomain();
+	MultiInterval dom = new MultiInterval();
+	for (int i = 0; i <= indexDom.getLub(); i++)
+		if (indexDom.contains(i))
+			dom.addAll(((IntLVar)vars[i].getImpl()).getDomain());
+	IntLVar domain = new IntLVar(dom);
+	JSetLVar result = new JSetLVar(this,domain);
+	return post(result, oper, value);
+}
+\end{lstlisting}
+Il metodo per le variabili è del tutto simile, tranne per il fatto che il
+dominio è costruito in modo diverso, ovvero vengono aggiunti tutti i valori
+interi possibili per ogni variabile logica all'interno del range dato dal
+dominio di \files{indexVar}.
+
+\subsubsection{post}
+Un vincolo non ha effetto fino a che non viene inserito nel problema. Per 
+fare ciò si utilizza il metodo \files{post}, che ha le seguenti dichiarazioni:
+\begin{lstlisting}[language = Java, frame = single]
+public Constraint post(int[], Var[], String, int);
+public Constraint post(int[], Var[], String, Var);
+public Constraint post(Var[], String, int);
+public Constraint post(Var[], String, Var);
+public Constraint post(Var, String, int);
+public Constraint post(Var, String, Var);
+public Constraint post(Constraint);
+\end{lstlisting}
+Ogni metodo \files{post} ha il medesimo apporccio: costruisce il vincolo 
+basandosi sul metodo \files{linear} o \files{compureConstraint} (si entrerà
+nel dettaglio nei prossimi paragrafi), lo pubblica nel solver JSetL mediante
+la chiamata della specifica \files{post(Constraint)} ed infine
+viene aggiunto nei vincoli del problema con il metodo \files{add}.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{post}.}]
+public Constraint post(int[] array, Var[] vars, String oper, int value) {
+	Constraint result = linear(array, vars, oper, value);
+	post(result);
+	add(result);
+	return result;
+}
+
+public Constraint post(Var var, String oper, int value) {
+	Constraint result = linear(var, oper, value);
+	post(result);
+	add(result);
+	return result;
+}
+\end{lstlisting}
+Qui sopra si possono notare due metodi \files{post} standard, uno per le 
+variabili singole (il secondo) ed uno per array di variabili. Entrambi 
+utilizzano un metodo \files{linear} e restituiscono il nuovo vincolo
+creato. 
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{post(Constraint)}.}]
+public void post(Constraint constraint) {
+	((JSetLSolver) getSolver()).add(constraint);
+	add(constraint);
+}
+\end{lstlisting}
+Questo è invece il metodo su cui tutti gli altri si basano per aggiungere
+il vincolo creato al solver JSetL. Viene ``presa'' un'istanza del
+solver con il metodo \files{getSolver} da cui viene quindi invocato
+\files{add}, il quale sarà definito nella sezione \ref{jsetlsolver}.
+\begin{flushleft}
+Anche la classe \files{Constraint} ha un metodo \files{post}, per cui è 
+possibile creare un vincolo e quindi ``postarlo'' con la seguente sintassi:
+\begin{lstlisting}[language = Java, frame = single]
+Constraint c = p.linear(x, ``<='', y);
+c.post();
+\end{lstlisting}
+\end{flushleft}
+
+\subsubsection{linear}
+I vincoli che hanno a che fare con il confronto di espressioni vincolate
+utilizzano gli operatori di confronto standard:
+\[
+\begin{array}{cl}
+< & \textrm{minore stretto,} \\
+<= & \textrm{minore o uguale,} \\
+= & \textrm{uguale,} \\
+>= & \textrm{maggiore o uguale,} \\
+> & \textrm{maggiore stretto,} \\
+!= & \textrm{diverso.} \\
+\end{array}
+\]
+
+I metodi che implementano il confronto sono chiamati \files{linear} e vengono
+usati, come accennato in precedenza, nelle definizioni di \files{post}. \'E
+possibile anche per l'utente utilizzare \files{linear}, non sono infatti
+metodi privati, e sono utili perchè non aggiungono direttamente un vincolo
+e le variabili al problema.
+
+Vi sono quattro differenti metodi \files{linear}:
+\begin{lstlisting}[language = Java, frame = single]
+public Constraint linear(int[], Var[], String, int);
+public Constraint linear(int[], Var[], String, Var);
+public Constraint linear(Var, String, int);
+public Constraint linear(Var, String, Var);
+\end{lstlisting}
+i primi due hanno a che fare con vettori di variabili vincolate, mentre gli 
+altri gestiscono una sola variabile. In entrambi i casi si effettua il confronto
+con un intero o un'altra variabile vincolata.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{linear}, con array di variabili.}]
+public Constraint linear(int[] array, Var[] vars, String oper, int value) {
+	if (array.length != vars.length || array.length == 0)
+		throw new RuntimeException(
+			"Coefficent and variable length must be equal and not zero.");
+	JSetLVar scalprod = (JSetLVar) scalProd(array, vars);
+	return computeConstraint(scalprod, oper, value);
+}
+\end{lstlisting}
+Questo metodo, dopo aver verificato che le lunghezze dei vettori siano 
+compatibili e non nulle genera il prodotto scalare tra i due vettori tale che
+se $v_0, v_1, \ldots, v_{n-1}$ sono le variabili contenute in \files{vars} e
+$a_0, a_1, \ldots, a_{n-1}$ sono i coefficienti interi contenuti in 
+\files{array},
+la variabile vincolata $s$ rappresentata da \files{scalprod} è data da:
+\[
+s = a_0\cdot v_0 + a_1\cdot v_1 + \cdots + a_{n-1}\cdot v_{n-1}.
+\]
+
+Una volta creata la variabile temporanea \files{scalprod} viene calcolato il
+vincolo con il metodo \files{computeConstraint}.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{linear}, con variabile singola.}]
+public Constraint linear(Var var, String oper, int value) {
+	if (var == null)
+		throw new RuntimeException("Parameters must not be null.");
+	return computeConstraint(var, oper, value);
+}
+\end{lstlisting}
+In questo caso viene sono controllato che la variabile \files{var} non sia
+nulla, in qual caso viene lanciata un'eccezione, e quindi viene chiamato 
+direttamente il metodo \files{computeConstraint}.
+
+Si noti che in entrambi i casi la funzione ``ritorna'' una chiamata al metodo
+\files{computeConstraint} il quale prende sempre come primo argomento
+una variabile e come secondo può prendere un intero o una variabile a seconda
+delle esigenze. A questo punto si può analizzare questo metodo.
+ 
+\subsubsection{computeConstraint}
+Di fatto \files{computeConstraint} genera il vincolo mediante i costrutti
+di JSetL ed è quindi un metodo completamente indipendente dall'interfaccia
+JSR-331. Vi sono due versioni:
+\begin{itemize}
+\item[-]\lstinline[language=Java]$private Constraint computeConstraint(Var var, String oper, int value);$
+\item[-]\lstinline[language=Java]$private Constraint computeConstraint(Var var1, String oper, Var var2);$
+\end{itemize}
+Entrambe sono \files{private} poiché sono pensate per essere utilizzate solo
+internamente dall'implementazione JSetL di JSR-331. Hanno entrambe una variabile
+come primo parametro, l'unica differenza è data dal terzo parametro che 
+può essere un intero o una variabile. La stringa \files{oper} rappresenta
+l'operatore di confronto che viene gestito dalla funzione \files{getOperator}
+su cui non ci si soffermerà.
+
+Si da invece la definizione di uno solo dei metodi poiché sono pressoché 
+identici, soffermandosi solo sull'unica differenza tra i due:
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{computeConstraint}.}]
+private Constraint computeConstraint(Var var, String oper, int value) {
+	IntLVar v = ((JSetLVar) var).getIntLVar();
+	Constraint result;
+	switch(getOperator(oper)) {
+	case 1: {
+		// Case = "equals".
+		JSetL.Constraint constraint = v.eq(value);
+		result = new JSetLConstraint(this, constraint);
+	} break;
+	case 2: {
+		// Case != "not equals".
+		JSetL.Constraint constraint = v.neq(value);
+		result = new JSetLConstraint(this, constraint);
+	} break;
+        .
+        .
+        .
+	case 6: {
+		// Case >= "greater equals".
+		JSetL.Constraint constraint = v.ge(value);
+		result = new JSetLConstraint(this, constraint);
+	} break;
+	default: throw new UnsupportedOperationException();
+	}
+	return result;
+}
+\end{lstlisting}
+Inizialmente viene estratta la variabile intera JSetL di tipo 
+\files{IntLVar} mediante la funzione ausiliaria \files{getIntLVar} (che non
+fa altro che chiamare la \files{getImpl} dell'implementazione comune).
+Quindi, a seconda del caso, viene creato un vincolo JSetL opportuno (nel listato
+sono stati omessi alcuni casi per leggibilità) utilizzato per creare un vincolo
+JSR-331 mediante la chiamata del relativo costruttore. Viene quindi
+restituito il vincolo creato.
+
+Ecco l'istruzione JSetL per la creazione del vincolo:
+\begin{lstlisting}[language = Java, frame = single]
+JSetL.Constraint constraint = v.eq(value);
+\end{lstlisting}
+
+
+Se nessun caso dovesse essere ``catturato'' mediante lo \files{switch} 
+verrebbe lanciata un'eccezione di operazione non supportata.
+
+Come accennato in precedenza l'altra versione del metodo (con due variabili:
+\files{var1} e \files{var2}) è di poco differente, infatti inizialmente
+viene estratta la seconda variabile JSetL e viene quindi trattata come
+quella intera, poiché JSetL fornisce i medesimi metodi per interi e variabili.
+Ecco la riga aggiunta prima dello statement \files{switch}:
+\begin{lstlisting}[language = Java, frame = single]
+IntLVar value = ((JSetLVar) var2).getIntLVar();
+\end{lstlisting}
+\begin{nota}
+I metodi descritti hanno il solo compito di creare i vincoli, infatti non
+agiscono sul solver JSetL (\files{SolverClass}), per il quale si rimanda
+alla sezione \ref{jsetlsolver}.
+\end{nota}
+
+\subsubsection{scalProd}
+Questo metodo pubblico permette di creare una nuova variabile vincolata
+intera che rappresenti il prodotto scalare tra gli elementi degli array
+passati come parametro. Come si è già visto per il metodo \files{linear} il
+risultato che si ottiene è del tipo:
+\[
+s = a_0\cdot v_0 + a_1\cdot v_1 + \cdots + a_{n-1}\cdot v_{n-1}.
+\]
+
+\files{scalProd} è spesso utilizzato all'interno di altri metodi, ma è comunque
+definito pubblicamente poiché rappresenta un operazione comune per le variabili.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{scalProd}.}]
+public Var scalProd(int[] values, Var[] vars) {
+  .
+  .
+  IntLVar[] intVars = new IntLVar[vars.length];
+  if (values[0] != 0)
+    intVars[0] = ((JSetLVar) vars[0]).getIntLVar().mul(values[0]);
+  else intVars[0] = new IntLVar(0,0);
+  for (int i = 1; i < values.length; i++) {
+    if (values[i] !=0) {
+      IntLVar tmp = new IntLVar(((JSetLVar) vars[i]).getIntLVar().mul(values[i]));
+      intVars[i] = intVars[i-1].sum(tmp);
+    }
+    else intVars[i] = intVars[i-1];
+  }
+  return new JSetLVar(this, intVars[vars.length-1]);
+}
+\end{lstlisting}
+Inizialmente il metodo controlla le lunghezze degli array (parte omessa) e se
+non sono compatibili o se sono nulli lancia una ``Runtime Exception''.
+
+Quindi viene creato un array ausiliario di \files{IntLVar} di lunghezza pari
+a quella dei due vettori \files{vars} e \files{values}. Questo vettore viene
+utilizzato per calcolare i risultati parziali, ovvero nell'$i$-esimo elemento
+è contenuto il prodotto scalare dei primi $i$ elementi dei due parametri.
+\[
+\begin{array}{rcl}
+\files{vars} & = & [v_0, v_1, \ldots, v_i, \ldots, v_{n-1}] \\
+\files{values} & = &  [a_0, a_1, \ldots, a_i, \ldots, a_{n-1}] \\
+\hline
+\hline
+\files{intVars[i]} & = & a_0\cdot v_0 + a_1\cdot v_1 + \cdots + a_i\cdot v_1
+\end{array}
+\] 
+
+Alla fine del processo si otterrà un array il cui ultimo elemento rappresenta
+proprio il prodotto scalare dei due vettori passati come parametro.
+A questo punto viene creata e restituita una nuova variabile intera JSR-331
+mediante un opportuno costruttore.
+
+\subsubsection{allDifferent}
+L'interfaccia \files{Problem} definisce un modo semplice per creare ed inserire
+nel problema una dei più comuni vincoli conosciuto come ``allDifferent'':
+\begin{center}
+\lstinline[language = Java]$public Constraint postAllDifferent(Var[] vars);$
+\end{center}
+\'E definito un altro sinonimo più compatto:
+\begin{center}
+\lstinline[language = Java]$public Constraint postAllDiff(Var[] vars);$
+\end{center}
+Questi metodi creano, pubblicano nel problema e restituiscono un nuovo vincolo
+per cui ogni variabile dell'array \files{vars} debba avere un valore diverso 
+dalle altre.
+
+La definizione del metodo è la seguente:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{allDifferent}.}]
+public Constraint postAllDifferent(Var[] vars) {
+	if (vars.length == 0)
+		throw new RuntimeException("Variable array must not be empty.");
+	JSetLConstraint result = ((JSetLSolver) getSolver()).postAllDiff(vars);
+	add(result);
+	return result;
+}
+\end{lstlisting}
+Questo metodo crea semplicemente un nuovo vincolo appoggiandosi ad un metodo 
+ausiliario della classe \files{JSetLSolver}. Si è seguito questo approccio 
+poiché, dovendo inserire il vincolo nel problema, si rendeva necessario 
+utilizzare un'istanza della \files{SolverClass} di JSetL, ed è stato demandato 
+il compito al metodo \files{postAllDiff} di \files{JSetLSolver} definita in 
+\ref{jsetlsolver}. 
+
+\subsubsection{postCardinality}
+La specifica JSR-331 include tra i metodi pubblici alcune funzioni che
+creano vincoli che hanno a che fare con la cardinalità di array di variabili
+intere. Questi vincoli detti vincoli di cardinalità (Cardinality Constraints), 
+che tuttavia non hanno nulla a che fare con le variabili insiemistiche, sono
+quattro:
+\begin{lstlisting}[language = Java, frame = single]
+public Constraint postCardinality(Var[], int, String, int);
+public Constraint postCardinality(Var[], int, String, Var);
+public Constraint postCardinality(Var[], Var, String, int);
+public Constraint postCardinality(Var[], Var, String, Var);
+\end{lstlisting}
+
+Poiché sono vincoli abbastanza particolari, la loro trattazione più dettagliata
+viene fatta a parte, nella sezione \ref{cardinality}.
+
+\subsubsection{postGlobalCardinality}
+L'interfaccia \files{Problem} specifica anche metodi utili per creare vincoli
+di cardinalità globale (noti come ``gcc'') che rappresentano non uno ma più
+vincoli di cardinalità allo stesso tempo. La specifica prevede che il livello
+d'implementazione di questi possa essere comune o specifico, ovvero è 
+fornita un'implementazione nella classe \files{AbstractProblem}. \'E quindi
+possibile implementare o meno questi metodi. 
+
+La lista dei metodi, limitati alle variabili intere (per ora) è la seguente:
+\begin{lstlisting}[language = Java, frame = single]
+public Constraint postGlobalCardinality(Var[], int[], Var[]);
+public Constraint postGlobalCardinality(Var[], int[], int[], int[]);
+\end{lstlisting}
+
+Poiché l'implementazione
+comune utilizza \files{postCardinality} e i test mediante TCK hanno dato 
+riscontri positivi, si è scelto di non dare un'implementazione specifica.
+
+
+\section{Interfaccia comune: CommonBase}\label{common}
+Prima di parlare nello specifico delle componenti del problema (inteso come CSP)
+e quindi di variabili e vincoli, occorre parlare dell'interfaccia comune.
+Come per l'interfaccia \files{Problem} anche le interfacce \files{Var},
+\files{VarBool}, \files{VarSet} e \files{Constraint} sono fornite di
+un'implementazione astratta (non pura) che fornisce attributi, costrutti e 
+metodi di base. Questa è la classe \files{CommonBase}.
+
+\subsection{Attributi}
+Gli attributi della classe \files{CommonBase} sono quattro:
+\begin{lstlisting}[language = Java, frame = single]
+	Problem problem;
+	String  name;
+	Object  impl;
+	Object  businessObject;
+\end{lstlisting}
+\files{problem} rappresenta il problema a cui l'oggetto del CSP è associato,
+la stringa \files{name} è il nome dato all'oggetto. Si parla di oggetto
+perchè questa classe implementa gli attributi di base di ogni oggetto di un
+CSP, ed è chiaro che ogni variabile intera, booleana o insiemistica possa avere
+un nome, e \emph{deve} sicuramente avere un problema asssociato e una
+parte implementativa.
+
+La parte implementativa è rappresentata dall'attributo \files{impl} che, per
+l'appunto è dichiarato \files{Object}, ovvero l'oggetto generico Java. Ogni
+implementazione specifica (come JSetL) deve, se supportato, appoggiarsi
+all'attributo \files{impl} per sfruttare la propria implementazione.
+
+L'ultimo attributo della classe è \files{businessObject}, che può essere
+utilizzato come attributo di supporto per le specifiche implementazioni.
+
+\subsection{Costruttori}
+Con la classe \files{CommonBase} vengono forniti due costruttori, uno senza 
+parametro ed uno con un parametro stringa che ne rappresenta il nome:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{costruttori di CommonBase}.}]
+public CommonBase(Problem problem) {
+	this(problem,"");
+}
+
+public CommonBase(Problem problem, String name) {
+	this.problem = problem;
+	this.name = name;
+	impl = null;
+	businessObject = null;
+}
+\end{lstlisting}
+Il primo si limita a chiamare il secondo passando come parametro la stringa
+vuota.
+
+L'importanza di questi costruttori è dovuta al fatto che ogni classe derivata
+dalla suddetta classe dovrà utilizzarli. Questo implica che ogni classe
+(\files{JSetLVar},  (\files{JSetLVarBool}, (\files{JSetLVarSet} e
+\files{JSetLConstraint}) dovranno fornire tali costruttori di base ed 
+utilizzare quindi il metodo \files{setImpl} per definire la propria
+implementazione dell'oggetto.  
+
+
+\subsection{Metodi}
+La classe \files{CommonBase} fornisce alcuni metodi comuni per qualsiasi tipo
+di variabile o vincolo. Si descrivono brevemente:
+\begin{longtable}{|l|l|}
+\hline
+\textrm{\textbf{Metodo}} & \textrm{\textbf{Descrizione}} \\
+\hline 
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Problem getProblem()$ } & 
+\parbox{200pt}{\vspace{5pt}Restituisce il problema a cui l'oggetto
+d'invocazione è legato.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public void setName(String name)$ } & 
+\parbox{200pt}{\vspace{5pt}Definisce il nome dell'oggetto.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public String getName()$ } & 
+\parbox{200pt}{\vspace{5pt}Restituisce il nome dell'oggetto
+d'invocazione.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public void setImpl(Object impl)$ } & 
+\parbox{200pt}{\vspace{5pt}Definisce l'implementazione concreta di uno 
+specifico solver per l'oggetto d'invocazione.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Object getImpl()$ } & 
+\parbox{200pt}{\vspace{5pt}Restituisce l'implementazione concreta di uno 
+specifico solver per l'oggetto d'invocazione.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public void setObject(Object obj)$ } & 
+\parbox{200pt}{\vspace{5pt}Aggiunge un oggetto ausiliario per 
+l'oggetto d'invocazione.\vspace{5pt}}\\
+\hline
+\parbox{160pt}{\vspace{5pt}
+\lstinline[language = Java]$public Object getObject()$ } & 
+\parbox{200pt}{\vspace{5pt}Restituisce l'oggetto ausiliario 
+per l'oggetto d'invocazione.\vspace{5pt}}\\
+\hline
+\end{longtable}
+
+
+\section{Classe JSetLVar}
+Questa classe implementa le variabili intere vincolate
+\files{Var} per la specifica JSR-331
+estendendo la classe \files{AbstractVar} (che a sua volta estende 
+\files{CommonBase}).
+
+Come visto nella descrizione dell'interfaccia comune vengono forniti tutti gli
+attributi e metodi utili ed è quindi sufficiente implementare i metodi
+dell'interfaccia \files{AbstractVar} ed i costruttori di \files{CommonBase},
+``mappando'' quindi le funzionalità richieste per la classe \files{Var}
+con quelle fornite da JSetL (tramite \files{IntLVar}).
+
+Si elencano i metodi ridefiniti in \files{JSetLVar}:
+\begin{lstlisting}[language = Java,
+                   frame = single,
+                   caption = {Metodi di JSetLVar},
+                   label = metodiVar]
+        public int getMin();
+	public int getMax(); 
+	public boolean isBound();
+	public boolean contains(int value);
+	public Var plus(int value);
+	public Var minus(int value);
+	public Var plus(Var x);
+	public Var minus(Var x); 
+	public Var multiply(int value);
+	public Var multiply(Var x);
+	public Var divide(int value);
+	public Var divide(Var x);
+\end{lstlisting}
+
+\subsection{Costruttori}
+Sono stati implementati vari costruttori per la classe \files{JSetLVar} atti
+a soddisfare diverse esigenze, in primis quelle richieste dalla specifica e 
+quindi altre ``suggerite'' dallo sviluppo del progetto.
+
+Il meccanismo è simile per tutti i costruttori: si richiama il costruttore
+della classe che si estende (mediante il costrutto \files{super}) con il
+parametro \files{Problem} (e a volte il nome), quindi si imposta l'oggetto
+\files{impl} con l'implementazione concreta del caso.
+ 
+\begin{lstlisting}[language = Java,
+                   caption = {\files{Un costruttore di JSetLVar}.}]
+public JSetLVar(JSetLProblem problem) {
+	super(problem);
+	String name = problem.getFreshName();
+	setImpl(new IntLVar(name));
+	setName(name);
+}
+\end{lstlisting}
+In questo esempio si vede il costruttore con il solo parametro \files{problem}.
+Viene chiamato il costruttore \files{AbstractVar(problem)} mediante il
+costrutto \files{super(problem)}, quindi viene generato un nuovo nome mediante
+la funzione\footnote{La funzione ausiliaria \files{getFreshName} si limita a
+creare un nome per le variabili interne che sia unico, al fine di rendere più
+chiare le variabili in fase di debugging, non è trattata nel dettaglio.} di 
+supporto \files{getFreshName} della classe \files{JSetLProblem}.
+
+A questo punto viene impostato l'attributo \files{impl} con una nuova istanza
+della classe \files{intLVar} creata con il costruttore con parametro stringa,
+che rappresenta il nome della nuova variabile appena creato. Il nome infine 
+viene settato anche per la variabile \files{JSetLVar}.
+
+
+\subsection{Metodi generici}
+I primi quattro metodi dell'elenco \ref{metodiVar} sono metodi di utilità 
+generica e se ne dà una descrizione dettagliata.
+\subsubsection{getMin}
+Il metodo \files{getMin} ritorna il più piccolo interno del dominio corrente
+della variabile d'invocazione. \'E definito nel seguente modo:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{getMin}.}]
+public int getMin() {
+	MultiInterval domain = ((IntLVar) getImpl()).getDomain();
+	return domain.getGlb();
+}
+\end{lstlisting}
+Dapprima viene presa l'implementazione concreta con il metodo \files{getImpl},
+che in questo caso restituisce l'istanza di \files{IntLVar} relativa alla
+variabile d'invocazione. A questo punto, mediante il metodo \files{getDomain}
+dalla variabile si ottiene il dominio sotto forma di \files{MultiInterval}.
+Viene quindi restituito il minimo valore di \files{domain} con il
+metodo \files{MultiInterval.getGlb}.
+
+\subsubsection{getMax}
+Il metodo \files{getMax} ritorna il più grande interno del dominio corrente
+della variabile d'invocazione. \'E definito nel seguente modo:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{getMax}.}]
+public int getMin() {
+	MultiInterval domain = ((IntLVar) getImpl()).getDomain();
+	return domain.getGlb();
+}
+\end{lstlisting}
+Analogamente a \files{getMin} questo metodo sfutta le funzionalità di
+\files{IntLVar} e \files{MultiInterval}.
+
+\subsubsection{isBound}
+Il metodo \files{isBound}, come suggerisce il nome, è di tipo booleano, ovvero
+ha due possibili valori di ritorno: \files{true} se il dominio della variabile
+vincolata si riduce ad un singoletto, \files{false} altrimenti.
+\begin{lstlisting}[language = Java,
+                   caption = {\files{isBound}.}]
+public boolean isBound() {
+	return ((LVar) getImpl()).isBound();
+}
+\end{lstlisting}
+Questo metodo si appoggia semplicemente al relativo metodo di JSetL per le
+variabili intere.
+
+\subsubsection{contains}
+Anche questo è un metodo booleano, restituisce \files{true} se e solo se
+un dato intero appartiene al dominio della variabile.
+\begin{lstlisting}[language = Java,
+                   caption = {\files{isBound}.}]
+public boolean contains(int value) {
+	MultiInterval domain = ((IntLVar) getImpl()).getDomain();
+	return domain.contains(value);
+}
+\end{lstlisting}
+Come nei metodi precedenti viene prima richiamato il dominio della variabile
+JSetL e in seguito viene ``ritornato'' il medesimo metodo sui multi-intervalli
+\files{MultiInterval.contains(int)}.
+
+\subsection{Operazioni aritmetiche}
+La classe \files{AbstractVar} prevede l'implementazione dei comuni operatori
+aritmetici per le variabili intere: ``$+$'', ``$\cdot$'', ``$-$'', ``$\div$''.
+
+Per ogni operatore è definita una funzione con parametro intero ed una che abbia
+come parametro un'altra variabile intera, questo permette di ottenere delle
+espressioni del tipo:
+\[
+X + k, \quad X + Y,
+\]
+dove $X$ e $Y$ rappresentano delle variabili intere vincolate e $k$ un intero.
+
+La lista dei metodi aritmetici è definita dalle ultime otto dichiarazioni
+del listato \ref{metodiVar}, poiché si basano tutte sullo stesso principio
+verranno definite nel dettaglio solo due, una con parametro intero ed
+una con parametro variabile.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{plus}, con parametro intero.}]
+public Var plus(int value) {
+	JSetLProblem p = (JSetLProblem) getProblem();
+	JSetLVar x = new JSetLVar(p, p.getFreshName());
+	x.setImpl(((IntLVar) getImpl()).sum(value));
+	((IntLVar)x.getImpl()).setName(x.getName());
+	// To constraint the new variable.
+	JSetLSolver solver = (JSetLSolver) p.getSolver();
+	solver.getSolverClass().add(((IntLVar) x.getImpl()).eq(
+			((IntLVar) getImpl()).sum(value)));
+	return x;
+}
+\end{lstlisting}
+Il metodo crea una nuova variabile \files{x} di tipo \files{JSetLVar} che
+poi verrà restituita come risultato, a questa viene assegnato un nuovo nome
+e una nuova implementazione vincolata ad essere il risultato della somma
+della variabile di invocazione e l'intero \files{value}.
+
+A questo punto si potrebbe dire che il lavoro sia finito e si potrebbe 
+restituire il 
+risultato, tuttavia si commetterebbe un errore. La nuova variabili deve infatti
+essere vincolata a quella di invocazione ed è quindi necessario aggiungere al
+solver JSetL il vincolo $X = T+k$ dove $X$ è la variabile creata, $T$ è
+quella di invocazione e $k$ l'intero \files{value}.
+
+Questa aggiunta (che è definita nel codice subito dopo il commento) è stata
+dovuta non tanto per la correttezza del metodo per quanto riguarda le variabili
+del problema, ma per le variabili di supporto i cui vincoli non verrebbero 
+aggiornati nel solver JSetL altrimenti.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{multiply}, con parametro variabile.}]
+public Var multiply(Var x) {
+	JSetLProblem p = (JSetLProblem) getProblem();
+	JSetLVar a = new JSetLVar(p, p.getFreshName());
+	a.setImpl(((IntLVar) getImpl()).mul(((JSetLVar) x).getIntLVar()));
+	((IntLVar)a.getImpl()).setName(a.getName());
+	// To constraint the new variable.
+	JSetLSolver solver = (JSetLSolver) p.getSolver();
+	solver.getSolverClass().add(((IntLVar) a.getImpl()).eq(
+			((IntLVar) getImpl()).mul((IntLVar) x.getImpl())));
+	return a;
+}
+\end{lstlisting}
+Come si può notare il metodo con parametro variabile è sostanzialmente identico,
+l'unica differenza è data dalla chiamata della funzione \files{getImpl} anche
+per il parametro all'interno dell'argomento del metodo dell'operazione 
+\files{JSetLVar} (\files{mul} in questo caso).
+
+\section{Classe JSetLVarBool}
+La classe \files{JSetLVarBool} rappresenta le variabili booleane che si possono 
+considerare un caso particolare 
+delle variabili intere, con il dominio ristretto ai valori $[0,1]$. In cui
+$0$ rappresenta il valore \files{false} e $1$ \files{true}.
+
+JSR-331 fornisce un'implementazione di base per questa classe che estende
+\files{Var}, tuttavia si è scelto di ridefinirla (anche se in modo del tutto
+analogo) per avere una gestione più diretta e per facilitare eventuali
+modifiche future.
+\begin{lstlisting}[language = Java,
+                   caption = {La classe \files{JSetLVarBool}}]
+public class JSetLVarBool extends JSetLVar implements VarBool {
+.
+.
+.
+}
+\end{lstlisting}
+\subsection{Costruttori}
+I costruttori della classe chiamano quelli della classe superior 
+\files{JSetLVar} e quindi modificano l'implementazione con una variabile dal
+dominio $[0;1]$
+\begin{lstlisting}[language = Java,
+                   caption = {Un costruttore di \files{JSetLVarBool}}]
+public JSetLVarBool(JSetLProblem problem, String name) {
+	super(problem, name);
+	setImpl(new IntLVar(name, 0, 1));
+}
+\end{lstlisting}
+
+\section{Classe JSetLVarSet}
+La specifica JSR-331 specifica un'interfaccia basilare per le variabili
+insiemistiche vincolate. Al contrario delle variabili intere, quando un
+istanza di questa classe è considerata ``bound''  è uguale ad un insieme di
+valori interi.
+
+Il pacchetto \files{javax.constraints.impl} fornisce la classe 
+\files{BasicVarSet} che di fatto implementa l'interfaccia \files{VarSet}. 
+Tuttavia poiché JSetL ha le proprie classi che implementano insiemi, 
+e soprattutto insiemi di interi mediante la classe \files{SetLVar}, si è deciso
+di non considerare l'implementazione di base fornita e proseguire con 
+l'approccio utilizzato per la classe \files{JSetLVar}.
+\begin{lstlisting}[language = Java,
+                   frame = single]
+public class JSetLVarSet extends CommonBase implements VarSet {
+\end{lstlisting}
+
+Ovvero la classe estende \files{CommonBase}, che come si è già più volte
+sottolineato, fornisce tutti gli strumenti necessari. Inoltre 
+\files{JSetLVarSet} implementa (direttamente) l'interfaccia \files{VarSet}.
+
+\begin{flushleft}
+Il dominio di una variabile insiemistica consiste in due insiemi:
+\begin{enumerate}
+\item[-]``Required Set'': un insieme di interi i cui valori appartengono
+ tutti alla variabile (lower bound);
+\item[-]``Possibile Set'': un insieme di interi in cui almeno un valore
+appartiene alla variabile (upper bound).
+\end{enumerate}
+Il ``Required Set'' è sempre un sottoinsieme del ``Possibile Set''. Ad esempio,
+se una variabile insiemistica rappresenta i giorni lavorativi della settimana 
+i valori possibili sono: $\{1, 2, 3, 4, 5, 6, 7 \}$, mentre quelli richiesti
+dovranno essere un sottoinsieme di cardinalità $5$, ad esempio $\{1, 2, 3, 4, 5
+\}$. \'E permesso rimuovere elementi solo dai valori possibili ed
+aggiungerli solo a quelli richiesti. La cardinalità di una variabile
+insiemistica vincolata è una variabile intera vincolata. \'E possibile definire
+intersezione ed unione di variabili insiemistiche.
+\end{flushleft}
+
+Se chiamiamo $V$ una generica variabile insiemistica, $L$ e $U$ due insiemi di
+interi che rappresentano rispettivamente ``Required Set'' e ``Possibile Set'',
+tale che $L \subseteq U$, allora il dominio di $V$ si può esprimere nel
+seguente modo:
+\[
+\textrm{dom}(V) = \{L,U\}.
+\]
+\begin{flushleft}
+Tutte queste caratteristiche, specificate nel documento di riferimento di
+JSR-331 (??), sono già presenti nella classe \files{SetLVar} di JSetL, ed è
+stato quindi semplice e naturale sfruttarne le caratteristiche.
+\end{flushleft}
+\subsection{Costruttori}
+I costruttori richiesti dall'interfaccia sono solo quelli definiti in
+\files{CommonBase}, infatti \files{VarSet} non ne prevede dei propri. I 
+costruttori standard sono:
+\begin{lstlisting}[language = Java,
+                   frame = single]
+public JSetLVarSet(Problem);
+public JSetLVarSet(Problem, String);
+\end{lstlisting}
+mentre quelli definiti in un secondo momento, per venire incontro alle 
+necessità implementative sono:
+\begin{lstlisting}[language = Java,
+                   frame = single]
+public JSetLVarSet(Problem,  int[], String);
+public JSetLVarSet(Problem, Set<Integer>, Set<Integer>, String);
+public JSetLVarSet(Problem, MultiInterval, String);
+public JSetLVarSet(Problem, SetLVar);
+\end{lstlisting}
+
+Come per la classe \files{JSetLVar} ogni costruttore utilizza il medesimo
+approccio: viene chiamato il costruttore della classe base  mediante il 
+costrutto
+\files{super} e quindi viene impostato l'oggetto \files{impl} con
+una chiama al relativo costruttore di \files{SetLVar}.
+
+Si danno alcuni esempi.
+
+\begin{lstlisting}[language = Java,
+                   caption = {un costruttore standard di \files{JSetLVarSet}}]
+public JSetLVarSet(Problem problem, String name) {
+	super(problem);
+	setImpl(new SetLVar(name));
+	setName(name);
+}
+\end{lstlisting}
+Il costruttore in questione si comporta esattamente come quello definito per
+la classe \files{JSetLVar}.
+
+\begin{lstlisting}[language = Java,
+                   caption = {costruttore con lista di interi.}]
+public JSetLVarSet(Problem problem,  int[] values, String name) {
+	super(problem, name);
+	MultiInterval s = new MultiInterval();
+	for (int i = 0; i < values.length; i++)
+		s.add(values[i]);
+	setImpl(new SetLVar(name,s));
+}
+\end{lstlisting}
+In questo costruttore, che passa come parametro una lista di interi e il nome,
+viene creato un multi-intervallo a cui vengono aggiunti uno ad uno tutti gli
+elementi dell'array \files{values}. Quindi viene chiamato il costruttore
+che come parametro un \files{MultiInterval} fornito da JSetL.
+
+
+\begin{lstlisting}[language = Java,
+                   caption = {costruttore con un multi-intervallo.}]
+public JSetLVarSet(Problem problem, MultiInterval lb, String name) {
+	super(problem, name);
+	setImpl(new SetLVar(name, lb, MultiInterval.universe()));
+}
+\end{lstlisting}
+Questo costruttore ausiliario sfrutta la classe JSetL \files{MultiInterval}
+di cui si è già spesso parlato e che è definita in (??). In questo caso
+viene chiamato un costruttore di \files{SetLVar} che utilizza due 
+multi-intervalli, il primo rappresenta i valori opzionali (required), mentre
+il secondo quelli richiesti.
+
+Sia $L$ l'insieme che rappresenta il multi-intervallo \files{lb}, $\mathcal{U}$
+l'insieme universo (di tutti gli interi rapprensentabili dall'implementazione),
+allora la variabile insiemistica creata $V$ ha dominio:
+\[
+\textrm{dom}(V) = \{ L, \mathcal{U} \}.
+\] 
+
+\subsection{Metodi generici}
+L'interfaccia \files{VarSet} prevede alcuni metodi di utilità generica, tra cui
+si evidenziano:
+\begin{lstlisting}[language = Java,frame = single]
+public boolean isBound();
+public Set<Integer> getValue() throws Exception;
+public void setValue(Set<Integer> set) throws Exception;
+public Set<Integer> getRequiredSet();
+public Set<Integer> getPossibleSet();
+public boolean isPossible(int value);
+public boolean isRequired(int value);
+public void remove(int value) throws Exception;
+public void require(int val) throws Exception;
+public boolean contains(Set<Integer> setOfValues);
+public void setEmpty(boolean flag);
+public Var getCardinality();
+\end{lstlisting}
+Alcuni di questi metodi si avvalgono della controparte nell'implementazione
+concreta di JSetL e quindi non se ne darà la definizione. Tra questi
+si ha \files{isBound}, \files{getValue} e \files{setValue} (di cui si è
+dovuta cambiare leggermente l'implementazione in JSetL rendendola pubblica).
+
+I metodi che hanno a che fare con il dominio inevece seguono un altro approccio,
+dovendosi basare sulla funzione \files{getDomain} che restituisce il
+dominio della variabile JSetL \files{SetLVar}. Questo dominio è
+un'istanza della classe \files{SetInterval} e quindi i metodi sono basati su
+questa classe oltre che ai multi-intervalli già citati.
+
+\begin{lstlisting}[language = Java,
+                   caption = {metodi ``getter'' per il dominio.}]
+public Set<Integer> getRequiredSet() {
+	return ((SetLVar) getImpl()).getDomain().getGlb();
+}
+
+public Set<Integer> getPossibleSet() {
+	return ((SetLVar) getImpl()).getDomain().getLub();
+}
+\end{lstlisting}
+Come anticipato la chiave dei due metodi è una funzione della classe
+\files{SetInterval} che rappresenta il dominio di una variabile insiemistica.
+Con \files{getGlb} viene restituito un multi-intervallo (che implementa un
+\files{Set<Integer>}) rappresentante il ``lower-bound'' della variabile; al
+contrario \files{getLub} restituisce l' ``upper-bound''. I due oggetti
+mappano perfettamente l'insieme required e possible definiti in \files{VarSet}.
+
+\begin{lstlisting}[language = Java,
+                   caption = {un intero è possibile o richiesto?.}]
+public boolean isPossible(int value) {
+	return ((SetLVar) getImpl()).getDomain().getLub().contains(value);
+}
+
+public boolean isRequired(int value) {
+	return ((SetLVar) getImpl()).getDomain().getGlb().contains(value);
+}
+\end{lstlisting}
+In questo caso, dopo aver ottenuto l'insieme request o possible viene
+sfruttato il metodo \files{contains} che restituisce un booleano a seconda che
+l'intero passato come parametro sia contenuto nel multi-intervallo di 
+invocazione o meno.
+
+\begin{lstlisting}[language = Java,
+                   caption = {inserire e rimuovere elementi.}]
+public void remove(int value) throws Exception {
+	((SetLVar) getImpl()).getDomain().getLub().remove(value);	
+}
+
+public void require(int value) throws Exception {
+	((SetLVar) getImpl()).getDomain().getGlb().add(value);	
+}
+\end{lstlisting}
+Nella descrizione inziale della classe si è detto che è 
+permesso rimuovere elementi solo dai valori possibili ed aggiungerli solo a
+quelli richiesti. Questi due metodi implementano quanto detto, non sono
+state quindi implementate funzioni che aggiungano elementi all' ``upper-bound''
+o ne rimuovano dal ``lower-bound''.
+
+\begin{lstlisting}[language = Java,
+                   caption = {\files{this} $\stackrel{?}{\supseteq}$ \files{setOfValues}.}]
+public boolean contains(Set<Integer> setOfValues) {
+	return ((SetLVar) getImpl()).getDomain().getLub().containsAll(setOfValues);
+}
+\end{lstlisting}
+Questo metodo booleano controlla se ogni elemento dell'insieme dato sia 
+contenuto nel dominio della variabile d'invocazione. Utilizza il metodo 
+\files{containsAll} sui multi-intervalli.
+
+\begin{lstlisting}[language = Java,
+                   caption = {``getter'' per la cardinalità.}]
+public Var getCardinality() {
+	Var result = new JSetLVar((JSetLProblem) getProblem(), ((SetLVar) getImpl()).card());
+	return result;
+}
+\end{lstlisting}
+Il metodo si avvale di \files{card} presente nella classe \files{SetLVar}, che
+restituisce una variabile vincolata intera rappresentante la cardinalità 
+dell'insieme. Questa variabile viene poi utilizzata per costruire una nuova
+variabile intera \files{JSetLVar} con la stessa funzione che viene quindi
+restituita dal metodo.
+
+\subsection{Operazioni insiemistiche}
+\files{VarSet} prevede le operazioni insiemistiche di unione ed intersezione.
+Queste operazioni sono già presenti in \files{SetLVar} ed è stato quindi 
+semplice implementarle. JSetL prevede inoltre le operazioni di complementazione
+e differenza insiemistica al contrario dello standard, tuttavia non è stata
+fornita una implementazione per queste operazioni.
+
+\begin{lstlisting}[language = Java,
+                   caption = {unione insiemistica.}]
+public VarSet union(VarSet varSet) throws Exception {
+	SetLVar tmp = ((SetLVar) varSet.getImpl());
+	JSetLVarSet result = new JSetLVarSet(this.getProblem());
+	result.setImpl(((SetLVar)getImpl()).union(tmp));
+	return result;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = Java,
+                   caption = {intersezione insiemistica.}]
+public VarSet intersection(VarSet varSet) throws Exception {
+	SetLVar tmp = ((SetLVar) varSet.getImpl());
+	JSetLVarSet result = new JSetLVarSet(this.getProblem());
+	result.setImpl(((SetLVar)getImpl()).intersect(tmp));
+	return result;
+}
+\end{lstlisting}
+
+In entrambi i metodi si dichiara una variabile temporanea di tipo 
+\files{SetLVar} che rappresenti la variabile passata come parametro e quindi si 
+crea la variabile di tipo \files{JSetLVarSet} che diventerà il risultato 
+dell'operazione. A \files{result} viene assegnato il risultato
+dell'operazione tra la
+variabile temporanea e la variabile d'invocazione concreta.
+
+
+\section{Classe JSetLConstraint}\label{constraint}
+L'ultima classe che si tratta a riguardo della definizione del problema è
+quella che rappresenta il generico vincolo. JSR-331 specifica i vincoli più
+comuni che definiscono relazioni tra variabili vincolate. Questi vincoli
+possono essere ottenuti tramite l'interfaccia \files{Problem} ed ogniuno di
+essi è istanza di questa classe.
+
+\subsection{Implementazione}
+\files{JSetLConstraint} implementa i vincoli JSR-331 estendendo la classe
+astratta \files{AbstractConstraint}:
+\begin{lstlisting}[language = Java,frame = single]
+abstract public class AbstractConstraint extends CommonBase implements javax.constraints.Constraint {
+\end{lstlisting}
+Come si può vedere \files{AbstractConstraint} a sua volta estende 
+\files{CommonBase}, già descritta nella sezione \ref{common}. Questo vuol dire 
+che ogni attributo e metodo utile è ereditato dalla classe e verrà quindi 
+sfruttato nell'implementazione. Si hanno poi i metodi definiti nella classe 
+astratta: \files{post},  \files{and},  \files{or},  \files{negation} e
+ \files{implies}; a parte il primo sono tutti stati ridefiniti poiché JSetL
+fornisce la propria implementazione.
+
+\subsection{Costruttori}
+Analogamente a quanto visto per gli altri elementi del problema (le variabili)
+i costruttori di questa classe richiedono come parametro sempre il problema.
+Viene poi fornito un costruttore che aggiunge il nome ed infine uno ausiliario
+per l'implementazione JSetL.
+
+\begin{lstlisting}[language = Java,
+                   caption = {i costruttori.}]
+public JSetLConstraint(Problem problem) {
+	super(problem);
+	setImpl(new JSetL.Constraint());
+}
+
+public JSetLConstraint(Problem problem, String name) {
+	super(problem, name);
+	setImpl(new JSetL.Constraint());
+}
+
+public JSetLConstraint(Problem problem, JSetL.Constraint constraint) {
+	super(problem);
+	setImpl(constraint);
+}
+\end{lstlisting}
+I tre costruttori sopra definiti utilizzano il medesimo approccio di ogni
+classe che si basa su \files{CommonBase}: chiamano il costruttore base e
+quindi impostano l'implementazione concreta di JSetL.
+
+\subsection{Metodi logici}
+La specifica JSR-331 prevede quattro metodi che rappresentano i comuni
+operatori logici per creare vincoli: $\wedge$, $\vee$, $\neg$ e $\Rightarrow$.
+
+Siano $\mathcal{C}_1$ e $\mathcal{C}_2$ generici vincoli, allora le seguenti
+espressioni sono a loro volta vincoli:
+\begin{center}
+$\mathcal{C}_1 \wedge \mathcal{C}_2$,\quad
+$\mathcal{C}_1 \vee \mathcal{C}_2$, \quad
+$\neg \mathcal{C}_1$, \quad
+$\mathcal{C}_1 \Rightarrow \mathcal{C}_2$.
+\end{center}
+
+\subsubsection{Congiunzione logica}
+La congiunzione logica è implementata tramite il metodo \files{and} ed ha un
+parametro di tipo \files{JSetLConstraint}:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{and}.}]
+public Constraint and(Constraint c) {
+	JSetL.Constraint constraint = ((JSetLConstraint) c).getConstraint();
+	JSetLConstraint result = new JSetLConstraint(getProblem(), this.getConstraint().and(constraint));
+	return result;
+}
+\end{lstlisting}
+Il metodo semplicemente crea un nuovo vincolo mediante il costruttore ausiliario
+creato per JSetL. Utilizza il metodo \files{and} della classe
+\files{Constraint} di JSetL.
+
+\subsubsection{Dinsgiunzione logica}
+Anche la disgiunzione logica ha un vincolo come parametro ed è implementata 
+dal seguente codice: 
+\begin{lstlisting}[language = Java,
+                   caption = {\files{or}.}]
+public Constraint or(Constraint c) {
+	JSetL.Constraint constraint = ((JSetLConstraint) c).getConstraint();
+	JSetLConstraint result = new JSetLConstraint(getProblem(), this.getConstraint().orTest(constraint));
+	return result;		
+}
+\end{lstlisting}
+Il metodo è praticamente identico al primo, con l'unica differenza che nel
+costruttore è utilizzato il metodo \files{orTest}. 
+
+\subsubsection{Negazione}
+La Negazione, contrariamente agli altri metodi, non ha argomenti, per il 
+resto è identico come approccio agli altri: viene creato un nuovo vincolo
+mediante il metodo \files{notTest}:
+\begin{lstlisting}[language = Java,
+                   caption = {\files{negation}.}]
+public Constraint negation() {
+	JSetLConstraint result = new JSetLConstraint(getProblem(), this.getConstraint().notTest());
+	return result;		
+}
+\end{lstlisting}
+
+\subsubsection{Implicazione}
+L'implicazione segue di pari passo i primi due metodi descritti: ha un parametro
+di tipo \files{JSetLConstraint} e crea un nuovo vincolo mediante il metodo
+\files{impliesTest} di JSetL.
+\begin{lstlisting}[language = Java,
+                   caption = {\files{negation}.}]
+public Constraint implies(Constraint c) {	
+	JSetL.Constraint constraint = ((JSetLConstraint) c).getConstraint();
+	JSetLConstraint result = new JSetLConstraint(getProblem(), this.getConstraint().impliesTest(constraint));
+	return result;
+}
+\end{lstlisting}
+\begin{nota}
+Nella classe \files{JSetL.Constraint} erano presenti i soli metodi \files{or} e
+\files{and} che implementavano la disgiunzione e congiunzione logica in modo 
+non deterministico. Durante lo sviluppo dell'interfaccia per la specifica si
+è reso necessaria l'introduzione (o meglio la re-introduzione) di metodi per
+la negazione e l'implicazione.
+
+Sono stati quindi forniti i metodi \files{orTest}, \files{impliesTest}, e
+\files{notTest} che forniscono un'implementazione deterministica delle
+relative operazioni logiche.
+
+Nell'approccio di JSetL per la soluzione dei vincoli il non determinismo 
+garantisce il risultato, a scapito dell'efficienza magari; tuttavia sono stati 
+introdotti altri sistemi per raggiungere la correttezza e la completezza, come 
+il labeling visto nel capitolo \ref{jsetl}.
+
+L'approccio nello sviluppo di JSR-331 su JSetL si basa sul labeling di ogni
+variabile inserita nel problema e questo garantisce un risultato quando si
+cerca una soluzione. Per questo motivo l'utilizzo di metodi non deterministici
+non è un problema, anzi in alcuni tests si è rivelato un approccio molto
+più efficiente.
+\end{nota}
+
+%\section{Risoluzione del problema}
+\section{Interfaccia Solver}\label{solver}
+Per rappresentare la parte di risoluzione di un qualsiasi CSP, la specifica
+JSR-331 utilizza l'interfaccia \files{Solver}. Il solver permette ad un utente
+di risolvere un problema cercando una soluzione soddisfacibile o ottimale. Ecco
+un esempio di risoluzione di un problema:
+\begin{lstlisting}[language = Java,
+                   caption = {una risoluzione di \files{problem}.}]
+problem.log("=== Find One solution:");
+Solver solver = problem.getSolver();
+Solution solution = solver.findSolution();
+if (solution != null)
+  solution.log();
+else
+  problem.log("No Solutions");
+\end{lstlisting}
+In questo semplice esempio il solver cerca una soluzione 
+utilizzando una strategia di ricerca di default. La specifica definisce anche 
+un'interfaccia per la strategia di ricerca come si vedrà nella sezione
+\ref{search}.
+
+\subsection{Implementazione astratta}
+JSR-331 fornisce un'implementazione astratta non pura, ovvero in cui sono
+implementati concetti e metodi comuni. Innanzitutto si possono notare
+le seguenti strutture:
+\begin{lstlisting}[language = Java,
+                   frame = single]
+public enum ProblemState {
+       RESTORE,
+       DO_NOT_RESTORE
+}
+\end{lstlisting}
+Questa struttura è utilizzata controllare lo stato del problema dopo
+l'esecuzione di una risoluzione.
+\begin{lstlisting}[language = Java,
+                   frame = single]
+public enum Objective {
+       MINIMIZE,
+       MAXIMIZE
+}
+\end{lstlisting}
+Questa viene utilizzata per specificare il tipo di ottimizzazione richiesta
+dal metodo \files{findOptimalSolution}.
+
+
+
+\section{Classe JSetLSolver}\label{jsetlsolver}
+\section{Interfaccia SearchStrategy}
+\section{Classe JSetLSearchStrategy}\label{search}
+\section{Interfaccia Solution}
+\section{Classe JSetLSolution}
+\section{Classe JSetLSolutionIterator}\label{solIter}

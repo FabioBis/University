@@ -1,0 +1,305 @@
+\hyphenation{
+sil-la-ba-zio-ne
+JSetL
+Choco
+JaCoP
+}
+
+\chapter{Java Specification Request 331}\label{capJSR}
+JSR-331 è una \emph{richiesta per specifiche} Java in fase di sviluppo sotto
+le regole redatte dal Java Community Process. Queste specifiche definiscono
+le API per la programmazione a vincoli.
+
+La specifica JSR-331 risponde alla necessità di ridurre i costi associati 
+all'incorporazione di risolutori di vincoli (come JSetL, Choco, etc.) ad
+applicazioni commerciali e non, operanti nel mondo reale. Esiste già un 
+certo numero di fornitori di queste API, come già accennato possiamo
+ricordare JSetL, Choco, JaCoP ed altri. Tuttavia le differenze tra questi
+sono abbastanza significative da causare gravi difficoltà di utilizzo per 
+gli sviluppatori di software.
+
+\section{Obiettivi del JSR-331}
+La standardizzazione della programmazione a vincoli si prefigge come scopo
+quello di rendere tale tecnologia più accessibile per gli sviluppatori.
+Avendo un'interfaccia unificata sarà possibile, per i programmatori, modellare
+il problema in modo tale da poter provare la soluzione con più CP solver.
+Questo minimizza la dipendenza da fornitori specifici, ma allo stesso
+tempo non limita la possibilità di quest'ultimi nel procedere con lo sviluppo
+del solver.
+
+Gli obiettivi delle specifiche sono:
+\begin{itemize}
+\item[-]facilitare l'inserimento della tecnologia basata sui vincoli nelle 
+applicazioni Java;
+\item[-]aumentare la comunicazione e la standardizzazione tra i vari fornitori
+di CP solver;
+\item[-]incoraggiare il mercato delle applicazioni basate sulla programmazione
+a vincoli e dei suoi strumenti mediante la standardizzazione delle suddette API;
+\item[-]facilitare l'integrazione di tecniche basate sui vincoli in altri
+JSR per supportare la programmazione dichiarativa;
+\item[-]rendere le applicazioni Java più portabili tra vari fornitori di
+risolutori di vincoli;
+\item[-]fornire un modello per l'implementazione ed il supporto di
+librerie di vincoli e strategie di ricerca per diverse applicazioni basate sulla
+programmazione a vincoli;
+\item[-] supportare i fornitori di solver offrendo API che vadano incontro alle
+loro necessità e che siano di facile implementazione.
+\end{itemize}
+
+\subsection{A chi è rivolta?}
+La specifica è rivolta principalmente a tre soggetti:
+\begin{itemize}
+\item[-]aziende che utilizzano le CP API
+per sviluppare applicazioni di supporto a decisioni in ambito industriale;
+\item[-]fornitori di risolutori di vincoli che intendono sviluppare e mantenere
+la propria implementazione delle CP API;
+\item[-]ricercatori in ambito di programmazione a vincoli che vogliono 
+fornire o arricchire librerie di vincoli standard, algoritmi di ricerca e
+problemi concreti che vengano mantenuti dalla CP community.
+\end{itemize}
+
+\subsection{Scopo della specifica}
+Lo scopo della specifica JSR-331 è di definire un'interfaccia semplice da
+utilizzare, leggera e che costituisca uno standard per acquisire ed utilizzare
+risolutori di vincoli.
+
+La specifica è mirata a piattaforme basate su Java ed è compatibile con JDK 1.5
+o successivi.
+
+L'ambito della specifica segue un approccio minimalista, con particolare cura
+alla facilità d'uso. Ricopre i più comuni concetti dei problemi con vincoli e
+della loro rappresentazione che è ormai già diventata una standardizzazione
+di fatto, adottata dai solver e negli articoli scientifici. Tale ambito è
+allo stesso tempo sufficientemente ampio da permettere agli sviluppatori di
+applicazioni l'utilizzo delle interfacce standard per modellare
+e risolvere tipici problemi di soddisfacimento di vincoli, all'interno
+dei domini più comuni in ambito aziendale, come la pianificazione, l'allocazione
+delle risorse e la configurazione.
+
+I seguenti concetti ed oggetti rappresentano l'ambito iniziale delle
+specifiche:
+\begin{itemize}
+\item[-]variabili vincolate dei tipi più utilizzati: interi, booleani, reali
+ed insiemi di interi;
+\item[-]vincoli unari e binari ed espressioni definite con variabili vincolate;
+\item[-]i più comuni vincoli globali;
+\item[-]la possibilità di ottenere una soluzione, ogni soluzione oppure
+una soluzione ottimale, sotto certi limiti definiti dall'utente.
+\end{itemize}
+
+Ci si aspetta che le API vengano ampliate e così è anche specificato come
+aggiungere nuovi concetti, funzionalità e strategie relative ai CP nel momento
+in cui queste vengono comunemente adottate.
+
+JSR-331 è focalizzato solo sull'interfaccia, per quanto riguarda le 
+implementazioni non assume nessun approccio particolare. I seguenti concetti ed
+oggetti sono prerogativa esclusiva dei vari solver e strumenti specifici:
+\begin{itemize}
+\item[-]meccanismi d'implementazione per i vari domini;
+\item[-]implementazione dei più comuni vincoli binari e globali;
+\item[-]meccanismi di propagazione di vincoli;
+\item[-]backtracking e meccanismi di reversibilità.
+\end{itemize}
+
+\section{Struttura}
+JSR-331 prescrive un insieme di operazioni fondamentali per definire e risolvere
+problemi di soddisfacimento di vincoli e problemi di ottimizzazione.
+La struttura consiste in tre principali componenti:
+\begin{itemize}
+\item[-]specifiche (CP API);
+\item[-]implementazione basata su differenti CP solver;
+\item[-]\emph{TCK} (\emph{Tecnology Compatibility Kit}), un pacchetto di test,
+strumenti e
+documentazione che verrà utilizzato per verificare la conformità alle
+specifiche delle varie implementazioni.
+\end{itemize}
+
+Ogni implementazione del JSR-331 può implementare l'interfaccia direttamente
+oppure può estendere le classi della \emph{common implementation} fornite
+dalle API. La common implementation può essenzialmente semplificare
+l'implementazione del JSR-331. Nel momento in cui lo standard diverrà più 
+maturo e più
+implementazioni adotteranno vincoli e strategie di ricerca comuni, queste
+verranno gradualmente aggiunte alle librerie della common implementation.
+
+\subsection{Specifiche}
+Le specifiche per JSR-331 consistono in:
+\begin{itemize}
+\item[-]un'interfaccia pura (\files{javax.constraints});
+\item[-]la common implementation (\files{javax.constraints.impl}).
+\end{itemize}
+
+\begin{itemize}
+\item[-]\files{javax.constraints} 
+
+Interfacce Java pure, come \files{Problem} o
+\files{Solver}, che specificano i maggiori concetti e metodi per definire e 
+risolvere problemi di soddisfacimento ed ottimizzazione di vincoli.
+
+\item[-]\files{javax.constraints.impl}
+
+Classi Java come \files{AbstractProblem} e 
+\files{AbstractSolver} che implementano (parzialmente o completamente)
+definizioni di problemi, concetti di risoluzione e metodi che non
+dipendono direttamente da uno specifico CP solver.
+\end{itemize}
+
+\subsection{Implementazioni per JSR-331}
+Ogni implementazione della specifica JSR-331 è basata su un 
+CP solver (come ad esempio JSetL) e deve fornire le definizioni per tutte le
+interfacce presenti nel pacchetto \files{javax.constraints}.
+Alcune classi possono essere implementate direttamente dall'interfaccia
+standard, altre si possono ottenere estendendo l'implementazione comune
+fornita dal pacchetto \files{javax.constraints.impl}. 
+
+JSR-331 richiede
+che ogni implementazione fornisca almeno la definizione delle classi
+presenti nei seguenti pacchetti:
+\begin{itemize}
+\item[-]\files{javax.constraints.impl}
+
+Classi Java come \files{Problem} o \files{Solver} 
+che forniscono
+una implementazione finale per la definizione di problemi, concetti
+e metodi. Queste classi possono essere derivate dall'implementazione
+comune.
+
+\item[-]\files{javax.constraints.impl.constraint}
+
+Una libreria di vincoli che contiene
+le implementazioni di vincoli basilari e globali che sono di fatto basati
+sulle varie implementazioni dei CP solver.
+
+\item[-]\files{javax.constraints.impl.search}
+
+Una libreria di strategie di ricerca che contiene 
+le implementazioni basate sui solver concreti.
+\end{itemize}
+
+In aggiunta ogni implementazione può fornire propri vincoli (nativi) e
+proprie strategie di ricerca, assumendo che questi seguano le interfacce 
+standard \files{javax.constraints.Constraint} e 
+\files{javax.constraints.SearchStrategy}.
+
+Il fatto che ogni implementazione per JSR-331 debba adottare gli stessi
+nomi per i package, per le principali classi e metodi permetterà agli 
+sviluppatori di applicazioni di passare facilmente da un solver ad
+un altro (differenti implementazioni) senza  dover cambiare nulla nel proprio
+codice. Possono di fatto scrivere applicazioni specifiche, motori basati su
+vincoli una sola volta utilizzando le CP API e quindi utilizzare i differenti 
+solver cambiando solo i file \files{.jar} all'interno del classpath.
+
+\begin{nota}
+La possibilità di cambiare i solver senza modificare il codice delle 
+applicazioni ha comunque una limitazione: fissando  per convenzione i nomi
+dei package si ha come effetto collaterale quello di non poter unire
+le funzionalità di due o più solver differenti. La scelta di una determinata 
+implementazione sottostante è definita dal solo file \files{.jar} nel
+classpath dell'applicazione.
+\end{nota}
+
+\subsection{Tecnology Compatibility Kit}
+Il \emph{TCK} (\emph{Tecnology Compatibility Kit}) è un pacchetto di 
+documentazione, test e  strumenti utilizzati per testare la correttezza delle 
+implementazioni per le specifiche di JSR-331.
+
+Il TCK consiste in due package:
+\begin{itemize}
+\item[-]\files{org.jcp.jsr331.tests}
+
+Contiene i moduli 
+JUnit che permettono all'utente di validare automaticamente la correttezza
+dell'implementazione con la specifica JSR-331.
+
+\item[-]\files{org.jcp.jsr331.samples}
+
+Contiene esempi di CSP che 
+forniscono test integrati per i più comuni vincoli e
+strategie di ricerca incluse in JSR-331, mostrano l'utilizzo della
+programmazione a vincoli per problemi reali.
+\end{itemize}
+
+Non tutti i concetti introdotti nel package \files{javax.constraints} sono
+richiesti per l'implementazione del solver al fine di essere validato.
+Il pacchetto \files{org.jcp.jsr331.tests} contiene solo quei test che
+sono normativi per la specifica (devono essere soddisfatti da ogni
+implementazione al fine di essere validate). Il file 
+\files{AllTests.java} all'interno del package contiene tutti i test normativi.
+
+Il pacchetto \files{javax.constraints.impl} fornisce le implementazioni di
+base per alcune interfacce e metodi opzionali. Ci sono due tipi di
+implementazioni opzionali:
+\begin{enumerate}
+\item implementazioni di default (non le più efficienti) che possono
+essere sovrascritte da una particolare implementazione per JSR-331;
+\item semplici frammenti di codice che lanciano un'eccezione a runtime e che 
+informano l'utente che quel metodo non è stato implementato dalla
+particolare implementazione.
+\end{enumerate}
+
+\begin{nota}
+Il package \files{org.jcp.jsr331.samples} è presente a soli fini dimostrativi e
+non tutto ciò che è ivi incluso deve essere supportato da ogni implementazione.
+\end{nota}
+
+\subsection{Modello di sviluppo}
+Il modello di sviluppo per le applicazioni finali che utilizzeranno le
+API JSR-331 richiederà che i seguenti file \files{.jar} siano inclusi nel 
+classpath:
+\begin{itemize}
+\item[-]\files{jsr331.jar}: include tutte le classi e le interfacce standard;
+\item[-]\files{jsr331.<solver>.jar}: include tutte le classi della specifica
+implementazione;
+\item[-]\files{<solver>.jar}: include tutte le classi del solver utilizzato su 
+cui si basa l'implementazione.
+\end{itemize}
+Ad esempio lo sviluppo basato su JSetL richiederà:
+\begin{itemize}
+\item[-]\files{jsr331.jar}
+\item[-]\files{jsr331.jsetl.jar}
+\item[-]\files{jsetl.jar}
+\end{itemize}
+
+\section{Rappresentazione di un CSP}
+Come si è evidenziato nel capitolo \ref{capCP} un CSP è definito da un insieme
+di variabili con il relativo dominio ed un insieme di vincoli; a queste 
+variabili viene quindi ristretto il dominio per trovare una o più soluzioni.
+
+JSR-331 definisce tutti i concetti Java per la \emph{rappresentazione} e la
+\emph{risoluzione} di un problema di soddisfacimento di vincoli. Suddivide
+quindi in maniera naturale un CSP in due parti fondamentali:
+\begin{itemize}
+\item[-]la \textbf{definizione} del problema, rappresentata dall'interfaccia
+\files{Problem};
+\item[-]la \textbf{soluzione} del problema, rappresentata dall'interfaccia
+\files{Solver}. 
+\end{itemize}  
+
+Ogni concetto fondamentale di un CSP appartiene ad una delle due categorie, a
+livello utente è possibile presentare un CSP mediante la seguente suddivisione:
+\begin{enumerate}\samepage
+\item Problema:
+  \begin{itemize}
+  \item[(a)]Variabili vincolate.
+  \item[(b)]Vincoli.
+  \end{itemize}
+\item Risoluzione:
+  \begin{itemize}
+  \item[(c)]Strategia.
+  \item[(d)]Soluzione.
+  \end{itemize}
+\end{enumerate}
+
+Ogni CP solver utilizza nomi e rappresentazioni differenti per questi concetti,
+che comunque sono semanticamente invarianti per la maggior parte di essi.
+JSR-331 fornisce una nomenclatura unificata e specifiche dettagliate.
+
+La definizione di un problema non conosce nulla a riguardo della sua 
+risoluzione. Un'istanza della classe \files{Problem} può quindi esistere a
+prescindere dall'esistenza di un'istanza di \files{Solver}. Non vale il
+viceversa, poiché un'istanza della classe \files{Solver} può essere creata
+solo partendo da uno specifico problema. Durante la ricerca di una soluzione
+il solver può cambiare lo stato del problema (modifica dei domini delle 
+variabili, semplificazione dei vincoli, etc). \`E quindi responsabilità
+degli specifici risolutori mantenere (o meno) i possibili stati del problema in
+base alla strategia di ricerca utilizzata.

@@ -1,0 +1,152 @@
+\hyphenation{
+sil-la-ba-zio-ne
+JSetL
+Choco
+Jacop
+}
+
+\documentclass[a4paper, 11pt, oneside]{book}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% i comandi seguenti impediscono la scrittura in maiuscolo
+% dei nomi dei capitoli e dei paragrafi nelle intestazioni
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{} % rimuove l’attuale contenuto dell’intestazione
+% e del pi\‘e di pagina
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headheight}{0.5pt} % riserva spazio per la linea
+\fancypagestyle{plain}{%
+\fancyhead{} % ignora, nello stile plain, le intestazioni
+\renewcommand{\headrulewidth}{0pt} % e la linea
+}
+
+\usepackage[italian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{makeidx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{cancel}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage{appendix}
+\usepackage[symbol]{footmisc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{enumerate}
+\lstloadlanguages{Java}
+
+
+\usepackage{hyperref}
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\newcommand{\files}[1]{\texttt{#1}}
+
+
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\nn}{\mathbb{N}}
+
+\frenchspacing
+
+\newenvironment{dimo}{\textbf{Dimostrazione.\ }}{\samepage
+\begin{flushright}$\blacksquare$\end{flushright}}
+
+\newtheorem{teo}{Teorema}[chapter]
+\newtheorem{prop}[teo]{Proposizione}
+\newtheorem{cor}[teo]{Corollario}
+\newtheorem{lemma}[teo]{Lemma}
+
+
+\theoremstyle{definition}
+\newtheorem{defi}[teo]{Definizione}
+\newtheorem{osse}[teo]{Osservazione}
+\newtheorem*{exe}{Esercizio}
+\newtheorem*{ese}{Esempio}
+\newtheorem*{notabene}{Nota Bene}
+\newtheorem*{nota}{Nota}
+
+\theoremstyle{remark}
+\newtheorem*{notazione}{Notazione}
+
+% General command to set parameter(s).
+\lstset{
+basicstyle=\small,
+breakindent = 20pt,
+breakautoindent = True,
+postbreak=\space,
+breaklines,
+frameround = tttt,
+frame = shadowbox
+}
+\renewcommand{\lstlistingname}{Listato}
+
+\author{Fabio Biselli}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.060]{img/Sigillo.pdf}\\
+\end{center}
+\end{figure}
+
+\begin{center}
+\Large UNIVERSIT\`A DEGLI STUDI DI PARMA\\
+Facoltà di Scienze Matematiche, Fisiche e Naturali\\
+\bigskip
+\Large Corso di Laurea in Informatica\\
+\vspace{100pt}
+\huge \textbf{Contributo alla Specifica JSR-331 mediante un'Implementazione 
+basata su JSetL}
+\end{center}
+\vspace{120pt}
+\large
+\begin{flushleft}
+Relatore:\\ \textbf{Chiar.mo Prof. Federico Bergenti}\\
+\vspace{5pt}
+Candidato:\\ \textbf{Fabio Biselli}
+\end{flushleft}
+\normalsize
+\bigskip
+\begin{center}
+Anno Accademico 2010/2011
+\end{center}
+\end{titlepage}
+
+\frontmatter
+\pagestyle{empty}
+\include{dedica}
+\pagestyle{fancy}
+
+\tableofcontents
+
+\mainmatter
+\include{introduzione}
+\include{cprogramming}
+\include{jsr331}
+\include{jsetl}
+\include{problema}
+\include{soluzione}
+\include{conclusioni}
+\appendix
+\include{spec}
+\include{test}
+
+\backmatter
+\include{biblio}
+
+\end{document}

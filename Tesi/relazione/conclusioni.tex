@@ -1,0 +1,89 @@
+\hyphenation{
+Jacob
+Feldman
+}
+
+\chapter{Conclusioni e lavori futuri}\label{conclusioni}
+
+Il lavoro di tesi descritto verte sull'implementazione delle
+specifiche individuate dal JSR-331 mediante il pacchetto JSetL.
+Il modello di sviluppo utilizzato per il progetto può essere catalogato come
+\emph{in cascata} in cui si sono eseguite più iterazioni delle seguenti fasi:
+\begin{enumerate}[i]
+\item \label{i}Studio del documento di specifica \cite{specifiche}.
+\item \label{ii}Valutazione delle funzionalità offerte da JSetL.
+\item \label{iii}Codifica.
+\item \label{iv}Test e validazione.
+\end{enumerate}
+Prima di passare alla descrizione delle fasi indicate occorre sottolineare
+che tutto il lavoro non si sarebbe potuto svolgere senza l'appoggio del
+Dr. Jacob Feldman, il quale, oltre ad un contatto diretto e grande 
+disponibilità, ha fornito l'accesso al repository del  progetto e uno spazio
+dedicato all'implementazione JSetL. Dal repository, mediante \emph{SVN}, si
+è potuto scaricare tutto il materiale necessario per iniziare l'implementazione,
+inoltre il repository
+è stato uno strumento fondamentale per mantenere il progetto aggiornato.
+
+Per quanto riguarda il punto \ref{i} si è trattato di analizzare il documento di
+specifica fornito. Sono stati molto utili, al fine di comprendere meglio i 
+requisiti dei vari metodi e delle classi, anche gli esempi presenti nel TCK
+(vedi cap. \ref{capJSR}).
+
+La valutazione di JSetL (punto \ref{ii}) è stata facilitata dai numerevoli 
+documenti
+(articoli, tesi, \ldots) presenti al Dipartimento di Matematica, nonché dal
+contatto diretto con persone che hanno lavorato attivamente al 
+progetto, su tutti il prof. Gianfranco Rossi, promotore del progetto e 
+sempre disponibile.
+
+La fase di codifica ha portato alla realizzazione vera e propria delle classi
+descritte nei capitoli precedenti. Indubbiamente lo sforzo maggiore è
+stato quello di mappare i requisiti di input e di output richiesti sulle 
+funzionalità di JSetL in modo corretto ed efficace. In questa fase, oltre
+alla codifica delle classi, si sono realizzati anche i test di unità, ovvero
+delle prove d'esecuzione (white box) scritte appositamente per verifiche 
+interne.
+
+L'ultima fase riguarda il TCK che di fatto rappresenta l'unico test di
+conformità alle specifiche. Come accennato nel capitolo \ref{capJSR} il TCK è
+fornito direttamente dalle specifiche JSR-331 ed un'implementazione, per
+essere conforme allo standard, deve permettere a questi test di terminare con 
+successo. Nelle varie iterazioni del processo di sviluppo si è utilizzato
+questo pacchetto per validare le unità introdotte e per poter quindi
+passare alla realizzazione del modulo successivo o rivalutare quello non
+soddisfacente. Oltre al TCK si è sviluppato un ulteriore pacchetto di test
+per verificare l'implementazione prodotta allo scopo di coprire il più
+possibile il codice. Tale attività è stata svolta nelle ultime
+iterazioni del processo, nel momento in cui il TCK ha dato un buon numero di
+successi.
+
+Il lavoro svolto, essendo completamente modulare e documentato oltre che dal
+presente testo anche mediante una ricca documetazione JavaDoc, risulta
+facilmente estendibile e modificabile. 
+
+\section{Sviluppi futuri}
+La specifica JSR-331, al momento dell'inizio del progetto, era in fase di 
+valutazione da parte del Java Community Process. Durante la stesura del
+presente testo la specifica è stata accettata ed è passata da uno stato di
+richiesta allo stato di release finale. Tuttavia, come annunciato nel
+blog (\cite{blog}) del Dr. Jacob Feldman, questo rappresenta una milestone del
+progetto di standardizzazione e JSR-331 sarà sviluppato ulteriormente. Per tale
+motivo uno dei lavori futuri sarà quello di mantenere allineata 
+l'implementazione
+basata su JSetL con le specifiche. Si può notare che
+l'implementazione fornita è solo una delle possibili, sarebbe
+possibile analizzare più in dettaglio il pacchetto JSetL e le sue funzionalità
+al fine di migliorare l'implementazione attuale. 
+\`E anche doveroso
+sottolineare che durante lo sviluppo del progetto sono emerse funzionalità
+richieste che si è dovuto aggiungere e quindi anche il JSR-331 
+rappresenta uno spunto per migliorare JSetL stesso.
+Inoltre essendo JSetL un progetto didattico, è soggetto naturalmente a frequenti
+cambiamenti e sarà quindi importante studiare la possibilità di utilizzare
+nuove funzionalità.
+Infine si evidenzia la possibilità di produrre un report, in fase di stesura,
+nella forma di un Rapporto Tecnico del Dipartimento di Matematica, che possa
+guidare nell'implementazione delle specifiche anche altri solver.
+
+
+

@@ -1,0 +1,253 @@
+\chapter{Il Vincolo di Cardinalità}\label{cardinality}
+
+\section{Preliminari sul vincolo di cardinalità}
+L'interfaccia \files{Problem} della specifica JSR-331 introduce dei metodi
+convenzionali per la creazione di vincoli che abbiano a che fare con la
+cardinalità di certi valori in un
+array di variabili vincolate. Questi vincoli contano
+quanto spesso certi valori sono assegnati alle variabili nell'array dato.
+La variabile di cardinalità risulta quindi vincolata al numero 
+di quelle variabili dell'array che siano a loro volta
+vincolate da uno specifico valore. 
+
+Vediamo quindi un metodo della classe \files{Problem} che genera un vincolo
+di cardinalità:
+
+\begin{center}
+\lstinline[language = Java]{Constraint postCardinality(Var[] vars, int cardValue, String oper, int value)}
+\end{center}
+
+Questo metodo crea, inserisce nel solver e restituisce un nuovo vincolo di
+cardinalità tale che 
+``Card(\texttt{vars}, \texttt{cardValue}) \texttt{oper}  \texttt{value}''.
+
+Card(\texttt{vars}, \texttt{cardValue}) denota una variabile vincolata ad essere
+uguale al numero di tutti quegli elementi nell'array \texttt{vars}  che sono
+a loro volta uguali a \texttt{cardValue}.
+
+Per esempio se la stringa \texttt{oper} rappresenta il simbolo ``$<$'' ciò 
+significa che la 
+variabile Card(\texttt{vars}, \texttt{cardValue}) deve essere strettamente 
+minore
+di \texttt{value}.
+
+\begin{defi}\label{insCard}
+Sia $V$ la famiglia indiciata da $I_V$ delle variabili vincolate 
+appartenenti all'array \texttt{vars}, $n \in \nn$ la dimensione dell'array 
+\texttt{vars},
+$a \in \zz$ il valore corrispondente alla variabile intera \texttt{cardValue}, 
+si definisce la famiglia $S$ tale che:
+\[ \forall i \in I_V, \quad
+\forall v_i \in V, \quad
+v_i \in S \Leftrightarrow v_i = a.
+\] 
+\end{defi}
+
+Si noti che $I_V = \{0, 1, \ldots, n-1\}$ e che la 
+cardinalità
+di $I_V$ è esattamente $n$. In questo modo si può mappare ogni
+elemento dell'array \texttt{vars} con un elemento della famiglia indiciata 
+$V$ mediante i rispettivi indici, che coincidono.
+
+\begin{defi}
+Sia $S$ la famiglia definita in \ref{insCard} ed indiciata da $I_S$, $\odot$ 
+l'operatore descritto dalla stringa
+\texttt{oper}  e $b \in \zz$ il valore corrispondente alla variabile intera
+\texttt{value}, si definisce il \emph{vincolo di cardinalità} $\mathcal{C}$
+tale che:
+\[
+\mathcal{C} \leftarrow |I_S| \odot b.
+\]
+\end{defi}
+Se $n$ è la lunghezza del vettore \texttt{vars}, allora
+il vincolo $\mathcal{C}$ appena definito si può anche esplicitare nel seguente
+modo:
+\begin{equation}\label{eqCard1}
+\mathcal{C} \leftarrow
+\left(v_0 = a \Leftrightarrow v_0 \in S  \right) \wedge \cdots 
+\wedge \left(v_{n-1} = a \Leftrightarrow v_{n-1} \in S\right) 
+\wedge |I_S| \odot b.
+\end{equation}
+
+\section{Una prima implementazione del vincolo di cardinalità}
+
+Possiamo utilizzare nell'implementazione
+il concetto di insieme di indici, sfruttando la classe 
+\files{VarSet} che modella proprio insiemi di interi, restringendone il
+dominio ai soli valori non negativi.
+
+Se $n$ è la lunghezza del vettore \texttt{vars}, allora
+il vincolo $\mathcal{C}$ può quindi essere riscritto come segue:
+\begin{equation}\label{eqCard2}
+\mathcal{C} \leftarrow
+\left( v_0 = a \Leftrightarrow 0 \in I_S \right) \wedge \cdots 
+\wedge \left(v_{n-1} = a \Leftrightarrow n-1 \in I \right) \wedge |I_S| \odot b.
+\end{equation}
+
+Vediamo la costruzione del vincolo $\mathcal{C}$ nell'implementazione
+JSR-331 basata su JSetL. Inizialmente costruiamo l'insieme degli indici
+di dominio $[0, n-1]$ ed il vincolo vuoto.
+\begin{lstlisting}[language=Java,
+                   caption = {postCardinality()},
+                   frame = single]
+// S rappresenta l'insieme degli indici.
+SetLVar S = new SetLVar("_Card" + counterSet++, new MultiInterval(), new MultiInterval(0, vars.length-1));
+// Il vincolo C.
+JSetL.Constraint cardinality = new JSetL.Constraint();
+\end{lstlisting}
+
+Passiamo quindi ad inizializzare \texttt{cardinality}  con il vincolo sulla 
+cardinalità dell'insieme degli indici, la funzione 
+\texttt{getOperator(oper)}  restituisce un codice relativo all'operatore 
+opportuno
+e mediante lo statement
+\texttt{switch}  viene richiamata la relativa funzione ed aggiornato il vincolo
+$\mathcal{C}$.
+\begin{lstlisting}[language=Java,
+                   caption = {postCardinality()},
+                   frame = single]
+switch(getOperator(oper)) {
+  case 1: {
+    // Case = "equals". 
+    cardinality.and(S.card().eq(value));
+    } break;
+  case 2: {
+    // Case != "not equals".
+    cardinality.and(S.card().neq(value));
+    }
+  case 3: {
+    // Case < "less".
+    cardinality.and(S.card().lt(value));
+    } 
+  case 4: {
+    // Case <= "less equals".
+    cardinality.and(S.card().le(value));
+    } 
+  case 5: {
+    // Case > "greater".
+    cardinality.and(S.card().gt(value));
+    } 
+  case 6: {
+    // Case >= "greater equals".
+    cardinality.and(S.card().ge(value));
+    } 
+  default: throw new UnsupportedOperationException();
+}
+\end{lstlisting}
+
+A questo punto per ogni variabile del vettore dato \texttt{vars}  viene
+aggiornato il vincolo con la congiunzione delle due implicazioni 
+$v_i = a \Rightarrow i \in I_S$ e $i \in I_S \Rightarrow v_i = a$.
+\begin{lstlisting}[language=Java,
+                   caption = {postCardinality()},
+                   frame = single]
+for (int i = 0; i < vars.length; i++) {
+  SetLVar X = new SetLVar("_X"+i, new MultiInterval(i,i));
+  IntLVar tmp = (IntLVar) vars[i].getImpl();
+  // C <- C e v_i = a --> i in S. 
+  cardinality.and(tmp.eq(cardValue).impliesTest(X.subset(S)));
+  // C <- C e i in S --> v_i = a.
+  cardinality.and(X.subset(S).impliesTest(tmp.eq(cardValue)));
+  }
+\end{lstlisting}
+
+Al termine del ciclo \texttt{cardinality}  rappresenta il vincolo
+$\mathcal{C}$ definito da (\ref{eqCard2}).
+
+\subsection*{Esempio di utilizzo}
+Vediamo un semplice esempio di come si può utilizzare il vincolo di
+cardinalità. Costruiamo cinque variabili intere $v_0, v_1, v_2, v_3$ e $v_4$ di 
+dominio $[0, 4]$ e costruiamo un vincolo di cardinalità tale che il numero
+delle variabili $v_i$ che assumono il valore $2$ sia esattamente $3$.
+
+Ecco la definizione del problema:
+\begin{lstlisting}[language=Java,
+                   caption = {esempio di utilizzo di postCardinality},
+                   frame = single]
+int n = 5;
+// Dichiarazione e inizializzazione delle 5 variabili.
+Var[] vars = new Var[n];
+for (int i = 0; i < vars.length; i++)
+  vars[i] = p.variable("v" + i, 0, n - 1);
+
+// Aggiunta nel problema p del vincolo di cardinalita' 
+// sulle variabili.
+p.postCardinality(vars, 2, "=", 3);
+\end{lstlisting}
+
+Chiamando in seguito la funzione \texttt{findSolution()}  ecco l'output di 
+questo semplice esempio:
+\begin{verbatim}
+JSetL - 2.2
+Solution #0:
+	 v0[0] v1[0] v2[2] v3[2] v4[2]
+\end{verbatim}
+
+\section{Una soluzione più efficiente}
+La soluzione sopra descritta, progettata ed applicata in prima istanza durante 
+la fase d'implementazione, sebbene abbastanza elegante e dichiarativa, si è
+poi rivelata inefficiente nella fase di testing. 
+Probabilmente i problemi di
+efficienza sono dovuti all'utilizzo eccessivo delle variabili insiemistiche
+per chiamate multiple ai metodi \texttt{postCardinality} o l'istanziazione
+di più classi \texttt{Cardinality} e \texttt{GlobalCardinality}.
+Si è quindi deciso di adottare un sistema alternativo che sfrutta un nuovo
+vincolo definito da utente con il solver JSetL: \texttt{Occurrence}.
+
+\subsection{Il vincolo \texttt{Occurrence}}\label{occurrence}
+Il vincolo \texttt{Occurrence} è stato creato come vincolo JSetL definito da 
+utente, aggiunto quindi ad un package della libreria per supportare lo standard
+JSR-331. Come ogni vincolo utente di JSetL viene definito nel seguente modo:
+\begin{lstlisting}[language = Java, frame = single]
+public class Occurence extends NewConstraintsClass {
+\end{lstlisting}
+
+La funzione fornita dal vincolo, chiamata \texttt{occurrence}, definisce la
+semantica dello stesso: data una lista di variabili logiche intere \texttt{l}, 
+due variabili \texttt{v} e \texttt{n}, vincola la lista \texttt{l} ad avere
+esattamente  \texttt{n} elementi che assumono il valore \texttt{v}.
+%\begin{lstlisting}[language=Java,
+%                   caption = {metodo \texttt{occurrence}},
+%                   frame = single]
+%// True if the list l contains exactly N elements with value V
+%public Constraint occurrence(Vector<IntLVar> l, IntLVar v, IntLVar n) { 
+%         return new Constraint("occurrence", l, v, n); 
+%}
+%\end{lstlisting}
+
+
+All'interno dell'implementazione della classe \texttt{Cardinality} il
+questo metodo   viene utilizzato con l'ausilio di una nuova
+variabile intera (libera) nel parametro \texttt{n}. Di fatto questa variabile
+rappresenta la cardinalità dell'insieme $I_S$ definito in precedenza.
+Questa variabile viene poi vincolata al valore richiesto mediante
+l'operatore definito.
+
+\begin{lstlisting}[language=Java,
+                   caption = {\texttt{Occurrence} usato in 
+\texttt{cardinality}}]
+        SolverClass solver = ((Solver) p.getSolver()).getSolverClass();
+        Occurrence listOps = new Occurrence(solver);
+        Vector<IntLVar> varsList = new Vector<IntLVar>();
+        for (int i = 0; i < vars.length; i++)
+                varsList.add((IntLVar) vars[i].getImpl());
+        cardinality.and(listOps.occurrence(varsList, v, k));
+        switch(p.getOperator(oper)) {
+        case 1: {
+                // Case = "equals". 
+                cardinality.and(k.eq(value));
+        .
+        .
+        .
+\end{lstlisting}
+Inizialmente viene caricato il solver per poter inizializzare il vincolo
+utente JSetL. Quindi gli oggetti implementativi (\texttt{IntLVar}) degli
+elementi dell'array \texttt{vars} vengono inseriti in un \texttt{Vector}. A
+questo punto si utilizza \texttt{occurrence} per vincolare \texttt{k} elementi
+di \texttt{vars} ad essere uguali a \texttt{v}.
+
+Infine, mediante il costrutto \texttt{switch}, a seconda della relazione
+richiesta si vincola \texttt{k} per ottenere il risultato voluto:
+\[
+|I_S| \odot b.
+\]
