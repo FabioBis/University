@@ -1,0 +1,1270 @@
+\begin{comment}
+
+\begin{codice}
+\begin{verbatim}
+
+\end{verbatim}
+\end{codice}
+
+\end{comment}
+
+\chapter{Esercitazioni di Laboratorio Computazionale Numerico.}
+
+\section{Esercitazione I.}
+
+\begin{enumerate}
+\item Supponendo che le variabili $a$, $b$, $c$, $d$, $e$, $f$, $g$ siano 
+scalari,  scrivere istruzioni di assegnazione in Matlab per calcolare il 
+valore delle seguenti espressioni:
+\[
+x = 1 + \frac{a}{b} + \frac{c}{f^2} \qquad s = \frac{b-a}{d-c} \qquad
+z = \left(1-\frac{1}{e^5}\right)^{-1}
+\]
+\[
+r = \frac{1}{\frac{1}{a}+\frac{1}{b}+\frac{1}{c}+\frac{1}{d}} \qquad
+y = ab \cdot \frac{1}{c} \cdot \frac{f^2}{2} \qquad 
+t = 7\left(g^{\frac{1}{3}}\right) + 4g^{0.58}
+\]
+con $a = 1.12$, $b = 2.34$, $c = 0.72$, $d = 0.81$, $e = 3$, $f = 19.83$, 
+$g = 20$. Visualizzare i risultati in format short e format long.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> a = 1.12;
+>> b = 2.34;
+>> c = 0.72;
+>> d = 0.81;
+>> e = 3;
+>> f = 19.83;
+>> g = 20;
+>> 
+>> x = 1 + (a/b) + (c/f^2)
+
+x =
+
+    1.4805
+
+>> s = (b-a)/(d-c);
+>> z = (1-1/e^5)^-1;
+>> r = 1/(1/a + 1/b + 1/c + 1/d);
+>> y = a*b*(1/c)*((f^2)/2);
+>> t = 7*(g^(1/3))+4*g^(0.58);
+>> 
+>> x, s, z, r, y, t
+
+x =
+
+    1.4805
+
+
+s =
+
+   13.5556
+
+
+z =
+
+    1.0041
+
+
+r =
+
+    0.2536
+
+
+y =
+
+  715.6766
+
+
+t =
+
+   41.7340
+
+>> format long
+>> 
+>> x, s, z, r, y, t
+
+x =
+
+   1.480463473251643
+
+
+s =
+
+  13.555555555555541
+
+
+z =
+
+   1.004132231404959
+
+
+r =
+
+   0.253571274994625
+
+
+y =
+
+     7.156765979999999e+02
+
+
+t =
+
+  41.733956653314806
+
+>> 
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item Dopo aver cancellato le variabili del workspace, individuare, 
+descrivere e correggere gli errori nelle seguenti istruzioni di assegnazione:
+\begin{itemize}
+\item[-]\verb a=2y+(((3+1)9) ,
+\item[-]\verb b==2*sin[3] ,
+\item[-]digitare \verb c=e^0.5 \ per calcolare  $e^{0.5}$ con  $e$
+numero di Nepero,
+\item[-]per il calcolo di $log(4 −\frac{8}{4-2})$ digitare
+ \verb d=log(4-8/4*2) .
+\end{itemize}
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> clear x s z r y t
+>> 
+>> a = 2y+(((3+1)9)
+??? a = 2y+(((3+1)9)
+         |
+Error: Unexpected MATLAB expression.
+\end{verbatim}
+\end{codice} 
+In questo comando abbiamo due tipi di errori: innanzitutto le moltiplicazioni
+(ove \verb 2y \ si intende ovviamente $2 \cdot y$) si effettuano con 
+l'operatore\verb * , inoltre le parentesi non sono bilanciate.
+\begin{codice}
+\begin{verbatim}
+>> b==2*sin[3]
+??? b==2*sin[3]
+            |
+Error: Unbalanced or unexpected
+parenthesis or bracket.
+ 
+\end{verbatim}
+\end{codice} 
+La funzione $\sin$, come tutte le funzioni in Matlab, utilizza le parentesi
+rotonde (le quadre sono utilizzate per altri scopi). 
+\begin{codice}
+\begin{verbatim}
+>> c = e^0.5
+
+c =
+
+   1.732050807568877
+
+\end{verbatim}
+\end{codice}
+\verb e \ in questo caso è uno scalare definito da utente, il numero di
+Nepero in Matlab è calcolato dalla dunzione \verb exp() \ con argomento $1$:
+\verb exp(1) .
+\begin{codice}
+\begin{verbatim}
+>> d = log(4-8/4*2)
+
+d =
+
+  -Inf
+
+>> 
+\end{verbatim}
+\end{codice}
+Gli operatori \verb / \ e \verb * \ hanno la stessa precedenza, quindi la
+sopracitata istruzione calcola $\log(4 - \frac{8}{4}\cdot 2)$ eseguendo in 
+ordine (da sinistra verso destra) le operazioni. L'istruzione corretta
+è quindi \verb d=log(4-8/(4*2)) . 
+\end{svol}
+
+\item Mediante una sequenza di istruzioni di assegnazione in Matlab:
+\begin{itemize}
+\item[--]
+Calcolare il raggio di una sfera che ha un volume del $30\%$ più grande di 
+una sfera di raggio $5$ cm.
+\item[--]
+Considerando le seguenti approssimazioni polinomiali della funzione $e^x$ :
+\[
+e^x \simeq p_1(x) := 1 + x, \quad
+e^x \simeq p_2(x) := 1 + x +\frac{x^2}{2}\]
+si calcolino l’errore assoluto
+\[e_a (x) = |e^x − p_i (x)| \quad i = 1, 2\]
+e l’errore relativo
+\[e_r(x) = \frac{|e^x − p_i(x)|}{e^x} \quad i = 1, 2\]
+in $x = 0,1$.
+\item[--] Calcolare le radici delle equazioni:
+\[2t^2 − 4t − 1 = 0 \quad
+x^4 + 2x^2 − 3 = 0 \quad
+x^3 = 2197.\]
+\end{itemize}
+
+\begin{svol}
+\begin{itemize}
+\item[--]
+\begin{codice}
+\begin{verbatim}
+>> v1 = (4/3)*pi*(5^3);
+>> v2 = v1*(130/100);
+>> r2 = ((3/4)*(1/pi)*v2)^(1/3)
+
+r2 =
+
+   5.456964415305529
+
+>> 
+\end{verbatim}
+\end{codice}
+\item[--]
+\begin{codice}
+\begin{verbatim}
+>> p10 = 1 + 0;
+>> p11 = 1 + 1;
+>> p20 = 1 + 0 + (0^2)/2;
+>> p21 = 1 + 1 + (1^2)/2;
+>> 
+>> e_a10 = abs(exp(0) - p10)
+
+e_a10 =
+
+     0
+
+>> e_a11 = abs(exp(1) - p11)
+
+e_a11 =
+
+   0.718281828459046
+
+>> e_a20 = abs(exp(0) - p20)
+
+e_a20 =
+
+     0
+
+>> e_a21 = abs(exp(1) - p21)
+
+e_a21 =
+
+   0.218281828459046
+
+>> e_r10 = abs(exp(0) - p10)/(exp(0))
+
+e_r10 =
+
+     0
+
+>> e_r11 = abs(exp(1) - p11)/(exp(1))
+
+e_r11 =
+
+   0.264241117657115
+
+>> e_r20 = abs(exp(0) - p20)/(exp(0))
+
+e_r20 =
+
+     0
+
+>> e_r21 = abs(exp(1) - p21)/(exp(1))
+
+e_r21 =
+
+   0.080301397071394
+
+>> 
+\end{verbatim}
+\end{codice}
+\item[--] Utilizzando $x_{1,2}=\frac{-b \pm \sqrt{b^2-4ac}}{2a}$ e alcune
+operazioni algebriche:
+
+\begin{codice}
+\begin{verbatim}
+>> t1 = (4 + sqrt((-4)^2-4*2*(-1)))/(2*2);
+>> t2 = (4 - sqrt((-4)^2-4*2*(-1)))/(2*2);
+>> t = [t1 t2]
+
+t =
+
+   2.224744871391589  -0.224744871391589
+
+>> 
+>> y1 = (-2 + sqrt((2)^2-4*2*(-3)))/(2*2);
+>> y2 = (-2 - sqrt((2)^2-4*2*(-3)))/(2*2);
+>> x1 =  sqrt(y1);
+>> x2 = -x1;
+>> x = [x2 x1]
+
+x =
+
+  -0.907124939317785   0.907124939317785
+
+>> 
+>> x = (2197)^(1/3)
+
+x =
+
+  12.999999999999998
+
+>> 
+\end{verbatim}
+\end{codice}
+\end{itemize}
+\end{svol}
+
+\item\samepage
+Generare il vettore riga e il vettore colonna $y$ di elementi equidistanti 
+$1, 2, ..., 10$ e $10, 9, ..., 1$ rispettivamente e farne il prodotto scalare.
+Generare inoltre il vettore colonna $z$ costituito dai valori della funzione 
+seno in $11$ elementi equidistanti nell’intervallo $[0, 1]$.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> y1 = linspace(1,10,10)';
+>> y2 = linspace(10,1,10);
+>> y1'.*y2
+
+ans =
+
+    10    18    24    28    30    30    28    24    18    10
+
+>> 
+>> z = sin(linspace(0,1,11))'
+
+z =
+
+                   0
+   0.099833416646828
+   0.198669330795061
+   0.295520206661340
+   0.389418342308651
+   0.479425538604203
+   0.564642473395035
+   0.644217687237691
+   0.717356090899523
+   0.783326909627483
+   0.841470984807897
+
+>> 
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item \samepage
+Generare il vettore riga $x$ e il vettore colonna $y$ di elementi 
+equidistanti $25, 28, 31, ..., 91$ e $100, 98, 96, ..., 10$ rispettivamente. 
+Generare inoltre il vettore colonna $z$ costituito da 33 elementi 
+equidistanti nell’intervallo $[−15, −10]$.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> x = (25:1:91);
+>> y = (100:-1:10);
+>> z = linspace(-15,-10, 33);
+>> 
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item 
+Applicare la formula di de Moivre $z^n = \rho^n (\cos(n\theta) + i 
+\sin(n\theta))$ al numero complesso $z = 1 + i = \sqrt{2}(\cos(\frac{\pi}{4})
+ + i \sin(\frac{\pi}{4}))$ con $n = 60$ e controllare il risultato ottenuto 
+con Matlab.
+
+\end{enumerate}
+
+\section{Esercitazione II.}
+
+\begin{enumerate}
+\item Dato il vettore $x$ di elementi equidistanti $-5, -4, \ldots, 8, 9$
+determinare l'elemento massimo, minimo, di valore assoluto massimo, di valore
+assoluto minimo, la somma di tutti gli elementi e la somma dei valori assoluti
+di tutti gli elementi.
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> x = linspace(-5,9,15)
+
+x =
+
+    -5    -4    -3    -2    -1     0     1     2     3     4     5     6     7     8     9
+
+>> % elmento massimo
+>> max(x)
+
+ans =
+
+     9
+
+>> % elmento minimo
+>> min(x)
+
+ans =
+
+    -5
+
+>> % valore assoluto massimo
+>> max(abs(x))
+
+ans =
+
+     9
+
+>> % valore assoluto minimo
+>> min(abs(x))
+
+ans =
+
+     0
+
+>> % somma degli elementi di x
+>> sum(x)
+
+ans =
+
+    30
+
+>> % somma dei valori assoluti di x
+>> sum(abs(x))
+
+ans =
+
+    60
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item Dopo aver definito il vettore $x = [1 : -0.1 :0]$, spiegare il
+significato dei seguenti comandi Matlab:
+\begin{codice}
+\begin{verbatim}
+>> x([1 4 3]);
+>> x([1:2:7 10]) = zeros(1,5);
+>> x([1 2 5]) = [0.5*ones(1,2) -0.3];
+>> y = x(end:-1:1);
+\end{verbatim}
+\end{codice}
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> x([1 4 3])
+
+ans =
+
+   1.000000000000000   0.700000000000000   0.800000000000000
+
+\end{verbatim}
+\end{codice}
+Il comando seleziona gli elementi di indici $1$, $4$ e $3$ e li inserisce
+in un vettore temporaneo.
+\begin{codice}
+\begin{verbatim}
+>> x([1:2:7 10]) = zeros(1,5)
+
+x =
+
+  Columns 1 through 4
+
+                   0   0.900000000000000                   0   0.700000000000000
+
+  Columns 5 through 8
+
+                   0   0.500000000000000                   0   0.300000000000000
+
+  Columns 9 through 11
+
+   0.200000000000000                   0                   0
+\end{verbatim}
+\end{codice}
+Seleziona dal primo al settimo elemento di $x$ con passo $2$ ed il decimo
+elemento e li sostituisce con gli elementi di un vettore di cinque elementi
+costituito di soli zeri.
+
+\begin{codice}
+\begin{verbatim}
+>> x([1 2 5]) = [0.5*ones(1,2) -0.3]
+
+x =
+
+  Columns 1 through 4
+
+   0.500000000000000   0.500000000000000                   0   0.700000000000000
+
+  Columns 5 through 8
+
+  -0.300000000000000   0.500000000000000                   0   0.300000000000000
+
+  Columns 9 through 11
+
+   0.200000000000000                   0                   0
+\end{verbatim}
+\end{codice}
+Seleziona gli elementi di $x$ di indice $1$, $2$ e $5$ e li sostituisce con
+gli elementi del vettore $[0.5, 0.5, 0.3]$.
+
+\begin{codice}
+\begin{verbatim}
+>> y = x(end:-1:1)
+
+y =
+
+  Columns 1 through 4
+
+                   0                   0   0.200000000000000   0.300000000000000
+
+  Columns 5 through 8
+
+                   0   0.500000000000000  -0.300000000000000   0.700000000000000
+
+  Columns 9 through 11
+
+                   0   0.500000000000000   0.500000000000000
+\end{verbatim}
+\end{codice}
+Crea un nuovo vettore $y$ a cui assegna gli elementi del vettore $x$ in
+ordine invertito.
+\end{svol}
+
+\item Usare le variabili e le operazioni vettoriali per osservare la convergenza
+in $\nn$ delle successioni:
+\[
+\left(1 + \frac{1}{n}\right)^n \rightarrow e,\quad
+ \frac{4n}{n+2} \rightarrow 4,\quad
+\log \left(1 + \sqrt{\frac{n}{n+1}} \right) \rightarrow \log 2.
+\]
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> n = linspace(1,10000,10000);
+>> one = ones(1,10000);
+>> e = (one + one./n).^n;
+>> exp(1) - e(10000)
+
+ans =
+
+   1.3590e-04
+
+>> q = (4*n)./(n+2*one);
+>> 4 - q(10000)
+
+ans =
+
+   7.9984e-04
+
+>> l=log(one + sqrt(n./(n+one)));
+>> log(2) -l(10000)
+
+ans =
+
+   2.4998e-05
+
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item Usare le variabili e le operazioni vettoriali per osservare, per qualche
+$n \in \nn$, che la somma dei primi $n$ numeri naturali è:
+\[\sum_{i=0}^{n}i = \frac{n(n+1)}{2},\]
+e che la serie (detta di Mengoli): \[\sum_{i=0}^{n}\frac{1}{(i+1)(i+2)} = 
+1 -\frac{1}{n+2},\]converge a $1$.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> n = 10;
+>> sum = n*(n+1)/2
+
+sum =
+
+    55
+
+>> sum_1 = 0;
+>> for i=1:10
+sum_1 = sum_1 +i;
+end
+>> sum_1
+
+sum_1 =
+
+    55
+
+\end{verbatim}
+\end{codice}
+
+\verb sum  e \verb sum_1 risultano uguali.
+
+\begin{codice}
+\begin{verbatim}
+>> n = linspace(1,1000,1000);
+>> one = ones(1,1000);
+>> one - one./(one*2 + n);
+>> meng = one - one./(one*2 + n);
+>> 
+>> meng_1 = 0;
+>> for i=0:1000
+meng_1 = meng_1 + 1/((i+1)*(i+2));
+end
+>> meng(1000), meng_1
+
+ans =
+
+    0.9990
+
+
+meng_1 =
+
+    0.9990
+
+>> 
+\end{verbatim}
+\end{codice}
+ 
+\end{svol}
+
+\item Definire la matrice:
+
+\[A =\left[
+\begin{array}{cccc}
+1 & 2 & 3 & 4 \\
+5 & 6 & 7 & 8 \\
+9 & 10 & 11 & 12
+\end{array}\right]
+\]
+e comprendere il significato dei seguenti comandi Matlab:
+\begin{codice}
+\begin{verbatim}
+>> size(A);
+>> B = A.*A;
+>> B = A*A;
+>> B = A'*A;
+>> A(1:2,4), A(:,3), A(1:2,:), A(:,[2 4]), A([2 3 3]);
+>> A(3,2) = A(1,1);
+>> A(2,:) = A(2,:)-A(2,1)/A(1,1)*A(1,:);
+>> [r,c] = max(A);
+\end{verbatim}
+\end{codice}
+
+\begin{svol}
+
+\begin{codice}
+\begin{verbatim}
+>> A = [1 2 3 4; 5 6 7 8; 9 10 11 12]
+
+A =
+
+     1     2     3     4
+     5     6     7     8
+     9    10    11    12
+
+>> size(A)
+
+ans =
+
+     3     4
+
+\end{verbatim}
+\end{codice}
+Costruita la matrice \verb1A1 il comando \verb1size(A)1 restituisce il numero
+di righe e di colonne in un vettore $2 \times 1$.
+\begin{codice}
+\begin{verbatim}
+>> B = A.*A
+
+B =
+
+     1     4     9    16
+    25    36    49    64
+    81   100   121   144
+
+\end{verbatim}
+\end{codice}
+L'operatore \verb1.*1 effettua il prodotto puntuale tra gli elementi delle
+due matrici, in questo caso due matrici \verb1A1 e salva il risultato nella 
+matrice \verb1B1. Un'operazione analoga sarebbe potuta essere \verb1B=A.^2 1.
+\begin{codice}
+\begin{verbatim}
+>> B = A*A
+??? Error using ==> mtimes
+Inner matrix dimensions must agree.
+\end{verbatim}
+\end{codice}
+L'operatore \verb1*1 effettua il prodotto righe per colonne di due matrici,
+in questo caso, essendo la matrice $A$ della forma $3 \times 4$, le dimnesioni
+non sono compatibili con tale operazione.
+\begin{codice}
+\begin{verbatim}
+>> B = A'*A
+
+B =
+
+   107   122   137   152
+   122   140   158   176
+   137   158   179   200
+   152   176   200   224
+\end{verbatim}
+\end{codice}
+In questo caso invece, applicando l'operatore \verb1'1 si esegue prima la
+trasposizione della matrice $A$, e solo in seguito (tale operatore ha 
+infatti la precedenza su ogni altro) quello di prodotto riga per colonna.
+L'operazione risulta quindi valida e viene eseguito ciò che ci si aspetta.
+\begin{codice}
+\begin{verbatim}
+>> A(1:2,4), A(:,3), A(1:2,:), A(:,[2 4]), A([2 3 3])
+
+ans =
+
+     4
+     8
+
+
+ans =
+
+     3
+     7
+    11
+
+
+ans =
+
+     1     2     3     4
+     5     6     7     8
+
+
+ans =
+
+     2     4
+     6     8
+    10    12
+
+
+ans =
+
+     5     9     9
+
+\end{verbatim}
+\end{codice}
+Le operazioni di cui sopra sono delle selezioni di elementi della matrice, che
+vengono salvati in un array temporaneo. L'operatore \verb1( , )1 applicato ad
+una matrice come sopra seleziona gli elementi indicati dagli indici di riga
+(prima della virgola) e di colonna (dopo la virgola).
+\begin{codice}
+\begin{verbatim}
+>> A(3,2) = A(1,1)
+
+A =
+
+     1     2     3     4
+     5     6     7     8
+     9     1    11    12
+\end{verbatim}
+\end{codice}
+Questa operazione assegna all'elemnto di indice $3,2$ il valore di indice
+$1,1$ della matrice $A$.
+\begin{codice}
+\begin{verbatim}
+>> A(2,:) = A(2,:)-A(2,1)/A(1,1)*A(1,:)
+
+A =
+
+     1     2     3     4
+     0    -4    -8   -12
+     9     1    11    12
+
+\end{verbatim}
+\end{codice}
+Alla seconda riga della matrice, assegna una combinazione lineare della
+seconda e della prima.
+\begin{codice}
+\begin{verbatim}
+>> [r,c] = max(A)
+
+r =
+
+     9     2    11    12
+
+
+c =
+
+     3     1     3     3
+\end{verbatim}
+\end{codice}
+La funzione \verb1max()1 crea un array con i valori massimi di ogni colonna.
+La scrittura \verb1[r,c]=1 prima della funzione, invoca la funzione che
+salva gli elementi massimi nell'array \verb1r1 e cerca gli indici di riga 
+di tali
+elementi e li salva nell'array \verb1c1 .
+\end{svol}
+
+\item Utilizzare il comando \verb1diag1 per generare una matrice tridiagonale 
+$A$  di dimensione $9 \times 9$ i cui elementi della diagonale principale 
+coincidono con $-2$ e quelli delle codiagonali con $1$. Calcolare $A^{-1}$ (e
+commentare il risultato). Successivamente scambiare in $A$ dapprima le righe 
+$3$ e $6$, e di seguito, le colonne $1$ e $4$.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> d = -2*ones(1,9);
+>> d1 = ones(1,8);
+>> A = diag(d) + diag(d1,1) + diag(d1,-1);
+>> Ainv = inv(A);
+>> Ainv
+
+Ainv =
+
+   -0.9000   -0.8000   -0.7000   -0.6000   -0.5000   -0.4000   -0.3000   -0.2000   -0.1000
+   -0.8000   -1.6000   -1.4000   -1.2000   -1.0000   -0.8000   -0.6000   -0.4000   -0.2000
+   -0.7000   -1.4000   -2.1000   -1.8000   -1.5000   -1.2000   -0.9000   -0.6000   -0.3000
+   -0.6000   -1.2000   -1.8000   -2.4000   -2.0000   -1.6000   -1.2000   -0.8000   -0.4000
+   -0.5000   -1.0000   -1.5000   -2.0000   -2.5000   -2.0000   -1.5000   -1.0000   -0.5000
+   -0.4000   -0.8000   -1.2000   -1.6000   -2.0000   -2.4000   -1.8000   -1.2000   -0.6000
+   -0.3000   -0.6000   -0.9000   -1.2000   -1.5000   -1.8000   -2.1000   -1.4000   -0.7000
+   -0.2000   -0.4000   -0.6000   -0.8000   -1.0000   -1.2000   -1.4000   -1.6000   -0.8000
+   -0.1000   -0.2000   -0.3000   -0.4000   -0.5000   -0.6000   -0.7000   -0.8000   -0.9000
+
+>> A
+
+A =
+
+    -2     1     0     0     0     0     0     0     0
+     1    -2     1     0     0     0     0     0     0
+     0     1    -2     1     0     0     0     0     0
+     0     0     1    -2     1     0     0     0     0
+     0     0     0     1    -2     1     0     0     0
+     0     0     0     0     1    -2     1     0     0
+     0     0     0     0     0     1    -2     1     0
+     0     0     0     0     0     0     1    -2     1
+     0     0     0     0     0     0     0     1    -2
+
+>> % La matrice inversa di una tridiagonale, non mantiene tale proprietà
+>> 
+>> tmp = A(3,:)
+
+tmp =
+
+     0     1    -2     1     0     0     0     0     0
+
+>> A(3,:) = A(6,:);
+>> A(6,:) = tmp;
+>> tmp = A(:,1);
+>> A(:,1) = A(:,4);
+>> A(:,4) = tmp;
+>> 
+>> A
+
+A =
+
+     0     1     0    -2     0     0     0     0     0
+     0    -2     1     1     0     0     0     0     0
+     0     0     0     0     1    -2     1     0     0
+    -2     0     1     0     1     0     0     0     0
+     1     0     0     0    -2     1     0     0     0
+     1     1    -2     0     0     0     0     0     0
+     0     0     0     0     0     1    -2     1     0
+     0     0     0     0     0     0     1    -2     1
+     0     0     0     0     0     0     0     1    -2
+
+>> 
+
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item Definire la matrice:
+
+\[A =\left[
+\begin{array}{cccccccc}
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+2 & 2 & 2 & 2 & 2 & 2 & 2 & 2\\
+3 & 3 & 3 & 3 & 3 & 3 & 3 & 3\\
+4 & 4 & 4 & 4 & 4 & 4 & 4 & 4\\
+5 & 5 & 5 & 5 & 5 & 5 & 5 & 5\\
+6 & 6 & 6 & 6 & 6 & 6 & 6 & 6\\
+7 & 7 & 7 & 7 & 7 & 7 & 7 & 7\\
+8 & 8 & 8 & 8 & 8 & 8 & 8 & 8\\
+9 & 9 & 9 & 9 & 9 & 9 & 9 & 9
+\end{array}\right]
+\]
+e successivamente:
+\begin{itemize}
+\item[a)] generare le matrici $S$ triangolare superiore e $I$ triangolare 
+inferiore i cui elementi non nulli coincidano con gli elementi omonimi di $A$;
+successivamente, porre gli elementi della diagonale principale della matrice $S$
+uguali a $0$ e quelli della matrice $I$ uguali a $1$;
+\item[b)]generare le matrici $B_1$, $B_2$ e $B_3$ rispettivamente triangolare,
+bidiagonale superiore e bidiagonale inferiore, i cui elementi coincidano con
+gli elementi omonimi di $A$.
+\end{itemize}
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> A = [1:8]'*ones(1,8)
+
+A =
+
+     1     1     1     1     1     1     1     1
+     2     2     2     2     2     2     2     2
+     3     3     3     3     3     3     3     3
+     4     4     4     4     4     4     4     4
+     5     5     5     5     5     5     5     5
+     6     6     6     6     6     6     6     6
+     7     7     7     7     7     7     7     7
+     8     8     8     8     8     8     8     8
+
+>> S = triu(A)
+
+S =
+
+     1     1     1     1     1     1     1     1
+     0     2     2     2     2     2     2     2
+     0     0     3     3     3     3     3     3
+     0     0     0     4     4     4     4     4
+     0     0     0     0     5     5     5     5
+     0     0     0     0     0     6     6     6
+     0     0     0     0     0     0     7     7
+     0     0     0     0     0     0     0     8
+
+>> I = tril(A)
+
+I =
+
+     1     0     0     0     0     0     0     0
+     2     2     0     0     0     0     0     0
+     3     3     3     0     0     0     0     0
+     4     4     4     4     0     0     0     0
+     5     5     5     5     5     0     0     0
+     6     6     6     6     6     6     0     0
+     7     7     7     7     7     7     7     0
+     8     8     8     8     8     8     8     8
+
+>> S = triu(A,1)
+
+S =
+
+     0     1     1     1     1     1     1     1
+     0     0     2     2     2     2     2     2
+     0     0     0     3     3     3     3     3
+     0     0     0     0     4     4     4     4
+     0     0     0     0     0     5     5     5
+     0     0     0     0     0     0     6     6
+     0     0     0     0     0     0     0     7
+     0     0     0     0     0     0     0     0
+
+>> I = tril(A,-1);
+>> I = eye(8) + I
+
+I =
+
+     1     0     0     0     0     0     0     0
+     2     1     0     0     0     0     0     0
+     3     3     1     0     0     0     0     0
+     4     4     4     1     0     0     0     0
+     5     5     5     5     1     0     0     0
+     6     6     6     6     6     1     0     0
+     7     7     7     7     7     7     1     0
+     8     8     8     8     8     8     8     1
+
+>> B1 = diag(diag(A)) + diag(diag(A,-1),-1) + diag(diag(A,1),1)
+
+B1 =
+
+     1     1     0     0     0     0     0     0
+     2     2     2     0     0     0     0     0
+     0     3     3     3     0     0     0     0
+     0     0     4     4     4     0     0     0
+     0     0     0     5     5     5     0     0
+     0     0     0     0     6     6     6     0
+     0     0     0     0     0     7     7     7
+     0     0     0     0     0     0     8     8
+
+>> 
+
+>> B2 = diag(diag(A)) + diag(diag(A,1),1)
+
+B2 =
+
+     1     1     0     0     0     0     0     0
+     0     2     2     0     0     0     0     0
+     0     0     3     3     0     0     0     0
+     0     0     0     4     4     0     0     0
+     0     0     0     0     5     5     0     0
+     0     0     0     0     0     6     6     0
+     0     0     0     0     0     0     7     7
+     0     0     0     0     0     0     0     8
+
+>> B3 = diag(diag(A)) + diag(diag(A,-1),-1)
+
+B3 =
+
+     1     0     0     0     0     0     0     0
+     2     2     0     0     0     0     0     0
+     0     3     3     0     0     0     0     0
+     0     0     4     4     0     0     0     0
+     0     0     0     5     5     0     0     0
+     0     0     0     0     6     6     0     0
+     0     0     0     0     0     7     7     0
+     0     0     0     0     0     0     8     8
+
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item $E$ matrice elementare è definita da:
+\[
+E(\alpha, \mathbf{u}, \mathbf{v}) = I - \alpha\mathbf{u}\mathbf{v}^t
+\qquad \alpha \in \rr,\ \mathbf{u}, \mathbf{v} \in \rr^n.
+\]
+Se $\alpha \mathbf{v}^t \mathbf{u} \neq 1$, $E(\alpha, \mathbf{u}, \mathbf{v})$
+è \emph{invertibile} e la sua inversa è $E(\beta, \mathbf{u}, \mathbf{v})$ con
+\[ \beta = \frac{\alpha}{\alpha \mathbf{v}^t \mathbf{u}-1}.\]
+Generare le matrici elementari (e le loro inverse) associate a:
+\[
+\mathbf{u}_1 = \left(\begin{array}{c}9\\1\\5\\1\end{array}\right), \
+\mathbf{v}_1 = \left(\begin{array}{c}3\\2\\5\\5\end{array}\right), \
+\alpha_1 = 7, \quad
+\mathbf{u}_2 = \left(\begin{array}{c}2\\1\\-3\\-1\end{array}\right), \
+\mathbf{v}_2 = \left(\begin{array}{c}1\\1\\1\\1\end{array}\right), \
+\alpha_2 = 1.
+\]
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> u = [9;1;5;1];
+>> u1 = [9;1;5;1];
+>> v1 = [3;2;5;5];
+>> a1 = 7;
+>> 
+>> E1 = eye(4) - a1*(u1*v1')
+
+E1 =
+
+  -188  -126  -315  -315
+   -21   -13   -35   -35
+  -105   -70  -174  -175
+   -21   -14   -35   -34
+
+>> u2 = [2;1;-3;-1];
+>> v2 = [1;1;1;1];
+>> a2 = 1;
+>> 
+>> E2 = eye(4) - a2*(u2*v2');
+>> 
+>> b1 = a1/(a1*v1'*u1-1);
+>> b2 = a2/(a2*v2'*u2-1);
+>> 
+>> invE1 = eye(4) - b1*(u1*v1');
+>> invE2 = eye(4) - b2*(u2*v2');
+>> 
+>> abs(invE1 - inv(E1))
+
+ans =
+
+   1.0e-14 *
+
+    0.2331    0.9048    0.2109    0.2220
+    0.0507    0.0222    0.0791    0.0805
+    0.2109    0.5024    0.2331    0.2387
+    0.0493    0.0201    0.0791    0.0777
+
+>>
+>> abs(invE2 - inv(E2))
+
+ans =
+
+   1.0e-15 *
+
+    0.4441    0.4441    0.2220    0.2220
+    0.2220    0.2220    0.1110    0.1110
+    0.4441    0.4441    0.3331         0
+    0.1110    0.1110         0    0.2220
+
+\end{verbatim}
+\end{codice}
+Si può osservare che la differenza, in valore assoluto, delle matrici
+inverse così ottenute è prossima allo zero.
+\end{svol}
+
+\item Sia $A \in \rr^{n \times n}$, costruire le matrici $A^{(i)} = E_{i-1}A_{i-1}$
+derivanti dal prodotto di matrici elementari $E_i(1,\mathbf{m}_i,\mathbf{e}_i)
+= I - \mathbf{m}_i\mathbf{e}_i^t$, con $\mathbf{m}_i, \mathbf{e}_i \in \rr^4$,
+\[
+A = \left(
+\begin{array}{cccc}
+-27 & -6 & 15 & 8 \\
+-9 & 53 & 6 & 2 \\
+-45 & -5 & 29 & 6 \\
+-9 & -1 & -5 & 53
+\end{array}
+\right),
+\]
+definite dai vettori $\mathbf{e}_i$ della base canonica di $\rr^n$ e 
+$\mathbf{m}_i$ tali che:
+\[
+\mathbf{m}_i = \left( 0, \ldots, 0, m_{i+1,1}, \ldots, m_{n,i}\right)^t, \quad
+m_{r,i} = \frac{a_{r,i}}{a_{i,i}},\ r = i+1, \ldots, n.
+\]
+Osservare la struttura delle matrici inverse di $E_i$ e delle matrici 
+$A^{(i+1)}$.
+
+\begin{svol}
+Posta $A^{(1)} \in \rr^{n \times n}$ tale che:
+\[
+A^{(1)} = \left(
+\begin{array}{cccc}
+-27 & -6 & 15 & 8 \\
+-9 & 53 & 6 & 2 \\
+-45 & -5 & 29 & 6 \\
+-9 & -1 & -5 & 53
+\end{array}
+\right)
+\]
+Si calcolano i coefficienti $m_{i,j}$ come richiesto.
+\begin{codice}
+\begin{verbatim}
+>> A1 = [ -27 -6 15 8
+-9 53 6 2
+-45 -5 29 6
+-9 -1 -5 53]
+
+A1 =
+
+   -27    -6    15     8
+    -9    53     6     2
+   -45    -5    29     6
+    -9    -1    -5    53
+
+>> m21 = A1(2,1)/A1(1,1);
+>> m31 = A1(3,1)/A1(1,1);
+>> m41 = A1(4,1)/A1(1,1);
+
+
+>> m1 = [0; m21; m31; m41]
+
+m1 =
+
+         0
+    0.3333
+    1.6667
+    0.3333
+
+>> E1 = eye(4) -m1*[1 0  0 0]
+
+E1 =
+
+    1.0000         0         0         0
+   -0.3333    1.0000         0         0
+   -1.6667         0    1.0000         0
+   -0.3333         0         0    1.0000
+
+>> A2 = E1*A1
+
+A2 =
+
+  -27.0000   -6.0000   15.0000    8.0000
+         0   55.0000    1.0000   -0.6667
+         0    5.0000    4.0000   -7.3333
+         0    1.0000  -10.0000   50.3333
+
+>> m32 = A2(3,2)/A2(2,2);
+>> m42 = A2(4,2)/A2(2,2);
+>> 
+>> m2 = [0; 0; m32; m42]
+
+m2 =
+
+         0
+         0
+    0.0909
+    0.0182
+
+>> E2 = eye(4) -m2*[ 0 1 0 0]
+
+E2 =
+
+    1.0000         0         0         0
+         0    1.0000         0         0
+         0   -0.0909    1.0000         0
+         0   -0.0182         0    1.0000
+
+>> A3 = E2*A2
+
+A3 =
+
+  -27.0000   -6.0000   15.0000    8.0000
+         0   55.0000    1.0000   -0.6667
+         0         0    3.9091   -7.2727
+         0         0  -10.0182   50.3455
+>> m43 = A3(4,3)/A3(3,3);
+>> m3 = [0; 0; 0; m43]
+
+m3 =
+
+         0
+         0
+         0
+   -2.5628
+
+>> E3 = eye(4) -m3*[ 0 0 1 0]
+
+E3 =
+
+    1.0000         0         0         0
+         0    1.0000         0         0
+         0         0    1.0000         0
+         0         0    2.5628    1.0000
+
+>> A4 = E3*A3
+
+A4 =
+
+  -27.0000   -6.0000   15.0000    8.0000
+         0   55.0000    1.0000   -0.6667
+         0         0    3.9091   -7.2727
+         0         0         0   31.7070
+
+>> inv(E1), inv(E2), inv(E3)
+
+ans =
+
+    1.0000         0         0         0
+    0.3333    1.0000         0         0
+    1.6667         0    1.0000         0
+    0.3333         0         0    1.0000
+
+
+ans =
+
+    1.0000         0         0         0
+         0    1.0000         0         0
+         0    0.0909    1.0000         0
+         0    0.0182         0    1.0000
+
+
+ans =
+
+    1.0000         0         0         0
+         0    1.0000         0         0
+         0         0    1.0000         0
+         0         0   -2.5628    1.0000
+
+\end{verbatim}
+\end{codice}
+Le inverse delle matrici elementari $E_i$ sono matrici, sempre elementari,
+mantengono la forma triangolare inferiore, ma i coefficienti al di sotto della
+diagonale principale sono di segno opposto. 
+\end{svol}
+
+\end{enumerate}

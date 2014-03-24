@@ -1,0 +1,1248 @@
+\hyphenation{
+Barrow
+Binet
+Chebyshev
+Cholesky
+Cramer
+Gauss
+Faber
+Hausdorff
+Householder
+Laplace
+Lebesque
+Newton
+Rolle
+Runghe
+Sturm
+tras-for-ma-zio-ne
+Torricelli
+}
+
+\chapter{Metodi iterativi.}
+I metodi di risoluzione di sistemi lineari visti fin'ora sono metodi diretti,
+esiste un'altra categoria di metodi per tale obiettivo: i \emph{metodi
+iterativi}.
+
+I metodi iterativi costituiscono una successione di vettori che converge
+al valore soluzione. Dato un problema $Ax=b$,
+\[
+x^{(0)} \quad \textrm{vettore dato.}
+\]
+\[
+x^{(k+1)} = Bx^{(k)} + q. \quad k = 0, 1, \ldots
+\]
+con ipotesi varie abbiamo che:
+\[\lim_{k \to +\infty}x^{(k)} = x.\]
+\[\lim_{k \to +\infty}\|x^{(k)}-x\| = 0.\]
+\[\|x^{(k)}-x\| \leq \varepsilon. \qquad \textrm{(}\, \varepsilon \ 
+\textrm{tolleranza)}\]
+Perchè usarlo se dovremo ``troncare'' le iterazioni ad un numero finito?
+Semplicemente perchè l'Analisi Numerica contempla e accetta l'esistenza di un
+errore.
+
+\section{Differenza dai metodi diretti.}
+I metodi diretti sono caratterizzati dal fatto di sapere già inizialmente 
+quale sarà il costo computazionale della risoluzione di un dato sistema.
+
+Nei metodi iterativi, fissata una precisione, quante operazioni servono per
+ottenerla? Applicheremo il metodo iterativo se avrà un costo minore.
+\begin{flushleft}
+Operazione cardine:\\
+prodotto matrice-vettore $Bx^{(k)}$, ha costo $n^2$ se $n$ è l'ordine della 
+matrice. Quindi, se riusciamo ad ottenere la stessa approssimazione con
+\emph{meno} di $n$ iterazioni, abbiamo \emph{risparmiato}.
+Inoltre se $B$ fosse tridiagonale il prodotto matrice vettore costerebbe
+$n$ (costo lineare), allora avremmo a disposizione fino a $n^2$ iterazioni.
+\end{flushleft}
+
+Nell'interpolazione lo scopo è di ricostruire l'andamento di un fenomeno
+avendo a disposizione dei dati discreti.
+
+\section{Risoluzione di sistemi non lineari.}
+Data una funzione $f \colon [a,b] \to \rr$, trovare $\alpha \in [a,b]$ tale
+che $f(\alpha) = 0$.
+
+Non avendo a disposizione un algoritmo come nel caso dei sistemi lineari,
+poiché l'Analisi non offre l'algoritmo costruttivo, occorrerà procedere
+con un \emph{metodo iterativo}, troncando il procedimento infinito in modo
+tale che il risultato sia sufficientemente vicino. Partendo da:
+\[
+x^{(0)} \quad \textrm{dato,}
+\]
+costruiamo una successione $\{x^{(k)}\}$ di punti sperando che:
+\[
+\lim_{k \to +\infty}x^{(k)} = \alpha.
+\]
+Bloccheremo il procedimento in corrispondenza di una tolleranza $\varepsilon$
+tale che:
+\[
+\left|x^{(k)} -\alpha\right| < \varepsilon.
+\]
+\begin{osse}
+Tale disuguaglianza non può essere testata non conoscendo $\varepsilon$,
+dovremo trovare una disuguaglianza alternativa.
+\end{osse}
+
+\subsection{Metodo di bisezione (dicotomica).}
+E' un metodo dell'Analisi.
+\begin{teo}
+Sia $f(x) \in \cc^0([a,b])$ tale che $f(a) \cdot f(b) < 0$, allora
+\[\exists \alpha \in [a,b] \colon f(\alpha) = 0.\]
+\end{teo}
+
+\begin{notabene}
+Una funzione può avere uno zero anche in punto molto ``avanti'' nel dominio,
+anche in corrispondenza di un numero non esprimibile dalla macchina.
+Come si opera in questi casi? Occorrerà scalare l'intervallo in modo da
+saper esprimere la radice.
+\end{notabene}
+
+Sia $[a_0,b_0] := [a,b]$, poniamo:
+\[x^{(0)} = \frac{a_0+b_0}{2}.\]
+Se $f(x^{(0)}) = 0$ allora $\alpha = x^{(0)}$. STOP.
+\begin{osse}
+In Matlab $f(x^{(0)}) = 0$ non ci assicura che $x^{(0)}$ sia radice a causa 
+dell'approssimazione di macchina. Sarà qualcosa di leggermente diverso, quindi
+occorre fare attenzione a dire che siamo vicini ad $\alpha$.
+\end{osse}
+\begin{itemize}
+\item[$\bullet$]Se $f(x^{(0)})f(a_0) < 0$ allora $a_1 = a_0$ e $b_1 = x^{(0)}$.
+\item[$\bullet$]Se $f(x^{(0)})f(b_0) < 0$ allora $a_1 = x^{(0)}$ e $b_1 = b_0$.
+\end{itemize}
+Otteniamo:
+\[f:[a_1,b_1] \to \rr \colon f(a_1)\cdot f(b_1) < 0.\]
+\begin{osse}
+Se valesse il primo caso \emph{non procederemmo} ad analizzare il secondo, 
+questo perchè (parlando in termini informatici) essendo vero il primo ``if''
+non occorre calcolare le radici del secondo tratto, risparmiando così calcoli.
+\end{osse}
+
+\[
+x^{(1)} = \frac{a_1+b_1}{2}.
+\]
+
+\begin{itemize}
+\item[$\bullet$]Se $f(x^{(1)}) = 0$ allora $\alpha = x^{(1)}$. STOP.
+\item[$\bullet$]Se $f(x^{(1)})f(a_1) < 0$ allora $a_2 = a_1$ e $b_2 = x^{(1)}$.
+\item[$\bullet$]Se $f(x^{(1)})f(b_1) < 0$ allora $a_2 = x^{(1)}$ e $b_2 = b_1$.
+\end{itemize}
+
+Sostituiremo il test $\left|x^{(k)} -\alpha\right| < \varepsilon$ con:
+\[
+\left| \,\textrm{ampiezza intervallo}\,\right| < \varepsilon.
+\]
+Porremo la radice approssimata nel punto medio di quell'intervallo.
+
+\[
+b_1-a_1 = \frac{b_0 - a_0}{2}, \quad b_2-a_2 = \frac{b_1-a_1}{2} = 
+\frac{b_0 - a_0}{2^2}.
+\]
+
+Dopo $k$ iterazioni arriveremo ad avere il seguente intervallo:
+\[I_{k-1} = [a_{k-1},b_{k-1}],\]
+tale che $f(a_{k-1})\cdot f(b_{k-1}) < 0$.
+
+\[
+x^{(k-1)} = \frac{a_{k-1}+b_{k-1}}{2}.
+\]
+
+
+\begin{itemize}
+\item[$\bullet$]Se $f(x^{({k-1})}) = 0$ allora $\alpha = x^{({k-1})}$. STOP.
+\item[$\bullet$]Se $f(x^{({k-1})})f(a_{k-1}) < 0$ allora $a_k = a_{k-1}$ e 
+$b_k = x^{({k-1})}$.
+\item[$\bullet$]Se $f(x^{({k-1})})f(b_{k-1}) < 0$ allora $a_k = x^{({k-1})}$ e 
+$b_k = b_{k-1}$.
+\end{itemize}
+
+Ottenendo un nuovo intervallo $I_k = [a_k,b_k]$ di ampiezza:
+\[b_k-a_k = \frac{b_{k-1}-a_{k-1}}{2} = \frac{b_0 - a_0}{2^k}.\]
+
+\begin{osse}
+Alla fine del procedimento otterremo un'unica radice di $f$, se ve ne fossero
+altre sarebbero state perse.
+\end{osse}
+
+\[
+|\textrm{errore}| = \left| x^{(k)} - \alpha \right|
+\leq b_k-a_k = \frac{b_0 - a_0}{2^k}.\]
+\[\longrightarrow \ |\textrm{errore}| \leq 
+\lim_{k \to +\infty}\frac{b_0 - a_0}{2^k} = 0.\]
+\[\longrightarrow \ \left\{x^{(k)}\right\}, \quad \lim_{k \to + \infty} x^{(k)}
+= \alpha.\]
+
+Abbiamo costruito un processo che genera una successione che converge ad
+$\alpha$. 
+
+A priori, fissata una tolleranza, possiamo avere una stima del numero di
+iterazioni necessarie.
+\[|\textrm{errore}| \leq \frac{b_0 - a_0}{2^k}.\]
+Vorremmo ottenere $|\textrm{errore}|< \varepsilon$.
+
+\[\longrightarrow \ 
+\frac{b_0 - a_0}{2^k} < \varepsilon \ \Longrightarrow \ 
+\frac{b_0 - a_0}{\varepsilon} < 2^k.
+\]
+\[\longrightarrow \ 
+k > \log_2\left(\frac{b_0 - a_0}{\varepsilon}\right).
+\]
+\[\longrightarrow \ 
+k > \frac{\log_{10}\left(\frac{b_0 - a_0}{\varepsilon}\right)}{\log_2}
+\simeq \frac{\log_{10}\left(\frac{b_0 - a_0}{\varepsilon}\right)}{0.6971}.
+\]
+\subsubsection{Costo complessivo:}
+è la somma del costo delle valutazioni di $f$.
+
+\begin{osse}
+Il metodo dicotomico si dice \emph{globalmente} convergente, cioè non
+importa quanto sia ampio l'intervallo, né quale sia il punto iniziale
+da cui partiamo.
+\end{osse}
+
+Con il metodo dicotomico troviamo una radice, siamo sicuri che converga, ma
+è una procedura ``lenta''. Sostituiamola con una più veloce: semplifichiamo il
+problema.
+
+Supponiamo di voler conoscere la radice $\alpha_3$. Partiamo da un $x^{(0)}$
+arbitrario e controlliamo $f(x^{(0)})$. Sostituiamo localmente la funzione
+con una retta passante per $f(x^{(0)})$ e con una pendenza scelta da noi.
+Costruiamo il punto $x^{(1)}$ come intersezione della retta con l'asse delle
+$x$ e calcoliamo $f(x^{(1)})$, quindi scegliamo nuovamente la pendenza e
+ricominciamo il procedimento.
+
+Se lo facciamo sensatamente, non è certo, ma probabile che ci stiamo 
+avvicinando ad $\alpha_3$
+
+\begin{osse}
+La scelta di $x^{(0)}$ deve essere opportuna, infatti se non dovesse 
+appartenere all'intervallo il processo si bloccherà poiché non sarà possibile
+calcolare $f(x^{(0)})$.
+
+Questo non si può quindi definire un metodo \emph{globale}.
+\end{osse}
+
+\textbf{Metodo di Newton:}
+o delle rette tangenti, è un metodo di approssimazione che utilizza le 
+tangenti, che vedremo più avanti. 
+
+\begin{flushleft}
+Come potremmo prendere $x^{(0)}$ in modo da utilizzare il metodo delle 
+tangenti?
+\end{flushleft}
+\begin{itemize}
+\item[]$f'$ di segno fissato.
+\item[]$f''$ di segno fissato.
+\item[]Se $f'(x_0)\cdot f''(x_0) > 0$ allora il processo converge.
+\end{itemize}
+Tuttavia abbiamo convergenze locali.
+
+\begin{osse}(Sul metodo dicotomico)\\
+
+Dato un punto medio ($j$-esimo passo), che legame c'è tra $|x_k - \alpha|$ e 
+$\frac{|x_j-\alpha|}{10}$?
+\[
+\frac{b_0 - a_0}{2^k} = \frac{b_0 - a_0}{2^j} \cdot \frac{1}{10}.
+\]
+\[\longrightarrow \
+10 \cdot 2^{j-k} = 1\ \Longrightarrow \ \log_2\frac{1}{10} = j-k.
+\]
+\[\longrightarrow \
+k-j = \log_2 10 \simeq 3.32.
+\]
+Ovvero tra $3$ e $4$ iterazioni sistemiamo una cifra decimale.
+\end{osse}
+
+\[
+f(\alpha) = f(x) + f'(\xi)(\alpha-x), \quad |\alpha - \xi| \leq |\alpha -x|.
+\]
+
+\[
+0 = f(x_n) + f'(\xi_n)(\alpha -x_n).
+\]
+\[
+0 = f(x_n) + (x_{n+1} - x_n)q_n.
+\]
+
+\[
+x_{n+1} = x_n - \frac{f(x_n)}{q_n}.
+\]
+
+$q_n$ approssima $f'(\xi_n)$.
+
+\subsection{Metodo delle corde.}
+Il metodo consiste nel costruire una retta dal coefficiente angolare $q$
+(indipendente dal numero di intervalli di cui è composta la decomposizione),
+se $a$ e $b$ sono gli estremi dell'intervallo su cui stiamo cercando la
+soluzione, $q$ viene definito come:
+\[
+q = \frac{f(b)-f(a)}{b-a}.
+\]
+La retta di  coefficiente angolare $q$ e passante per $f(a)$ e $f(b)$ si dice
+\emph{corda}.
+
+Per trovare $x_1$ a questo punto si deve fare l'intersezione con l'asse delle
+$x$, si calcola ora $f(x_1)$ per costruire la nuova corda passante per 
+$f(x_1)$ e di coefficiente angolare sempre $q$ (le corde sono tutte 
+parallele). Si itera il procedimento per trovare $x_2, \ldots, x_n$.
+\[x_{n+1} = x_n - f(x_n)\frac{b-a}{f(b)-f(a)}.\]
+
+\begin{osse}
+Anche questo procedimento ha una ``falla'', se nel calcolo di $x_i$ questo
+esce dal nostro intervallo di partenza non riusciremmo a calcolarne 
+l'immagine attraverso $f$, interrompendo così la procedura.
+\end{osse}
+
+\subsection{Metodo delle tangenti o di Newton.}
+\[q_n = f'(x_n).\]
+\[\left\{\begin{array}{lr}
+x_0 \quad \textrm{dato.} \\
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} & n = 0,\ldots
+\end{array}\right.\]
+Anche con questo metodo possiamo avere fallimenti. Il solito problema è
+quello di aver scelto un $x_0$ che non appartenga all'intervallo oppure
+di ottenere un $x_k$ non appartenente all'intervallo ad un $k$-esimo passo.
+Questa situazione non è neanche prevedibile.
+
+Quindi la convergenza è assicurata \emph{se e solo se} $x_0$ sarà 
+sufficientemente vicino alla radice.
+
+\begin{teo}(di convergenza di Newton)\\
+Sia $f(x) \in \cc^2(I)$, dove $I$ è un intervallo contenente una radice
+semplice $\alpha$ dell'equazione $f(x) = 0$. Allora preso un punto $x_0$
+``sufficientemente''  vicino ad $\alpha$ la successione generata dal metodo
+di Newton (delle tangenti) converge ad $\alpha$, cioè:
+\[
+\lim_{n \to +\infty}x_n = \alpha,
+\]
+e inoltre:
+\[
+\lim_{n \to +\infty}\frac{\alpha - x_{n+1}}{(\alpha - x_n)^2} = 
+- \frac{f''(\alpha)}{2f'(\alpha)}
+\]
+\end{teo}
+Ovvero $\alpha$ è semplice se e solo se  $f(\alpha)=0 \wedge f'(\alpha) \neq 
+0$.
+
+\begin{defi}
+Sia $\{x_n\}$ una successione generata da un metodo iterativo, 
+$\lim_{n \to +\infty}x_n = \alpha$ tale che:
+
+\[
+\exists\ c > 0 \colon \forall n \ 
+\lim_{n \to +\infty}\frac{|\alpha -x_{n+1}|}{|\alpha -x_n|} = c,
+\]
+cioé:
+\[
+\lim_{n \to +\infty}\frac{|e_{n+1}|}{|e_n|} = c,
+\]
+
+un metodo iterativo si dice di ordine $p$ se la successione $\{x_n\}$
+generata ha convergenza di ordine $p$, ovvero:
+
+\[
+\exists\ c > 0, \exists\ p \geq 1 \colon \forall n \ 
+\lim_{n \to +\infty}\frac{|e_{n+1}|}{|e_n|^p} = c,
+\]
+\end{defi}
+
+\begin{prop}
+Se $f''(\alpha) \neq 0$ allora,
+\[
+\lim_{n \to +\infty}\frac{|e_{n+1}|}{|e_n|}= \frac{|f''(\alpha)|}{2|f'(\alpha)|},
+\]
+allora il metodo di Newton per radici semplici è del secondo ordine.
+\end{prop}
+\begin{dimo}
+Sia $\varepsilon > 0$ sufficientemente piccolo, siano $I^*$ e $M$ tali che:
+\[I^* := [\alpha-\varepsilon, \alpha + \varepsilon],\]
+\[M = \frac{\max_{x \in I^*}|f''(x)|}{\max_{x \in I^*}|f'(x)|}.\]
+
+Vediamo lo sviluppo di Taylor di $f$:
+\[
+f(x) = f(x_n) + f'(x_n)(x-x_n) + f''(\xi)\frac{(x-x_n)^2}{2}.
+\]
+Posto $x \equiv \alpha$ la radice di cui stiamo parlando,
+\[
+f(\alpha) = f(x_n) + f'(x_n)(\alpha-x_n) + f''(\xi)\frac{(\alpha-x_n)^2}{2}
+= 0.
+\]
+Esiste un intorno in cui $f'$ sia diverso da $0$.
+
+\[
+\begin{array}{lcl}
+0 = f(\alpha) 
+     & = & f(x_n) + f'(x_n)(\alpha-x_n) + 
+           f''(\xi)\frac{(\alpha-x_n)^2}{2}\\
+     & = & \dfrac{1}{f'(x_n)}\left(f(x_n) + f'(x_n)(\alpha-x_n) + f''(\xi)
+           \dfrac{(\alpha-x_n)^2}{2}\right) \\
+     & = & \dfrac{f(x_n)}{f'(x_n)} + \cancelto{1}{\dfrac{f'(x_n)}{f'(x_n)}}
+           (\alpha-x_n)+\dfrac{f''(\xi)}{2f'(x_n)}(\alpha-x_n)^2\\
+     & = & \underbrace{\dfrac{f(x_n)}{f'(x_n)} - x_n}_{(*) \ -x_{n+1}} + \alpha + 
+           \dfrac{f''(\xi)}{2f'(x_n)}(\alpha-x_n)^2\\
+     & = & \alpha -x_{n+1} + \dfrac{f''(\xi)}{2f'(x_n)}(\alpha-x_n)^2.
+\end{array}
+\]
+
+La $(*)$ deriva dalla relazione: $x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}$.
+
+\[
+0 = \alpha - x_{n+1} + \frac{f''(\xi)}{2f'(x_n)}(\alpha-x_n)^2.
+\]
+
+\[\begin{array}{lcl}
+|\alpha - x_{n+1}| & = & \dfrac{f''(\xi)}{2f'(x_n)}(\alpha-x_n)^2 
+                        \leq M|\alpha -x_n|^2\\ 
+                  & \leq & M|\alpha -x_n|^2 \\
+                  & = & \dfrac{1}{M}(M|\alpha -x_n|)^2.
+\end{array}
+\]
+
+Passando alla distanza tra $\alpha$ e il punto $x_n$ si ha:
+
+\[
+|\alpha - x_{n}| \leq M|\alpha -x_{n-1}|^2.
+\]
+\[
+|\alpha - x_{n+1}| \leq \frac{1}{M}\left(MM|\alpha -x_{n-1}|\right)^2
+= \frac{1}{M}\left(M|\alpha -x_{n-1}|\right)^{2^2}.
+\]
+
+Valutando la relazione con tutti i punti intermedi, si raggiunge a concludere
+la seguente per $x_0$:
+
+\[
+|\alpha - x_{n+1}| \leq \frac{1}{M}\left(M|\alpha -x_{0}|\right)^{2^{n+1}}.
+\]
+\begin{prop}
+Se $x_0 \in I^*$ tale che $M|\alpha -x_{0}| < 1$ allora:
+\[
+\lim_{n \to + \infty}|\alpha - x_{n+1}| = 0.
+\]
+\end{prop}
+
+Può succedere che durante le iterazioni esca dall'intervallo $I^*$?
+\[
+|\alpha -x_{1}| \leq M|\alpha -x_{0}|^2 = \underbrace{M|\alpha -x_{0}|}_{< 1}
+|\alpha -x_{0}| \leq |\alpha -x_{0}|.
+\]
+Quindi se $x_0 \in I^*$ allora $x_1 \in I^*$.\\
+$x_1$ soddisfa le condizioni? E' vera la condizione per ogni $x_n$ nella
+successione?
+\begin{prop}
+Per ogni $x_n \in I^*$ appartente alla successione si ha che:
+\[M|\alpha -x_{n}| < 1.\]
+\end{prop}
+\begin{dimo}
+Si è già dimostrato per $n = 1$ (caso base), proseguiamo per induzione:
+
+\textbf{Ipotesi:} $x_n \in I^*, \quad  M|\alpha -x_{n}| < 1$. \\
+
+\textbf{Tesi:} $x_{n+1} \in I^*, \quad  M|\alpha -x_{n+1}| < 1$.
+
+\[
+|\alpha -x_{n+1}| \leq  M|\alpha -x_n|^2 = 
+\underbrace{M|\alpha -x_{n}|}_{< 1}|\alpha -x_{n}| < |\alpha -x_{n}|.
+\]
+
+Allora $x_{n+1}$ appartiene a $I^*$.
+
+\[
+M|\alpha -x_{n+1}| \leq M^2|\alpha -x_n| < 1.
+\]
+
+In conclusione se $x_0 \in I^*$ tale che $M|\alpha -x_{0}| < 1$, allora:
+\[
+\{x_n\}_{\textrm{Newton}} \colon x_n \in I^* \quad M|\alpha -x_{n}| < 1.
+\]
+\end{dimo}
+
+E' importante che ciascuno dei punti mantenga le proprietà del punto
+$x_0$, perchè ciascuno degli $x_n$ è un punto nuovo per il processo di Newton.
+
+\[
+f(x) = f(x_n) + f'(x_n)(x-x_n) + f''(\xi)\frac{(x-x_n)^2}{2}.
+\]
+\[
+f(\alpha) = f(x_n) + f'(x_n)(\alpha-x_n) + f''(\xi)\frac{(\alpha-x_n)^2}{2}.
+\]
+
+\[\longrightarrow \
+0 = \frac{f(x_n)}{f'(x_n)} - x_n + \alpha + \frac{f''(\xi)}{2f'(x_n)}
+(\alpha - x_n)^2.
+\]
+\[\longrightarrow \
+0 = \alpha - x_{n+1} + \frac{f''(\xi)}{2f'(x_n)}
+\]
+\[
+- (\alpha + x_{n+1}) = (\alpha -x_n)^2\frac{f''(\xi)}{2f'(x_n)}.
+\]
+
+\[
+\frac{(\alpha -x_{n+1})}{(\alpha -x_n)^2} = -\frac{f''(\xi)}{2f'(x_n)}.
+\]
+
+\[
+\lim_{n \to + \infty}-\frac{f''(\xi)}{2f'(x_n)} = \lim_{n \to + \infty}
+\frac{(\alpha -x_{n+1})}{(\alpha -x_n)^2} = \frac{f''(\alpha)}{2 f'(\alpha)} 
+\qquad 
+\substack{\alpha < \xi < x_n \\ |\alpha - \xi| < |\alpha - x_n|}.
+\]
+\end{dimo}
+
+\begin{ese}
+$x^2 = 0$.\\
+
+Applichiamo il teorema di Newton, attenzione però che non è una situazione 
+contemplata dal teorema, perchè $f'(0) =0$. Non è garantita la convergenza 
+al second'ordine.
+
+\[
+f(x) \in \cc^2([a,b]), \ \alpha \ \textrm{radice doppia.}
+\]
+\[
+f(\alpha) = 0, \ f'(\alpha) = 0, \ f''(\alpha) \neq 0.
+\]
+Verificare che il metodo di Newton perde in ordine di convergenza.
+
+\[x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}, \quad e_n = \alpha - x_n.\]
+
+\[
+\underbrace{\alpha - x_{n+1}}_{e_{n+1}} = \alpha -x_n + \frac{f(x_n)}{f'(x_n)}
+\]
+
+Poiché $x_n = \alpha -e_n$ si ha:
+\[\begin{array}{lcl}
+\alpha - x_{n+1} & = & (\alpha - x_n) + 
+                      \frac{f(\alpha - e_n)}{f'(\alpha - e_n)} \\
+& = & (\alpha - x_n) + \frac{\cancelto{0}{f(\alpha)}+ \cancelto{0}{f'(\alpha)(\alpha - 
+e_n -\alpha)} + f''(\xi_1)\frac{(\alpha-e_n-\alpha)^2}{2}}{\cancelto{0}{f'(x)}
+ + f''(\xi_2)(\alpha -e_n \alpha)} \\
+& = & (\alpha - x_n) - \frac{f''(\xi_1)\frac{e_n^2}{2}}{f''(\xi_2)e_n}.
+\end{array}
+\]
+
+\[
+e_{n+1} = e_n-\frac{f''(\xi_1)\frac{e_n^{\cancel{2}}}{2}}{f''(\xi_2)\cancel{e_n}}.
+\]
+\[
+e_{n+1} = e_n \left(1 - \frac{1}{2}\frac{f''(\xi_1)}{f''(\xi_2)}\right).
+\]
+
+\[\longrightarrow \
+\frac{e_{n+1}}{ e_n} = 1 - \frac{1}{2}\frac{f''(\xi_1)}{f''(\xi_2)}.
+\]
+Poiché $f''(\xi_1)$ e $f''(\xi_2)$ vanno a coincidere per $n$ che tende a
+$+ \infty$, passando ai limiti:
+\[
+\lim_{n \to + \infty}\frac{e_{n+1}}{ e_n} = \frac{1}{2}.
+\]
+Questo ci dice che il processo è \emph{lineare}.
+\end{ese}
+Quindi il problema è trovare $x_0$ adeguato a costruire una successione 
+convergente. Ci sono situazioni in cui possiamo affermare la globale
+convergenza nel metodo di Newton (ovvero non dobbiamo preoccuparci di come
+prendere $x_0$)? 
+\begin{itemize}
+\item[$\bullet$]Funzioni monotone crescenti convesse:\[
+f(x) \in \cc^2([a,b]), \quad f(a) \cdot f(b) < 0.
+\]
+$\textrm{sign}(f'(x)) = \textrm{cost} > 0$.\\
+$\textrm{sign}(f''(x)) = \textrm{cost} > 0$.\\
+
+La scelta adeguata per $x_0$ è quella in cui l'immagine tramite $f$ è
+di segno concorde con $f''$, in questo caso $f > 0$, ovvero per 
+$x_0 \in [\alpha, b]$.
+
+In $[a, \alpha]$ non è assicurata la convergenza.
+
+\item[$\bullet$]Funzioni monotone crescenti concave:\[
+f(x) \in \cc^2([a,b]), \quad f(a) \cdot f(b) < 0.
+\]
+$\textrm{sign}(f'(x)) = \textrm{cost} > 0$.\\
+$\textrm{sign}(f''(x)) = \textrm{cost} < 0$.\\
+
+In quest'altro caso invece la convergenza è assicurata per $f < 0$, ovvero per 
+$x_0 \in [a, \alpha]$ e non lo
+sarà quindi per $x_0 \in [\alpha, b]$.
+
+\item[$\bullet$]Funzioni monotone decrescenti concave:\[
+f(x) \in \cc^2([a,b]), \quad f(a) \cdot f(b) < 0.
+\]
+$\textrm{sign}(f'(x)) = \textrm{cost} < 0$.\\
+$\textrm{sign}(f''(x)) = \textrm{cost} < 0$.\\
+
+Convergenza garantita per $f < 0$, ovvero per $x_0 \in [\alpha, b]$.
+
+\item[$\bullet$]Funzioni monotone decrescenti convesse:\[
+f(x) \in \cc^2([a,b]), \quad f(a) \cdot f(b) < 0.
+\]
+$\textrm{sign}(f'(x)) = \textrm{cost} < 0$.\\
+$\textrm{sign}(f''(x)) = \textrm{cost} > 0$.\\
+
+Convergenza garantita per $f > 0$, ovvero per $x_0 \in [a, \alpha]$.
+\end{itemize}
+
+In conclusione la convergenza è garantita se vale la seguente proposizione:
+
+\begin{prop}
+Sia $x_0 \in [a,b]$, $f \in \cc^2([a,b])$ tale che:
+\[f(x_0)\cdot f''(x_0) > 0,\]
+allora la successione $\{x_n\}$ Newtoniana converge ad $\alpha$, ovvero
+\[\lim_{n \to +\infty}x_n = \alpha.\]
+\end{prop}
+\begin{dimo}(Nel caso di funzioni monotone crescenti convesse)\\
+
+Sia $x_0 \in [a,b]$ tale che $f(x_0)\cdot f''(x_0) > 0$, sia $x_1 = x_0 -
+\frac{f(x_0)}{f'(x_0)}$.\\
+
+\textbf{Tesi:} $x_1 \in [\alpha, b]$.
+\[
+f' \wedge f > 0 \ \longrightarrow\ \frac{f}{f'} > 0
+\ \longrightarrow\ x_1 < x_0.
+\]
+Dobbiamo dimostrare che $x_1 \geq \alpha$.
+
+\[
+f(x) = f(x_0) + f'(x_0)(x-x_0) + f''(\xi)\frac{(x-x_0)^2}{2}.
+\]
+\[
+f(\alpha) = f(x_0) + f'(x_0)(\alpha-x_0) + f''(\xi)\frac{(\alpha-x_0)^2}{2}=0.
+\]
+
+\[
+f' \neq 0 \ \longrightarrow \ \underbrace{\frac{f(x_0)}{f'(x_0)} - x_0}_{-x_1}
++ \alpha + \frac{f''(\xi)}{f'(x_0)}\frac{(\alpha - x_0)^2}{2}
+\]
+\[\longrightarrow \
+0 = \alpha - x_1 + \underbrace{\frac{f''(\xi)}{f'(\xi)} 
+\frac{(\alpha - x_0)^2}{2}}_{>0} \ \longrightarrow \ \alpha -x_1 <0.
+\]
+
+\[\alpha < x_1.\]
+\end{dimo}
+Ora si deve dimostrare nel caso generico $x_n$, $x_{n+1}$.
+
+\begin{osse}
+La successione $\{x_n\}$ converge ad $\alpha$ in modo \emph{decrescente}, 
+ovvero ad ogni passo ci avviciniamo allo zero. Questo miglioramento non è 
+garantito con il metodo dicotomico (non è monotono).
+\end{osse}
+
+\begin{osse}
+Con il metodo di Newton, al caso delle funzioni monotone crescenti convesse,
+abbiamo un'approssimazione sempre per eccesso, con il metodo delle corde 
+invece l'approssimazione è per difetto.
+
+Combinando i due metodi otteniamo un intervallo di appartenenza.
+Questo crea una condizione di stop al processo analoga a quella del
+processo dicotomico (quando l'intervallo è $< \delta$).
+\end{osse}
+
+Come scegliere quando terminare il procedimento?\\
+Facciamo un test sulle iterazioni: quando due iterazioni successive sono 
+vicine al limite.
+
+\begin{flushleft}
+\textbf{Problema:} Se siamo in un caso in cui la convergenza sia lenta
+le iterazioni possono somigliarsi già dall'inizio.
+\end{flushleft}
+
+\subsection{Metodo delle secanti. \ (cenno)}
+
+\[
+x^{(k+1)} = x^{(k)} - \frac{f(x^{(k)})}{q_k}.
+\]
+Consideriamo i punti:\\
+
+$\begin{array}{cc}
+x^{(k-1)} & x^{(k)} \\
+f(x^{(k-1)}) & f(x^{(k)})
+\end{array}$
+
+\[q_k := \frac{f(x^{(k)})-f(x^{(k-1)})}{x^{(k)}-x^{(k-1)}}.\]
+
+\[\left\{
+\begin{array}{l}
+x^{(k+1)} = x^{(k)} - f(x^{(k)})\cdot 
+\frac{x^{(k)}-x^{(k-1)}}{f(x^{(k)})-f(x^{(k-1)})}, \\
+x^{-1}, \, x^0 \quad \textrm{dati.}
+\end{array}\right. \quad k = 0,1, \ldots
+\]
+
+Nel caso in cui le immagini attraverso $f$ di $x^{(0)}$ e $x^{(-1)}$ fossero
+``vicine'' si potrebbe uscire dall'intervallo di partenza, inoltre una tale 
+situazione potrebbe verificarsi anche durante le iterazioni. La convergenza 
+non è garantita.
+
+\subsection{Regula Falsi. \ (cenno)}
+E' una variante del metodo delle secanti, però qui è assicurata la 
+convergenza. 
+
+\[
+x^{(k+1)} = x^{(k)} - f(x^{(k)}) \cdot \frac{x^{(k)}-x^{(k')}}{f(x^{(k)}) -
+f(x^{(k')})}.
+\]
+
+Deve accadere che:
+\begin{equation}\label{eq10.1}
+f(x^{(k)}) \cdot f(x^{(k')}) < 0. 
+\end{equation}
+Tale vincolo si impone nella scelta dei punti.
+
+Se vale la \ref{eq10.1} allora il punto $x^{(1)}$, ottenuto come intersezione 
+della secante con l'asse delle $x$, è interno all'intervallo $(x^{(0)}, 
+x^{(-1)})$. In questo modo la convergenza è garantita.
+
+Ora come punto, insieme ad $x^{(1)}$, prendiamo quello di indice maggiore tale
+che $f(x^{(1)}) \cdot f(x^{(k)}) < 0$.
+
+\begin{teo}
+Sia $f(x) \in \cc^2(I)$, dove $I$ è un intervallo contenente la radice 
+$\alpha$ e $f''(\alpha) \neq 0$. Allora presi due punti $x^{(-1)}$ e $x^{(0)}$ 
+sufficientemente vicini alla radice $\alpha$, la successione generata dal
+ metodo delle secanti converge ad $\alpha$ con ordine $p$:
+\[
+p = \frac{\left(1 + \sqrt{5}\right)}{2} \simeq 1.63.
+\]
+\end{teo}
+
+\subsection{Metodo delle tangenti per cercare le radici.}
+\[
+f(x) \equiv p(x) = a_0x^n + a_1 x^{n-1}+ \cdots + a_{n-2}x^2 +a_{n-1}x + a_n.
+\]
+\[a_i \in \rr,\ a_0 \neq 0, \quad i = 0, \ldots, n.\]
+
+Tangenti $p(x) = 0$.
+\[
+x^{(0)} \ \textrm{dato},\quad x^{(i+1)} = x^{(i)} - \frac{p(x^{(i)})}{p'(x^{(i)})},
+\quad i = 0, 1, \ldots
+\]
+
+Il teorema ci dice che converge almeno linearmente. Se la radice è semplice
+converge in modo quadratico.
+\begin{itemize}
+\item[--]
+\begin{itemize}
+\item[] $d_0 \equiv a_0$.
+\item[]\begin{itemize}
+  \item[$\circ$]$k = 1, \ldots, n.$
+  \item[]$d_k = d_{k-1}x + a_k$.
+  \end{itemize}
+\item[]$d_n = p(x).$
+\end{itemize}       
+\item[--]
+\begin{itemize}
+\item[] $d_0 \equiv a_0$.
+\item[]\begin{itemize}
+  \item[$\circ$]$k = 1, \ldots, n.$
+  \item[]$d_k = d_{k-1}x^{(i)} + a_k$.
+  \end{itemize}
+\item[]$d_n = p(x^{(i)}).$
+\end{itemize} 
+\end{itemize}
+
+$p(x) = (x-x^{(i)})\cdot q(x) + r$.\\
+Il resto è una costante perchè dividiamo per un polinomio lineare.
+\begin{flushleft}
+$p(x^{(i)}) = r$: lo utilizziamo per calcolare il denominatore.
+\[
+p(x) = \left(x-x^{(i)}\right)\cdot q(x) + p\left(x^{(i)}\right).
+\]
+\[\longrightarrow \
+\left.q(x)\right|_{x = x^{(i)}} = \left.\frac{p(x) - 
+p \left(x^{(i)}\right)}{x-x^{(i)}} \right|_{x = x^{(i)}} = p'(x^{(i)}).
+\]
+$q(x)$ coincide con $p'(x^{(i)})$ (solo nel nodo $x^{(i)}$), quindi possiamo
+applicare il metodo anche senza conoscere la derivata.
+\end{flushleft}
+
+Sviluppo di Taylor.
+\[
+p(x) = p\left(x^{(i)}\right) + p'\left(x^{(i)}\right)\left(x-x^{(i)}\right)+
+p''\left(x^{(i)}\right)\frac{\left(x-x^{(i)}\right)^2}{2}+ \cdots +
+p^{(n)}\left(x^{(i)}\right)\frac{\left(x-x^{(i)}\right)^n}{n!}.
+\]
+\[
+\begin{array}{lcl}
+\left.
+\dfrac{p(x) - p\left(x^{(i)}\right)}{\left(x-x^{(i)}\right)}\right|_{x = x^{(i)}}
+& = &\left.
+\left( p'\left(x^{(i)}\right) + \frac{p''\left(x^{(i)}\right)\left(x-x^{(i)}
+\right)}{2!} +
+\cdots +
+p^{(n)}\left(x^{(i)}\right)\frac{\left(x-x^{(i)}\right)^{n-1}}{n!}
+\right)\right|_{x = x^{(i)}} \\
+& = & p'(x^{(i)}).
+\end{array}
+\]
+
+
+\[
+\begin{array}{lcl}
+p'(x^{(i)}) & = & a_0x^n + a_1 x^{n-1}+ \cdots + a_{n-2}x^2 +a_{n-1}x + a_n \\
+& = &\left(x-x^{(i)}\right)\left(b_0 x^{n-1}+ b_1x^{n-2}+\cdots + b_{n-2}x^1 +b_{n-1}
+ \right)+ r\\
+& = &
+b_0x^n + \cdots + b_{n-1}x -b_0 x^{(i)}x^{n-1} - \cdots -b_{n-1}x^{(i)} +r \\
+& = &
+b_0x^n + x^{n-1}\left(b_1-b_0 x^{(i)}\right)
++ \cdots + x\left(b_{n-1}-b_{n-2} x^{(i)}\right) + r - b_{n-1}x^{(i)}.
+\end{array}
+\]
+
+Sfruttando il principio di identità dei polinomni si ha:
+
+\[\longrightarrow\qquad\begin{array}{l}
+a_0 = b_0 \\
+a_1 = b_1 - b_0x^{(i)} \\
+a_2 = b_2 - b_1x^{(i)} \\
+\vdots \\
+a_k = b_k - b_{k-1}x^{(i)} \\
+\vdots \\
+a_n = b_n - b_{n-1}x^{(i)} \\
+\end{array}
+\]
+
+{\samepage\begin{itemize}
+\item[]
+\begin{itemize}
+\item[] $b_0 \equiv a_0$.
+\item[]\begin{itemize}
+  \item[$\circ$]$k = 1, \ldots, n-1.$
+  \item[]$b_k = b_{k-1}x^{(i)} + a_k$.
+  \end{itemize}
+\item[]$r = b_{n-1}x^{(i)} + a_n.$
+\end{itemize}       
+\end{itemize}
+}
+Ora abbiamo $q\left(x^{(i)}\right)$ e quindi anche $p'\left(x^{(i)}\right)$.
+
+\begin{teo}\label{teo10.16}
+Sia $p(x)$ un polinomio di grado $n$ a coefficienti reali con zeri tutti
+reali.
+\[
+\xi_{n} \leq \xi_{n-1} \leq \cdots \leq \xi_{2} \leq \xi_1,
+\]
+allora preso un punto $x^{(0)} > \xi_1$, la successione generata dal metodo di 
+Newton converge in modo \emph{monotono} alla radice $\xi_1$.
+\end{teo}
+\begin{osse}
+Non ci sono ipotesi sulla molteplicità della radice.
+\end{osse}
+\textbf{Problema successivo:} trovare tutte le radici.
+
+\begin{exe}
+Sia $J$ una matrice tridiagonale irriducibile tale che: 
+\[\alpha_i \in \rr, \quad i = 1,\ldots, n; \qquad \beta_j \in \rr, \quad j =
+1, \ldots, n; \quad \beta_j \neq 0.\]
+
+\[J = \left[
+\begin{array}{ccccc}
+\alpha_1 & \beta_2 & 0  &\cdots & 0 \\
+\beta_2 & \alpha_2 & \beta_3 & & \vdots \\
+0 &\ddots &\ddots &\ddots &  0\\
+\vdots & &\beta_{n-1} & \alpha_{n-1}& \beta_n\\
+0 & \cdots & 0 &\beta_{n} & \alpha_{n}
+\end{array}
+\right].\]
+
+Poiché irriducibile la matrice $J$ non può essere spezzata a blocchi nella
+ricerca degli autovalori.
+
+\[\longrightarrow \
+\textrm{det}(J - \lambda I) = 0,
+\]
+presenta solo $n$ autovalori reali. Inoltre l'irriducibilità implica che
+gli $n$ autovalori sono \emph{distinti}.
+
+Come costruiamo un intervallo adeguato?
+\[
+\|Jx\|= \|\lambda x\| \ \Rightarrow \ \|J\|\cdot\|x\| \geq |\lambda|\cdot\|x
+\|.\]
+\begin{notabene}
+Stiamo utilizzando una norma compatibile: $\|\cdot\|_1$ o $\|\cdot\|_\infty$, 
+la $\|\cdot\|_2$ no perchè richiede di conoscere gli autovalori, che invece 
+vogliamo trovare.
+\end{notabene}
+L'intervallo $\left[I-\|J\|_\infty, \|J\|_\infty\right]$ va bene poiché ha 
+convergenza  verso l'autovalore più grande per il teorema \ref{teo10.16}. 
+
+Come si costruirebbe l'algoritmo newtoniano? cioé come calcoliamo $p(x^{(i)})$
+e $p'(x^{(i)})$?
+
+\[J-\lambda I = \left[
+\begin{array}{ccccc}
+\alpha_1-\lambda & \beta_2 & 0  &\cdots & 0 \\
+\beta_2 & \alpha_2-\lambda & \beta_3 & & \vdots \\
+0 &\ddots &\ddots &\ddots &  0\\
+\vdots & &\beta_{n-1} & \alpha_{n-1}-\lambda& \beta_n\\
+0 & \cdots & 0 &\beta_{n} & \alpha_{n}-\lambda
+\end{array}
+\right],\]
+
+{\samepage\begin{itemize}
+\item[]
+\begin{itemize}
+\item[] $d_0 \equiv 1$.
+\item[] $d_1 = \alpha_1 - \lambda$.
+\item[]\begin{itemize}
+  \item[$\circ$]$k = 2, \ldots, n.$
+  \item[]$d_k = (\alpha_k - \lambda)d_{k-1} - \beta_k^2d_{k-2}$.
+  \end{itemize}
+\item[]$d_n \equiv \textrm{det}\left(J - \lambda I\right) = p(\lambda).$
+\end{itemize}       
+\end{itemize}
+}
+
+Se poniamo $\overline{\lambda} = x^{(i)}$ otteniamo:
+\[\overline{d}_n = \textrm{det}\left(J - \overline{\lambda} I\right),\]
+il polinomio caratteristico valutato in $\overline{\lambda}$.
+
+\[
+d'_k(\lambda) = -d_{k-1}(\lambda) +  (\alpha - \lambda)d'_{k-1} 
+- \beta_k^2d'_{k-2}(\lambda),
+\]
+valutato in $\overline{\lambda} = x^{(i)}$ otteniamo il valore di $p'(x^{(i)})$.
+\end{exe}
+
+\begin{dimo}(Teorema \ref{teo10.16})\\
+
+\textbf{Ipotesi:} $a_0 > 0$.\\
+
+In $[\xi_1, \xi_2]$ la derivata prima ammette una radice $\alpha_1$ (teorema 
+di Rolle),
+se $\xi_2 \equiv \xi_1$ allora $\xi_1$ ha molteplicità $2$ ed è comunque una
+radice del polinomio derivato.
+
+Analogamente otteniamo $\alpha_2 \in [\xi_2, \xi_3], \ldots, \alpha_{n-1}
+\in [\xi_{n-1}, \xi_n]$, $n-1$ radici del polinomio derivato. 
+
+\[x > \alpha_1\ \Rightarrow\ p'(x) > 0 .\]
+$p''(x)$?
+
+In $[\alpha_1, \alpha_2]$ il polinomio ha uno zero (teorema di Rolle), quindi
+$p''$ ha coefficiente massimo maggiore di $0$.
+
+\[x > \alpha_1\ \Rightarrow\ p''(x) > 0 .\]
+$p'''(x)$? Discorso analogo.
+
+\[x \geq \alpha_1\ \Rightarrow\ p'''(x) \geq 0 .\]
+
+Allora $p$ e $p'$ sono funzioni convesse per $x > \alpha_1$.
+
+Consideriamo $x^{(0)}$ a destra di $\xi_1$. Costruiamo $x^{(1)}$ col metodo di
+Newton.
+
+\begin{equation}\label{eq10.2}
+x^{(1)} = x^{(0)} - \frac{p(x^{(0)})}{p'(x^{(0)})}
+\end{equation}
+
+\[
+p(x) = p\left(x^{(0)}\right) + p'\left(x^{(0)}\right)\left(x-x^{(0)}\right) 
++ p''(c_0)\left(\frac{x-x^{(0)}}{2}
+\right)^2.
+\]
+
+\[
+0 = p(\xi_1) = p\left(x^{(0)}\right)+
+p'\left(x^{(0)}\right)\left(\xi_1-x^{(0)}\right) 
++ \underbrace{p''(c_0)\left(\frac{\xi_1-x^{(0)}}{2}\right)^2}_{>0}.
+\]
+
+\[
+0 > p\left(x^{(0)}\right)+p'\left(x^{(0)}\right)\left(\xi_1-x^{(0)}\right).
+\]
+
+\[
+\left(x^{(0)}-x^{(1)}\right)p'\left(x^{(0)}\right) = p\left(x^{(0)}\right).
+\]
+
+Da \ref{eq10.2} si ha:
+\[
+0 > p'\left(x^{(0)}\right)\left(
+\cancel{x^{(0)}} -x^{(1)} + \xi_1 \cancel{- x^{(0)}}
+\right) = \underbrace{p'\left(x^{(0)}\right)}_{>0}\left(\xi_1 - x^{(1)}\right).
+\]
+
+\[
+\longrightarrow \xi_1 - x^{(1)} < 0 \ \Rightarrow \ x^{(1)} > \xi_1.
+\]
+
+Si completa, analogamente, la dimostrazione per induzione.\\
+
+\textbf{Ipotesi: } $\xi_1 < x^{(k)} < x^{(k-1)}$·\\
+
+\textbf{Tesi: } $\xi_1 < x^{(k+1)} < x^{(k)}$.
+\end{dimo}
+
+Il teorema permette di calcolare anche la radice più piccola grazie alla
+convergenza \emph{monotona} dall'altro lato. Ovvero in questo caso si parte
+a sinistra dell'intervallo da $[\xi_{n-1}, \xi_n]$.
+
+Lo spettro di autovalori è molto ampio si hanno quindi dei problemi numerici
+nel calcolo. Nel caso generale come si calcola l'intervallo a cui appartengono
+tutte le radici del polinomio?
+
+\subsubsection{Esperimento Matlab.}
+Prendiamo un polinomio a coefficienti reali e ne calcoliamo le radici reali.
+Quindi cambiamo un coefficiente, ricalcoliamo le radici e scopriamo che
+non sono più reali.
+
+\begin{exe}Minkinson.\\
+\[p(x) = (x-1)\cdot (x-2) \cdots (x-20).\]
+Modifica: $a_{19}$ diventa $10^{-10}$.\\
+
+Otteniamo radici complesse coniugate, $5$ o $6$ coppie.
+\end{exe} 
+
+\begin{teo}
+Per le radici $\xi_i$, con $i = 1, \ldots, n $, del polinomio $p$ tale che:
+\[
+p(x) = a_0x^n + \cdots + a_n,
+\] 
+si ha la seguente limitazione:
+\[
+|\xi_i| \leq \max\left\{ \frac{|a_n|}{|a_0|}, 1+\frac{|a_{n-1}|}{|a_0|},
+\ldots, 1 + \frac{|a_{1}|}{|a_0|}\right\},
+\]
+\[
+|\xi_i| \leq \max\left\{
+1, \sum_{i=1}^n\frac{|a_{i}|}{|a_0|}
+\right\}.
+\]
+\end{teo}
+
+\subsubsection{Tecnica defrattiva.}
+Per calcolare $\xi_2$, una volta trovata $\xi_1$ poniamo:
+\[
+p_2(x) = \frac{p(x)}{(x-\xi_1)},
+\]
+a questo punto riapplichiamo il procedimento. Analogamente per
+il caso inverso (da $\xi_n$).
+
+Che errore commettiamo facendo la divisione? $\xi_1$ è calcolata con la 
+massima precisione macchina, però viene approssimata. Ne segue che i 
+coefficienti di $p_2$ siano affetti da errore poiché $\xi_1$ è leggermente
+diversa da quella effettiva. Anche in questo caso $\xi_2$ sarà 
+un'approssimazione. Etc.
+
+Il problema è dunque la divisione, è possibile calcolare $\xi_2$ utilizzando
+i coefficienti del polinomio di partenza? (senza fare la divisione).
+
+
+\[p(x) = a_0x^n + \cdots + a_n.\]
+
+\[
+\xi_1 \geq \xi_2 \geq \cdots \geq \xi_{n-1} \geq \xi_n.
+\]
+
+\[
+x^{(0)}> \xi_1, \quad \lim_{k \to +\infty}x^{(k)} = \xi_1, \quad x^{(0)} < \xi_n.
+\]
+
+\[\left\{\begin{array}{lr}
+x^{(k+1)} = x^{(k)} - \frac{p\left(x^{(k)}\right)}{p'\left(x^{(k)}\right)}, & 
+k = 0,1,\ldots \\\\
+x^{(0)} \ \textrm{dato.}
+\end{array}\right.\]
+
+\[
+p_1(x) = \frac{p(x)}{x -\xi_1}.
+\]
+\[
+p'_1(x) = \frac{p'(x)(x-\xi_1)-p(x)}{(x -\xi_1)^2}.
+\]
+
+\[\left\{\begin{array}{lr}
+x^{(k+1)} = x^{(k)} - \frac{p_1\left(x^{(k)}\right)}{p_1'\left(x^{(k)}\right)}, &
+ k = 0,1,\ldots \\\\
+x^{(0)} \ \textrm{dato.}
+\end{array}\right.\]
+
+\[
+x^{(k+1)} = x^{(k)} - \frac{\frac{p\left(x^{(k)}\right)}{\cancel{x^{(k)}-\xi_1}}}{
+\frac{p_1'\left(x^{(k)}\right)\left(x^{(k)}-\xi_1\right) - p\left(x^{(k)}\right)}
+{\left(x^{(k)}-\xi_1\right)^{\cancel{2}}}.
+}
+\]
+
+\[
+x^{(k+1)} = x^{(k)} -\frac{p(x^{(k)})}{p'(x^{(k)}) -
+p(x^{(k)}) \frac{1}{x^{(k)}-\xi_1}}.
+\]
+
+Supponiamo di avere $\xi_1, \xi_2, \ldots, \xi_j$ note.
+
+\[
+p_j(x) = \frac{p(x)}{(x-\xi_1)\cdot(x-\xi_2)\cdots (x-\xi_j)}.
+\]
+
+\[\left\{\begin{array}{lr}
+x^{(k+1)} = x^{(k)} - \frac{p_j\left(x^{(k)}\right)}{p_j'\left(x^{(k)}\right)}, &
+ k = 0,1,\ldots \\\\
+x^{(0)} \ \textrm{dato.}
+\end{array}\right.\]
+
+\[
+p_j'(x) = \frac{p'(x)(x-\xi_1)\cdot(x-\xi_2)\cdots (x-\xi_j) - p(x)\cdot
+\sum_{l=1}^j\prod_{\substack{i = 1 \\ i \neq l}}^j (x-\xi_i)}{\left(
+(x-\xi_1)\cdot(x-\xi_2)\cdots (x-\xi_j)\right)^2}.
+\]
+Moltiplicando e dividendo per $(x - \xi_l)$ si ha:
+\[
+p_j'(x) = \frac{p'(x)(x-\xi_1)\cdot(x-\xi_2)\cdots (x-\xi_j) - p(x)\cdot
+\prod_{i = 1}^j (x-\xi_i)  \sum_{l=1}^j\frac{1}{(x - \xi_l)}}
+{\left((x-\xi_1)\cdot(x-\xi_2)\cdots (x-\xi_j)\right)^2}.
+\]
+
+Segue che:
+\[
+x^{(k+1)} = x^{(k)} - \frac{\frac{p(x^{(k)})}{\cancel{(x^{(k)}-\xi_1)\cdot(x^{(k)}
+-\xi_2)\cdots (x^{(k)}-\xi_j)}}}{\frac{p'(x^{(k)})(x^{(k)}-\xi_1)\cdot(x^{(k)}-
+\xi_2)\cdots (x^{(k)}-\xi_j) - p(x^{(k)})\cdot\prod_{i = 1}^j (x^{(k)}-\xi_i)  
+\sum_{l=1}^j\frac{1}{(x^{(k)} - \xi_l)}}{\left((x^{(k)}-\xi_1)\cdot(x^{(k)}-\xi_2)
+\cdots (x^{(k)}-\xi_j)\right)^{\cancel{2}}}}.
+\]
+
+\[\longrightarrow
+x^{(k+1)} = x^{(k)} - \frac{p(x^{(k)})}{p'(x^{(k)})- p(x^{(k)})\sum_{l=1}^j
+\frac{1}{(x^{(k)} - \xi_l)}}
+\]
+Costruiamo così un nuovo polinomio utilizzando sempre $p(x)$.
+
+\section{Criteri d'arresto.}
+Quale può essere un criterio di arresto per i processi iterativi?
+Introduciamo la $\varepsilon$ tolleranza.
+
+\subsection{Controllo del resto.}
+Se siamo abbastanza vicini alla radice $\alpha$, la seguente disequazione è
+verificata?
+\[f\left(x^{(k)}\right) < \varepsilon\]
+Se $x^{(k)}$ è in un intorno della radice il test sul residuo è soddisfacente,
+però la funzione potrebbe essere approssimata a zero anche in un punto
+$x^{(k)}$ lontano dalla radice e il test interromperebbe la computazione
+in modo errato.
+
+Allo stesso modo se la pendenza della tangente alla curva nel punto in 
+questione è molto elevata, otterremmo quindi una $f$ molto grande ed 
+eseguiremmo iterazioni in eccesso.
+
+Sia $\alpha$ una radice di $f$, ovvero $f(\alpha) = 0$.
+
+\[f\left(x^{(k)}\right) - f(\alpha) = f'(c_n)\left(x^{(k)}-\alpha\right).\]
+
+$c_n$ punto opportuno, dividendo per $f'(c_n)$ si ha:
+
+\[
+\alpha - x^{(k)} = - \frac{f\left(x^{(k)}\right)}{f'(c_n)}.
+\]
+
+\[
+|\alpha - x^{(k)}| = \frac{|f\left(x^{(k)}\right)|}{|f'(c_n)|}
+\simeq \frac{|f\left(x^{(k)}\right)|}{|f'(\alpha)|} \leq \frac{\varepsilon}
+{|f'(\alpha)|}.
+\]
+
+Se $|f'(\alpha)| \simeq 1$ allora $|\alpha - x^{(k)}| \leq \varepsilon$.\\
+
+Se $|f'(\alpha)| \simeq 0$ allora $|\alpha - x^{(k)}|$ può essere grande.
+
+\subsection{Differenza tra due iterate successive.}
+Esaminiamo la differenza tra due iterazioni successive, ovvero in un dato
+$x^{(k)}$ e $x^{(k+1)}$.
+
+\[
+|x^{(k+1)}-x^{(k)}| < \varepsilon.
+\]
+
+Normalmente non è esaustivo, quando la convergenza di successione è lenta
+probabilmente questo metodo ``fa acqua''. E' invece valido quando l'iterata
+(è di ordine maggiore di $1$) ha una convergenza più che lineare 
+(``muovendosi'' velocemente $|x^{(k+1)}-x^{(k)}|$ è piccola).
+
+Per il metodo di Newton ad esempio come arriverei a scrivere qualcosa?
+
+\[
+x^{(k+1)}-x^{(k)} = - \frac{f\left(x^{(k)}\right)}{f'\left(x^{(k)}\right)}
+\simeq - \frac{f\left(x^{(k)}\right)}{f'\left(c_n\right)} = \alpha -x^{(k)}.
+\]
+
+Se facciamo il test $\varepsilon > |x^{(k+1)}-x^{(k)}| \simeq |\alpha -x^{(k)}|$.
+
+Stiamo lavorando nelle vicinanze del punto $\alpha$, occorre che il processo 
+sia di ordine superiore ad $1$.
+
+\subsection{Teorema di Sturm.}
+Consideriamo un polinomio $p(x) = a_0x^n + a_1x^{n-1}+ \cdots + a_n$, con 
+$a_0 \neq 0$. Definiamo una sequenza di Sturm (di polinomi)
+\[
+p(x) \equiv p_0(x), p_1(x), p_2(x), \ldots, p_n(x);
+\]
+che soddisfino le seguenti condizioni:
+\begin{enumerate}
+\item $p_0(x)$ ha tutte le radici semplici;
+\item $\textrm{sign}\,p_1(\xi) =- \textrm{sign}\, p'_0(\xi)$ per ogni zero 
+reale di $p_0(x)$;
+\item $i = 1,2, \ldots, n-1$\\
+
+$p_{i-1}(\xi)\cdot p_{i+1}(\xi) < 0$, se $\xi$ è uno zero reale di $p_i(\xi)$;
+\item il polinomio $p_n(x)$ non cambia di segno.
+\end{enumerate}
+
+A cosa serve questa successione?
+
+\begin{teo}
+Sia $p_0(x), p_1(x), p_2(x), \ldots, p_n(x)$ una sequenza di Sturm, allora
+il numero degli zeri reali di $p_0(x)$ che cadono in $[a,b)$ è dato dalla 
+differenza $w(b)-w(a)$, dove $w(x)$ indica il numero dei cambiamenti di
+segno della sequenza nel punto $x$.
+\end{teo}
+
+\begin{exe}Esempio numerico:\\
+$p(x) = 13x^6 - 364x^5+2912x^4-9984x^3+166640x^2-13312x+4096$.\\
+$p_0(x) = p(x)$.\\
+$p_1(x) = -26(3x^5-70x^4+448x^3-1152x^2+ 1280x -50)$.\\
+$p_2(x) = \frac{4}{9}(1001x^4-9152x^3+27456x^2-33280x+14080)$.\\
+$p_3(x) = -\frac{2304}{539}(134x^3-702x^2+1080x-528)$.\\
+$p_4(x) = \frac{784}{99}(51x^2-136x+88)$.\\
+$p_5(x) = -\frac{4094}{833}(19x-22)$.\\
+$p_6(x) = \frac{3136}{361}$.\\
+
+Come si costruisce? Si parte dal polinomio assegnato e si costruisce $p_1(x)$:
+\[
+p_1(x) = - p'_0(x).
+\]
+
+\[
+p_0(x) = p_1(x)q_1(x) +r_1(x), \quad p_2(x) = r_1(x).
+\]
+
+\[\longrightarrow
+p_0(x) = p_1(x)q_1(x) + q_2(x).
+\]
+
+\[
+p_1(x) = p_2(x)q_2(x) +r_2(x), \quad p_3(x) = r_2(x).
+\]
+\[
+p_2(x) = p_3(x)q_3(x) +r_3(x), \quad p_4(x) = r_3(x).
+\]
+\[\vdots\]
+Si trova così il massimo comun divisore tra $p(x)$ e $p'(x)$.
+
+\[
+\begin{array}{c|cccccccc}
+x & p_0(x) & p_1(x) & p_2(x) & p_3(x) & p_4(x) & p_5(x) & p_6(x) & w(x) \\
+\hline 
+0 & + & + & + & + & + & + & + & 0 = w(0) \\
+2 & - & 0 & + & + & + & - & + & 3 
+\end{array}
+\]
+
+Alla seconda riga (per $x = 2$) possiamo dare il ``valore'' che vogliamo, a 
+seconda se calcoliamo la derivata destra o sinistra.
+
+Poiché $w(2)-w(0) = 3$ si ha che nell'intervallo $[0,2]$ il polinomio ha
+$3$ radici. Passando al limite ($x \to + \infty$) si possono trovare gli zeri
+totali.
+\end{exe}
