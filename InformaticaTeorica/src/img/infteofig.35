@@ -1,0 +1,47 @@
+%!PS
+%%BoundingBox: -29 -29 72 15 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmr10 9.96265 9.96265 31:c
+%*Font: cmmi10 9.96265 9.96265 41:8000000000001
+%%EndProlog
+%%Page: 1 1
+ 0 0.5 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinejoin 10 setmiterlimit
+newpath 0 0 moveto
+28.34645 0 lineto
+28.34645 14.17323 lineto
+0 14.17323 lineto
+0 0 lineto
+-28.34645 0 lineto
+-28.34645 14.17323 lineto
+0 14.17323 lineto
+ closepath stroke
+newpath 70.86613 -28.34645 moveto
+70.86613 -14.17323 lineto
+42.51968 -14.17323 lineto
+70.86613 -28.34645 lineto
+42.51968 -28.34645 lineto
+42.51968 -14.17323 lineto
+14.17323 -14.17323 lineto
+14.17323 -28.34645 lineto
+ closepath stroke
+ 1 setlinecap
+newpath 14.17323 7.08661 moveto
+19.84244 -19.84244 lineto stroke
+newpath 17.58315 -16.54149 moveto
+19.84244 -19.84244 lineto
+20.57906 -15.91075 lineto
+ closepath
+gsave fill grestore stroke
+-22.19873 3.68271 moveto
+(At) cmmi10 9.96265 fshow
+-11.12914 3.68271 moveto
+(1) cmr10 9.96265 fshow
+20.32095 -24.66374 moveto
+(At) cmmi10 9.96265 fshow
+31.39055 -24.66374 moveto
+(2) cmr10 9.96265 fshow
+showpage
+%%EOF

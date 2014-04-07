@@ -1,0 +1,1225 @@
+\hyphenation{
+Matlab
+}
+
+\begin{comment}
+
+\begin{codice}
+\begin{verbatim}
+
+\end{verbatim}
+\end{codice}
+
+\end{comment}
+
+\chapter{Introduzione a Matlab.}
+MATLAB (abbreviazione di Matrix Laboratory) è un ambiente per il calcolo 
+numerico e l'analisi statistica che comprende anche l'omonimo linguaggio di 
+programmazione creato dalla The MathWorks. MATLAB consente di manipolare 
+matrici, visualizzare funzioni e dati, implementare algoritmi, creare 
+interfacce utente, e interfacciarsi con altri programmi.
+
+\begin{notabene}Il corso e \emph{sopratutto l'esame} di Laboratorio di 
+Calcolo Numerico vertirà su esercizi da svolgersi in ambiente Matlab, per
+esercitarsi è possibile usufruire dei computer in laboratorio. Per coloro che
+volessero (o debbano) esercitarsi a casa, poiché Matlab è un software
+proprietario, l'unico modo (legale) per ottenere il programma è l'acquisto.
+Tuttavia esiste un'alternativa ``free'', Octave, che permette di fare gran parte
+delle operazioni di Matlab con gli stessi comandi. D'ora in poi, nel seguente
+testo, per specificare differenze o particolarità riguardanti Octave 
+utilizzeremo un ``ambiente'' apposito come il seguente.
+\end{notabene}
+
+\begin{octave}
+GNU Octave è un'applicazione software per l'analisi numerica parzialmente
+ compatibile con MATLAB. Octave è rilasciato sotto licenza GPL, e quindi può 
+essere liberamente copiato e usato. Il programma gira sotto sistemi Unix e 
+Linux, oltre che su Windows e MAC OS X.
+
+Ha un insieme di funzionalità fornite per il calcolo matriciale come rango e 
+determinante o specialistiche come decomposizione ai valori singolari (SVD), 
+fattorizzazione LU; sebbene le consenta la soluzione numerica di sistemi 
+lineari non svolge calcolo simbolico o altre attività tipiche di un sistema 
+di algebra computazionale.
+\end{octave}
+
+\section{Introduzione.}
+Questo testo è di fatto una raccolta di appunti del corso di Laboratorio di
+Calcolo Numerico del dipartimento di Matematica dell'Università di Parma, 
+non ha lo scopo di sostituirne le lezioni o i libri di testo
+consigliati. Pertanto sconsiglio di utilizzarlo come unica fonte di studio
+o di esercitazione pratica.
+
+Inoltre non verranno definite tutte le funzioni o risolti tutti gli esercizi
+proposti durante il corso ed alcune altre cose saranno date per scontate
+come ad esempio la descrizione o definizione di:
+\begin{enumerate}
+\item[-]Command Window,
+\item[-]Command History,
+\item[-]Workspace,
+\item[-]alcune funzionio comandi ben descritti sul libro di testo.
+\end{enumerate}
+
+\section{Help.}
+Il primo comando utile di Matlab è \verb1help1, serve, dato
+un comando o una funzione, per ottenerne le istruzioni d'uso:
+\begin{codice}
+\begin{verbatim}
+>> help nomecomando
+>> help nomefunzione
+\end{verbatim}
+\end{codice}
+
+\section{Variabili ed ambiente di lavoro.}
+In Matlab tutte le variabili sono array, nello specifico una variabile singola
+è un array di dimensione $1$. Nell'ambiente di lavoro (workspace) le variabili
+vengono memorizzate e vi risiedono fino alla fine della sessione di lavoro o
+fino a quando non viene utilizzato il comando \verb1clear1 che consente di
+cancellarle, non vengono cancellati lo schermo e la history dei comandi.
+Per cancellare il contenuto dello schermo si utilizza il comando \verb1clc1.
+\begin{codice}
+\begin{verbatim}
+>> clear
+\end{verbatim}
+\end{codice}
+
+Per definire (dichiarazione e inizializzazione) una variabile è sufficiente
+scrivere la seguente istruzione:
+\begin{codice}
+\begin{verbatim}
+>> x = 1
+
+x =
+
+     1
+\end{verbatim}
+\end{codice}
+In questo modo verrà salvata nel Workspace la variabile di nome $x$, valore 
+$1$, size $1\times 1$ e valore minimo e massimo dell'array. Di default gli 
+attributi visibili delle variabili del Workspace dovrebbero essere questi, è
+comunque possibile cambiarli dal menù a tendina ``view/Choose Columns''.
+
+E' possibile evitare di visualizzare a schermo l'assegnamento della variabile
+semplicemente utilizzando il carattere ``;'' a fine istruzione. Questo è
+molto utile per array o matrici di grandi dimensioni.
+
+\begin{codice}
+\begin{verbatim}
+>> v = [ 1 2 3 4 5 6 7 8 9 ]
+
+v =
+
+     1     2     3     4     5     6     7     8     9
+
+\end{verbatim}
+\end{codice}
+
+\begin{codice}
+\begin{verbatim}
+>> v = [ 1 2 3 4 5 6 7 8 9 ];
+>> 
+\end{verbatim}
+\end{codice}
+
+Esiste una variabile speciale in Matlab chiamata \verb1ans1, questa è generata
+automaticamente se non viene esplicitamente dato un nome ad una variabile,
+tipicamente quando non viene assegnato il risultato di un operazione.
+Proviamo a moltiplicare il nostro vettore $v$ per la variabile $x$ senza
+assegnamento:
+\begin{codice}
+\begin{verbatim}
+>> x*v
+
+ans =
+
+     1     2     3     4     5     6     7     8     9
+\end{verbatim}
+\end{codice}
+Utilizzare la variabile \verb1ans1 non è un errore, occorre però fare 
+attenzione poiché questa può essere sovrascritta durante il lavoro.
+
+Nell'ambiente di lavoro è inoltre possibile cambiare il formato di 
+rappresentazione dei numeri, di default l'ambiente dovrebbe essere inpostato
+sul formato \verb1short1 ma è possibile cambiarlo con il comando \verb1format1.
+\begin{codice}
+\begin{verbatim}
+>> x = 1/2
+
+x =
+
+    0.5000
+
+>> format long
+>> x = 1/2
+
+x =
+
+   0.500000000000000
+
+>> 
+\end{verbatim}
+\end{codice}
+Inizialmente $x$ ha quattro cifre dopo la virgola, impostando il formato 
+\verb1long1 diventano quindici.
+\begin{octave}In Octave le cifre del formato short sono cinque dopo la virgola,
+si noti inoltre la differenza di stampa nella Command Window (che in Octave si
+chiama Octave Terminal).
+\begin{codice}
+\begin{verbatim}
+>>> x = 1/2
+x =  0.50000
+>>> format long
+>>> x = 1/2
+x =  0.500000000000000
+\end{verbatim}
+\end{codice}
+\end{octave}
+
+Matlab lavora con un sistema floating point in doppia precisione (si possono
+aumentare i numeri dopo la virgola).
+
+\subsection{Variabili speciali.}
+In Matlab esistono alcune variabili speciali:
+\begin{center}
+\begin{tabular}{ll}
+\verb1i1, \verb1j1 & unità immaginarie ($i^2 = -1, \ j^2 = -1$), \\
+\verb1pi1 & pi greco, \\
+\verb1realmax1 & il più grande numero di macchina, \\
+\verb1realmin1 & il più piccolo numero di macchina, \\
+\verb1Inf1 & $\infty$, ovvero un numero maggiore di \verb1realmax1, \\
+\verb1nan1 & Not a number ($0/0$, etc.), \\
+\verb1eps1 & epsilon macchina.
+\end{tabular}\end{center}
+
+\begin{codice}
+\begin{verbatim}
+>> pi
+
+ans =
+
+    3.1416
+\end{verbatim}
+\end{codice}
+
+\subsection{Funzioni Built-In.}
+In Matlab è possibile utilizzare una lista di funzioni ``pre-costruite'' come
+\verb1sin1, \verb1cos1, etc... con la sintassi seguente:
+\begin{center}
+\begin{tabular}{ll}
+\verb1sin(x)1 & calcola il seno della variabile \verb1x1, \\
+\verb1cos(x)1 & calcola il coseno delella variabile \verb1x1, \\
+\verb1sqrt(x)1 & calcola la radice quadrata di \verb1x1, \\
+\verb1abs(x)1 & calcola il valore assoluto di \verb1x1, \\
+\verb1log(x)1 & calcola il logaritmo naturale di \verb1x1, \\
+\verb log10(x) & calcola il logaritmo di\verb1x1in base $10$.
+\end{tabular}\end{center}
+
+\begin{codice}
+\begin{verbatim}
+>> log(2)
+
+ans =
+
+    0.6931
+
+>> log10(2)
+
+ans =
+
+    0.3010
+\end{verbatim}
+\end{codice}
+
+Molte altre funzioni sono disponibili, per poterle visualizzare tutte è
+possibile utilizzare il browser apposito cliccando sulla barra di navigazione
+su Help/Function Browser, oppure premendo MAIUSC+F1.
+
+\begin{octave}
+La maggior parte delle funzioni sono presenti su Octave con lo stesso nome.
+\begin{codice}
+\begin{verbatim}
+>>> log(2)
+ans =  0.69315
+\end{verbatim}
+\end{codice}
+Però, come già sottolineato, il formato short differisce per una cifra 
+decimale, è quindi consigliabile usare il formato long.
+Inoltre in Octave per visualizzare la lista è necessario andare sull'Help,
+sempre sulla barra di navigazione: Help/Octave Help (anche premendo F1) e 
+quindi in fondo all'indice delle pagine di aiuto, dopo le appendici,
+cliccare su \emph{function index}.
+\end{octave}
+
+Per avere informazioni su funzioni specifiche è possibile usare
+due comandi: \verb1help1 e \verb1lookfor1, del primo abbiamo già parlato, il
+secondo invece è molto utile poiché permette di verificare tutti i comandi
+che si riferiscano ad una parola chiave. La sintassi è: \verb1lookfor nome1,
+dove \verb1nome1 può specificare il nome di un comando o di una parola chiave,
+in inglese.
+\begin{codice}
+\begin{verbatim}
+>> lookfor absolute
+abs                            - Absolute value.
+genelowvalfilter               - filters genes with low absolute expression levels.
+mamadnorm                      - normalizes microarray data by median absolute deviation (MAD).
+abs2active                     - Convert constraints from absolute format to active format.
+active2abs                     - Convert constraints from active format to absolute format.
+imabsdiff                      - Absolute difference of two images.
+mae                            - Mean absolute error performance function.
+dmae                           - Mean absolute error performance derivative function.
+circlepick                     - Pick bad triangles using an absolute tolerance
+mad                            - Mean/median absolute deviation.
+>> 
+\end{verbatim}
+\end{codice}
+ 
+\subsection{Modificare, Salvare e Caricare il Workspace.}
+Nel Workspace sono presenti tutte le variabili che noi dichiariamo con la
+semplice sintassi descritta. Ogni volta che eseguiamo un assegnamento
+modifichiamo il Workspace, nello specifico modifichiamo la variabile a 
+sinistra dell'assegnamento, se una funzione non ha tale variabile di default
+viene modificata \verb1ans1.
+\begin{exe}
+Modifica del Workspace.
+\begin{codice}
+\begin{verbatim}
+>> x = 1
+
+x =
+
+     1
+>> x = [1 2 3]
+
+x =
+
+     1     2     3
+
+\end{verbatim}
+\end{codice}
+In questo esempio la variabile \verb1x1 viene inizializzata come un array
+di un solo elemento con valore $1$, il comando successivo la modifica in un
+array di $3$ elementi. D'ora in avanti, durante il lavoro, ogni volta che
+utilizzeremo \verb1x1 questa sarà come l'ultima modifica effetuata.
+\end{exe}
+
+Per evitare di cancellare dati importanti è consigliabile dare nomi diversi
+alle variabili e sopratutto significativi, quando le variabili in gioco
+cominciano a diventare numerose è possibile usare il comando \verb1exist1
+per verificare l'esistenza o meno.
+\begin{exe}
+Ricerca di una variabile.
+\begin{codice}
+\begin{verbatim}
+>> exist x
+
+ans =
+
+     1
+
+>> exist y
+
+ans =
+
+     0
+
+>> 
+\end{verbatim}
+\end{codice}
+In questo caso \verb1x1 esiste ($1 = $ vero) mentre \verb1y1 no.
+\end{exe}
+
+E' possibile che si debba interrompere una sessione di lavoro, o che questa
+debba essere suddivisa in intervalli temporali per vari motivi. Ovviamente
+non occorre ogni volta che si riavvia Matlab reinserire tutte le variabili
+manualmente per ricominciare il lavoro, con il comando \verb1save nomefile1 è
+infatti possibile salvare l'intero contenuto del Workspace all'interno del 
+file specificato. Per ricarice i dati salvati si usa il comando 
+\verb1load nomefile1.
+\begin{ese}
+Si provi la seguente lista di comandi:
+\begin{codice}
+\begin{verbatim}
+>> x = 1;
+>> save walker
+>> clear
+>> exist x
+>> load walker
+>> exist x
+\end{verbatim}
+\end{codice}
+\end{ese}
+
+\section{Manipolare i dati.}
+Come abbiamo già detto, i dati in Matlab sono tutti espressi in array. Con
+la sintassi \verb1>> x = 2;1 si genera un array monodimenzionale di un solo
+elemento ($1 \times 1$). Ma come si creano vettori di più elementi?
+\begin{codice}
+\begin{verbatim}
+>> x = [1 2 3 4 5];
+>> y = [1,2,3,4,5]
+
+y =
+
+     1     2     3     4     5
+
+\end{verbatim}
+\end{codice}
+Questi due comandi generano due vettori riga (\verb1x1 e \verb1y1) 
+completamente uguali
+a parte per il nome, ovvero all'interno di parentesi elencare numeri
+--elementi-- separati da uno spazio o una virgola genera un vettore riga.
+
+Per generare un vettore colonna invece gli elmenti devono essere separati da
+un ``a capo'' o da un punto e virgola.
+\begin{codice}
+\begin{verbatim}
+>> x = [1 
+2 
+3 
+4 
+5];
+>> y = [1;2;3;4;5]
+
+y =
+
+     1
+     2
+     3
+     4
+     5
+
+>> 
+\end{verbatim}
+\end{codice}
+
+Per generare una matrice si devono mischiare le due modalità, ovvero inserire
+una colonna di righe o una riga di colonne (è possibile usare anche
+le variabili come righe o colonne).
+\begin{codice}
+\begin{verbatim}
+>> Y = [1 2 ; 3 4]
+
+Y =
+
+     1     2
+     3     4
+\end{verbatim}
+\end{codice}
+
+
+\subsection{Trasposta.}
+Dato un array (vettore o matrice) è possibile calcolarne semplicemente la
+\emph{trasposta} applicando un apice (') alla fine della definizione
+del vettore o al nome del vettore.
+\begin{codice}
+\begin{verbatim}
+>> y = [1;2;3;4;5]'
+
+y =
+
+     1     2     3     4     5
+
+>> x'
+
+ans =
+
+     1     2     3     4     5
+\end{verbatim}
+\end{codice}
+
+\subsection{Accesso agli elementi e dimensioni}
+Per accedere ad un elemento specifico di un vettore o di una matrice è 
+sufficiente utilizzare le parentesi rotonde applicate al nome dell'array
+indicando l'indice o gli indici
+dell'elemento desiderato.
+
+\begin{codice}
+\begin{verbatim}
+>> x(2)
+
+ans =
+
+     2
+
+>> X(2,1)
+
+ans =
+
+     0
+\end{verbatim}
+\end{codice}
+
+Dato un array è possibile conoscerne la lunghezza con il comando 
+\verb1length nomevettore1, oppure  le dimensioni con il comando
+\verb1size nomevettore1.
+
+\begin{codice}
+\begin{verbatim}
+>> length x
+
+ans =
+
+     1
+
+>> size X
+
+ans =
+
+     1     1
+\end{verbatim}
+\end{codice}
+
+\subsection{linspace(a,b,n).}
+\begin{codice}
+\begin{verbatim}
+>> x = linspace(a,b,n);
+\end{verbatim}
+\end{codice}
+Crea un vettore equispaziato da $\verb1a1$ a $\verb1b1$ di $n$ elementi.
+Il parametro \verb1n1 è facoltativo, se non presente di default Matlab
+imposta $100$ elementi.
+
+\subsection{logspace(a,b,n).}
+\begin{codice}
+\begin{verbatim}
+>> x = linspace(a,b,n);
+\end{verbatim}
+\end{codice}
+Crea un vettore di $n$ elementi intervallati logaritmicamente da $10^{\verb1a1}$
+ a 
+$10^{\verb1b1}$. Il parametro \verb1n1 è facoltativo, se non presente di default 
+Matlab imposta $50$ elementi. Utile per creare grafici in scala logaritmica
+per dati di grandi dimensioni.
+
+\subsection{Assegnazione a blocchi.}
+Matlab da la possibilità di eseguire operazioni fondamentali senza il bisogno
+di accedere agli elementi di vettori e matrici direttamente magari usando
+comandi come cicli \verb1for1 o \verb1while1. Ad esempio è possibile creare 
+matrici con assegnazioni a blocchi.
+\begin{codice}
+\begin{verbatim}
+>> x = [1 2];
+>> y = [3 4];
+>> z = [x y x]
+
+z =
+
+     1     2     3     4     1     2
+
+>> B = [x;y]
+
+B =
+
+     1     2
+     3     4
+\end{verbatim}
+\end{codice}
+\begin{notabene}
+I blocchi devono essere di dimensioni compatibili.
+\end{notabene}
+\begin{codice}
+\begin{verbatim}
+>> C = [y' B; 5 6 7]
+
+C =
+
+     3     1     2
+     4     3     4
+     5     6     7
+\end{verbatim}
+\end{codice}
+\begin{codice}
+\begin{verbatim}
+>> C = [y B; 5 6 7]
+??? Error using ==> horzcat
+CAT arguments dimensions are not consistent.
+ 
+\end{verbatim}
+\end{codice}
+
+\subsection{Notazione ``due punti'' o ``colon''.}
+E' possibile usare, alternativamente a \verb1linspace1 la notazione ``colon''
+per creare vettori equispaziati, utile sopratutto per array di piccole 
+dimensioni, la sintassi è la seguente:
+\begin{center}
+\verb1vettore = inizio : passo : fine1
+\end{center}
+Il \verb1passo1 se non specificato di default è $1$, ovvero il vettore che ne 
+risulta avrà come valore iniziale \verb1inizio1 e di seguito gli altri 
+elementi saranno incrementati di $1$ fino all'ultimo elemento (\verb1fine1),
+un valore negativo invece crea il vettore dal valore più alto a quello più
+basso. 
+\begin{codice}
+\begin{verbatim}
+>> x = (2:5)
+
+x =
+
+     2     3     4     5
+
+>> y = (5:2)
+
+y =
+
+   Empty matrix: 1-by-0
+
+>> z = (5:-1:2)
+
+z =
+
+     5     4     3     2
+\end{verbatim}
+\end{codice}
+\begin{notabene}
+Si noti che \verb1y1 è un vettore vuoto di dimensioni $1 \times 0$
+\end{notabene}
+
+Un altro utilizzo per la notazione ``colon'' è per selezionare un'intera
+colonna o una riga in una matrice.
+\begin{codice}
+\begin{verbatim}
+>> C(:,1)
+
+ans =
+
+     3
+     4
+     5
+
+>> C(1,:)
+
+ans =
+
+     3     1     2
+\end{verbatim}
+\end{codice}
+Oppure per la selezione di un ``range'' all'interno di un vettore o una
+matrice. 
+\begin{codice}
+\begin{verbatim}
+>> C(1:2,2:3)
+
+ans =
+
+     1     2
+     3     4
+
+\end{verbatim}
+\end{codice}
+Qui ad esempio abbiamo estratto la sottomatrice di \verb1C1 data dalla
+prima alla seconda riga e dalla seconda alla terza colonna.
+\begin{codice}
+\begin{verbatim}
+>> A = [1 2 3; 4 5 6; 7 8 9]
+
+A =
+
+     1     2     3
+     4     5     6
+     7     8     9
+
+\end{verbatim}
+\end{codice}
+L'ultima utilità che vediamo per la notazione ``colon'' è quella per la 
+modifica di una matrce o un vettore, partiamo dalla matrice \verb1A1 di cui
+sopra ed applichiamo la notazione per alcune modifiche.
+\begin{codice}
+\begin{verbatim}
+>> A(1,:) = (2:2:6)
+
+A =
+
+     2     4     6
+     4     5     6
+     7     8     9
+
+\end{verbatim}
+\end{codice}
+Qui alla prima riga abbiamo sostituito il vettore dato da \verb12:2:61.
+\begin{codice}
+\begin{verbatim}
+>> A(:,3) = (1:3)'
+
+A =
+
+     1     2     1
+     4     5     2
+     7     8     3
+
+
+\end{verbatim}
+\end{codice}
+Alla terza colonna abbiamo sostituito il vettore colonna \verb (1:3)' .
+
+\begin{codice}
+\begin{verbatim}
+>> A(:,1) = []
+
+A =
+
+     2     3
+     5     6
+     8     9
+
+\end{verbatim}
+\end{codice}
+Come si nota, è possibile anche eliminare un intero vettore colonna o riga,
+modificando la struttura della matrice.
+
+\subsection{zeros(), ones(), rand() e eye()}
+Alcune funzioni utili per costruire vettori e matrici particolari sono:
+\begin{center}
+\begin{tabular}{ll}
+\verb1zeros(righe, colonne)1& crea un array contenete solo elementi \verb101, \\
+\verb1ones(righe, colonne)1 & crea un array contenete solo elementi \verb 1 , \\
+\verb1rand(righe, colonne)1 & crea un array contenete elementi casuali, \\
+\verb1eye(righe, colonne)1 & crea una matrice identità.
+\end{tabular}
+\end{center}
+I parametri \verb1righe1 e \verb1colonne1 indicano il numero di righe e di 
+colonne della matrice risultante.
+\begin{codice}
+\begin{verbatim}
+>> zeros(2,2)
+
+ans =
+
+     0     0
+     0     0
+
+>> ones(2,2)
+
+ans =
+
+     1     1
+     1     1
+
+>> rand(2,2)
+
+ans =
+
+    0.8147    0.1270
+    0.9058    0.9134
+
+>> eye(2,4)
+
+ans =
+
+     1     0     0     0
+     0     1     0     0
+
+\end{verbatim}
+\end{codice}
+Come si può notare è possibile dare dimensioni differenti dalla canonica
+forma quadrata, anche nella matrice identità.
+
+\subsection{Operatori su vettori e matrici.}
+Sia \verb1x1 un vettore di $n$ elementi tale che $x_i \in \verb1x1$ per ogni
+$i \in [0,n-1]$, sia \verb1A1 una matrice di $n \times m$ elementi.
+In Matlab sono definite le seguenti funzioni:
+
+\begin{center}
+\begin{tabular}{ll}
+\verb1a = sum(x)1 & genera lo scalare $\verb1a1 = \sum_ix_i$, \\
+\verb1a = prod(x)1 & genera lo scalare $\verb1a1 = \prod_ix_i$, \\
+\verb1a = max(x)1 & genera lo scalare $\verb1a1 = \textrm{max}\ x_i, \quad i 
+= 1, \ldots n$, \\
+\verb1a = min(x)1 & genera lo scalare $\verb1a1 = \textrm{min}\ x_i, \quad i 
+= 1, \ldots n$, \\
+$\verb1a = norm(x)1$ & genera lo scalare $\verb1a1 = \|x\|_2$, \\
+$\verb1a = norm(x,1 \verb 1) $ & genera lo scalare $\verb1a1 = \|x\|_1$, \\
+\verb1a = norm(x,inf)1 & genera lo scalare $\verb1a1 = \|x\|_{\infty}$, \\
+\verb1A = diag(x)1 & crea una matrice con diagonale il vettore \verb1x1, \\
+\verb1a = norm(A)1 & genera lo scalare $\verb1a1 = \|A\|_2$, \\
+\verb1a = norm(A,1)1 & genera lo scalare $\verb1a1 = \|A\|_1$, \\
+\verb1a = norm(A,inf)1 & genera lo scalare $\verb1a1 = \|A\|_{\infty}$, \\
+\verb1x = sum(A)1 & genera il vettore riga $\verb1x1 = x_{i,j} = \sum_ia_{i,j},
+\quad j = 1, \ldots n$, \\
+\verb1x = max(A)1 & genera il vettore riga $\verb1x1 = x_{i,j} = \textrm{max}
+ \ a_{i,j}, \quad j = 1, \ldots n$, \\
+\verb1x = min(A)1 & genera il vettore riga $\verb1x1 = x_{i,j} = \textrm{min}
+ \ a_{i,j}, \quad j = 1, \ldots n$, \\
+\verb1x = diag(A)1 & genera il vettore colonna dato dalla diagonale di 
+\verb1A1, \\
+\verb1B = abs(A)1 & genera la matrice dei valori assoluti, \\
+\verb1U = triu(A)1 & genera la matrice triangolare superiore con gli elementi\\
+& non nulli uguali a quelli di \verb1A1.\\
+\verb1U = tril(A)1 & genera la matrice triangolare inferiore con gli elementi\\
+& non nulli uguali a quelli di \verb1A1.
+\end{tabular}
+\end{center}
+
+\subsection{Operatori algebrici sugli array.}
+Siano \verb1A1 e \verb1B1 array (matrici o vettori), Matlab definisce due
+tipi generici di operazioni: le operazioni puntuali e le operazioni tra
+array. Le operazioni tra array sono quelle con la consueta sintassi, le 
+operazioni puntuali invece hanno come sintazzi un punto prima dell'operazione
+desiderata. Ad esempio un prodotto matriciale riga per colonna si effettua
+con il seguente comando: \verb1A*B1, se invece avessimo voluto moltiplicare
+elemento per elemento (nella stessa posizione) il comando sarebbe stato:
+\verb1A.*B1.
+
+\begin{codice}
+\begin{verbatim}
+>> A = 2*ones(2,2)
+
+A =
+
+     2     2
+     2     2
+
+>> A.^2
+
+ans =
+
+     4     4
+     4     4
+
+>> A^2
+
+ans =
+
+     8     8
+     8     8
+\end{verbatim}
+\end{codice}
+Si noti che \verb1A.^21 equivale al comando \verb1A.*A1, ovvero moltiplica
+ciascun elemento per se stesso, invece \verb1A^21 equivale a \verb1A*A1,
+ovvero prodotto riga per colonna.
+
+Come il prodotto è possibile utilizzare tutte le operazioni su vettori,
+matrici, scalari, etc.
+
+\chapter{Lavorare con Matlab.}
+
+\section{Funzioni dell'algebra lineare.}
+Come si è visto nell'introduzione a Matlab, i dati su cui si lavora sono
+matrici e vettori. In questa sezione vedremo quindi l'utilizzo delle principali
+funzioni Matlab basate sull'algebra lineare.
+
+\begin{itemize}
+\item \verb1d = det(A) 1  calcola il determinante di $A$.
+\item \verb1B = inv(A) 1  calcola la matrice inversa di $A$.
+\item \verb1H = hilb(n) 1  costruisce la matrice di Hilbert: $H(i,j) = 
+\frac{1}{i+j-1}$.
+\item \verb1V = vander(v) 1 costruisce la matrice di Vandermonde di ordine
+$n = \verb1length(v)1$: $V(i,j) = v(i)^{(n-j)}$.
+\item \verb1[M,D] = eig(A) 1 calcola gli autovalori e autovettori di $A$.
+\item \verb1 A\b 1 calcola la soluzione del sistema lineare $Ax = b$ con
+l'eliminazione di Gauss.
+\end{itemize}
+
+\begin{exe}Matrice di Hilbert e suo determinante.
+
+\begin{codice}
+\begin{verbatim}
+>> format rat
+>> A = hilb(4)
+
+A =
+
+       1              1/2            1/3            1/4     
+       1/2            1/3            1/4            1/5     
+       1/3            1/4            1/5            1/6     
+       1/4            1/5            1/6            1/7     
+
+>> m1 = A(1,1)
+
+m1 =
+
+       1       
+
+>> m2 = A(1:2,1:2), dm2 = det(m2)
+
+m2 =
+
+       1              1/2     
+       1/2            1/3     
+
+
+dm2 =
+
+       1/12    
+
+>> m3 = A(1:3,1:3), dm3 = det(m3)
+
+m3 =
+
+       1              1/2            1/3     
+       1/2            1/3            1/4     
+       1/3            1/4            1/5     
+
+
+dm3 =
+
+       1/2160  
+
+>> m4 = det(A)
+
+m4 =
+
+       1/6048000
+
+>> 
+\end{verbatim}
+\end{codice}
+In questo esempio vediamo un nuovo formato: \verb1format rat1 che visualizza la
+notazione razionale dei nostri dati.
+
+Le funzioni \verb1hilb()1 e \verb1det()1, si comportano esattamente come ci si
+aspetta: con la prima si costruisce una matrice di ordine $4$, mentre con la 
+seconda un \emph{vettore} $1 \times 1$ il cui unico elemento è il valore
+del determinante.
+\end{exe}
+
+\begin{exe}Matrice di Vandermonde e calcolo dell'inversa.
+
+\begin{codice}
+\begin{verbatim}
+>> v = [1:4]; V = vander(v)
+
+V =
+
+       1              1              1              1       
+       8              4              2              1       
+      27              9              3              1       
+      64             16              4              1       
+
+>> inv_V = inv(V)
+
+inv_V =
+
+      -1/6            1/2           -1/2            1/6     
+       3/2           -4              7/2           -1       
+     -13/3           19/2           -7             11/6     
+       4             -6              4             -1       
+
+>> 
+\end{verbatim}
+\end{codice}
+\verb1v1 è il vettore $[1,2,3,4]$, viene quindi creata la matrice $V$ di
+Vandermonde come ci si aspetta dal comando \verb1vander()1, quindi con la 
+funzione \verb1inv()1 si calcola l'inversa.
+\end{exe}
+
+\begin{exe}Autovalori e autovettori.
+
+\begin{codice}
+\begin{verbatim}
+>> v = [0.1:0.1:0.5]; [M,D] = eig(vander(v))
+
+M =
+
+    -641/1844      -903/1345      1206/1345       521/892      -1236/1405  
+    -521/1355      -397/702        739/2270      -174/235        411/1310  
+   -3585/8339      -963/2413     -1189/10328      129/394        615/1933  
+    -605/1244      -249/1691     -1018/3795      -243/4162     -1259/7785  
+    -976/1753        24/109        194/2795        87/25672       95/5587  
+
+
+D =
+
+     939/535          0              0              0              0       
+       0           -452/1511         0              0              0       
+       0              0            169/3621         0              0       
+       0              0              0              8/32799        0       
+       0              0              0              0           -100/20753 
+
+>> 
+\end{verbatim}
+\end{codice}
+
+\end{exe}
+
+\begin{exe}Risoluzione di un sistema lineare.
+
+\begin{codice}
+\begin{verbatim}
+>> A = vander(1:3); b=[3;7;13];
+>> x = A\b
+
+x =
+
+       1       
+       1       
+       1       
+
+>> A*x
+
+ans =
+
+       3       
+       7       
+      13       
+
+\end{verbatim}
+\end{codice}
+
+\end{exe}
+
+\section{File Diario.}
+Il comando \verb1diary1 permette di registrare l'attività svolta in una sessione
+di lavoro con Matlab. L'utilizzo è il seguente:
+\begin{itemize}
+\item \verb1diary 1 registra una sessione di lavoro e la salva in un file di 
+nome diary.
+\item \verb1diary nomefile 1 registra una sessione di lavoro e la salva in un 
+file di nome \verb1nomefile1.
+\item \verb1diary off 1 disattiva la registrazione.
+\item \verb1diary on 1 riattiva la registrazione. 
+\end{itemize}
+I file vengono salvati in formato ASCII.
+\begin{exe}Utilizzo del comando \verb1diary1.
+
+\begin{codice}
+\begin{verbatim}
+>> diary esempio
+>> x = linspace(0,pi,10);
+>> y = (15120 -6900*x.^2 + 313*x.^4)./(15120+660*x.^2 +13*x.^4);
+>> [x',y']
+
+ans =
+
+       0              1       
+     355/1017       857/912   
+     710/1017      1313/1714  
+     355/339     441131/882261
+    1420/1017       207/1192  
+    1775/1017      -109/628   
+     710/339       -546/1093  
+    1102/451       -554/725   
+    2840/1017    -15007/16079 
+     355/113      -4069/4143  
+
+>> diary off
+>> % fine registrazione
+>> 
+>> type esempio
+
+x = linspace(0,pi,10);
+y = (15120 -6900*x.^2 + 313*x.^4)./(15120+660*x.^2 +13*x.^4);
+[x',y']
+
+ans =
+
+       0              1       
+     355/1017       857/912   
+     710/1017      1313/1714  
+     355/339     441131/882261
+    1420/1017       207/1192  
+    1775/1017      -109/628   
+     710/339       -546/1093  
+    1102/451       -554/725   
+    2840/1017    -15007/16079 
+     355/113      -4069/4143  
+
+diary off
+
+>> 
+\end{verbatim}
+\end{codice}
+Il comando \verb1type nomefile1 infine permette di visualizzare il contenuto
+di \verb1nomefile1.
+\end{exe}
+
+\section{Tipi di file Matlab.}
+In Matlab ci sono tre tipi di file:
+\begin{itemize}
+\item Mat File, con estensione \verb1.mat1.
+\begin{codice}
+\begin{verbatim}
+>> save esempio
+\end{verbatim}
+\end{codice}
+salva il file \verb1esempio.mat1, contente l'ambiente di lavoro Matlab.
+\item M-file, con estensione \verb1.m1, per memorizzare programmi e funzioni
+Matlab.
+\item File dati, con estensione \verb1.txt1, in formato ASCII.
+\end{itemize}
+
+In Matlab possiamo operare in due modi, in modalità interattiva (a riga di 
+comando dalla shell) oppure tramite l'esecuzione di programmi o script.
+
+\section{Creare e utilizzare M-file.}
+Gli M-file possono contenere script o funzioni. La principale differenza 
+``semantica'' tra lo script e la function è che nel primo le variabili sono
+globali, e quindi vengono salvate nel workspace, nelle function invece le
+variabili sono memorizzate localmente e non vanno a sporcare l'ambiente di 
+lavoro.
+
+Inoltre una function ha delle variabili in input ed output, mentre lo script
+modifica e crea variabili date nel workspace, in una function l'unico
+modo di modificare variabili è quello di usare il meccanismo di output.
+
+Per creare un M-file è necessario:
+\begin{enumerate}
+\item selezionare \verb1New1 dal menù \verb1File1 e poi \verb1M-file1;
+\item digitare i comandi che compongono lo script o la function;
+\item selezionare \verb1save1 dal menù \verb1File1 della nuova finestra;
+\item dare un nome coerente al file se si tratta di uno script, o il nome
+esatto della function.
+\end{enumerate}
+
+\subsection{Function.}
+Le function Matlab sono utili quando occorre ripetere più volte una serie
+di comandi, in modo particolare quando questi comandi hanno un senso
+particolare, ad esempio un algoritmo.
+
+Per quanto riguarda la sintassi, la prima riga dell'M-file deve contenere la
+parola chiave \verb1function1 seguita dai parametri di output racchiusi tra
+parentesi quadre, il nome della funzione ed i nomi delle variabili in input
+tra parentesi rotonde.
+
+\begin{exe}
+Il codice seguente, salvato in un file \verb1risolvi.m1, implementa una
+funzione che genera il vettore soluzione \verb1x1 del problema lineare
+$ Ax = b$.
+\begin{codice}
+\begin{verbatim}
+function [x] = risolvi(A,b)
+% risolvi risolve il generico problema Ax = b
+% con metodo di Gauss.
+
+x = A\b;
+
+end
+\end{verbatim}
+\end{codice}
+Il suo utilizzo è il seguente.
+\begin{codice}
+\begin{verbatim}
+>> A = rand(4);
+>> b = rand(4,1);
+>> x1 = A\b
+
+x1 =
+
+   17.2819
+    0.8395
+  -15.9067
+    1.0883
+
+>> x = risolvi(A,b)
+
+x =
+
+   17.2819
+    0.8395
+  -15.9067
+    1.0883
+
+>> 
+\end{verbatim}
+\end{codice}
+Questo è solo un esempio di come possono essere utilizzate le funzioni, in 
+genere convengono quando l'algoritmo richiede più linee di codice.
+\end{exe}
+
+\begin{exe}
+La seguente funzione, invece è più complessa, ha come parametri di output
+due variabili: $A_n$ e $P$. Di conseguenza il metodo di invocazione è differente
+e, come si può notare, ha molte più righe di codice ed ha più senso di essere
+scritta come funzione di quella vista in precedenza.
+\begin{codice}
+\begin{verbatim}
+function [An,P] = permuta(A)
+% Data una matrice A analizza l'elemento
+% di indice (1,1) e se è uguale a zero effettua uno scambio di righe.
+% Utilizza la tecnica del pivoting parziale.
+
+n = size(A);
+An = A;
+P = eye(n(1));
+
+if(A(1,1)==0)
+   [ma, j] = max(abs(A(:,1)));
+   if(ma ~= 0)
+    An(1,:) = A(j,:); 
+    An(j,:) = A(1,:);
+    P(1,:) = P(j,:);
+    P(j,:)= eye(1,n);
+   end
+end
+\end{verbatim}
+\end{codice}
+Ecco come si utilizza, da notare che l'output è un array di due elementi.
+
+\begin{codice}
+\begin{verbatim}
+>> A = [ 0 1 1 2 4
+1 0 3 3 3
+5 5 5 5 5]
+
+A =
+
+     0     1     1     2     4
+     1     0     3     3     3
+     5     5     5     5     5
+
+>> [An, P] = permuta(A)
+
+An =
+
+     5     5     5     5     5
+     1     0     3     3     3
+     0     1     1     2     4
+
+
+P =
+
+     0     0     1
+     0     1     0
+     1     0     0
+
+\end{verbatim}
+\end{codice}
+I dati di input, se si verifica il workspace, sono inalterati. Gli unici dati
+aggiunti sono quelli di output, delle variabili interne alla funzione non vi
+è traccia.
+\end{exe}
+
+\subsection{Script.}
+Gli script Matlab sono di fatto file di comandi, contengono una sequenza di 
+comandi Matlab, comprese anche funzioni definite da utente.
+
+Tutte le variabili contenute negli script vengono salvate nel workspace.
+Vediamo dunque un esempio di prima in forma di script.
+\begin{exe}Il seguente codice è inserito nel file \verb1esempio.m1.
+\begin{codice}
+\begin{verbatim}
+A = rand(4)
+b = rand(4,1)
+x = A\b
+\end{verbatim}
+\end{codice}
+Per eseguirlo è sufficiente digitare \verb1esempio1, ovvero il nome dello script
+salvato nella directory corrente.
+\begin{codice}
+\begin{verbatim}
+>> esempio
+
+A =
+
+    0.3804    0.5308    0.5688    0.1622
+    0.5678    0.7792    0.4694    0.7943
+    0.0759    0.9340    0.0119    0.3112
+    0.0540    0.1299    0.3371    0.5285
+
+
+b =
+
+    0.1656
+    0.6020
+    0.2630
+    0.6541
+
+
+x =
+
+   -0.7515
+    0.0062
+    0.5057
+    0.9902
+\end{verbatim}
+\end{codice}
+\end{exe}

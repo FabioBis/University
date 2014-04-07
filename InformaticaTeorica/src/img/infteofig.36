@@ -1,0 +1,83 @@
+%!PS
+%%BoundingBox: -29 -86 72 15 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmr10 9.96265 9.96265 31:c
+%*Font: cmmi10 9.96265 9.96265 41:8000000000001
+%%EndProlog
+%%Page: 1 1
+ 0 0.5 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinejoin 10 setmiterlimit
+newpath 0 0 moveto
+28.34645 0 lineto
+28.34645 14.17323 lineto
+0 14.17323 lineto
+0 0 lineto
+-28.34645 0 lineto
+-28.34645 14.17323 lineto
+0 14.17323 lineto
+ closepath stroke
+newpath 70.86613 -28.34645 moveto
+70.86613 -14.17323 lineto
+42.51968 -14.17323 lineto
+70.86613 -28.34645 lineto
+42.51968 -28.34645 lineto
+42.51968 -14.17323 lineto
+14.17323 -14.17323 lineto
+14.17323 -28.34645 lineto
+ closepath stroke
+ 1 setlinecap
+newpath 14.17323 7.08661 moveto
+28.34645 -14.17323 lineto stroke
+newpath 25.02277 -11.94739 moveto
+28.34645 -14.17323 lineto
+27.57022 -10.24911 lineto
+ closepath
+gsave fill grestore stroke
+newpath 0 -56.6929 moveto
+28.34645 -56.6929 lineto
+28.34645 -42.51968 lineto
+0 -42.51968 lineto
+0 -56.6929 lineto
+-28.34645 -56.6929 lineto
+-28.34645 -42.51968 lineto
+0 -42.51968 lineto
+ closepath stroke
+newpath 70.86613 -85.03935 moveto
+70.86613 -70.86613 lineto
+42.51968 -70.86613 lineto
+70.86613 -85.03935 lineto
+42.51968 -85.03935 lineto
+42.51968 -70.86613 lineto
+14.17323 -70.86613 lineto
+14.17323 -85.03935 lineto
+ closepath stroke
+newpath 14.17323 -49.6063 moveto
+28.34645 -70.86613 lineto stroke
+newpath 25.02277 -68.64029 moveto
+28.34645 -70.86613 lineto
+27.57022 -66.94202 lineto
+ closepath
+gsave fill grestore stroke
+newpath 28.34645 -21.25984 moveto
+-7.08661 -42.51968 lineto stroke
+newpath -4.7053 -39.30574 moveto
+-7.08661 -42.51968 lineto
+-3.13017 -41.93098 lineto
+ closepath
+gsave fill grestore stroke
+-22.19873 3.68271 moveto
+(At) cmmi10 9.96265 fshow
+-11.12914 3.68271 moveto
+(1) cmr10 9.96265 fshow
+-22.19873 -53.0102 moveto
+(At) cmmi10 9.96265 fshow
+-11.12914 -53.0102 moveto
+(2) cmr10 9.96265 fshow
+20.32095 -81.35664 moveto
+(At) cmmi10 9.96265 fshow
+31.39055 -81.35664 moveto
+(1) cmr10 9.96265 fshow
+showpage
+%%EOF

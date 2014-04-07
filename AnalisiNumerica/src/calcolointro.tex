@@ -1,0 +1,214 @@
+\chapter{Introduzione}
+\section{Risoluzione di sistemi lineari}
+
+Come si risolve il generico problema $Ax = b, \,   A \in \rr^{n \times n}$ con
+$A$ non singolare?
+\[
+b \in \rr^n, \qquad
+x \in \rr^n,
+\]
+\[
+\begin{array}{ccc}
+A = \left [\begin{array}{ccc}
+a_{1,1} & \cdots & a_{1,n} \\
+\vdots & \ddots & \vdots \\
+a_{n,1} & \cdots & a_{n,n}
+\end{array}
+\right],
+&
+b = \left[ \begin{array}{c}
+b_{1} \\
+\vdots \\
+b_{n}
+\end{array}\right],
+&
+x = \left [\begin{array}{c}
+x_{1} \\
+\vdots \\
+x_{n}
+\end{array}\right].
+\end{array}
+\]
+Problema: trovare le $x_i$.
+\subsection{Algoritmo di Cramer}
+Utilizzando il metodo di Cramer sulla $i$-esima colonna:
+
+\[x_i = \frac{\textrm{det}A_i}{\textrm{det}A},\]
+(il costo consiste nel calcolare $n+1$ determinanti
+distinti).
+
+\[
+A_i = \left[ \begin{array}{ccccc}
+a_{1,1} & \cdots & b_1 & \cdots & a_{1,n} \\
+\vdots & & \vdots & & \vdots \\
+a_{n,1} & \cdots & b_n & \cdots & a_{n,n}
+\end{array} \right].
+\]
+
+Non è un algoritmo sequenziale cioè non è necessario trovare $x_1$ per
+calcolare $x_2$ etc.
+Posso utilizzare $n$ processori distinti, ognuno per calcolare $x_i$.
+
+\[\textrm{det}A = \sum_{i = 1}^{n}(-1)^{i+1}a_{1,i}\textrm{det}A_i
+\textrm{ (elimino la prima riga e l'i-esima colonna).}\]
+Quanto costa il calcolo del determinante di una matrice?
+\newline
+Prodotto di $a_{1,i}\textrm{det}A_i$.
+\begin{itemize}
+\item[]$c_n := n$ numero dei prodotti per il calcolo del derminate det$A$
+\item[]$c_n = n c_{n -1} + n\geq n c_{n-1} \geq
+n(n-1) c_{n-2} \geq \cdots \geq n(n-1)(n-2) \cdots c_2 = n!$
+\item[]Stima per difetto.
+\item[]$c_2 = 2$ $ (2$ operazioni come prodotto).
+\item[]$c_{n+1} = (n-1)c_{n-2} + (n-1) \geq (n-1)c_{n-2}$.
+\end{itemize}
+
+Per determinare $n+1$ determinanti: $(n+1)n! = (n+1)!$
+Costo in termini di operazioni di prodotto.
+
+\subsection{Matrice inversa.}
+Vedremo che l'algoritmo di eliminazione di Gauss si baserà sulle traformazioni
+matriciali, intanto osserviamo un metodo alternativo all'algoritmo di Cramer:
+matrice inversa.
+
+\[x = Ix = A^{-1}Ax = A^{-1}b \textrm{ (prodotto matrice vettore).}\]
+
+Stesso problema di calcolare i determinanti.
+
+\[A A^{-1} = A^{-1} A = I.\]
+
+\[A^{-1} = \frac{[A']^t}{\textrm{det}A}.\]
+
+Ove, ricordiamo, $[A']^t$ è la matrice aggiunta, ovvero la matrice dei cofattori:
+
+\[
+A = \left[ \begin{array}{ccccc}
+a_{1,1}(-1)^{1+1} \textrm{det}A_{1,1} & \cdots & a_{1,n}(-1)^{1+n} \textrm{det}A_{1,n} \\
+\vdots & \ddots & \vdots \\
+a_{n,1}(-1)^{n+1} \textrm{det}A_{n,1} & \cdots & a_{n,n}(-1)^{n+n} \textrm{det}A_{n,n}
+\end{array} \right],
+\]
+
+Sia $\overline{a}_i$ la colonna della matrice di indice $i$ di
+$A^{-1} \quad i = 1, 2, \ldots , n$
+%array
+\[
+A[\overline{a}_1\, \overline{a}_2\, \ldots\, \overline{a}_i\, \ldots\,
+\overline{a}_n] = [e_1\, e_2\, \ldots\, e_i\, \ldots\, e_n] = I.\]
+%array
+
+\[[A\overline{a}_1\, A\overline{a}_2\, \ldots\, A\overline{a}_i\, \ldots\,
+A\overline{a}_n] = [e_1\, e_2\, \ldots\, e_i\, \ldots\, e_n] = I.\]
+Dovrei arrivare a trovare $A^{-1}$ ricavando gli $\overline{a}_i$.
+\newline Ma il problema iniziale $Ax = b\quad  x = \, ?$
+Occorre molto tempo.
+
+Vediamo quanto costa la singola operazione di prodotto di un calcolatore
+reale.
+
+Esempio: $10^{-8}$sec.
+
+$t$ = tempo d'esecuzione.
+
+$t(n+1)!$
+
+es. $t = 10^{-6}$sec.
+\begin{displaymath}
+\begin{array}{c|c|c}
+\textrm{Ordine Matrice} & \textrm{Cramer} & \textrm{Eliminazione di Gauss} \\
+\hline
+12 & 103 \textrm{ minuti} & 7,1 10^{-8} \textrm{sec.} \\
+13 & 24 \textrm{ ore} & 8,9 10^{-4} \textrm{sec.} \\
+14 & 15 \textrm{ gg.} & 1,1 10^{-3} \textrm{sec.} \\
+30 & 1,6 10^{20}\textrm{ anni} & 9,9 10^{-3} \textrm{sec.}
+\end{array}
+\end{displaymath}
+
+Meglio l'alternativa? NO.
+
+L'analisi numerica permette di risolvere questi problemi in tempo reale
+(al più qualche minuto).
+
+Ci permette di  arrivare a soluzione di $f(x) = 0$ anche se non esistono
+forme chiuse per determinare le radici. Non esiste sempre un algoritmo di
+risoluzione in forma chiusa.
+\begin{itemize}
+\item $Ax = b$, l'algoritmo ci permette di avere tecniche in forma chiusa ma
+tempi troppo lunghi.
+\item $f(x) = 0$, l'analisi qui non ci fornisce la soluzione precisa ma
+un'approssimazione, una stima.
+\end{itemize}
+\[
+\int_a^bf(x)dx = \,?
+\]
+$f(x) \in C^0([a;b])$, $
+F(b)- F(a)$ so che esiste (Torricelli-Barrow) ma non so determinarla per ogni
+$f$,
+l'Analisi Numerica non passa attraverso la primitiva.
+
+\subsection{Sistemi lineari particolari.}
+
+\subsubsection{Matrici diagonale.}
+Matrice diagonale.
+\[
+A = \left[ \begin{array}{ccccc}
+a_{1,1} & 0 & 0 & \cdots & 0 \\
+0 & a_{2,2}& 0 & \cdots & \vdots \\
+0 & 0 & a_{3,3} &  & 0 \\
+\vdots & \vdots &  & \ddots & 0 \\
+0 & \cdots & 0 & \cdots & a_{n,n}
+\end{array} \right],
+\]
+
+
+\[x_i = \frac{b_i}{a_{i,i}}\quad i = 1, \ldots, n \quad
+\textrm{(richiede n divisioni).}\]
+
+Costo divisione $tn$.
+
+\subsubsection{Matrici triangolari.} %% A triangolare
+Matrice triangolare (inferiore).
+\[
+A = \left[ \begin{array}{ccccc}
+a_{1,1} & 0 & 0 & \cdots & 0 \\
+\vdots & \ddots & 0 & \cdots & 0 \\
+a_{j,1} & \vdots & a_{i,i} &  & \vdots \\
+\vdots & \vdots & \vdots & \ddots & 0 \\
+a_{n,1} & \cdots & a_{n,i} & \cdots & a_{n,n}
+\end{array} \right];
+\]
+
+\[
+x_1 = \frac{b_1}{a_{1,1}};\]
+\[ x_2 = \frac{b_2 - a_{2,1}x_1}{a_{2,2}};\]
+\[ x_n =
+\frac{b_n - a_{n,1}x_1 - \cdots -a_{n,n-1}x_{n-1}}{a_{n,n}}.
+\]
+
+Ovvero:
+
+\[
+x_k = \frac{\left[b_k -\sum_{i = 1}^{k-1}a_{k,i}x_i\right]}{a_{k,k}}.
+\]
+Costo:
+\begin{itemize}
+\item[]Divisioni: $n$;
+\item[]Prodotti: $\frac{n(n-1)}{2}$;
+\item[]Somme: $\frac{n(n-1)}{2}$.
+\item[]
+\item[]Costo complessivo: $\frac{n^2}{2} - \frac{n}{2} =
+\textrm{O}(\frac{n^2}{2})$.
+\end{itemize}
+Discorso analogo per le matrici triangolari superiori.
+\[
+\triu.
+\]
+Il cui costo è identico e la cui formula all'indietro è la seguente:
+\[
+x_k = \frac{\left[b_k -\sum_{i = k+1}^na_{k,i}x_i\right]}{a_{k,k}}.
+\]
+La risoluzione di una matrice triangolare quindi, ha costo pari a O($n^2$).
+L'algoritmo di eliminazione di Gauss serve per riportare il caso generale al
+caso con $A$ triangolare. Il costo più incidente sarà quello della
+trasformazione.
+

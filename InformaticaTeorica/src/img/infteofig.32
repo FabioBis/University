@@ -1,0 +1,28 @@
+%!PS
+%%BoundingBox: -1 -43 284 43 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmr10 9.96265 9.96265 62:d18cf
+%%EndProlog
+%%Page: 1 1
+ 0 0.5 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinejoin 10 setmiterlimit
+newpath 0 0 moveto
+0 -34.97357 44.32198 -42.51968 85.03935 -42.51968 curveto
+125.75673 -42.51968 170.0787 -34.97357 170.0787 0 curveto
+170.0787 34.97357 125.75673 42.51968 85.03935 42.51968 curveto
+44.32198 42.51968 0 34.97357 0 0 curveto closepath stroke
+newpath 113.3858 0 moveto
+113.3858 -34.97357 157.70778 -42.51968 198.42516 -42.51968 curveto
+239.14253 -42.51968 283.46451 -34.97357 283.46451 0 curveto
+283.46451 34.97357 239.14253 42.51968 198.42516 42.51968 curveto
+157.70778 42.51968 113.3858 34.97357 113.3858 0 curveto closepath stroke
+123.05225 -2.49066 moveto
+(bijection) cmr10 9.96265 fshow
+36.6292 -2.3582 moveto
+(inijection) cmr10 9.96265 fshow
+205.55945 -2.3582 moveto
+(surjection) cmr10 9.96265 fshow
+showpage
+%%EOF

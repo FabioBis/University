@@ -1,0 +1,79 @@
+%!PS
+%%BoundingBox: -5 -57 82 8 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmmi10 9.96265 9.96265 58:e
+%*Font: cmr7 6.97385 6.97385 28:c
+%*Font: cmmi7 6.97385 6.97385 6e:8
+%*Font: cmsy7 6.97385 6.97385 30:8
+%%EndProlog
+%%Page: 1 1
+ 0 0.5 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinecap 1 setlinejoin 10 setmiterlimit
+newpath 7.08661 0 moveto
+14.17322 7.08661 lineto
+21.25983 0 lineto
+28.34644 7.08661 lineto stroke
+newpath 0 -7.08661 moveto
+22.67712 -24.80313 lineto stroke
+newpath 18.82278 -23.73434 moveto
+22.67712 -24.80313 lineto
+20.70749 -21.32193 lineto
+ closepath
+gsave fill grestore stroke
+newpath 28.34644 7.08661 moveto
+35.43304 0 lineto stroke
+newpath 31.73752 1.5307 moveto
+35.43304 0 lineto
+33.90234 3.69553 lineto
+ closepath
+gsave fill grestore stroke
+newpath 53.14957 -7.08661 moveto
+34.72433 -24.80313 lineto stroke
+newpath 36.32726 -21.13818 moveto
+34.72433 -24.80313 lineto
+38.4493 -23.34512 lineto
+ closepath
+gsave fill grestore stroke
+newpath 28.34644 -35.43304 moveto
+43.93695 -46.06296 lineto stroke
+newpath 40.02113 -45.24588 moveto
+43.93695 -46.06296 lineto
+41.74586 -42.71625 lineto
+ closepath
+gsave fill grestore stroke
+newpath 77.9527 -28.34644 moveto
+55.98416 -46.06296 lineto stroke
+newpath 57.89993 -42.55139 moveto
+55.98416 -46.06296 lineto
+59.8219 -44.93463 lineto
+ closepath
+gsave fill grestore stroke
+newpath 58.81888 -7.08661 moveto
+72.28339 -17.71652 lineto stroke
+newpath 68.43434 -16.62811 moveto
+72.28339 -17.71652 lineto
+70.33138 -14.22519 lineto
+ closepath
+gsave fill grestore stroke
+-4.51776 -3.4039 moveto
+(X) cmmi10 9.96265 fshow
+52.60626 -4.42285 moveto
+(X) cmmi10 9.96265 fshow
+61.64177 -0.80745 moveto
+(\() cmr7 6.97385 fshow
+64.75516 -0.80745 moveto
+(n) cmmi7 6.97385 fshow
+69.67996 -0.80745 moveto
+(\)) cmr7 6.97385 fshow
+45.8495 -56.55347 moveto
+(Z) cmmi10 9.96265 fshow
+23.19214 -32.0913 moveto
+(Z) cmmi10 9.96265 fshow
+30.70564 -28.47589 moveto
+(0) cmsy7 6.97385 fshow
+73.9538 -24.66373 moveto
+(Y) cmmi10 9.96265 fshow
+showpage
+%%EOF

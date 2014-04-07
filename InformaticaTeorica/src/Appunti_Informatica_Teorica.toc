@@ -1,0 +1,72 @@
+\select@language {italian}
+\contentsline {chapter}{\numberline {1}Introduzione al calcolo dei combinatori}{5}
+\contentsline {section}{\numberline {1.1}Funzioni: due punti di vista}{5}
+\contentsline {subsection}{\numberline {1.1.1}Visione estensionale}{6}
+\contentsline {subsection}{\numberline {1.1.2}Visione operativa}{6}
+\contentsline {section}{\numberline {1.2}Calcolo dei combinatori}{7}
+\contentsline {chapter}{\numberline {2}Calcolo dei combinatori}{9}
+\contentsline {section}{\numberline {2.1}Operazioni su termini combinatori}{11}
+\contentsline {subsection}{\numberline {2.1.1}Sostituzione}{11}
+\contentsline {subsection}{\numberline {2.1.2}Sostituzione multipla}{13}
+\contentsline {subsection}{\numberline {2.1.3}Riduzione}{14}
+\contentsline {subsection}{\numberline {2.1.4}Astrazione}{16}
+\contentsline {subsection}{\numberline {2.1.5}Riduzione semplice}{16}
+\contentsline {subsection}{\numberline {2.1.6}Riduzione multipla}{17}
+\contentsline {subsection}{\numberline {2.1.7}Uso del teorema di astrazione}{18}
+\contentsline {section}{\numberline {2.2}Propriet\`a di riduzione ed uguaglianza debole}{19}
+\contentsline {section}{\numberline {2.3}Interpretazione ``utile'' del calcolo dei combinatori}{21}
+\contentsline {subsection}{\numberline {2.3.1}Richiami sulla teoria degli insiemi}{21}
+\contentsline {subsection}{\numberline {2.3.2}``Tipi'' delle funzioni insiemistiche}{22}
+\contentsline {subsection}{\numberline {2.3.3}Interpretazione Insiemistica delle costanti riducibili}{23}
+\contentsline {section}{\numberline {2.4}Teorema del punto fisso}{25}
+\contentsline {section}{\numberline {2.5}Esercizi significativi}{26}
+\contentsline {subsection}{\numberline {2.5.1}Diagonalizzatore}{26}
+\contentsline {subsection}{\numberline {2.5.2}Interpretazione funzionale}{27}
+\contentsline {subsection}{\numberline {2.5.3}Estrattore parametrico}{27}
+\contentsline {subsection}{\numberline {2.5.4}Interpretazione funzionale}{28}
+\contentsline {subsection}{\numberline {2.5.5}Conclusioni}{28}
+\contentsline {chapter}{\numberline {3}Funzioni ricorsive}{29}
+\contentsline {section}{\numberline {3.1}Funzioni parziali ricorsive}{29}
+\contentsline {section}{\numberline {3.2}Alcune considerazioni}{30}
+\contentsline {section}{\numberline {3.3}Ricorsione primitiva}{31}
+\contentsline {section}{\numberline {3.4}Funzioni ricorsive primitive}{31}
+\contentsline {section}{\numberline {3.5}Lemma di parzialit\`a}{32}
+\contentsline {section}{\numberline {3.6}Tesi di Church}{32}
+\contentsline {section}{\numberline {3.7}Forma normale delle funzioni parziali ricorsive}{33}
+\contentsline {chapter}{\numberline {4}Rapp.ne funz. parz. ric.}{35}
+\contentsline {section}{\numberline {4.1}Rappresentazione delle coppie insiemistiche}{38}
+\contentsline {chapter}{\numberline {5}Indecidibilit\`a}{41}
+\contentsline {section}{\numberline {5.1}Indecidibilit\`a per i termini combinatori}{42}
+\contentsline {chapter}{\numberline {6}Introduzione al $\lambda $-cal\discretionary {-}{}{}co\discretionary {-}{}{}lo}{45}
+\contentsline {section}{\numberline {6.1}$\lambda $-ter\discretionary {-}{}{}mi\discretionary {-}{}{}ni}{45}
+\contentsline {section}{\numberline {6.2}Alberi di De Bruijn}{50}
+\contentsline {section}{\numberline {6.3}Uguaglianza estensionale}{52}
+\contentsline {section}{\numberline {6.4}Riduzione forte (cenno)}{53}
+\contentsline {section}{\numberline {6.5}Equivalenza tra $\lambda $-cal\discretionary {-}{}{}co\discretionary {-}{}{}lo~e calcolo dei combinatori}{54}
+\contentsline {chapter}{\numberline {7}Sistemi combinatori alternativi}{57}
+\contentsline {section}{\numberline {7.1}Uso del sistema $\mathbf {B}$-$\mathbf {C}$-$\mathbf {K}$-$\mathbf {W}$}{58}
+\contentsline {section}{\numberline {7.2}Possibile uso di sistemi combinatori alternativi}{58}
+\contentsline {section}{\numberline {7.3}Sistemi di riscrittura}{59}
+\contentsline {chapter}{\numberline {8}Tipi e termini con tipo}{61}
+\contentsline {section}{\numberline {8.1}Risultati}{64}
+\contentsline {section}{\numberline {8.2}Assegnazione di tipi a termini senza tipo}{65}
+\contentsline {chapter}{\numberline {9}Applicazioni matematiche}{71}
+\contentsline {section}{\numberline {9.1}Logica Matematica}{71}
+\contentsline {section}{\numberline {9.2}Algebra (e informatica algebrica)}{71}
+\contentsline {subsection}{\numberline {9.2.1}Combinatore $\mathbf {B}$}{72}
+\contentsline {subsection}{\numberline {9.2.2}Combinatore $\mathbf {C}$}{72}
+\contentsline {subsection}{\numberline {9.2.3}Combinatore $\mathbf {K}$}{73}
+\contentsline {subsection}{\numberline {9.2.4}Combinatore $\mathbf {W}$}{73}
+\contentsline {chapter}{\numberline {10}Applicazioni informatiche}{75}
+\contentsline {section}{\numberline {10.1}Introduzione al LISP}{75}
+\contentsline {subsection}{\numberline {10.1.1}Campi d'applicazione LISP}{75}
+\contentsline {subsection}{\numberline {10.1.2}Idee di base}{76}
+\contentsline {subsection}{\numberline {10.1.3}Differenza dal $\lambda $-cal\discretionary {-}{}{}co\discretionary {-}{}{}lo}{76}
+\contentsline {subsection}{\numberline {10.1.4}Organizzazione memoria LISP}{77}
+\contentsline {section}{\numberline {10.2}Rappresentazione grafica di S-termini}{78}
+\contentsline {section}{\numberline {10.3}Uso delle S-espressioni}{80}
+\contentsline {section}{\numberline {10.4}Funzioni elementari}{81}
+\contentsline {subsection}{\numberline {10.4.1}Altre funzioni elementari}{82}
+\contentsline {section}{\numberline {10.5}Espressioni condizionali}{82}
+\contentsline {section}{\numberline {10.6}Istruzioni di controllo esecuzione}{82}
+\contentsline {section}{\numberline {10.7}Ricorsione}{83}

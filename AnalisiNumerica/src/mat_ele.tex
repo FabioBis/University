@@ -1,0 +1,936 @@
+\hyphenation{
+Barrow
+Cramer
+Gauss
+Hausdorff
+Laplace
+Runghe
+tras-for-ma-zio-ne
+Torricelli
+}
+
+%Matrici elementari
+\chapter{Dalle matrici elementari all'algoritmo di Gauss.}
+\section{Matrici elementari.}
+Una matrice elementare è una matrice quadrata a coefficienti reali (o
+complessi) del tipo:
+\[ I + A,\]
+dove $I$ è la matrice quadrata identica di ordine $n$ e $A$ è una matrice
+quadrata a coefficienti reali di ordine $n$ (assumiamo sia di tipo triangolare
+superiore).
+
+\begin{defi}
+Siano $\alpha \in \rr$, $u, v \in \rr^{n}$, $v \neq 0$, si dice matrice
+elementare la matrice $E(\alpha, u, v)$ così definita:
+\[E(\alpha, u, v) := I + \alpha uv^{t}.\footnote{$t$ indica la trasposta,
+in questo caso un vettore riga.}
+\]
+\end{defi}
+\begin{teo}\label{teo3.2}
+Per ogni matrice elementare $E(\alpha, u, v)$ con $\alpha v^{t}u \neq -1$
+esiste una matrice inversa e la sua inversa è $E(\beta, u, v)$.
+\end{teo}
+\begin{dimo}
+\begin{itemize}
+\item[]Caso $\alpha = 0$:
+\[E(\alpha, u, v) = I.\]
+\item[]Caso $\alpha \neq 0$:
+\[
+\begin{array}{ccl}
+I & = & E(\alpha, u, v)E(\beta, u, v) \\
+ & = & (I + \alpha uv^{t})(I + \beta uv^{t})\\
+ & = & (I + \alpha uv^{t}+ \beta uv^{t} + \alpha uv^{t}\beta uv^{t}),
+\end{array}
+\]
+ovvero:
+\[
+\begin{array}{ccl}
+[0]
+ & = &  \alpha uv^{t}+ \beta uv^{t} + \alpha \underbrace{v^{t}u}_{scalare}
+\beta uv^{t}\\
+ & = & (\alpha + \beta + \alpha \beta v^t u) uv^t.
+\end{array}
+\]
+
+\[
+\Longrightarrow \alpha + \beta + \alpha \beta v^t u = 0.
+\]
+
+Da $0 = \alpha + \beta + \alpha \beta v^t u$ segue che:
+\[
+\beta = \frac{- \alpha}{1 + \alpha v^tu}.
+\]
+\end{itemize}
+
+Siano $x, y \in \rr^n$, $x \neq y$. \\Esiste una matrice elementare che
+trasforma $x$ in $y$?
+\[ E(\alpha, u, v)x = y,\]
+\[(I + \alpha uv^{t})x = y, \]
+\begin{equation}\label{eq2.1}
+x + \alpha uv^{t}x = y,
+\end{equation}
+\[v^tx \neq 0 \textrm{ altrimenti } x = y \textrm{ che è contro le ipotesi}
+\footnote{$v^t$ e $x$ tra loro non ortogonali.}.\]
+\[
+\alpha u = \frac{y - x}{v^tx},
+\]
+e moltiplicando la \ref{eq2.1} per $v^t$ si ha:
+\[
+\begin{array}{ccl}
+v^tx + v^t\alpha u v^t x & = & v^ty \\
+ & = & v^tx(1 +  v^t\alpha u).
+\end{array}
+\]
+Se $v^ty \neq 0$ allora $(1 +  v^t\alpha u) \neq 0$, allora:
+\[\alpha v^tu \neq -1. \]
+\end{dimo}
+
+%Esercizio 1
+\begin{ese}
+Sia $x \in \rr^n$, $x_1 \neq 0$, trovare una matrice elementare che
+trasformi $x$ in un multiplo del versore $e_1$ in cui la costante sia data da
+$x_1$.
+
+\[
+\vectx,\quad E_1 \equiv E(\alpha_1, u_1, e_1).
+\]
+
+$
+\begin{array}{ccl}
+E(\alpha_1, u_1, e_1)x & = & x_1e_1 \\
+& = & (I + \alpha_1u_1e_1^t)x \\
+& = & x + \alpha_1u_1e_1^tx.
+\end{array}$
+
+\[
+\alpha_1u_1 = \frac{x_1e_1 - x}{e_1^tx}, \qquad
+\alpha_1u_1 = \left[
+\begin{array}{c}
+0 \\
+-\frac{x_2}{x_1} \\
+\vdots \\
+-\frac{x_n}{x_1}
+\end{array}\right].
+\]
+
+\[ e_1^tx = [1, 0, \ldots, 0]\left[ \begin{array}{c}
+x_{1} \\
+\vdots \\
+x_{n}
+\end{array}\right]   = x_1, \]
+
+\[
+\frac{x_1e_1 - x}{e_1^tx} = \left(
+x_{1} \cdot \left[ \begin{array}{c}
+1 \\
+0 \\
+\vdots \\
+0
+\end{array}\right] - \left[ \begin{array}{c}
+x_{1} \\
+\vdots \\
+x_n
+\end{array}\right]\right) \cdot \frac{1}{x_1}= \left[
+\begin{array}{c}
+0 \\
+-\frac{x_2}{x_1} \\
+\vdots \\
+-\frac{x_n}{x_1}
+\end{array}\right].
+\]
+
+\[
+E_1  =
+\left[\begin{array}{ccc}
+1 & & \\
+ & \ddots & \\
+& & 1
+\end{array}\right] +
+\left[\begin{array}{c}
+0 \\
+-\frac{x_2}{x_1} \\
+\vdots \\
+-\frac{x_n}{x_1}
+\end{array}\right] \left[ 1, 0, \ldots, 0\right] =
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+-\frac{x_2}{x_1} & 1 & 0  & \cdots & 0 \\
+-\frac{x_3}{x_1} & 0 & 1  & & \vdots \\
+\vdots & \vdots & & \ddots & 0 \\
+-\frac{x_n}{x_1} & 0 & \cdots & 0 &1
+\end{array}\right].
+\]
+La prima colonna di $E_1$ è costituita dai termini del vettore $\alpha_1u_1$
+che abbiamo costruito.
+
+\[
+\alpha_1e_1^tu_1 = e_1^t(\alpha_1u_1) = [1 \, 0 \, \cdots\,0]
+\left[\begin{array}{c}0 \\ -\frac{x_2}{x_1}\\ \vdots \\ -\frac{x_n}{x_1}
+\end{array}\right] = 0.
+\]
+Ne segue che $\alpha_1e_1^tu_1 = 0 \neq -1$ ovvero $E_1$ è invertibile e $\beta
+= -\alpha_1$ da cui si ottiene:
+\[E_1^{-1} = I -\alpha_1u_1e_1^t.
+\]
+
+\[
+E_1^{-1}  =
+\left[\begin{array}{ccc}
+1 & & \\
+ & \ddots & \\
+& & 1
+\end{array}\right] -
+\left[\begin{array}{c}
+0 \\
+-\frac{x_2}{x_1} \\
+\vdots \\
+-\frac{x_n}{x_1}
+\end{array}\right] \left[ 1, 0, \ldots, 0\right] =
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+\frac{x_2}{x_1} & 1 & 0  & \cdots & 0 \\
+\frac{x_3}{x_1} & 0 & 1  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+\frac{x_n}{x_1} & 0 & \cdots &\cdots &1
+\end{array}\right].
+\]
+\end{ese}
+
+%Esercizio 2
+\begin{ese}\label{ese2}
+Sia $x \in \rr^n$, $x_1 = 0$, $x_2 \neq 0$, trovare una matrice elementare che
+trasformi $x$ in un multiplo del versore $e_2$ in cui la costante sia data da
+$x_2$.
+
+\[
+x = \left[\begin{array}{c}0 \\ x_2 \\ \vdots \\ x_n\end{array}\right],
+\quad E_2 \equiv E(\alpha_2, u_2, e_2).\]
+
+$
+\begin{array}{ccl}
+E(\alpha_2, u_2, e_2)x & = & x_2e_2 \\
+& = & (I + \alpha_2u_2e_2^t)x \\
+& = & x + \alpha_2u_2e_2^tx.
+\end{array}$
+
+\[
+\alpha_2u_2 = \frac{x_2e_2 - x}{e_2^tx}, \qquad
+\alpha_2u_2 =
+\frac{1}{x_2}\left(\left[\begin{array}{c}0\\x_2\\0\\ \vdots \\ 0 \end{array}
+\right] - \left[\begin{array}{c}0\\x_2\\x_3\\ \vdots \\ x_n \end{array}
+\right] \right)
+= \left[
+\begin{array}{c}
+0 \\
+0 \\
+-\frac{x_3}{x_2} \\
+\vdots \\
+-\frac{x_n}{x_2}
+\end{array}\right].
+\]
+Da calcoli analoghi al primo esercizio si ottiene:
+\[\alpha_2e_2^tu_2 = e_2^t(\alpha_2u_2) = 0 \neq -1.\]
+
+Risulta quindi $E_2$ invertibile e $\beta = - \alpha_2$.
+
+\[
+E_2 =
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+0  & 1 & 0  & \cdots & 0 \\
+0 &-\frac{x_3}{x_2} & 1  & \cdots & 0 \\
+\vdots & \vdots  & &\ddots & \vdots\\
+0 &-\frac{x_n}{x_2}  & 0 &\cdots &1
+\end{array}\right].
+\]
+
+\[E_2^{-1} = I -\alpha_2u_2e_2^t.
+\]
+
+\[
+E_2^{-1}  =
+\left[\begin{array}{ccc}
+1 & & \\
+ & \ddots & \\
+& & 1
+\end{array}\right] -
+\left[\begin{array}{c}
+0 \\
+0 \\
+-\frac{x_3}{x_2} \\
+\vdots \\
+-\frac{x_n}{x_2}
+\end{array}\right] \left[ 0\, 1\, 0\, \cdots\, 0\right] =
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+0 & 1 & 0 & \cdots & 0 \\
+0 &\frac{x_3}{x_2} & 1  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+0 &\frac{x_n}{x_2} & 0 &\cdots &1
+\end{array}\right].
+\]
+\begin{osse}
+Sia ora $x \in \rr^n$, $x_1 \neq 0$, $x_i = 0$ per ogni $i$ diverso da $1$:
+\[x = \left[\begin{array}{c}x_1 \\ 0 \\ \vdots \\ 0 \end{array}\right],\]
+sia ha che: \[E_2x = x +\alpha_2u_2\underbrace{e_2^tx}_{ =\, 0 } = x.\]
+\end{osse}
+\end{ese}
+
+\section{L'algoritmo di Gauss come prodotto di matrici elementari.}
+\label{E-to-Gauss}
+Rivediamo l'algoritmo di Gauss in termini matriciali.
+
+\[
+A_1 = \left[
+\begin{array}{cccc}
+a_{1,1}^{(1)} & a_{1,2}^{(1)} & \cdots & a_{1,n}^{(1)} \\
+a_{2,1}^{(1)} & a_{2,2}^{(1)}& \cdots & _{2,n}^{(1)} \\
+\vdots & &\ddots & \vdots \\
+a_{n,1}^{(1)}& a_{n,2}^{(1)} & \cdots & a_{n,n}^{(1)}
+\end{array} \right],
+\quad
+b_1 = b = \left[ \begin{array}{c}
+b_{1}^{(1)} \\
+\vdots \\
+b_{n}^{(1)}
+\end{array}\right].
+\]
+
+Hp. $a_{1,1}^{(1)} \neq 0$ (ipotesi forte).\\
+Per costruire $E_1$ abbiamo preso $x \in \rr^n$ tale che $x_1 \neq 0$, chiamo
+$x$ la prima colonna di $A_1$.
+
+\[ E_1x =
+E_1 \left[\begin{array}{c}a_{1,1}^{(1)}\\ \vdots \\ a_{n,1}^{(1)}\end{array}\right]
+=
+\left[\begin{array}{c}a_{1,1}^{(1)}\\ 0 \\ \vdots \\ 0\end{array}\right].
+\]
+
+\[
+E_1A_1 \stackrel{?}{=}  A_2 = \left[
+\begin{array}{cccc}
+a_{1,1}^{(1)} & a_{1,2}^{(1)} & \cdots & a_{1,n}^{(1)} \\
+0 & a_{2,2}^{(2)} & \cdots & _{2,n}^{(2)} \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & a_{n,2}^{(2)} & \cdots & a_{n,n}^{(2)}
+\end{array} \right].
+\]
+
+\[E_1A_1 = E_1[\overline{a}_1 \, \overline{a}_2 \, \cdots \, \overline{a}_n]
+= [E_1\overline{a}_1 \, E_1\overline{a}_2 \, \cdots \, E_n\overline{a}_n].\]
+
+\begin{dimo}
+\[E_1A_1 \stackrel{?}{=}  A_2.\]
+
+Vediamo nel dettaglio le operazioni sulle colonne.
+
+\[E_1\overline{a}_1 = E(\alpha_1, u_1, e_1)\overline{a}_1 =
+(I + \alpha_1u_1e_1^t)\overline{a}_1 = \overline{a}_1 +
+\alpha_1u_1e_1^t\overline{a}_1.
+\]
+
+\[
+\overline{a}_1 +
+\alpha_1u_1\cdot\underbrace{e_1^t\overline{a}_1}_{scalare:\, a_{1,1}^{(1)}} =
+\overline{a}_1 + \alpha_1u_1a_{1,1}^{(1)} = \left[\begin{array}{c}
+a_{1,1}^{(1)} \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Questo risultato deriva dai seguenti passaggi:
+
+\[
+\alpha_1u_1 = \left[\begin{array}{c}
+0 \\
+-\frac{a_{2,1}^{(1)}}{a_{1,1}^{(1)}} \\
+\vdots \\
+-\frac{a_{n,1}^{(1)}}{a_{1,1}^{(1)}}
+\end{array}\right],
+\qquad
+e_1^t\overline{a}_1 = \left[1\,0\,\cdots\,0\right]
+\left[\begin{array}{c}
+a_{1,1}^{(1)} \\
+\vdots \\
+a_{n,1}^{(1)}
+\end{array}\right] = a_{1,1}^{(1)}.
+\]
+
+\[
+\alpha_1u_1a_{1,1}^{(1)} =
+\left[\begin{array}{c}
+0 \\
+-\frac{a_{2,1}^{(1)}}{\cancel{a_{1,1}^{(1)}}} \\
+\vdots \\
+-\frac{a_{n,1}^{(1)}}{\cancel{a_{1,1}^{(1)}}}
+\end{array}\right]\cancel{a_{1,1}^{(1)}} =
+\left[\begin{array}{c}
+0\\
+-a_{2,1}^{(1)} \\
+\vdots \\
+-a_{n,1}^{(1)}
+\end{array}\right].
+\]
+
+\[
+\overline{a}_1 + \alpha_1u_1e_1^t\overline{a}_1 =
+\left[\begin{array}{c}
+a_{1,1}^{(1)} \\
+\vdots \\
+a_{n,1}^{(1)}
+\end{array}\right]- \left[\begin{array}{c}
+0\\
+a_{2,1}^{(1)} \\
+\vdots \\
+a_{n,1}^{(1)}
+\end{array}\right] =
+\left[\begin{array}{c}
+a_{1,1}^{(1)} \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Cosa succede alle altre colonne?
+\[E_1\overline{a}_j = \,? \qquad j = 2, \ldots, n.\]
+
+\[E_1\overline{a}_j = E(\alpha_1, u_1, e_1)\overline{a}_j =
+(I + \alpha_1u_1e_1^t)\overline{a}_j = \overline{a}_j +
+\alpha_1u_1e_1^t\overline{a}_j.
+\]
+
+\[
+E_1\overline{a}_j =
+\left[
+\begin{array}{c}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(1)} \\
+\vdots \\
+a_{n,j}^{(1)}
+\end{array}
+\right]
++
+\left[
+\begin{array}{c}
+0 \\
+m_{2,1} \\
+\vdots \\
+m_{n,1}
+\end{array}
+\right] \overbrace{a_{1,j}^{(1)}}^{scalare}
+=
+\left[
+\begin{array}{l}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(1)} + m_{2,1} a_{1,j}^{(1)}\\
+\vdots \qquad \vdots \\
+a_{n,j}^{(1)} +m_{n,1} a_{1,j}^{(1)}
+\end{array}
+\right]
+=
+\left[
+\begin{array}{l}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(2)} \\
+\vdots \\
+a_{n,j}^{(2)}
+\end{array}
+\right].
+\]
+\end{dimo}
+
+
+\begin{osse}Tornando alle matrici si nota che:
+\[
+E_1 = \left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+-\frac{x_2}{x_1} & 1 & 0  & \cdots & 0 \\
+-\frac{x_3}{x_1} & 0 & 1  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+-\frac{x_n}{x_1} & 0 & \cdots &\cdots &1
+\end{array}\right]
+=
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+-\frac{a_{2,1}^{(1)}}{a_{1,1}^{(1)}} & 1 & 0  & \cdots & 0 \\
+-\frac{a_{3,1}^{(1)}}{a_{1,1}^{(1)}} & 0 & 1  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+-\frac{a_{n,1}^{(1)}}{a_{1,1}^{(1)}} & 0 & \cdots &\cdots &1
+\end{array}\right]
+=
+\]
+\[ =
+\left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+m_{2,1} & 1 & 0  & \cdots & 0 \\
+m_{3,1} & 0 & 1  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+m_{n,1} & 0 & \cdots &\cdots &1
+\end{array}\right].
+\]
+$E_1$ è la matrice identità in cui colloco sotto al primo elemento i termini
+di eliminazione $m_{i,1}$. Inoltre la matrice è non singolare, quindi ammette
+inversa che si ottiene eliminando il segno ``$-$'' dalla prima colonna, ed il
+calcolo dell'inversa in termini computazionali ha costo nullo.
+\end{osse}
+
+Analogamente il secondo passo dell'algoritmo di Gauss si ottiene come segue:
+\\Hp. $a_{2,2}^{(2)} \neq 0$ (ipotesi forte).
+
+\[
+E_2 =
+\left[\begin{array}{ccccc}
+1 & 0 & 0  &\cdots & 0 \\
+0  & 1 & 0  & \cdots & 0 \\
+0 & m_{3,2} & 1  & \cdots & 0 \\
+\vdots & \vdots  & &\ddots & \vdots\\
+0 & m_{n,2}  & \cdots &\cdots &1
+\end{array}\right],
+\quad
+A_2 = \left[
+\begin{array}{cccc}
+a_{1,1}^{(1)} & a_{1,2}^{(1)} & \cdots & a_{1,n}^{(1)} \\
+0 & a_{2,2}^{(2)} & \cdots & _{2,n}^{(2)} \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & a_{n,2}^{(2)} & \cdots & a_{n,n}^{(2)}
+\end{array} \right].
+\]
+
+\begin{equation}E_2(E_1A_1) = E_2A_2 \stackrel{?}{=} A_3.\nonumber
+\end{equation}
+
+\[
+E_2A_2 =
+\left[\begin{array}{ccccc}
+1 & 0 & 0  &\cdots & 0 \\
+0  & 1 & 0  & \cdots & 0 \\
+0 & m_{3,2} & 1  & \cdots & 0 \\
+\vdots & \vdots  & &\ddots & \vdots\\
+0 & m_{n,2}  & \cdots &\cdots &1
+\end{array}\right]
+\left[
+\begin{array}{cccc}
+a_{1,1}^{(1)} & a_{1,2}^{(1)} & \cdots & a_{1,n}^{(1)} \\
+0 & a_{2,2}^{(2)} & \cdots & _{2,n}^{(2)} \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & a_{n,2}^{(2)} & \cdots & a_{n,n}^{(2)}
+\end{array} \right].
+\]
+
+\begin{osse}
+Si potrebbe anche lavorare sulla sottomatrice di $A_2$ di ordine $n-1$
+(anche nei passi successivi, con ordine decrescente) della forma:
+\[
+\left[
+\begin{array}{ccc}
+a_{2,2}^{(2)} & \cdots & _{2,n}^{(2)} \\
+\vdots & \ddots & \vdots \\
+a_{n,2}^{(2)} & \cdots & a_{n,n}^{(2)}
+\end{array} \right]
+\]
+ma, per i nostri scopi, è utile utilizzare la matrice intera.
+\end{osse}
+
+
+\begin{dimo}
+\[E_2A_2 \stackrel{?}{=} A_3.\]
+Vediamo nel dettaglio le operazioni sulle colonne.
+
+Prima colonna:
+\[E_2\overline{a}_1^{(2)} = E(\alpha_2, u_2, e_2)\overline{a}_1^{(2)} =
+(I + \alpha_2u_2e_2^t)\overline{a}_1^{(2)} = \overline{a}_1^{(2)} +
+\alpha_2u_2e_2^t\overline{a}_1^{(2)}.
+\]
+
+\[
+\overline{a}_1^{(2)} +
+\alpha_2u_2\underbrace{e_2^t\overline{a}_1^{(2)}}_{= \,0} =
+\overline{a}_1^{(2)} =
+\left[\begin{array}{c}
+a_{1,1}\\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Seconda colonna:
+\[E_2\overline{a}_2^{(2)} = E(\alpha_2, u_2, e_2)\overline{a}_2^{(2)} =
+(I + \alpha_2u_2e_2^t)\overline{a}_2^{(2)} = \overline{a}_2^{(2)} +
+\alpha_2u_2e_2^t\overline{a}_2^{(2)}.
+\]
+
+\[
+\overline{a}_2^{(2)} +
+\alpha_2u_2\cdot\underbrace{e_2^t\overline{a}_2^{(2)}}_{scalare:\, a_{2,2}^{(2)}} =
+\overline{a}_2^{(2)} + \alpha_2u_2a_{2,2}^{(2)} =
+\left[\begin{array}{c}
+a_{2,1}^{(1)} \\
+a_{2,2}^{(2)} \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Questo risultato deriva dai seguenti passaggi:
+
+\[
+\alpha_2u_2 = \left[\begin{array}{c}
+0 \\
+0 \\
+-\frac{a_{3,2}^{(2)}}{a_{2,2}^{(2)}} \\
+\vdots \\
+-\frac{a_{n,2}^{(2)}}{a_{2,2}^{(2)}}
+\end{array}\right],
+\qquad
+e_2^t\overline{a}_2^{(2)} = \left[0\,1\,0\,\cdots\,0\right]
+\left[\begin{array}{c}
+a_{1,2}^{(1)} \\
+a_{2,2}^{(2)} \\
+\vdots \\
+a_{n,2}^{(2)}
+\end{array}\right] = a_{2,2}^{(2)}.
+\]
+
+\[
+\alpha_2u_2a_{2,2}^{(2)} =
+\left[\begin{array}{c}
+0 \\
+0 \\
+-\frac{a_{3,2}^{(2)}}{\cancel{a_{2,2}^{(2)}}} \\
+\vdots \\
+-\frac{a_{n,2}^{(2)}}{\cancel{a_{2,2}^{(2)}}}
+\end{array}\right]\cancel{a_{2,2}^{(2)}} =
+\left[\begin{array}{c}
+0\\
+0\\
+-a_{3,2}^{(2)} \\
+\vdots \\
+-a_{n,2}^{(2)}
+\end{array}\right].
+\]
+
+\[
+\overline{a}_2^{(2)} + \alpha_2u_2e_2^t\overline{a}_2^{(2)} =
+\left[\begin{array}{c}
+a_{1,2}^{(1)} \\
+a_{2,2}^{(2)} \\
+\vdots \\
+a_{n,2}^{(2)}
+\end{array}\right]- \left[\begin{array}{c}
+0 \\
+0 \\
+a_{3,2}^{(2)} \\
+\vdots \\
+a_{n,2}^{(2)}
+\end{array}\right] =
+\left[\begin{array}{c}
+a_{1,2}^{(1)} \\
+a_{2,2}^{(2)} \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Cosa succede alle altre colonne?
+\[E_2\overline{a}_j^{(2)} = \,? \qquad j = 3, \ldots, n.\]
+
+\[E_2\overline{a}_j^{(2)} = E(\alpha_2, u_2, e_2)\overline{a}_j^{(2)} =
+(I + \alpha_2u_2e_2^t)\overline{a}_j^{(2)} = \overline{a}_j^{(2)} +
+\alpha_2u_2e_2^t\overline{a}_j^{(2)}.
+\]
+
+\[
+E_2\overline{a}_j^{(2)} =
+\left[
+\begin{array}{c}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(2)} \\
+\vdots \\
+a_{n,j}^{(2)}
+\end{array}
+\right]
++
+\left[
+\begin{array}{c}
+0 \\
+0 \\
+m_{3,2} \\
+\vdots \\
+m_{n,2}
+\end{array}
+\right] \overbrace{a_{2,j}^{(2)}}^{scalare}
+=
+\left[
+\begin{array}{l}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(2)} \\
+a_{3,j}^{(2)} + m_{3,2} a_{2,j}^{(2)}\\
+\vdots \qquad \vdots \\
+a_{n,j}^{(2)} +m_{n,2} a_{2,j}^{(2)}
+\end{array}
+\right]
+=
+\left[
+\begin{array}{l}
+a_{1,j}^{(1)} \\
+a_{2,j}^{(2)} \\
+a_{3,j}^{(3)} \\
+\vdots \\
+a_{n,j}^{(3)}
+\end{array}
+\right].
+\]
+
+Ne segue che:
+\[
+\left[E_2\overline{a}_1^{(2)}\,E_2\overline{a}_2^{(2)}\,\cdots\,
+E_2\overline{a}_n^{(2)}
+\right] = \left[
+\begin{array}{ccccc}
+a_{1,1}^{(1)} & a_{1,2}^{(1)} & a_{1,3}^{(1)} & \cdots & a_{1,n}^{(1)} \\
+0           & a_{2,2}^{(2)} & a_{2,3}^{(2)} & \cdots & a_{2,n}^{(2)} \\
+0           & 0           & a_{3,3}^{(3)} & \cdots & a_{3,n}^{(3)} \\
+\vdots      & \vdots      & \vdots      & \ddots & \vdots      \\
+0           & 0           & a_{n,3}^{(3)} & \cdots & a_{n,n}^{(3)}
+\end{array}\right].
+\]
+
+\end{dimo}
+
+%////------------
+\section{Prodotto di matrici elementari inverse.}
+Domanda: cosa fa il prodotto di due matrici inverse elementari?
+
+\[E_1^{-1}E_2^{-1} =\quad ?\]
+\begin{itemize}
+\item[]$E_1 \equiv E(\alpha_1, u_1, e_1) = (I + \alpha_1u_1e_1^t).$
+\item[]$E_2 \equiv E(\alpha_2, u_2, e_2) = (I + \alpha_2u_2e_2^t).$
+
+
+\item[]$
+\begin{array}{lcl}
+E_1^{-1}E_2^{-1} & = & (I - \alpha_1u_1e_1^t)(I - \alpha_2u_2e_2^t) \\
+& = & I - \alpha_1u_1e_1^t - \alpha_2u_2e_2^t +
+\alpha_1\alpha_2u_1e_1^tu_2e_2^t\\
+& = & I - \alpha_1u_1e_1^t - \alpha_2u_2e_2^t + \alpha_1\cdot
+\underbrace{\alpha_2e_1^tu_2}_{=\,e_1^t(\alpha_2u_2)\, =\, 0 }u_1e_2^t\\
+& = & I - \alpha_1u_1e_1^t - \alpha_2u_2e_2^t.
+\end{array}$
+\end{itemize}
+
+Tornando alla forma matriciale:
+\[
+E_1^{-1}E_2^{-1}  = I - \left[\begin{array}{ccccc}
+0 & 0 &\cdots  &\cdots & 0 \\
+m_{2,1} & 0 & 0  & \cdots & 0 \\
+m_{3,1} & 0 & 0  & \cdots & 0 \\
+\vdots & \vdots & & &\vdots \\
+m_{n,1} & 0 & \cdots &\cdots &0
+\end{array}\right]
+-
+\left[\begin{array}{ccccc}
+0 & 0 &\cdots  &\cdots & 0 \\
+0  & 0 & 0  & \cdots & 0 \\
+0 & m_{3,2} & 0  & \cdots & 0 \\
+\vdots & \vdots  & &\ddots & \vdots\\
+0 & m_{n,2}  & \cdots &\cdots &0
+\end{array}\right]
+\]
+
+\[
+= \left[\begin{array}{ccccc}
+1 & 0 &\cdots  &\cdots & 0 \\
+-m_{2,1} & 1 & 0  & \cdots & 0 \\
+-m_{3,1} & -m_{3,2} & 1  & \cdots & 0 \\
+\vdots & \vdots & \vdots &\ddots &\vdots \\
+-m_{n,1} & -m_{n,2} & 0 &\cdots &1
+\end{array}\right].
+\]
+
+Praticamente vengono ``copiati'' gli elementi della prima e della seconda
+colonna, cambiati di segno.
+\begin{osse}
+$E_2^{-1}E_1^{-1}$ non porta allo stesso risultato.
+\end{osse}
+
+%Esercizio 3.
+\begin{ese}
+Sia $x \in \rr^n$, $x_1 = x_2 = \cdots = x_{k-1} = 0$, $x_k \neq 0$ si vuole
+costruire una matrice elementare $E_k(\alpha_k, u_k, e_k)$ tale che:
+\[E_k(\alpha_k, u_k, e_k)x = x_ke_k.\]
+
+\begin{itemize}
+\item[-] Interpretare nell'ambito dell'algoritmo delle trasformazioni di
+Gauss.
+\item[-] Costruire l'inversa.
+\item[-] Costruire e verificare  $E_1^{-1}E_2^{-1}\cdots E_{k-1}^{-1}E_k^{-1}$.
+\item[-] Costo necessario per costruire l'inversa e il prodotto di:
+\[E_1^{-1}E_2^{-1}\cdots E_{k-1}^{-1}E_k^{-1}.\]
+\end{itemize}
+\end{ese}
+
+\begin{osse}
+\textbf{\emph{Algoritmo di Gauss mediante moltiplicazione di matrici elementari}}:
+Data la matrice $A = A_1$ con l'ipotesi fondamentale che $a_{k,k}^{(k)} \neq 0 \qquad k = 1, \ldots, n-1$
+\textrm{ e date le matrici elementari $E_k$ costruite come sopra, allora:}
+\[A_n = E_{n-1}E_{n-2}\cdots \left(E_2\left(E_1\left(A\right)\right)\right)\]
+Da cui:
+\[ E_1^{-1}E_2^{-1}\cdots E_{n-2}^{-1}E_{n-1}^{-1} A_n = A_1\]
+
+Con $E_1^{-1}E_2^{-1}\cdots E_{n-2}^{-1}E_{n-1}^{-1}$ matrice triangolare inferiore
+e $A_n$ matrice triangolare superiore. Ovvero $A$ è \emph{fattorizzabile}
+\footnote{O \emph{decomponibile}.} nel prodotto di due matrici: una triangolare
+superiore ed una triangolare inferiore.
+\end{osse}
+
+\section{Matrici di Permutazione.}
+Come si è visto nella sezione \ref{E-to-Gauss}, da un problema $Ax = b$,
+mediante l'algoritmo di Gauss sotto forma di ``pre-moltiplicazioni'' di
+matrici elementari si può giungere alla definizione di un problema equivalente
+nella forma $A_nx = b_n$, con $A_n$ di tipo triangolare superiore.
+Ovvero:
+\[
+E_{n-1}E_{n-2} \cdots E_2E_1A_1 = A_n,
+\]
+\[
+E_{n-1}E_{n-2} \cdots E_2E_1b_1 = b_n.
+\]
+Ogni passo di questo algoritmo prevede un'ipotesi forte sugli elementi della
+diagonale della matrice di partenza: $a_{j,j}^{(j)} \neq 0$. Questo discorso
+cade quando troviamo un elemento diagonale nullo, ma come osservato nel
+secondo capitolo (\ref{oss2.1}), è possibile effettuare scambi di righe
+per ottenere un elemento diagonale non nullo. Si utilizzano quindi le
+\emph{matrici di permutazione}.
+
+\[
+I = \left[\begin{array}{ccccccc}
+1       & 0      &        & \cdots &        &   & 0 \\
+0       & \ddots &        &        &        &   &   \\
+        &    0_i   & 1_i    &  0_i     &        &   & \vdots  \\
+\vdots  &        & \ddots & \ddots & \ddots &   &   \\
+        &        &        & 0_j      & 1_j    & 0_j &   \\
+        &        &        &        &        &   & 0 \\
+0       &        & \cdots   &      &        & 0 & 1
+\end{array}\right]
+\quad
+P_{ij} =\left[\begin{array}{ccccccc}
+1       & 0      &        & \cdots &        &   & 0 \\
+0       & \ddots &        &        &        &   &   \\
+        &        &        & 0_j      & 1_j    & 0_j &   \\
+\vdots  &        &  &  & &   & \vdots  \\
+        &    0_i   & 1_i    &  0_i     &        &   &  \\
+        &        &        &        &        & \ddots  & 0 \\
+0       &        & \cdots   &      &        & 0 & 1
+\end{array}\right].
+\]
+
+\begin{exe}Matrice di ordine $4$ che scambia la prima con la terza riga.
+\[
+I_4 = \left[\begin{array}{cccc}
+1       & 0     &   0    &  0  \\
+0       & 1     &   0    &  0  \\
+0       & 0     & 1      &  0   \\
+0       & 0     & 0      &  1
+\end{array}\right],
+\quad
+P_{1,3} =\left[\begin{array}{cccc}
+0       & 0     & 1      &  0   \\
+0       & 1     &   0    &  0   \\
+1       & 0     &   0    &  0   \\
+0       & 0     & 0      &  1
+\end{array}\right].
+\]
+\end{exe}
+
+Per scambiare due righe in una matrice $A$ è sufficiente applicare la relativa
+matrice di permutazione, ovvero pre-moltiplicare $A$ per $P_{i,j}$.
+
+\[
+A = \left[\begin{array}{ccccccc}
+a_{1,1} & \cdots & a_{1,i} & \cdots & a_{1,j} & \cdots & a_{1,n} \\
+\vdots\\
+a_{i,1} & \cdots & a_{i,i} & \cdots & a_{i,j} & \cdots & a_{i,n} \\
+\\
+\vdots \\
+\\
+a_{j,1} & \cdots & a_{j,i} & \cdots & a_{j,j} & \cdots & a_{j,n} \\
+\vdots\\
+a_{n,1} & \cdots & a_{n,i} & \cdots & a_{n,j} & \cdots & a_{n,n}
+\end{array}\right],
+\]
+
+\[
+P_{i,j}A = \left[\begin{array}{ccccccc}
+a_{1,1} & \cdots & a_{1,i} & \cdots & a_{1,j} & \cdots & a_{1,n} \\
+\vdots\\
+a_{j,1} & \cdots & a_{j,i} & \cdots & a_{j,j} & \cdots & a_{j,n} \\
+\\
+\vdots \\
+\\
+a_{i,1} & \cdots & a_{i,i} & \cdots & a_{i,j} & \cdots & a_{i,n} \\
+\vdots\\
+a_{n,1} & \cdots & a_{n,i} & \cdots & a_{n,j} & \cdots & a_{n,n}
+\end{array}\right].
+\]
+
+$P_{i,j}$ applicata alla matrice $A$ scambia la riga $i$-esima con la riga
+$j$-esima.
+\begin{osse}
+Un applicazione di $P_{i,j}$ del tipo $AP_{i,j}$ invece scambia le colonne.
+\end{osse}
+i
+\section{L'algoritmo di Gauss con matrici elementari e di permutazione.}
+Come si è visto nella sezione \ref{E-to-Gauss}, è possibile ottenere
+l'algoritmo di Gauss mediante l'applicazione di matrici elementari. Nel
+caso in cui, ad un passo ($j$-esimo) dell'algoritmo, si abbia che $a_{j,j}= 0$
+occorre quindi applicare anche una matrice di permutazione.
+Si può quindi riscrivere l'algoritmo come segue:
+\[A_1x = b_1.\]
+\begin{itemize}
+\item[]Caso $a_{1,1} \neq 0$:
+$\ P_{1,1}A_1, \, P_{1,1}b_1.$
+\item[]Caso $a_{1,1} = 0$:
+$\ P_{1,j}A_1, \, P_{1,j}b_1.$
+\end{itemize}
+Interpretando $P_{i,i}$ come la matrice identica $I$.
+
+Si applicano quindi le matrici elementari:
+\begin{itemize}
+\item[]Caso $a_{1,1} \neq 0$:
+$\ E_1P_{1,1}A_1, \, E_1P_{1,1}b_1.$
+\item[]Caso $a_{1,1} = 0$:
+$\ E_1P_{1,j}A_1, \, E_1P_{1,j}b_1.$
+\end{itemize}
+\[E_1P_{1,j}A_1 = A_2.\]
+
+Analogamente per il secondo passo:
+\begin{itemize}
+\item[]Caso $a_{2,2} \neq 0$:
+$\ E_2P_{2,2}A_2, \, E_2P_{2,2}b_2^{(2)}.$
+\item[]Caso $a_{2,2} = 0$:
+$\ E_2P_{2,j}A_2, \, E_2P_{2,j}b_2^{(2)}.$
+\end{itemize}
+
+Alla fine dell'algoritmo si otterrà la seguente situazione:
+
+\[
+E_{n-1}P_{n-1,j} \cdots E_{2}P_{2,j}E_{1}P_{1,j}A_{1} = A_n.
+\]
+\[
+E_{n-1}P_{n-1,j} \cdots E_{2}P_{2,j}E_{1}P_{1,j}b_{1} = b_n.
+\]
+
+Posto il caso in cui $a_{j,j} = 0$ quale riga conviene scegliere per
+sostituire la $j$-esima? Si ha un'amplificazione dell'errore minore quando
+$m_{i,j}$ è il più piccolo possibile. Questo si ottiene scegliendo il massimo
+in modulo degli elementi al di sotto dell'elemento $a_{j,j}$ pivotale.
+In questo modo per ogni $i$,  $m_{i,j} \leq 1$ minimizzando quindi l'errore.
+Tale operazione viene definita \emph{pivoting parziale di righe} ed è sempre
+applicabile, non necessariamente se l'elemento $a_{j,j}$ è uguale a zero.
+

@@ -1,0 +1,156 @@
+\hyphenation{
+Barrow
+Binet
+Chebyshev
+Cholesky
+Cramer
+Gauss
+Faber
+Frobenius
+Hausdorff
+Householder
+Laplace
+Lebesque
+Newton
+Rolle
+Runghe
+Sturm
+tras-for-ma-zio-ne
+Torricelli
+}
+
+%\addtocontents{toc}{\protect\contentsline{chapter} {Appendice}{}}
+\chapter{Norme.}
+\section{Norma di un vettore.}
+La norma di un vettore è un'applicazione $\|\cdot\| \colon \rr^n \to \rr^+$
+tale che:
+\begin{itemize}
+\item[$(1)$]$\|x\| \geq 0, \quad \forall x \in \rr^n$.
+\item[$(2)$]$\|x\| = 0 \Leftrightarrow x = 0$.
+\item[$(3)$]$\|ax\| = |a|\cdot\|x\|, \quad \forall x \in \rr^n$.
+\item[$(4)$]$\forall x,y \in \rr^n \quad \|x+y\| \leq \|x\| + \|y\|$.
+\end{itemize}
+
+\begin{defi}Si definisce la
+norma $p$ con $1 \leq p < +\infty$ tale che:
+\[\|x\|_p = \left(\sum_{i=1}^n|x_i|^p \right)^{\frac{1}{p}}.\]
+\[\|x\|_\infty = \max_{1 \leq i \leq m}|x_i|.\]
+\end{defi}
+
+\begin{exe}
+Sia $x = (1, -2)$.
+\[\|x\|_1 = 3, \quad \|x\|_2 = \sqrt{5}, \quad \|x\|_\infty = 2.\]
+\end{exe}
+
+\begin{defi}Due norme si dicono \emph{topologicamente equivalenti} se
+esistono due costanti $\alpha, \beta \in \rr, 0 < \alpha \leq \beta$ tali che:
+\[
+\alpha \|x\|'' \leq \|x\|' \leq \beta\|x\|'.
+\] 
+\end{defi}
+
+\begin{teo}
+$\forall x \in \rr^n$ si ha:
+\begin{enumerate}
+\item $\|x\|_\infty \leq \|x\|_2 \leq \sqrt{n}\|x\|_\infty$.
+\item $\|x\|_2 \leq \|x\|_1 \sqrt{n}\|x\|_2$.
+\item $\|x\|_\infty \leq \|x\|_1 \leq n\|x\|_\infty$.
+\end{enumerate}
+\end{teo}
+
+\section{Norma di una matrice.}
+La norma di una matrice è un'applicazione analoga a quella sui vettori, 
+valgono tutti i punti di cui sopra e in aggiunta:
+\begin{itemize}
+\item[$(5)$] $\|A\cdot B\| \leq \|A\|\cdot\|B\|$.
+\end{itemize}
+
+\begin{exe}Esempio di norma che non soddisfa la proprietà $(5)$:
+\[
+A = B = \left[\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right], \quad
+C = AB = \left[\begin{array}{cc}1 & 2 \\ 0 & 1\end{array}\right].
+\]
+\[
+\max_{i,j}|c_{i,j}| = 2, \quad \max_{i,j}|a_{i,j}| = \max_{i,j}|b_{i,j}| = 1.
+\]
+\[2 \leq 1 \ \longrightarrow\ \textrm{Assurdo.} \]
+\end{exe}
+
+\begin{defi}
+Si dice \emph{norma naturale} o \emph{norma indotta da un vettore} della
+matrice $A$ il numero reale $\|A\|$ tale che:
+\[
+\|A\|= \sup_{x \neq 0}\frac{\|Ax\|}{\|x\|}.
+\]
+\end{defi}
+\subsubsection{Proprietà:}
+\begin{itemize}
+\item[$(1)$]$\|I\| =1$.
+\item[$(2)$]$\|Ax\| \leq \|A\|\|x\|$.
+\item[$(3)$]$\rho(A)\leq \|A\|$.
+\end{itemize}
+
+$\rho(A)$ è il massimo autovalore di $A$ in modulo.
+
+\begin{flushleft}
+Nel condizionamento:
+\[
+1 = \|I\| = \|A\cdot A^{-1}\| \leq \|A\|\cdot\|A\| = 
+\textrm{cond(}A\textrm{)}.
+\]
+\end{flushleft}
+
+\begin{prop}
+La norma naturale indotta da $\|\cdot\|_1$ è tale che:
+\[
+\left\|A\right\|_1 = \max_j \sum_{i = 1}^n|a_{i,j}|, \qquad A \in \rr^{n\times n}.
+\]
+\end{prop}
+\begin{dimo}
+\[ \left\|Ax\right\|_1  =  \left\| \sum_{j=1}^n a_{i,j}x_j\right\|_1 \]
+\[ =  \sum_{i=1}^n\left|\sum_{j=1}^n a_{i,j}x_j\right| \leq  
+\sum_{i=1}^n\sum_{j=1}^n |a_{i,j}||x_j| \]
+\[ =  \sum_{j=1}^n|x_j|\sum_{i=1}^n |a_{i,j}|
+\leq  \sum_{i=1}^n|x_j| \max_j\sum_{i=1}^n |a_{i,j}| \]
+\[ =  \|x\|_1 (\max_j\sum_{i=1}^n |a_{i,j}|). \]
+
+\[
+\longrightarrow \ \frac{\|Ax\|_1}{\|x\|_1} \leq \sum_{i=1}^n |a_{i,j}|.
+\]
+\end{dimo}
+
+
+\subsubsection{Norme indotte:}
+\begin{enumerate}
+\item $\|A\|_1 = \max_j \sum_{i=1}^n|a_{i,j}|$.
+\item $\|A\|_2 = \sqrt{\rho(A^TA)}$. 
+\item $\|A\|_\infty = \max_i \sum_{j=1}^n|a_{i,j}|$.
+\end{enumerate}
+
+\subsection{Norma di Frobenius.}
+\begin{defi}
+Sia $A \in \rr^{n \times n}$, la \emph{norma di Frobenius} è definita come 
+segue:
+\[
+\|A\|_F = \left( \sum_{i=1}^n\sum_{j=1}^na_{i,j}^2\right)^{\frac{1}{2}}.
+\]
+\end{defi}
+E' una norma compatibile con la norma due di vettore.
+\[
+\|A\|_2 \leq \|A\|_F\|x\|_2.
+\]
+La sintassi del comando Matlab, data una matrcie quadrata $X$, è la seguente:
+\begin{codice}
+\begin{verbatim}
+>>> norm(X,'fro')
+\end{verbatim}
+\end{codice}
+
+\subsubsection{Proprietà:}
+
+\begin{enumerate}
+\item $\frac{1}{\sqrt{n}}\|A\|_\infty \leq \|A\|_2 \leq \sqrt{n}\|A\|_\infty$.
+\item $\frac{1}{\sqrt{n}}\|A\|_1 \leq \|A\|_2 \leq \sqrt{n}\|A\|_1$.
+\item $\max_{i,j} |a_{i,j}| \leq \|A\|_2 \leq n \max_{i,j}|a_{i,j}|$.
+\item $\|A\|_2 \leq \sqrt{\|A\|_1 \|A\|_\infty}$.
+\end{enumerate}

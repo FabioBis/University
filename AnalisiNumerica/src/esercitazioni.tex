@@ -1,0 +1,329 @@
+\begin{comment}
+
+\begin{codice}
+\begin{verbatim}
+
+\end{verbatim}
+\end{codice}
+
+\end{comment}
+
+\chapter{Esercitazioni di Laboratorio Computazionale Numerico.}
+
+\section{Esercitazione I.}
+
+\begin{enumerate}
+\item Supponendo che le variabili $a$, $b$, $c$, $d$, $e$, $f$, $g$ siano 
+scalari,  scrivere istruzioni di assegnazione in Matlab per calcolare il 
+valore delle seguenti espressioni:
+\[
+x = 1 + \frac{a}{b} + \frac{c}{f^2} \qquad s = \frac{b-a}{d-c} \qquad
+z = \left(1-\frac{1}{e^5}\right)^{-1}
+\]
+\[
+r = \frac{1}{\frac{1}{a}+\frac{1}{b}+\frac{1}{c}+\frac{1}{d}} \qquad
+y = ab \cdot \frac{1}{c} \cdot \frac{f^2}{2} \qquad 
+t = 7\left(g^{\frac{1}{3}}\right) + 4g^{0.58}
+\]
+con $a = 1.12$, $b = 2.34$, $c = 0.72$, $d = 0.81$, $e = 3$, $f = 19.83$, 
+$g = 20$. Visualizzare i risultati in format short e format long.
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> a = 1.12;
+>> b = 2.34;
+>> c = 0.72;
+>> d = 0.81;
+>> e = 3;
+>> f = 19.83;
+>> g = 20;
+>> 
+>> x = 1 + (a/b) + (c/f^2)
+
+x =
+
+    1.4805
+
+>> s = (b-a)/(d-c);
+>> z = (1-1/e^5)^-1;
+>> r = 1/(1/a + 1/b + 1/c + 1/d);
+>> y = a*b*(1/c)*((f^2)/2);
+>> t = 7*(g^(1/3))+4*g^(0.58);
+>> 
+>> x, s, z, r, y, t
+
+x =
+
+    1.4805
+
+
+s =
+
+   13.5556
+
+
+z =
+
+    1.0041
+
+
+r =
+
+    0.2536
+
+
+y =
+
+  715.6766
+
+
+t =
+
+   41.7340
+
+>> format long
+>> 
+>> x, s, z, r, y, t
+
+x =
+
+   1.480463473251643
+
+
+s =
+
+  13.555555555555541
+
+
+z =
+
+   1.004132231404959
+
+
+r =
+
+   0.253571274994625
+
+
+y =
+
+     7.156765979999999e+02
+
+
+t =
+
+  41.733956653314806
+
+>> 
+\end{verbatim}
+\end{codice}
+\end{svol}
+
+\item Dopo aver cancellato le variabili del workspace, individuare, 
+descrivere e correggere gli errori nelle seguenti istruzioni di assegnazione:
+\begin{itemize}
+\item[-]\verb a=2y+(((3+1)9) ,
+\item[-]\verb b==2*sin[3] ,
+\item[-]digitare \verb c=e^0.5 \ per calcolare  $e^{0.5}$ con  $e$
+numero di Nepero,
+\item[-]per il calcolo di $log(4 −\frac{8}{4-2})$ digitare
+ \verb d=log(4-8/4*2) .
+\end{itemize}
+
+\begin{svol}
+\begin{codice}
+\begin{verbatim}
+>> clear x s z r y t
+>> 
+>> a = 2y+(((3+1)9)
+??? a = 2y+(((3+1)9)
+         |
+Error: Unexpected MATLAB expression.
+\end{verbatim}
+\end{codice} 
+In questo comando abbiamo due tipi di errori: innanzitutto le moltiplicazioni
+(ove \verb 2y \ si intende ovviamente $2 \cdot y$) si effettuano con 
+l'operatore\verb * , inoltre le parentesi non sono bilanciate.
+\begin{codice}
+\begin{verbatim}
+>> b==2*sin[3]
+??? b==2*sin[3]
+            |
+Error: Unbalanced or unexpected
+parenthesis or bracket.
+ 
+\end{verbatim}
+\end{codice} 
+La funzione $\sin$, come tutte le funzioni in Matlab, utilizza le parentesi
+rotonde (le quadre sono utilizzate per altri scopi). 
+\begin{codice}
+\begin{verbatim}
+>> c = e^0.5
+
+c =
+
+   1.732050807568877
+
+\end{verbatim}
+\end{codice}
+\verb e \ in questo caso è uno scalare definito da utente, il numero di
+Nepero in Matlab è calcolato dalla dunzione \verb exp() \ con argomento $1$:
+\verb exp(1) .
+\begin{codice}
+\begin{verbatim}
+>> d = log(4-8/4*2)
+
+d =
+
+  -Inf
+
+>> 
+\end{verbatim}
+\end{codice}
+Gli operatori \verb / \ e \verb * \ hanno la stessa precedenza, quindi la
+sopracitata istruzione calcola $\log(4 - \frac{8}{4}\cdot 2)$ eseguendo in 
+ordine (da sinistra verso destra) le operazioni. L'istruzione corretta
+è quindi \verb d=log(4-8/(4*2)) . 
+\end{svol}
+
+\item Mediante una sequenza di istruzioni di assegnazione in Matlab:
+\begin{itemize}
+\item[--]
+Calcolare il raggio di una sfera che ha un volume del $30\%$ più grande di 
+una sfera di raggio $5$ cm.
+\item[--]
+Considerando le seguenti approssimazioni polinomiali della funzione $e^x$ :
+\[
+e^x \simeq p_1(x) := 1 + x, \quad
+e^x \simeq p_2(x) := 1 + x +\frac{x^2}{2}\]
+si calcolino l’errore assoluto
+\[e_a (x) = |e^x − p_i (x)| \quad i = 1, 2\]
+e l’errore relativo
+\[e_r(x) = \frac{|e^x − p_i(x)|}{e^x} \quad i = 1, 2\]
+in $x = 0,1$.
+\item[--] Calcolare le radici delle equazioni:
+\[2t2 − 4t − 1 = 0 \quad
+x4 + 2x2 − 3 = 0 \quad
+x3 = 2197.\]
+\end{itemize}
+
+\begin{svol}
+\begin{itemize}
+\item[--]
+\begin{codice}
+\begin{verbatim}
+>> v1 = (4/3)*pi*(5^3);
+>> v2 = v1*(130/100);
+>> r2 = ((3/4)*(1/pi)*v2)^(1/3)
+
+r2 =
+
+   5.456964415305529
+
+>> 
+\end{verbatim}
+\end{codice}
+\item[--]
+\begin{codice}
+\begin{verbatim}
+>> p10 = 1 + 0;
+>> p11 = 1 + 1;
+>> p20 = 1 + 0 + (0^2)/2;
+>> p21 = 1 + 1 + (1^2)/2;
+>> 
+>> e_a10 = abs(exp(0) - p10)
+
+e_a10 =
+
+     0
+
+>> e_a11 = abs(exp(1) - p11)
+
+e_a11 =
+
+   0.718281828459046
+
+>> e_a20 = abs(exp(0) - p20)
+
+e_a20 =
+
+     0
+
+>> e_a21 = abs(exp(1) - p21)
+
+e_a21 =
+
+   0.218281828459046
+
+>> e_r10 = abs(exp(0) - p10)/(exp(0))
+
+e_r10 =
+
+     0
+
+>> e_r11 = abs(exp(1) - p11)/(exp(1))
+
+e_r11 =
+
+   0.264241117657115
+
+>> e_r20 = abs(exp(0) - p20)/(exp(0))
+
+e_r20 =
+
+     0
+
+>> e_r21 = abs(exp(1) - p21)/(exp(1))
+
+e_r21 =
+
+   0.080301397071394
+
+>> 
+\end{verbatim}
+\end{codice}
+\item[--] Utilizzando $x_{1,2}=\frac{-b \pm \sqrt{b^2-4ac}}{2a}$ e alcune
+operazioni algebriche:
+
+\begin{codice}
+\begin{verbatim}
+>> t1 = (4 + sqrt((-4)^2-4*2*(-1)))/(2*2);
+>> t2 = (4 - sqrt((-4)^2-4*2*(-1)))/(2*2);
+>> t = [t1 t2]
+
+t =
+
+   2.224744871391589  -0.224744871391589
+
+>> 
+>> y1 = (-2 + sqrt((2)^2-4*2*(-3)))/(2*2);
+>> y2 = (-2 - sqrt((2)^2-4*2*(-3)))/(2*2);
+>> x1 =  sqrt(y1);
+>> x2 = -x1;
+>> x = [x2 x1]
+
+x =
+
+  -0.907124939317785   0.907124939317785
+
+>> 
+>> x = (2197)^(1/3)
+
+x =
+
+  12.999999999999998
+
+>> 
+\end{verbatim}
+\end{codice}
+\end{itemize}
+\end{svol}
+
+\item
+Generare il vettore riga e il vettore colonna $y$ di elementi equidistanti 
+$1, 2, ..., 10$ e $10, 9, ..., 1$ rispettivamente e farne il prodotto scalare.
+Generare inoltre il vettore colonna $z$ costituito dai valori della funzione 
+seno in $11$ elementi equidistanti nell’intervallo $[0, 1]$.
+
+\end{enumerate}

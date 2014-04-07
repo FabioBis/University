@@ -1,0 +1,1391 @@
+\hyphenation{
+Barrow
+Binet
+Chebyshev
+Cholesky
+Cramer
+Gauss
+Hausdorff
+Householder
+Laplace
+Runghe
+tras-for-ma-zio-ne
+Torricelli
+}
+
+\chapter{Altre fattorizzazioni.}
+
+\section{Verso la fattorizzazione di Cholesky.}
+
+\begin{prop}
+Sia $A \in \rr^{n \times n}$, simmetrica ($A = A^t$) e definita positiva ($
+\forall x \in \rr^n \colon x \neq 0, \quad x^tAx > 0$), allora $A$ è non
+singolare.
+\end{prop}
+\begin{dimo}
+Sia $A$ singolare, allora esiste $x \in \rr^n$ con $x \neq 0$ tale che
+$Ax = 0$.
+\[x^t\underbrace{Ax}_{= \, 0}\stackrel{?}{>} 0.\qquad
+0 \ngtr 0. \qquad \textrm{Assurdo.}\]
+\end{dimo}
+\begin{prop}
+I minori $\Delta_k$ della matrice A di cui sopra sono definiti positivi,
+non singolari.
+\end{prop}
+\begin{dimo}
+Posto $\Delta_k$ minore principale per $k = 1, \ldots, n$.
+\begin{flushleft}
+$\Delta_k$ è simmetrico, sia $v_k \in \rr^k$ con $v_k \neq 0$, allora
+esiste $w \in \rr^n$ tale che:
+\[w = \left[
+\begin{array}{c}
+v_k \\
+0_{k+1} \\
+\vdots \\
+0_{n}
+\end{array}\right], \quad w \neq 0.\]
+\end{flushleft}
+\[
+0 < w^tAw = \left[v_k^t \ 0_{k+1} \ \cdots \ 0_n \right]
+\left[
+\begin{array}{c|c}
+\Delta_k & A_{1,2} \\
+\hline
+A_{2,1} & A_{2,2}
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+v_k \\
+0_{k+1} \\
+\vdots \\
+v_n
+\end{array}
+\right] = v_k^t\Delta_kv_k.
+\]
+
+Pertanto $v_k^t\Delta_kv_k > 0$ per ogni $v_k \in \rr^k$ con $v_k \neq 0$.
+Allora $\Delta_k$ è definito postivo, non singolare.
+\end{dimo}
+
+\begin{osse}\label{oss-chol-lu}
+$A$ è non singolare e tutti i minori principali sono non nulli per il
+teorema \ref{teo4.4}.
+\end{osse}
+
+\begin{osse}Anche la matrice $A^{-1}$ è definita positiva.
+\[\forall y \in \rr^n, \quad y \neq 0, \quad A^{-1}y = x, \quad x \neq 0.\]
+Analizziamo $y^tAy$.
+
+Se $y^tAy > 0$ allora $A^{-1}$ è positiva.
+\[(A^{-1}y)^t = x^t \ \Longrightarrow \ y^tA^{-1} = x^t\  \Longrightarrow \
+y^t = x^tA.\]
+Osserviamo che $A^{-1} =(A^{-1})^t$ poichè $A$ è simmetrica.
+\[y^tA^{-1}y = x^tAA^{-1}y = x^t\underbrace{AA^{-1}}_{= \ I}Ax = x^tAx > 0.\]
+\end{osse}
+
+Com'è il determinante della matrice $A$ di cui sopra? Tale determinante è
+strettamente maggiore di zero (Det$A > 0$) perchè è definita positiva.
+Ovvero:
+
+\[A^{-1} = \left[
+\begin{array}{cccc}
+\alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,n} \\
+\alpha_{2,1} & \alpha_{2,2} &\cdots & \alpha_{2,n} \\
+\vdots & \vdots &\ddots & \vdots \\
+\alpha_{n,1} & \alpha_{n,2} & \cdots & \alpha_{n,n}
+\end{array}
+\right].
+\]
+$\alpha_{1,1} \neq 0$ e $\Delta_k \neq 0$ definito positivo per ogni
+$k = 1,\ldots, n$. Allora $\alpha_{1,1} > 0$ (come minore principale estratto
+da $A$) e
+
+\[0 < \alpha_{1,1} = \frac{\textrm{det}\left[
+\begin{array}{ccc}
+a_{2,2} & \cdots & a_{2,n} \\
+\vdots &        & \vdots \\
+a_{n,2} & \cdots & a_{n,n}
+\end{array}\right]}{\textrm{det}A}  \quad \Rightarrow \ \textrm{det}A > 0.
+\]
+Sfruttando queste condizioni e tenendo in considerazione l'osservazione \ref{oss-chol-lu}
+si può parlare di fattorizzazione diretta. Abbiamo già visto che esiste una
+fattorizzazione $A = LU$ con $L$ matrice triangolare inferiore con elementi
+diagonali uguali a $1$ ed $U$ matrice triangolare superiore.
+
+\[\textrm{det}A = \prod_{i = 1}^{n}u_{i,i}.\]
+Come sono gli elementi $u_{i,i}$?
+\begin{flushleft}
+Intanto sappiamo che $u_{1,1}$ non può essere negativo:
+\end{flushleft}
+\[A =
+\left[
+\begin{array}{ccc}
+a_{1,1} & \cdots & a_{1,n} \\
+\vdots &        & \vdots \\
+a_{n,1} & \cdots & a_{n,n}
+\end{array}\right], \quad \Delta_1 = a_{1,1}
+\]
+Poichè $A$ la possiamo vedere come matrice a blocchi, allora si ha:
+\[A = \left[
+\begin{array}{c|c}
+\Delta_1 & A_{1,2} \\
+\hline
+A_{2,1} & A_{2,2}
+\end{array}\right] = LU.
+\]
+
+\[\left[
+\begin{array}{c|c}
+\Delta_1 & A_{1,2} \\
+\hline
+A_{2,1} & A_{2,2}
+\end{array}\right] =
+\left[
+\begin{array}{c|c}
+1 & L_{1,2} \\
+\hline
+L_{2,1} & L_{2,2}
+\end{array}\right] \left[
+\begin{array}{c|c}
+u_{1,1} & U_{1,2} \\
+\hline
+U_{2,1} & U_{2,2}
+\end{array}\right]  \Rightarrow \Delta_1 = u_{1,1}\]
+Si ha quindi che $\Delta_1 > 0$.
+
+Si può dimostrare per induzione che $\Delta_k > 0$ per ogni $k = 1, \ldots,
+n$.
+
+\[A = \left[
+\begin{array}{c|c}
+\Delta_2 & A_{1,2} \\
+\hline
+A_{2,1} & A_{2,2}
+\end{array}\right] =
+\left[
+\begin{array}{c|c}
+\begin{array}{cc}
+1 & 0 \\
+* & 1
+\end{array} & L_{1,2} \\
+\hline
+L_{2,1} & L_{2,2}
+\end{array}\right]\left[
+\begin{array}{c|c}
+\begin{array}{cc}
+u_{1,1} & * \\
+0 & u_{2,2}
+\end{array} & U_{1,2} \\
+\hline
+U_{2,1} & U_{2,2}
+\end{array}\right]  \Rightarrow \textrm{det}\Delta_2 = u_{1,1}\cdot u_{2,2}\]
+Si ha quindi che $0 < \textrm{det}\Delta_2 = u_{1,1}\cdot u_{2,2} \wedge u_{1,1}
+> 0
+\Rightarrow u_{2,2} > 0$.
+
+
+\section{Fattorizzazione di Cholesky.}
+Sia $A \in \rr^{n \times n}$, simmetrica ($A = A^t$) e definita positiva,
+sappiamo dal capitolo
+precedente che $A$ è non singolare e che ogni suo minore è definito positivo.
+
+Costruiamo ora una matrice diagonale $D$ tale che:
+
+\[D = \left[
+\begin{array}{cccc}
+\sqrt{u_{1,1}} & 0 & \cdots & 0 \\
+0 & \sqrt{u_{2,2}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+0 &\cdots & 0 & \sqrt{u_{n,n}}
+\end{array}
+\right].\]
+
+\[A = LU = \left(\underbrace{LD}_{B} \underbrace{D^{-1}U}_{C} \right) = BC.\]
+Essendo $A = A^t$ si ha che $(BC)^t = BC$, allora $BC = C^tB^t$.
+
+\[ B = LD = \left[
+\begin{array}{cccc}
+\sqrt{u_{1,1}} & 0 & \cdots & 0 \\
+* & \sqrt{u_{2,2}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & \sqrt{u_{n,n}}
+\end{array}
+\right]
+\]
+Allora:
+\[ \textrm{det}B = \prod_{k = 1}^{n} \sqrt{u_{k,k}} \neq 0.\]
+Ovvero $B$ è invertibile, inoltre anche $B^t$ è non singolare ed invertibile.
+
+\[
+\begin{array}{rcl}
+B^{-1}BC & = & B^{-1}C^tB^t \\
+      C & = & B^{-1}C^tB^t \\
+C\left[B^t\right]^{-1} & = & B^{-1}C^tB^t\left[B^t\right]^{-1}.
+\end{array}
+\]
+\[
+\Rightarrow \ C\left[B^t\right]^{-1} = B^{-1}C^t.
+\]
+
+Vediamo com'è fatta la matrice $B^{-1}C^t$:
+
+\[B^{-1}C^t =
+\left[
+\begin{array}{cccc}
+\frac{1}{\sqrt{u_{1,1}}} & 0 & \cdots & 0 \\
+* & \frac{1}{\sqrt{u_{2,2}}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & \frac{1}{\sqrt{u_{n,n}}}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+\sqrt{u_{1,1}} & 0 & \cdots & 0 \\
+*' & \sqrt{u_{2,2}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+*' &\cdots & *' & \sqrt{u_{n,n}}
+\end{array}
+\right].
+\]
+Il prodotto risulta sempre una matrice triangolare inferiore.
+\[B^{-1}C^t =
+\left[
+\begin{array}{cccc}
+1 & 0 & \cdots & 0 \\
+*'' & 1 & & \vdots \\
+\vdots & & \ddots & 0 \\
+*'' &\cdots & *'' & 1
+\end{array}
+\right].\]
+
+Per determinare $B^{-1}$ risolvo i sistemi $Bx = e_k$, per $k = 1, \ldots, n$.
+
+\[C = D^{-1}U = \left[
+\begin{array}{cccc}
+\frac{1}{\sqrt{u_{1,1}}} & 0 & \cdots & 0 \\
+0 & \frac{1}{\sqrt{u_{2,2}}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+0 &\cdots & 0 & \frac{1}{\sqrt{u_{n,n}}}
+\end{array}
+\right]\left[
+\begin{array}{cccc}
+u_{1,1} & * & \cdots & * \\
+0 & u_{2,2} & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & u_{n,n}
+\end{array}
+\right] =
+\]
+
+\[ =
+\left[
+\begin{array}{cccc}
+\frac{u_{1,1}}{\sqrt{u_{1,1}}} & * & \cdots & * \\
+0 & \frac{u_{2,2}}{\sqrt{u_{2,2}}} & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & \frac{u_{n,n}}{\sqrt{u_{n,n}}}
+\end{array}
+\right] =
+\left[
+\begin{array}{cccc}
+\sqrt{u_{1,1}} & * & \cdots & * \\
+0 & \sqrt{u_{2,2}} & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & \sqrt{u_{n,n}}
+\end{array}
+\right].
+\]
+
+\[
+B^t = \left[
+\begin{array}{cccc}
+\sqrt{u_{1,1}} & * & \cdots & * \\
+0 & \sqrt{u_{2,2}} & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & \sqrt{u_{n,n}}
+\end{array}
+\right] \ \Rightarrow
+\left[B^t\right]^{-1} =
+\left[
+\begin{array}{cccc}
+\frac{1}{\sqrt{u_{1,1}}} & * & \cdots & * \\
+0 & \frac{1}{\sqrt{u_{2,2}}} & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & \frac{1}{\sqrt{u_{n,n}}}
+\end{array}
+\right].
+\]
+
+\[
+C\left[B^t\right]^{-1} =
+\left[
+\begin{array}{cccc}
+1 & * & \cdots & * \\
+0 & 1 & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & 1
+\end{array}
+\right].
+\]
+
+\[
+C\left[B^t\right]^{-1} =
+\left[
+\begin{array}{cccc}
+1 & * & \cdots & * \\
+0 & 1 & & \vdots \\
+\vdots & & \ddots & * \\
+0 &\cdots & 0 & 1
+\end{array}
+\right] =
+\left[
+\begin{array}{cccc}
+1 & 0 & \cdots & 0 \\
+*'' & 1 & & \vdots \\
+\vdots & & \ddots & 0 \\
+*'' &\cdots & *'' & 1
+\end{array}
+\right] = B^{-1}C^t.
+\]
+Quindi si ha che se $C\left[B^t\right]^{-1} = I$ allora $C = B^t$ e da
+$B^{-1}C = I$ segue che $C^t = B$, allora:
+
+\[A = BB^t.\]
+
+Questa fattorizzazione si realizza tramite il prodotto di una matrice $B$ con
+la sua trasposta. Se $A$ è una matrice simmetrica e definita positiva, allora
+esiste una matrice $B$ non singolare che fattorizza $A$.
+
+\subsection{Unicità della fattorizzazione.}
+Sotto quali condizioni si ha l'unicità della fattorizzazione di Cholesky?
+
+\begin{teo}
+Sia $A$ una matrice quadrata di ordine $n$ simmetrica e definita positiva,
+sia $B$ la matrice tale che il prodotto con la sua trasposta fattorizzi $A$,
+ovvero $A = BB^t$, allora tale fattorizzazione è unica.
+\end{teo}
+
+\begin{dimo}Siano $B_1$ e $B_2$ tali che:
+\[A = B_1B_1^t \quad \wedge \quad A = B_2B_2^t.\]
+Ipotesi: $(B_1)_{i,i} > 0\ \wedge\ (B_2)_{i,i} > 0, \quad i = 1, \ldots, n$.
+
+\[A = B_1D_1^{-1}D_1B_1^t.\]\[A = B_2D_2^{-1}D_2B_2^t.\]
+Ricordiamo che $D_1$ e $D_2$ sono matrici diagonali aventi come elementi
+diagonali i medesimi delle matrici $B_1$ e $B_2$.
+
+\[B_1D_1^{-1} =
+\left[
+\begin{array}{cccc}
+b_{1,1}^{(1)} & 0 & \cdots & 0 \\
+* & b_{2,2}^{(1)} & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & b_{n,n}^{(1)}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+\frac{1}{b_{1,1}^{(1)}} & 0 & \cdots & 0 \\
+0 & \frac{1}{b_{2,2}^{(1)}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+0 &\cdots & 0 & \frac{1}{b_{n,n}^{(1)}}
+\end{array}
+\right].
+\]
+\[B_1D_1^{-1} =
+\left[
+\begin{array}{cccc}
+1 & 0 & \cdots & 0 \\
+* & 1 & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & 1
+\end{array}
+\right] = L_1.
+\]
+
+\[B_2D_2^{-1} =
+\left[
+\begin{array}{cccc}
+b_{1,1}^{(2)} & 0 & \cdots & 0 \\
+* & b_{2,2}^{(2)} & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & b_{n,n}^{(2)}
+\end{array}
+\right]
+\left[
+\begin{array}{cccc}
+\frac{1}{b_{1,1}^{(2)}} & 0 & \cdots & 0 \\
+0 & \frac{1}{b_{2,2}^{(2)}} & & \vdots \\
+\vdots & & \ddots & 0 \\
+0 &\cdots & 0 & \frac{1}{b_{n,n}^{(2)}}
+\end{array}
+\right].
+\]
+\[B_2D_2^{-1} =
+\left[
+\begin{array}{cccc}
+1 & 0 & \cdots & 0 \\
+* & 1 & & \vdots \\
+\vdots & & \ddots & 0 \\
+* &\cdots & * & 1
+\end{array}
+\right] = L_2.\]
+
+Allora si ha che $A = L_1U_1$ e $A = L_2U_2$, poiché tali fattorizzazioni
+sono uniche segue che:
+\[L_1 = L_2 \ \Rightarrow \ B_1D_1^{-1} = B_2D_2^{-1},\]
+\[U_1 = U_2 \ \Rightarrow \ B_1D_1^{t} = B_2D_2^{t}.\]
+
+\[\textrm{Ovvero: }\ \left(B_1D_1^{t}\right)_{i,i} =
+\left(B_2D_2^{t}\right)_{i,i}, \quad i = 1, \ldots, n.\]
+\[
+\left[b_{i,i}^{(1)}\right]^2 = \left[b_{i,i}^{(2)}\right]^2,\quad i= 1, \ldots, n.
+\]
+Si ha quindi, per ogni $i$ che: $b_{i,i}^{(1)} = b_{i,i}^{(2)}$,
+quindi $D_1 = D_2$ per la genericità di $i$.
+\[D_1 = D_2\ \Rightarrow \ B_1 = B_2.\]
+\end{dimo}
+
+\subsection{Costruzione della matrice B.}
+Vediamo come costruire la matrice $B$ della fattorizzazione di Cholesky.
+Sappiamo che $B$ è una matrice triangolare inferiore.
+\[ B =
+\left[
+\begin{array}{cccc}
+b_{1,1} & 0 & \cdots & 0 \\
+b_{2,1} & b_{2,2} & & \vdots \\
+\vdots & & \ddots & 0 \\
+b_{n,1} & b_{n,2}& \cdots  & b_{n,n}
+\end{array}
+\right], \quad
+B^t =
+\left[
+\begin{array}{cccc}
+b_{1,1} & b_{2,1} & \cdots & b_{n,1} \\
+0 & b_{2,2} & & b_{n,2} \\
+\vdots & & \ddots & \vdots \\
+0 & \cdots & 0  & b_{n,n}
+\end{array}
+\right].
+\]
+Poiché $A = BB^t$ si ha che:
+\begin{equation}\label{eq5.1}
+a_{i,j} = \sum_{k = 1}^{n} b_{i,k}b_{j,k}. \qquad i = 1, \ldots, n; \quad j =1,
+\ldots, n.
+\end{equation}
+
+\begin{notabene}
+Dato che gli elementi $b_{p,q}$, con $1 \leq p \leq q \leq n$ sono nulli, non
+è necessario scorrere totalmente gli indici $i$ e $j$ dell'equazione
+\ref{eq5.1}, è sufficiente prendere $k$ fino l'indice minore dei due, ovvero:
+\[
+a_{i,j} = \sum_{k = 1}^{\textrm{min}(i,j)} b_{i,k}b_{j,k}. \qquad i = 1, \ldots, n;
+\quad j =1,\ldots, n.
+\]
+Inoltre per simmetria possiamo esprimere tale equazione come:
+\begin{equation}\label{eq5.2}
+a_{i,j} = \sum_{k = 1}^{i} b_{i,k}b_{j,k}. \quad i = 1, \ldots, n, \ i \leq j.
+\end{equation}
+\end{notabene}
+
+Costruiamo la matrice $B$.
+\begin{itemize}
+\item[]$i = 1$.
+  \begin{itemize}
+    \item[-]$j = 1$.\\
+    $a_{1,1} = (b_{1,1})^2\ \Longrightarrow\ b_{1,1} = \pm \sqrt{a_{1,1}}.$
+    \item[-]$j = 2$.\\
+    $a_{1,2} = b_{1,1}\cdot b_{2,1} \ \Longrightarrow\ b_{2,1} =
+      \frac{a_{1,2}}{b_{1,1}}.$
+    \item[] $\vdots$
+    \item[-]$j = n$.\\
+    $a_{1,n} = b_{1,1}\cdot b_{n,1}\ \Longrightarrow\ b_{n,1} =
+      \frac{a_{1,n}}{b_{1,1}}.$
+  \end{itemize}
+\item[]$i$ generico.
+  \begin{itemize}
+    \item[-]$j = i$.\\
+      $a_{i,i} = \sum_{k =1}^ib_{i,k}\cdot b_{i,k} = \sum_{k = 1}^{i-1}(b_{i,k})^2
+      + (b_{i,i})^{2}$.
+    \[b_{i,i} = \left[ a_{i,i} - \sum_{k = 1}^{i-1}(b_{i,k})^2\right]^{\frac{1}{2}}.\]
+    \item[-]$j = i+1$.\\
+      $a_{i,i+1} = \sum_{k =1}^nb_{i,k}\cdot b_{i+1,k} = \sum_{k = 1}^{i-1}b_{i,k}
+      \cdot b_{i+1,k} + b_{i,i}\cdot b_{i+1,i}$.
+    \[b_{i+1,i} = \frac{\left[ a_{i,i+1} - \sum_{k = 1}^{i-1}b_{i,k}\cdot b_{i+1,k}
+    \right]}{b_{i,i}}.\]
+    \item[] $\vdots$
+    \item[-]$j = n$.\\
+      $a_{i,n} = \sum_{k =1}^nb_{i,k}\cdot b_{n,k} = \sum_{k = 1}^{i-1}b_{i,k}
+      \cdot b_{n,k} + b_{i,i}\cdot b_{n,i}$.
+    \[b_{n,i} = \frac{\left[ a_{i,n} - \sum_{k = 1}^{i-1}b_{i,k}\cdot b_{n,k}
+    \right]}{b_{i,i}}.\]
+  \end{itemize}
+\end{itemize}
+
+\begin{osse}Come si può notare, nella \emph{fattorizzazione di Cholesky} si costruisce
+una sola matrice ($B$), il costo è quindi dimezzato rispetto alla $LU$ e risulta essere
+pari a $O(\frac{n}{6})$.
+\end{osse}
+
+\section{Fattorizzazione $QR$.}
+
+\subsection{Matrici di Householder e proprietà.}
+
+\begin{defi}
+Sia $u \in \rr^n$ generico,$ \ u \neq 0, \quad \beta = - \frac{2}{\| u
+\|_2^2} \in \rr.$
+Possiamo definire una matrice elementare $U$ tale che:
+\[U = E(\beta, u, u) = I - \frac{2uu^t}{\| u \|_2^2},\]
+si dice che $U$ è una matrice di \emph{Householder}, dato $x \in \rr^n$, $Ux$
+una riflessione e
+\[U = I - \frac{2uu^t}{\| u \|_2^2}\]
+un \emph{riflettore}.
+\end{defi}
+
+\begin{prop}
+Sia $U$ una matrice di Housholder, allora valgono le seguenti proprietà:
+\begin{enumerate}
+\item $U = U^t. \quad\qquad\qquad$ (simmetrica)
+\item $UU^t = U^tU = I. \qquad$ (ortogonale)
+\item $U^2 = I. \quad\qquad\qquad$ (idempotente)
+\end{enumerate}
+\end{prop}
+\begin{dimo}
+\begin{enumerate}
+\item $U \stackrel{?}{=} U^t.$
+\[U^t = \left(I - \frac{2uu^t}{\| u \|_2^2}\right)^t
+= I - \frac{2uu^t}{\| u \|_2^2} = U.\]
+\item $UU^t \stackrel{?}{=} U^tU = I.$\\
+Poiché $U = U^t$ si ha che:
+\[
+\left(I - \frac{2uu^t}{\| u \|_2^2}\right)\cdot
+\left(I - \frac{2uu^t}{\| u \|_2^2}\right) =
+I \bcancel{- \frac{2uu^t}{\| u \|_2^2}
+  - \frac{2uu^t}{\| u \|_2^2}}
++ \bcancel{\frac{4u\cancel{(u^tu)}u^t}{\| u \|_2^2
+\cancel{\| u \|_2^2}}} = I.
+\]
+\item $U^2 \stackrel{?}{=} I.$\\
+Immediato da $1$ e $2$.
+\end{enumerate}
+\end{dimo}
+
+\begin{osse}
+\label{mat-norma}
+Sia $u \in \rr^n, \ u \neq 0$, posto $\| u \|_2^2 = 1$ si ha
+che $U = I - 2uu^t$. Ovvero, passando al generico problema, posto $x = v+w$
+e $v = \alpha u$:
+\[
+\begin{array}{lcl}
+Ux & = & \left(I - 2uu^t\right)x \\
+   & = & x -  2uu^tx = x - 2uu^t(v+w)\\
+   & = & x -  2uu^tv -  2u\underbrace{u^tw}_{= 0 \hspace{1mm} (u\perp w)} \\
+   & = & x -  2uu^t\alpha u \\
+   & = & x - 2\alpha u\underbrace{u^tu}_{= 1 \hspace{1mm} (\| u \|_2^2 = 1)} \\
+   & = & x - 2\alpha u = v + w -2v \\
+   & = & -v +w.
+\end{array}
+\]
+
+Il problema ora è che da un singolo sistema lineare siamo passati a due.
+
+\begin{figure}
+\centering
+    \setlength{\unitlength}{1mm}
+    \begin{picture}(93,30)
+
+      \put(41,8){\circle*{1}}
+
+      \put( 2,8){\vector(1,0){78}}
+      \put(79,5){$u$}
+
+      \put(41,8){\vector(1,0){26}}
+      \put(50,5){$v=\alpha u$}
+
+      \put(41,8){\vector(-1,0){26}}
+      \put(15,5){$-v$}
+
+      \put(41,8){\vector(0,1){25}}
+      \put(43,30){$w$}
+
+      \put(41,8){\vector(2,1){26}}
+      \put(51,15){$x$}
+
+      \put(41,8){\vector(-2,1){26}}
+      \put(30,15){$Ux$}
+
+      \multiput(66,21)(0,-1.933){8}
+        {\line(0,1){1.2}}
+
+      \multiput(66,21)(-1.933,0){28}
+        {\line(1,0){1.2}}
+
+      \multiput(16,21)(0,-1.933){8}
+        {\line(0,1){1.2}}
+    \end{picture}
+  \caption{L'applicazione grafica di una matrice di Householder}
+  \label{fig-norma}
+\end{figure}
+
+Si dice che $Ux$ ha fatto una \emph{riflessione}. La norma euclidea
+di $x$ è quindi uguale alla norma euclidea di $Ux$ o, detto in altre parole,
+una matrice di Householder \emph{non cambia} la norma (euclidea) del vettore
+a cui è applicata.
+\[\|x\|_2 = \|Ux\|_2.\]
+La figura \ref{fig-norma} mostra vettorialmente l'applicazione di una matrice
+di Householder ad un generico vettore $x = v+w$ nella forma di cui sopra.
+
+\end{osse}
+
+\subsection{Costruzione di $Q$.}
+Usiamo nuovamente le matrici elementari.
+\[U = E(\beta, u, u) = I - \frac{2uu^t}{\| u \|_2^2},\]
+Sia $x \in \rr^n, \ x \neq 0, \ s_1 = \pm \|x \|_2$.
+\[u = x + s_1\cdot e_1, \qquad u =
+\left[
+\begin{array}{c}
+x_1 + s_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{array}
+\right]. \]
+
+\[
+\begin{array}{lcl}
+ Ux & = & \left(I - \frac{2uu^t}{\| u \|_2^2}\right)x \\
+ & = & x - \frac{2uu^t}{\| u \|_2^2}x \\
+ & = & x - u\frac{2u^tx}{\| u \|_2^2} \\
+ & = & x - u.
+ \end{array}
+\]
+L'ultima uguaglianza deriva dai seguenti calcoli:
+\[
+ \begin{array}{lcl}
+ 2u^tx & = & 2[(x_1+s_1)x_1 + x_2^2 + \cdots + x_n^2] \\
+       & = & 2(x_1^2 + \cdots + x_n^2 + s_1x_1) \\
+       & = & 2(s_1^2 + s_1x_1) \\
+       & = & 2s_1(s_1 +x_1),
+ \end{array}
+\]
+
+\[
+ \begin{array}{lcl}
+ \|u\|_2^2 & = & (x_1+s_1)^2 + x_2^2 + \cdots + x_n^2 \\
+          & = & s_1^2 + s_1^2 +2s_1x_1 \\
+          & = & 2s_1(s_1 +x_1).
+ \end{array}
+\]
+
+Possiamo quindi esprimere $Ux$ come $ x - u$, ovvero:
+\[Ux = x -u =
+\left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}\right] -
+\left[
+\begin{array}{c}
+x_1 + s_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{array}\right] =
+\left[
+\begin{array}{c}
+-s_1 \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+\begin{osse}
+\label{oss_qr_unicita}
+$U$ non è univocamente determinata, si può notare che è
+possibile scegliere come $s_1$ sia $+ \|x\|_2$ che $- \|x\|_2$. La scelta
+più opportuna per determinare $s_1$ è tale che $x_1 + s_1$ sia di segno
+concorde in modo che la somma non venga $0$ (cancellazione numerica). Quindi
+\[x_1 > 0\ \longrightarrow\ s_1 = + \|x\|_2, \quad
+x_1 < 0\ \longrightarrow\ s_1 = - \|x\|_2.\]
+\end{osse}
+
+Sia $x \in \rr^n, \ x \neq 0$, estraiamo $x' \in \rr^{n-1}$, ovvero:
+\[
+x = \left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}\right], \qquad
+x' =
+\left[
+\begin{array}{c}
+x_2 \\
+\vdots \\
+x_n
+\end{array}\right].
+\]
+In pratica abbiamo eliminato $x_1$. Si ha dunque $s_2 =\pm \|x'\|_2$.
+\[u_2' = x' + s_2e_1 \in \rr^{n-1}, \quad u_2 =
+\left[
+\begin{array}{c}
+0 \\
+u_2'
+\end{array}\right].\]
+
+Costruiamo il riflettore elementare $U_2$:
+\[U_2 = I - \frac{2u_2u_2^t}{\| u_2 \|_2^2}.\]
+
+\[
+\begin{array}{lcl}
+ U_2x & = & \left(I - \frac{2u_2u_2^t}{\| u_2 \|_2^2}\right)x \\
+ & = & x - \frac{2u_2u_2^t}{\| u_2 \|_2^2}x \\
+ & = & x - u_2\frac{2u_2^tx}{\| u_2 \|_2^2} \\
+ & = & x - u_2.
+ \end{array}
+\]
+
+L'ultima uguaglianza deriva dai seguenti calcoli:
+\[
+ \begin{array}{lcl}
+ 2u_2^tx & = & 2[0\  u_2']x \\
+       & = & 2(x_2^2 + \cdots + x_n^2 + s_2x_2) \\
+       & = & 2(s_2^2 + s_2x_2) \\
+       & = & 2s_2(s_2 + x_2),
+ \end{array}
+\]
+
+\[
+ \begin{array}{lcl}
+ \|u_2\|_2^2 & = & 0 + \underbrace{x_2^2+2x_2s_2+s_2^2}_{(x_2 + s)^2} + x_3^2 +
+                  \cdots + x_n^2 \\
+          & = & s_2^2 + s_2^2 +2s_2x_2 \\
+          & = & 2s_2(s_2 + x_2).
+ \end{array}
+\]
+
+Possiamo quindi esprimere $U_2x$ come $ x - u_2$, ovvero:
+\[U_2x = x - u_2 =
+\left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}\right] -
+\left[
+\begin{array}{c}
+0 \\
+x_2 + s_2\\
+x_3 \\
+\vdots \\
+x_n
+\end{array}\right] =
+\left[
+\begin{array}{c}
+x_1 \\
+-s_2 \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Analizziamo $U_2$ in termini matriciali.
+
+\[
+\begin{array}{lcl}
+U_2 & = &
+ \left[
+ \begin{array}{c|c}
+ I_1 & 0 \\
+ \hline
+ 0 & I_{n-1}
+ \end{array}
+ \right] - \frac{2}{\|u_2\|_2^2}\left[\begin{array}{c}0 \\ u_2'\end{array}
+ \right]\left[0\ u_2'^t\right]\\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_1 & 0 \\
+ \hline
+ 0 & I_{n-1}
+ \end{array}
+ \right] - \frac{2}{\|u_2\|_2^2}\left[
+ \begin{array}{c|c}
+ 0 & 0 \\
+ \hline
+ 0 & u_2'u_2'^t
+ \end{array}
+ \right] \\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_1 & 0 \\
+ \hline
+ 0 & I_{n-1}
+ \end{array}
+ \right] - \left[
+ \begin{array}{c|c}
+ 0 & 0\\
+ \hline
+ 0 & \frac{2}{\|u_2\|_2^2}u_2'u_2'^t
+ \end{array}
+ \right] \\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_1 & 0 \\
+ \hline
+ 0 & I_{n-1} - \frac{2}{\|u_2\|_2^2}u_2'u_2'^t
+ \end{array}
+ \right]\\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_1 & 0 \\
+ \hline
+ 0 & U_2^{n-1}
+ \end{array}
+ \right].
+\end{array}
+\]
+
+Sia $x \in \rr^n, \ x \neq 0$, estraiamo $x' \in \rr^{n-k+1}$, ovvero:
+\[
+x = \left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}\right], \qquad
+x' =
+\left[
+\begin{array}{c}
+x_k \\
+x_{k+1}\\
+\vdots \\
+x_n
+\end{array}\right].
+\]
+In pratica abbiamo eliminato $x_1, x_2, \ldots x_{k-1}$.
+Si ha dunque $s_k =\pm \|x'\|_2$.
+\[u_k' = x' + s_ke_1 \in \rr^{n-k+1}, \quad u_k =
+\left[
+\begin{array}{c}
+0 \\
+u_k'
+\end{array}\right].\]
+
+Costruiamo il riflettore elementare $U_k$:
+\[U_k = I - \frac{2u_ku_k^t}{\| u_k \|_2^2}.\]
+
+\[
+\begin{array}{lcl}
+ U_kx & = & \left(I - \frac{2u_ku_k^t}{\| u_k \|_2^2}\right)x \\
+ & = & x - \frac{2u_ku_k^t}{\| u_k \|_2^2}x \\
+ & = & x - u_k\frac{2u_k^tx}{\| u_k \|_2^2} \\
+ & = & x - u_k.
+ \end{array}
+\]
+
+Possiamo quindi esprimere $U_kx$ come $ x - u_k$, ovvero:
+\[U_kx = x - u_k =
+\left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}\right] -
+\left[
+\begin{array}{c}
+0_1 \\
+0_2 \\
+\vdots \\
+0_{k-1} \\
+x_k + s_k\\
+x_{k+1} \\
+\vdots \\
+x_n
+\end{array}\right] =
+\left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_{k-1} \\
+-s_k \\
+0 \\
+\vdots \\
+0
+\end{array}\right].
+\]
+
+Analizziamo $U_k$ in termini matriciali.
+
+\[
+\begin{array}{lcl}
+U_k & = &
+ \left[
+ \begin{array}{c|c}
+ I_{k-1} & 0 \\
+ \hline
+ 0 & I_{n-k+1}
+ \end{array}
+ \right] - \frac{2}{\|u_k\|_2^2}\left[\begin{array}{c}0 \\ u_k'\end{array}
+ \right]\left[0\ u_k'^t\right]\\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_{k-1} & 0 \\
+ \hline
+ 0 & I_{n-k+1}
+ \end{array}
+ \right] - \frac{2}{\|u_k\|_2^2}\left[
+ \begin{array}{c|c}
+ 0 & 0 \\
+ \hline
+ 0 & u_k'u_k'^t
+ \end{array}
+ \right] \\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_{k-1} & 0 \\
+ \hline
+ 0 & I_{n-k+1}
+ \end{array}
+ \right] - \left[
+ \begin{array}{c|c}
+ 0 & 0\\
+ \hline
+ 0 & \frac{2}{\|u_k\|_k^2}u_k'u_k'^t
+ \end{array}
+ \right] \\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_{k-1} & 0 \\
+ \hline
+ 0 & I_{n-k+1} - \frac{2}{\|u_k\|_2^2}u_k'u_k'^t
+ \end{array}
+ \right]\\
+\\
+& = & \left[
+ \begin{array}{c|c}
+ I_{k-1} & 0 \\
+ \hline
+ 0 & U_k^{n-(k-1)}
+ \end{array}
+ \right].
+\end{array}
+\]
+
+Dalle matrici $U_i$, con $i = 1, \ldots, n$, vedremo che si potrà costruire
+la matrice $Q$, partendo dal generico problema $Ax = b$.
+
+\subsection{Unicità della fattorizzazione QR}
+Dall'osservazione \ref{oss_qr_unicita}, si deduce che la fattorizzazione QR
+mediante riflettori elementari di Householder \emph{non è} quindi unica!
+La scelta in segno della norma del sottovettore estratto è arbitraria.
+
+\subsection{Algoritmo di fattorizzazione $QR$.}
+Applichiamo i risultati di cui sopra alla risoluzione dei sistemi lineari.
+\[Ax = b, \qquad A \in \rr^{n \times n}, \qquad x,b \in \rr^n,\quad x = ?\]
+
+\[A = \left[
+\begin{array}{ccc}
+a_{1,1} & \cdots & a_{1,n} \\
+\vdots &        & \vdots \\
+a_{n,1} & \cdots & a_{n,n}
+\end{array}
+\right].\]
+
+Passo $1$: poniamo $x$ equivalente alla prima colonna di $A$ e costruiamo
+$U_1$ come visto nella sezione precedente.
+
+\[
+x \equiv \overline{a}_1, \quad U_1A, \quad U_1b.
+\]
+Al termine noto $b$ penseremo dopo.
+
+\[
+\begin{array}{lcl}
+U_1A & = & U_1\left[\overline{a}_1 \ \overline{a}_2 \ \cdots\ \overline{a}_n
+\right]
+ =  \left[U_1\overline{a}_1 \ U_1\overline{a}_2 \ \cdots\ U_1\overline{a}_n
+\right] \\
+\\
+& = & \left[
+\begin{array}{c|c|c|c|c}
+\begin{array}{c}-s_1 \\ 0 \\ \vdots \\ 0 \end{array} &
+U_1\overline{a}_2 &
+U_1\overline{a}_3 &
+\cdots &
+U_1\overline{a}_n
+\end{array}\right].
+\end{array}
+\]
+
+Come si nota occorre calcolare $n-1$ prodotti matrice vettore, con
+$n$ righe per $n$ prodotti, il costo di un'operazione simile è un O($n^2$).
+Consideriamo la forma algebrica piuttosto che quella matriciale.
+
+\[
+U_1\overline{a}_k = \overline{a}_k -
+\frac{2}{\underbrace{\|u_1\|_2^2}_{n \ \textrm{prod.}}}u_1
+\underbrace{u_1^t\overline{a}_k}_{n \ \textrm{prod.}}.
+\]
+Il costo computazionale di questa operazione è circa $2n$, ovvero un costo
+lineare nel numero delle colonne, molto minore di $n^2$.
+
+\begin{osse}E' sufficiente calcolare $\|u_1\|_2^2$ una sola volta si avrà
+quindi che per calcolare $U_1\overline{a}_2$ il costo è $2n$, mentre per tutte
+le altre $n-2$ colonne questo si riduce a O($n$).
+\end{osse}
+
+A questo punto dell'algoritmo abbiamo, data $A_1 \equiv A$:
+
+\[U_1A_1 = A_2 = \left[
+\begin{array}{cccc}
+-s_1 & a_{1,2}^{(2)} & \cdots & a_{1,n}^{(2)} \\
+0   & a_{2,2}^{(2)} & \cdots & a_{2,n}^{(2)} \\
+\vdots & \vdots & & \vdots \\
+0 & a_{n,2}^{(2)} & \cdots & a_{n,n}^{(2)}
+\end{array}
+\right].\]
+
+Passo $2$: poniamo $x'$ equivalente alla seconda colonna di $A$
+ristretto alla seconda, terza, $\ldots$, ultima componente e costruiamo
+$U_2$ come visto nella sezione precedente.
+
+\[x' \equiv\left[
+\begin{array}{c}
+ a_{2,2}^{(2)} \\
+ \vdots \\
+ a_{n,2}^{(2)}
+\end{array}
+\right].
+\]
+
+Si ha dunque $s_2 =\pm \|x'\|_2$.
+\[u_2' = x' + s_2e_1 \in \rr^{n-1}, \quad u_2 =
+\left[
+\begin{array}{c}
+0 \\
+u_2'
+\end{array}\right].\]
+
+Ottenuto $U_2^{n-1}$ costruiamo $U_2'$.
+
+\[U_2 = \left[
+\begin{array}{c|c}
+I_1 & 0 \\
+\hline
+0 & U_2^{n-1}
+\end{array}
+\right].\]
+
+\[
+U_2A_2 = U_2\left[U_2\overline{a}_1^{(2)} \ U_2\overline{a}_2^{(2)} \ \cdots\
+U_2\overline{a}_n^{(2)}\right].\]
+
+\[U_2\overline{a}_1^{(2)} = \left[
+\begin{array}{c|c}
+I_1 & 0 \\
+\hline
+0 & U_2^{n-1}
+\end{array}
+\right]\left[
+\begin{array}{c}
+-s_1 \\ 0 \\ \vdots \\ 0
+\end{array}
+\right] = \left[
+\begin{array}{c}
+-s_1 \\ 0 \\ \vdots \\ 0
+\end{array}
+\right].\]
+Quindi non altera la prima colonna della matrice.
+
+\[U_2A_2 = A_3 = \left[
+\begin{array}{ccccc}
+-s_1 & a_{1,2}^{(2)} & a_{1,3}^{(2)} &\cdots & a_{1,n}^{(2)} \\
+0   & -s_2 & a_{2,3}^{(3)} &\cdots & a_{2,n}^{(3)} \\
+0   & 0 & a_{3,3}^{(3)} &\cdots & a_{3,n}^{(3)} \\
+\vdots & \vdots & \vdots & & \vdots \\
+0 & 0 & a_{n,3}^{(3)} & \cdots & a_{n,n}^{(3)}
+\end{array}
+\right].\]
+
+Passo $k$: poniamo $x'$ equivalente alla $k$-esima colonna di $A$
+ristretto alla $k+1$-esima, $k+2$-esima, $\ldots$, ultima componente e
+costruiamo $U_k$ come visto nella sezione precedente.
+
+\[x' \equiv\left[
+\begin{array}{c}
+ a_{k,k}^{(k)} \\
+a_{k+1,k}^{(k)} \\
+ \vdots \\
+ a_{n,k}^{(k)}
+\end{array}
+\right].
+\]
+
+Si ha dunque $s_k =\pm \|x'\|_2$, $x' \in \rr^{n-k+1}$.
+
+\[u_k' = x' + s_ke_1 \in \rr^{n-k+1}, \quad u_k =
+\left[
+\begin{array}{c}
+0 \\
+u_k'
+\end{array}\right].\]
+
+Ottenuto $U_k^{n-k+1}$ costruiamo $U_k'$.
+
+\[U_k = \left[
+\begin{array}{c|c}
+I_k & 0 \\
+\hline
+0 & U_k^{n-k+1}
+\end{array}
+\right].\]
+
+\[
+U_kA_k = U_k\left[U_k\overline{a}_1^{(k)} \ U_2\overline{a}_2^{(k)} \ \cdots\
+U_k\overline{a}_n^{(k)}\right].\]
+
+\[U_k\overline{a}_1^{(k)} = \left[
+\begin{array}{c|c}
+I_k & 0 \\
+\hline
+0 & U_k^{n-k+1}
+\end{array}
+\right]\left[
+\begin{array}{c}
+-s_1 \\ 0 \\ \vdots \\ 0
+\end{array}
+\right] = \left[
+\begin{array}{c}
+-s_1 \\ 0 \\ \vdots \\ 0
+\end{array}
+\right].\]
+Quindi non altera la prima colonna della matrice. Allo stesso modo non altera
+le restanti $k-1$ colonne.
+
+\[U_kA_k = A_{k+1} = \left[
+\begin{array}{cccccccc}
+-s_1   &a_{1,2}^{(2)} &a_{1,3}^{(3)} &\cdots &a_{1,k}^{(k)}&a_{1,k+1}^{(k)}   &\cdots
+ &a_{1,n}^{(k)}\\
+0      &-s_2        &a_{2,3}^{(3)} &\cdots &a_{2,k}^{(k)}&a_{2,k+1}^{(k)}   &\cdots
+ &a_{2,n}^{(k)}\\
+0      &0           &-s_3        &\cdots &a_{3,k}^{(k)}&a_{3,k+1}^{(k)}   &\cdots
+ &a_{3,n}^{(k)}\\
+0      &0           &0           &\ddots &            &              &
+&\vdots\\
+       &            &            &       &-s_k        &a_{k,k+1}^{(k)}  &\cdots
+ &a_{k,n}^{(k)}\\
+\vdots &\vdots      &\vdots      &       & 0          &a_{k+1,k+1}^{(k)}&\cdots
+ &a_{k+1,n}^{(k)}\\
+       &            &            &       &\vdots      &\vdots        &
+&\vdots\\
+0      &0           &0           &\cdots &0           &a_{n,k+1}^{(k)}&\cdots
+&a_{n,n}^{(k)}
+\end{array}
+\right].\]
+
+Riassumendo, alla fine dell'algoritmo, si ottiene una matrice triangolare
+superiore:
+\[U_{n-1}U_{n-2}\cdots U_2U_1A_1 = R.\]
+Poiché per ogni $k$ compreso tra $1$ ed $n$ si ha $U_K$ ortogonale (ovvero
+invertibile), possiamo ottenere la seguente:
+\[
+\begin{array}{lcl}
+A \equiv A_1 & = & U_1^{-1}U_2^{-1}\cdots U_{n-1}^{-1}R \\
+             & = & U_1^{t}U_2^{t}\cdots U_{n-1}^{t}R \\
+             & = & U_1U_2\cdots U_{n-1}R \\
+& = & QR.
+\end{array}
+\]
+
+Il problema originale $Ax=b$ si trasforma dunque in $QRx = b$, occorre ora
+risolvere il sistema:
+\[\left\{
+\begin{array}{l}Rx = y \\ Qy = b.
+\end{array}
+\right.\]
+Molto semplice, poiché si riduce con un passo ad un unico problema:
+\[Rx = Q^{-1}b\ \Longrightarrow\ Rx = Q^tb.\]
+Analizziamo il costo dell'algoritmo.
+\begin{flushleft}
+Per calcolare $t = Qb$ si hanno $n^2$ operazioni di prodotto, per calcolare
+$Rx = t$ ancora $n^2$ prodotti, ovvero un costo totale di $2n^2$.
+\end{flushleft}
+
+\begin{flushleft}
+Tale costo è equivalente a quello della fattorizzazione $LU$, nonostante si
+risolva un singolo sistema lineare. Allora perchè utilizzare la
+fattorizzazione $QR$?
+\end{flushleft}
+
+\begin{osse}
+\label{minimo-norma}
+Sia $Ax = b$ un generico problema lineare con $A \in  \rr^{n \times n}$ non
+singolare, $x,b \in \rr^n$, si ha:
+\[Ax -b = 0.\]
+Il problema, visto in questi termini, è quello di trovare un vettore
+$x \in \rr^n$ tale che $\min_{x \in \rr^n}\| Ax -b\|_2 = 0.$ Ovvero cercare il
+vettore $x$ che minimizza la norma euclidea. Il problema originario e
+quest'ultimo trovato sono dunque equivalenti!
+
+Non solo, ma considerando una fattorizzazione $QR$ della matrice A, è possibile
+applicare $Q$ internamente, poichè esso non cambia la norma del vettore $b$.
+\footnote{Si veda l'osservazione \ref{mat-norma}}
+
+\[
+\begin{array}{lcl}
+\displaystyle \min_{x \in \rr^n}\|Ax - b \|_2 & = & \displaystyle \min_{x \in \rr^n}\|Q(Ax-b)\|_2 \\
+& = & \displaystyle \min_{x \in \rr^n}\|QAx - Qb\|_2 \\
+& = & \displaystyle \min_{x \in \rr^n}\|Rx - Qb\|_2.
+\end{array}
+\]
+\end{osse}
+
+Parliamo ora del caso in cui la matrice A non sia necessariamente quadrata.
+
+Sia $A \in \rr^{n \times m}$, con $\ n \geq m, \ \textrm{rang}(A) = m,
+\ \,\rho(A)=m, \ x \in \rr^m,\ b \in \rr^n$, si ha che il generico sistema
+lineare $Ax = b$ per l'osservazione \ref{minimo-norma} si può scrivere come:
+\[\min_{x \in \rr^m}\|Ax -b\|_2.\]
+
+Costruiamo ora una fattorizzazione $QR$ passo per passo della matrice A.
+\[
+A = \left[
+\begin{array}{ccccc}
+a_{1,1} & \cdots & a_{1,m} \\
+\vdots &        & \vdots \\
+a_{m,1} & \cdots & a_{m,m} \\
+\vdots &        & \vdots \\
+a_{n,1} & \cdots & a_{n,m} \\
+\end{array}
+\right].
+\]
+
+Primo passo:
+
+\[ A_2 =
+\left[
+\begin{array}{cccc}
+-s_1    & a_{1,2}^{(2)} & \cdots & a_{1,m}^{(2)} \\
+0      & a_{2,2}^{(2)} & \cdots & a_{2,m}^{(2)} \\
+\vdots & \vdots      &        & \vdots \\
+0      & a_{n,2}^{(2)} & \cdots & a_{n,m}^{(2)}
+\end{array}
+\right].
+\]
+
+Secondo passo:
+
+\[ A_3 =
+\left[
+\begin{array}{cccc}
+-s_1   & a_{1,2}^{(2)}& a_{1,3}^{(3)} & \cdots  \\
+0      & -s_2       & a_{2,3}^{(3)} & \cdots  \\
+0      & 0          & a_{3,3}^{(3)} &         \\
+\vdots & \vdots     & \vdots      &         \\
+0      & 0          & a_{n,3}^{(3)} & \cdots
+\end{array}
+\right].
+\]
+
+Dopo $m$ passi (ovvero per tutte le m colonne) si arriva ad una situazione
+del tipo:
+
+\[ A_{m+1} = \underbrace{U_m...U_3U_2U_1}_{Q}A =
+\left[
+\begin{array}{ccccc}
+-s_1   & a_{1,2}^{(2)}& a_{1,3}^{(3)} & \cdots  & a_{1,m}^{(m)} \\
+0      & -s_2       & a_{2,3}^{(3)} & \cdots  & a_{2,m}^{(m)} \\
+0      & 0          & -s_3        &         & a_{3,m}^{(m)} \\
+\vdots & \vdots     &             & \ddots  & \\
+0      & 0          & 0           & \cdots  & -s_m \\
+0      & 0          & 0           & \cdots  & 0 \\
+\vdots & \vdots     & \vdots      &         & \vdots \\
+0      & 0          & 0           & \cdots  & 0
+\end{array}
+\right].
+\]
+
+Otteniamo così una matrice $QA$ (con $Q$ ortogonale) che può essere espressa come:
+
+\[QA = \left[
+\begin{array}{c}
+R \\
+0
+\end{array}
+\right].\]
+
+\begin{flushleft}
+Avente $R$ matrice quadrata triangolare superiore di ordine $m$.
+\end{flushleft}
+
+Tornando al problema originale si ha quindi:
+\[
+\begin{array}{lcl}
+Ax = b \Longleftrightarrow
+\displaystyle \min_{x \in \rr^m}\|Ax - b \|_2
+& = & \displaystyle \min_{x \in \rr^m}\|Q(Ax-b)\|_2 \\
+& = & \displaystyle \min_{x \in \rr^m}\|QAx - Qb\|_2 \\
+& = & \displaystyle \min_{x \in \rr^m}\left\|
+\left[
+\begin{array}{c}
+R \\
+0
+\end{array}
+\right]
+\left[
+\begin{array}{c}
+x_1 \\
+\vdots \\
+x_n
+\end{array}
+\right] -
+\left[
+\begin{array}{c}
+b_1 \\
+\hline
+b_2
+\end{array}
+\right]
+\right \|_2 \\ [25 pt]
+& = & \displaystyle \min_{x \in \rr^m}\left\|
+\begin{array}{c}
+Rx -b_1 \\
+-b_2
+\end{array}
+\right \|_2,
+
+\end{array}
+\]
+avente $b_1 \in \rr^m$ e $b_2 \in \rr^{n-m}$. Risolvendo il problema $Rx = b_1$,
+si trova il vettore del minimo. In $\|b_2\|_2$ è presente il resto (o residuo).
+
+\begin{osse}
+Se si applica questo procedimento ad una matrice A quadrata, risolvere $Rx = b_1$
+significa fondamentalmente trovare il vettore $x$ tale che la norma da minimizzare
+sia zero (avente quindi vettore $b_2$ nullo).
+\end{osse}
+
+Ma perchè utilizzare matrici rettangolari aventi più righe che colonne?
+Che idea di fondo modellano? Vedremo nella sezione \ref{min-quad} la
+formalizzazione precisa del problema ai minimi quadrati, però idealmente si
+pensi ad un insieme di punti nel piano.
+Ognuno di questi punti è univocamente determinato dalle coppie $(x_i,y_i)$.
+Ipotizziamo di voler andare a creare un polinomio che non passi necessariamente
+per tutti i punti ma che, essendo di grado basso, cerchi di avvicinarsi il più
+possibile ad essi.\footnote{Vedremo nel capitolo \ref{interpolazione} il concetto di
+interpolazione puntuale e della relazione tra numero di punti e grado del polinomio
+interpolante}.
+Tale tecnica viene in gergo chiamata \emph{curve fitting} e la sua formalizzazione
+passa tramite la definizione di matrici rettangolari. In questo senso quindi,
+la fattorizzazione $QR$ è uno strumento utile alla risoluzione di questo tipo di
+problemi.
+

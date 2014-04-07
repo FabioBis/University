@@ -1,0 +1,1428 @@
+\section{Nodi di Chebyshev.}
+
+\subsection*{Riprendiamo dai polinomi di Lagrange.}
+Siano:
+
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n  
+\end{array}\]
+il nostro insieme di dati (punti distinti e passaggio relativo),
+\[p(x) \in \PP_n, \quad p(x_i) = y_i, \quad i = 0,\ldots, n.\]
+\[p(x) = \sum_{i = 0}^{n}y_il_i(x).\]
+Assegnamo anche $\overline{y}_0, \overline{y}_1, \ldots, \overline{y}_n$, con
+$\overline{y}_i = y_i + \varepsilon_i$, con $\varepsilon_i$ perturbazioni.
+\[\longrightarrow\ \varepsilon_i = \overline{y}_i -y_i.\]
+Costruiamo ora il polinomio perturbato $\overline{p}(x) \in \PP_n$:
+\[\overline{p}(x) = \sum_{i = 0}^n\overline{y}_il_i(x).\]
+\[l_i(x) = \prod_{\substack{k=0\\ k \neq n }}^n\frac{x-x_k}{x_i-x_k}.\]
+
+\[p(x) - \overline{p}(x) = \sum_{i = 0}^{n}y_il_i(x) - 
+\sum_{i = 0}^{n}\overline{y}_il_i(x) = \sum_{i=0}^n(y_i - \overline{y}_i)l_i(x).\]
+\[
+\begin{array}{lcl}
+\left| p(x) - \overline{p}(x)\right| & = & \left| \sum_{i=0}^n(y_i - 
+\overline{y}_i)l_i(x)\right| \\
+& \leq & \sum_{i=0}^n\left|y_i - \overline{y}_i\right|\left|l_i(x)\right| \\
+& = & \sum_{i=0}^n\left|\varepsilon_i\right|\left|l_i(x)\right| \\
+& \leq & \sum_{i=0}^n\left\|\varepsilon_i\right\|_{\infty}\left|l_i(x)\right| \\
+& = & \left\|\varepsilon\right\|_{\infty}\sum_{i=0}^n\left|l_i(x)\right|.
+\end{array}
+\]
+
+\begin{center}
+Considerando il vettore
+$\varepsilon = \left[
+\begin{array}{c}
+\varepsilon_0 \\
+\varepsilon_1 \\
+\vdots \\
+\varepsilon_n
+\end{array}
+\right].
+$
+\end{center}
+
+\[\max_{x_0 \leq x \leq x_n}|p(x) - \overline{p}(x)| \leq \max_{x_0 \leq x \leq x_n}
+\left\|\varepsilon\right\|_{\infty}\sum_{i=0}^n\left|l_i(x)\right|
+= \left\|\varepsilon\right\|_{\infty}
+\underbrace{\max_{x_0 \leq x \leq x_n}\sum_{i=0}^n\left|l_i(x)\right|}_{\Lambda_n \
+\textrm{costante di Lebesgue}}.
+\]
+
+\[\longrightarrow\ \|p(x) - \overline{p}(x) \|_{\infty} \leq  \left\|
+\varepsilon\right\|_{\infty}\Lambda_n.\]
+
+\begin{osse}
+$\Lambda_n$ dipende solo dai nodi.
+\[
+\|p(x) -\overline{p}(x)\|_{\infty} \leq \|\varepsilon\|_{\infty}\Lambda_n.
+\]
+Questo è interpretabile come la stima dell'errore sul polinomio 
+$\overline{p}(x)$ rispetto a $p(x)$. Più $\Lambda_n$ è piccolo e più è
+piccolo l'errore relativo al calcolo di $p(x)$. E' importante minimizzare
+l'errore di propagazione.
+\end{osse}
+
+Sia $f(x) \in C^0([a,b])$ tale che:
+\begin{flushleft}$\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n  \quad \in [a,b] \\
+y_0 & y_1 & \cdots & y_n  
+\end{array}$\end{flushleft}
+$y_i = f(x_i), \quad i=0,\ldots,n.$\\
+
+In realtà non avremo valori $y_i$ esatti, ma approssimazioni dovuti 
+all'\emph{approssimazione di macchina}.
+
+\subsection{Minimizzazione di $\Lambda_n$.}
+Qual'è la scelta dei punti nodali che rende la costante di Lebesque 
+($\lambda_n$) minima? A questa domanda risponde \emph{Chebyshev}:
+\begin{itemize}
+\item[-] si prenda come intervallo $[-1,1] = [a,b]$;
+\item[-] si costruisca una sequenza di polinomi, il minimo $\Lambda_n$ si
+ottiene prendendo come nodi gli $n+1$ zeri del polinomio ortogonale di 
+Chebishev.
+\item[] (Quindi se possiamo, utilizziamo i nodi di Chebishev).
+\end{itemize}
+
+\begin{defi}Sia $x \in [a,b]$, $c(x)$ il polinomio di Chebyshev di grado 
+$n+1$, gli $n+1$
+zeri di $c(x)$ sono gli $x_i$ tali che:
+\[
+x_i = \frac{b -a}{2}\cos \left( \frac{2i-1}{n+1}  \cdot \frac{\pi}{2}\right) +
+\frac{a+b}{2}, \qquad i = 0, \ldots, n.
+\]
+$x_i \in [a,b]$.
+\end{defi}
+
+Sia $x_i \in [-1,1]$ un nodo di Chebyshev:
+\[t = \alpha x_i + \beta, \quad t_i = \frac{b-a}{2}x_i + \frac{b-a}{2}.\]
+
+$t, t_i$ sono nodi nell'intervallo $[a,b]$.
+
+\[
+a = \alpha(-1) + \beta \ \longrightarrow \ 2\beta = a+b;
+\]
+\[
+b = \alpha(1) + \beta \ \longrightarrow \ 2\alpha = b-a.
+\]
+
+Il procedimento è un po' lungo, quindi utilizziamo punti simili (che vengono
+sempre chiamati in gergo ``punti di Chebyshev'').
+\begin{enumerate}
+\item $x_i = \cos \frac{2i - 1}{2n +2} \pi, \quad i = 0,\ldots, n.$
+\item $x_i = \cos \frac{i}{n} \pi, \quad i = 0,\ldots, n.$
+\end{enumerate}
+\[
+\longrightarrow \ \Lambda_n \simeq e^{\frac{n}{2}}, \quad x_i \ \textrm{punti
+equispaziati.}
+\]
+
+\[h = \frac{b-a}{n}, \quad x_i = a +ih, \quad i = 0,\ldots,n.\]
+
+\[
+\Lambda_n \simeq e^{\frac{n}{2}}, \colon\quad \textrm{comportamento esplosivo.}
+\]
+
+In conclusione il polinomio che costruiamo può discostarsi molto da quello 
+teorico senza errori nei dati. Se invece utilizziamo i nodi di Chebyshev:
+\[\longrightarrow \ \Lambda_n \simeq \frac{2}{\pi}\log n,\]
+ovvero la divergenza è \emph{molto} più lenta.
+\[\lim_{n \to \infty}\frac{\Lambda_n}{\log n}  =
+\frac{2}{\pi}.\]
+Abbiamo una riduzione di $\Lambda_n$, questo garantisce una maggiore 
+precisione del polinomio approssimante $\overline{p}$.
+
+\subsection{Relazione tra errori relativi.}
+$\|p(x)\|_{\infty} = \max_{x_0 \leq x leq x_n}|p(x)| \geq \|p(x_i)\|_{\infty} =
+\max_{0 \leq i \leq n}|p(x_i)| = \|y\|_{\infty}$.
+\[y = \left[
+\begin{array}{c}
+y_0 \\
+y_1 \\
+\vdots \\
+y_n
+\end{array}\right].
+\]
+
+\begin{osse}
+
+\[
+\underbrace{\frac{\|p(x) - \overline{p}(x)\|_{\infty}}{\|p(x)\|_{\infty}}
+}_{\textrm{errore relativo sul polinomio}} \leq \left.\frac{\|\varepsilon\|_\infty}{\|y
+\|_{\infty}}\Lambda_n\,\right\}\textrm{errore relativo ai dati iniziali}
+\]
+\end{osse}
+
+\begin{teo}\label{teo7.15}
+Sia $f(x) \in \cc^0([a,b])$, siano $x_0, x_1, \ldots, x_n$ punti distinti in
+$[a,b]$ e $p(x)$ il polinomio interpolatore di $f$:
+\[p(x) \in \PP_n \colon p(x_i) = f(x_i), \quad i=0,\ldots, n.\]
+Allora:
+\[
+\max_{a \leq x \leq b}|f(x)-\overline{p}(x)| = \|f(x) - p(x) \|_{\infty}
+\leq \left(1+ \Lambda_n\right) E_n(t).
+\]
+
+\[
+E_n(t) := \inf_{q(x) \in \PP_n} \|f(x)-q(x)\|_\infty.
+\]
+$E_n(t)$ è il grado di approssimazione della funzione $f$ in norma infinito.
+\end{teo}
+\begin{osse}
+$q$ è un polinomio qualsiasi che varia nella classe dei polinomi di grado
+minore o uguale ad $n$.
+\end{osse}
+
+Un'idea è quella di costruire una successione di polinomi interpolanti che
+tenda ad $f$.
+\[
+\begin{array}{ccccccccc}
+x_0 & &p_0(x) \\
+x_0 & x_1 & & p_1(x) \\
+x_0 & x_1 & x_2 & &p_2(x) \\
+x_0 & x_1 & x_2 & x_3 & &p_3(x) \\
+\vdots \\
+x_0 &     &    & \cdots & x_n & &p_n(x) \\
+\vdots \\
+x_0 &     &    &\cdots & x_n & \cdots & x_m & &p_m(x)
+\end{array}
+\]
+
+Otteniamo così una matrice infinita costituiti da elementi riga diversi. 
+
+Il risultato che vogliamo é:
+\[
+\lim_{n \to + \infty}p_n(x) \stackrel{?}{=} f(x).
+\]
+
+Questo risultato \emph{non c'è}! Ovvero aggiungere dei punti non sempre
+migliora il modello.
+
+\begin{exe} Funzione di Runge.
+\[f(x) = \frac{1}{1+ x^2}, \quad [a,b] = [-5,5]. \]
+\[x_i = -5 +ih, \quad h = \frac{10}{n}, \quad i = 0, \ldots, n.\]
+Costruiamo i polinomi interpolatori (con la tecnica che vogliamo), 
+disegnandoli al variare di $n$, vediamo come migliora o peggiora 
+l'approssimazione del polinomio. Nell'avvicinarsi ai bordi dell'intervallo
+($-5$ e $5$) abbiamo errori grandi.
+\end{exe}
+\begin{notabene}
+Il problema è nei nodi scelti. Se avessimo altre famiglie di nodi potremmo
+avere \emph{convergenza}. In sostanza occorre scegliere opportunamente
+i nodi.
+\end{notabene}
+
+\begin{dimo} (Teorema \ref{teo7.15})
+\[
+\begin{array}{lcl}
+f(x) - p(x) & = & f(x) - q(x) + q(x) - p(x) \\
+& = & f(x) - q(x) - (p(x) - q(x)).
+\end{array}
+\]
+\[
+\begin{array}{lcl}
+|f(x) - p(x)| & = & |f(x) - q(x) -(p(x) - q(x))| \\
+& \leq & |f(x) - q(x)| - |p(x) - q(x)| \\
+& = & |f(x) - q(x)| + \left| \sum_{i = 0}^nf(x_i) l_i(x) 
+-\sum_{i=0}^nq(x_i)l_i(x)\right| \\
+& = & | f(x) -q(x)| + \left| \sum_{i=0}^n (f(x_i)-q(x_i))l_i(x)\right|.
+\end{array}
+\]
+Abbiamo potuto esprimere $q(x)$ in questa forma:
+\[q(x) = \sum_{i=0}^nq(x_i)l_i(x)\]
+poiché $q$ è un polinomio equivalente al suo polinomio
+interpolatore.
+
+\[
+\begin{array}{lcl}
+\longrightarrow \ 
+\|f(x) - p(x)\|_{\infty} & \leq & \|f(x) - q(x)\|_\infty + \|f(x)- q(x)\|_{\infty}
+\|\underbrace{\sum_{i=0}^n l_i(x)}_{\Lambda_n}\|_{\infty}\\
+& = & \|f(x) + q(x)\|_\infty(1 + \Lambda_n).  
+\end{array}
+\]
+\end{dimo}
+
+
+Perchè concentrarsi sull'interpolazione se non porta a convergenza? Ovviamente
+perchè ci sono condizioni che permettono la convergenza. Cerchiamo uno spazio
+si polinomi denso nello spazio di funzioni.
+
+Al posto di utilizzare il $\lim_{n \to + \infty}$ fissiamo $n$ e facciamo tendere
+l'ampiezza dell'intervallo $[a,b]$ a zero. In pratica ``tagliuzziamo'' il
+dominio in tanti sottointervalli, così otteniamo una buona approssimazione 
+di $f$ per ogni intervallino.
+
+\[\omega_n(x) = (x-x_0)(x-x_1)\cdots (x-x_n) \leq (b-a)^n.\]
+\[b-a \longrightarrow 0 \ \Longrightarrow \ \omega_n(x) \longrightarrow 0.\]
+
+Consideriamo una nuova quantità di dati, introducendo il dato ``pendenza''.
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n  \\
+y'_0 & y'_1 & \cdots & y'_n  
+\end{array}\]
+$p(x) \in \PP_{2n +1}$ tale che $p(x_i) = y_i,\, p'(x_i) = y'_i$, per ogni $i =
+0, \ldots, n$.
+
+Il polinomio ha $2n +2$ gradi di libertà, quindi esiste un unico polinomio
+$p(x) \in \PP_{2n+1}$ in cui imponiamo $2n+2$ vincoli.
+
+Una prima formula possibile di soluzione è la seguente:
+\begin{equation}\label{eq7.3}
+p(x) = \sum_{i=0}^nA_i(x)y_i + B_i(x)y'_i.
+\end{equation}
+Dove, per ogni $i = 0, \ldots, n$:
+\[A_i = [1-2(x-x_i)l'_i(x_i)]\cdot l_i^2(x),\]
+\[B_i = (x-x_i)l_i^2(x),\]
+\[l_i(x) = \sum_{\substack{k=0 \\ k\neq i}}\frac{x-x_k}{x_i-x_k}.\]
+
+\begin{defi}
+Un polinomio $p \in \PP_{2n+1}$ della forma di \ref{eq7.3} si dice
+\emph{polinomio interpolatore secondo Hermite}.
+\end{defi}
+
+\begin{prop}
+Il polinomio $p \in \PP_{2n+1}$ costruito con \ref{eq7.3} interpola i punti 
+dati:
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n  \\
+y'_0 & y'_1 & \cdots & y'_n  
+\end{array}\]
+Ovvero $p(x) \in \PP_{2n +1}$, $p(x_i) = y_i,\, p'(x_i) = y'_i$, per ogni $i =
+0, \ldots, n$.
+\end{prop}
+\begin{dimo}
+\begin{itemize}
+\item[-] $p(x) \in \PP_{2n+1}$:\\
+
+$A_i$ ha grado $2n+1$, $B_i$ ha grado $2n+1$, ne segue che $p$ è combinazione
+lineare di due polinomi di grado $2n+1$.
+\item[-]$p(x_i) = y_i,\qquad \forall i = 0, \ldots , n$:
+\[p(x_k) = \sum_{i=0}^n A_i(x_k)y_i + B_i(x_k)y'_i \stackrel{?}{=} y_k,\]
+\[
+B_i(x_k) = (x_k-x_i)l_i^2(x_k) = \left\{\begin{array}{lcr}0 & & i = k, \\ \\
+0 & &i \neq k.\end{array}\right.\]
+\[
+A_i(x_k) = \left[1-2(x_k-x_i)\cdot l'_i(x_k)\right]\cdot l_i^2(x_k) =
+\left\{\begin{array}{lcr}
+1 \cdot l_i^2(x_i) = 1 & & i = k, \\
+\\
+0 & & i \neq k.
+\end{array}\right.
+\]
+\[
+\longrightarrow \ p(x_k) = A_k(x_k) y_k = y_k.
+\]
+\item[-]$p'(x_k) = y'_k$:
+\[p'(x) = \sum_{i=0}^nA'_i(x)y_i + B'_i(x)y'_i.\]
+\[A'_i(x) = -2 l'_i (x_i)l_i^2[1-2(x-x_i)l'_i(x_i)]\cdot 2l_i(x)l'_i(x).\]
+\[B'_i(x) = l_i^2(x) + (x-x_i)2l_i(x)l_i'(x).\]
+
+$p'(x) = \ $?
+
+\begin{itemize}
+\item[$\circ$]
+$A'_i(x_k) = -2 l'_i(x_i)l^2_i(x_k) + 
+[1-2(x_k-x_i)l'_i(x_i)]\cdot 2l_i(x_k)l'_i(x_k)$.
+\[
+A'_i(x_k) = \left\{\begin{array}{lcr}0 & & \textrm{se } i = k, \\
+\\
+0 & & \textrm{se } i \neq k.
+\end{array}\right.
+\]
+\item[$\circ$]$B'_i(x_k) = l_i^2(x_k) + (x_k-x_i)2l_i(x_k)l_i'(x_k)$.
+\[
+B'_i(x_k) = \left\{\begin{array}{lcr}1 & & \textrm{se } i = k, \\
+\\
+0 & & \textrm{se } i \neq k.
+\end{array}\right.
+\]
+\end{itemize}
+$\longrightarrow \ p'(x_k) = y'_k$.
+\end{itemize}
+\end{dimo}
+
+\subsection{Nodi di Chebyshev e differenze divise.}
+Ricordiamo come si definiscono le derivate mediante differenze divise:
+\[
+f[x_i, x_i] = f'(x_i), \qquad f[\underbrace{x_i, \ldots, x_i}_{n}] = 
+\frac{f^{(n)}(x_i)}{n!}.
+\]
+
+\begin{itemize}
+\item[$\circ$]
+Partiamo da $x_0, y_0$ e costruiamo $p_0(x) \in \PP_0$ tale che $p_0(x_0)=y_0$:
+\[\longrightarrow \ p_0(x) = A_0 = y_0 = f[x_0]. \]
+
+Vogliamo costruire un polinomio $p_1(x) \in \PP_1$ tale che $p_1(x_0) = y_0$
+e $p'_1(x_0) = y'_0$ della forma:
+\[
+p_1(x) = p_0(x) + \framebox[3.5\width]{\textrm{?}} = p_0(x) + A_1(x-x_0).
+\]
+
+$\framebox[3.5\width]{\textrm{?}}$ si deve annullare in $x_0$ da cui
+$A_1(x-x_0)$.
+
+\[
+p'_1(x) = A_1, \quad y'_0 = p'_1(x_0) = A_1 = f[x_0,x_0].
+\]
+
+Vediamo cosa abbiamo fatto:\\
+
+$\begin{array}{llcc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] = y'_0 \\
+x_0 & y_0     
+\end{array}$
+\[p_1(x) = f[x_0] + f[x_0,x_0](x-x_0).\]
+
+\item[$\circ$]
+Dati il primo punto ($x_0$) ed il relativo passaggio abbiamo quindi ottenuto
+la pendenza, ora aggiungiamo il dato successivo $x_1$ ed il relativo passaggio
+$y_1$, abbiamo la seguente situazione:
+
+$\begin{array}{lllc}
+x_0 & y_0  & y'_0  \\
+x_1 & y_1     \\
+\end{array}$\\
+e costruiamo quindi $p_2$ (avendo tre vincoli sarà di grado $\leq 2$),
+$p_2(x) \in \PP_2$ tale che $p_2(x_0) = y_0$, $p'_2(x_0) = y'_0$ e $p_2(x_1) =
+y_1$ della seguente forma:
+\[
+p_2(x) = p_1(x) + \framebox[3.5\width]{\textrm{?}} = p_1(x) + A_2(x-x_0)^2.
+\]
+
+$\framebox[3.5\width]{\textrm{?}}$ deve annullasri in $x_0$ e in $p'(x_0)$
+da cui otteniamo $A_2(x-x_0)^2$.
+
+\[
+y_1 = p_2(x_1) = p_1(x_1) + A_2(x-x_0)^2.
+\]
+
+\[
+\begin{array}{lcl}
+A_2 & = & \frac{y_1 - y_0 - f[x_0,x_0](x_1-x_0)}{(x_1-x_0)^2} \\ 
+& = &\frac{\frac{y_1 - y_0}{(x_1 - x_0)} 
+- \frac{f[x_0,x_0](x_1-x_0)}{(x_1 -x_0)}}{x_1-x_0} \\
+& =  & \frac{f[x_0,x_1] - f[x_0,x_0]}{(x_1-x_0)} = f[x_0,x_0,x_1].
+\end{array}
+\]
+
+Abbiamo raggiunto la seguente situazione:\\
+
+$\begin{array}{llcc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] & \\
+x_1 & y_1 &
+\end{array}$
+
+\[
+p_2(x) = f[x_0] + f[x_0,x_0](x-x_0) + f[x_0,x_0,x_1](x-x_0)^2. 
+\]
+
+\item[$\circ$] A questo punto cerchiamo la pendenza nel punto $y_1$ e 
+calcoliamo il polinomio $p_3$ con quattro vincoli.
+
+$\begin{array}{lllc}
+x_0 & y_0  & y'_0  \\
+x_1 & y_1 & y'_1
+\end{array}$\\
+
+Vogliamo ottenere $p_3 \in \PP_3$ tale che:
+\[
+p_3(x_i) = y_i, \ p'_3(x_i) = y'_i, \qquad i = 0,1.
+\]
+
+\[p_3(x9 = p_2(x) + A_3(x-x_0)^2(x-x_1).\]
+\[p'_3(x) = p'_2(x) + 2\cdot A_3(x-x_0)(x-x_1) + A_3(x-x_0)^2.\]
+\[y'_1 = p'_3(x_1) = p'_2(x) + A-3(x_1-x_0)^2.\]
+\[p'_2(x) f[x_0,x_0] + 2 \cdot f[x_0,x_0,x_1](x-x_0).\]
+
+\[
+\begin{array}{lcl}
+A_3 & = & \frac{f[x_1,x_1]-f[x_0,x_0]-2f[x_0,x_0,x_1](x_1-x_0)}{(x_1-x_0)^2} \\ 
+& = &\frac{\frac{f[x_1,x_1] - f[x_0,x_1]}{(x_1 - x_0)} 
++ \frac{f[x_0,x_1]-f[x_0,x_0]}{(x_1 -x_0)}
+- \frac{2 \cdot f[x_0,x_0 x_1](x_1-x_0)}{(x_1 -x_0)}}{x_1-x_0} \\
+& =  & \frac{f[x_0,x_1,x_1] + f[x_0,x_0,x_1] -2 f[x_0,x_0,x_1]}{(x_1-x_0)} \\
+& = & f[x_0,x_0,x_1,x_1].
+\end{array}
+\]
+
+Abbiamo raggiunto la seguente situazione:\\
+
+$\begin{array}{llllc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] &               & f[x_0,x_0,x_1,x_1]\\
+x_1 & y_1 &            & f[x_0,x_1,x_1]\\
+    &     & f[x_1,x_1]\\
+x_1 & y_1
+\end{array}$
+
+\[
+\begin{array}{lcl}
+p_3(x) & = & p_2(x) + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1) \\
+       & = & f[x_0] + f[x_0,x_0](x-x_0) + f[x_0,x_0,x_1](x-x_0)^2 +\\
+       &   & + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1). 
+\end{array}
+\]
+
+\begin{osse}
+Nella tabellina si ripetono $x_i$ e $y_i$ tante volte quanti sono i vincoli
+assegnati a quei punti, nel nostro esempio abbiamo due vincoli, il passaggio
+e la pendenza.
+\end{osse}
+\end{itemize}
+
+$\begin{array}{llllll}
+x_0 & y_0   &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] &               & f[x_0,x_0,x_1,x_1]\\
+x_1 & y_1 &            & f[x_0,x_1,x_1] &                  & \ddots \\
+    &     & f[x_1,x_1]\\
+x_1 & y_1 &            & & & f[x_0,x_0,x_1,x_1,x_2, \ldots x_n,x_n]\\
+    &     & \\
+x_2 & y_2 & \\
+    &     &          &                    & \\
+\vdots & &           & f[x_{n-1}, x_n, x_n]\\
+    &    & f[x_n,x_n]\\
+x_n & y_n 
+\end{array}$
+\begin{flushleft}
+Il termine finale ottenuto $f[x_0,x_0,x_1,x_1,x_2, \ldots x_n,x_n]$ na
+$2n$ numeri ed è quindi un polinomio di ordine $2n-1$.
+\end{flushleft}
+\[
+\begin{array}{lcl}
+p(x) & = & f[x_0] + f[x_0,x_0] + f[x_0,x_0,x_1](x-x_0)^2 +\\
+     &   & + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1) + \\
+     &  & \vdots\\
+     &   &+ f[x_0,x_0, \ldots x_n,x_n](x-x_0)^2(x-x_1)^2\cdots 
+(x-x_{n-1})^2 (x-x_n).
+\end{array}
+\]
+\begin{notabene}
+L'ultimo termine $(x-x_n)$ non è elevato al quadrato.
+\end{notabene}
+
+\begin{osse}
+Non è necessario sviluppare sempre la tabella completa, solitamente lo
+faremo con i dati vicino al punto che ci interesserà.
+\end{osse}
+
+\begin{prop}
+Siano $x_0, x_1, \ldots, x_n$ punti distinti in $[a,b]$, siano $\alpha_0,
+\alpha_1, \ldots, \alpha_n$ numeri naturali, e sia:
+\[m = n + \sum_{i=0}^n\alpha_i.\]
+Allora, assegnati i numeri reali $y^{(j)}_i$ con $i = 0, \ldots, n$ e $j = 0,
+\ldots, \alpha_i$; esiste un unico polinomio $p(x) \in \PP_m$ tale che:
+\[
+p^{(j)}(x_i) = y^{(j)}_i, \quad i = 0, \ldots, n; \ j= 0, \ldots, \alpha_i.
+\]
+\end{prop}
+
+\begin{exe}
+Se per $x_0$ abbiamo tre vincoli: $y_0, \, y'_0, \, y''_0$, dobbiamo ripetere
+tre volte la coppia $x_0 \ x_1$ nella tabella:
+
+$\begin{array}{llllll}
+x_0 & y_0   &   \\
+    &     & f[x_0,x_0]= y'_0 \\
+x_0 & y_0  &            & f[x_0,x_0,x_0]  = \frac{f''(x_0)}{2!}\\
+    &     & f[x_0,x_0]= y'_0 &           \\
+x_0 & y_0 &            
+\end{array}$
+
+\[p(x) = f[x_0] + \underbrace{f[x_0,x_0](x-x_0)}_{= f'(x_0)} + 
+\underbrace{f[x_0,x_0,x_0](x-x_0)^2}_{= \frac{f''(x)}{2}}.\]
+$p$ è il polinomio di Taylor.
+\end{exe}
+
+\begin{flushleft}
+$\alpha_0 + 1 \left\{
+\begin{array}{lllll}
+x_0 & y_0  \\
+    &     & f[x_0,x_0] = y'_0 \\
+x_0 & y_0 &  & f[x_0,x_0,x_0] = \frac{y''_0}{2} \\
+    &     &  &         & f[x_0,x_0,x_0,x_0] = \frac{y'''_0}{3!}\\
+\vdots \\
+x_0 & y_0
+\end{array}
+\right.$
+\end{flushleft}
+\begin{flushleft}
+$\alpha_1 + 1 \left\{
+\begin{array}{ll}
+x_1 & y_1  \\
+x_1 & y_1 \\
+   
+\vdots \\
+x_1 & y_1
+\end{array}
+\right.$
+\end{flushleft}
+\begin{flushleft}
+$\alpha_2 + 1 \left\{
+\begin{array}{ll}
+x_2 & y_2  \\
+x_2 & y_2 \\
+   
+\vdots \\
+x_2 & y_2
+\end{array}
+\right.$
+\end{flushleft}
+
+\[\longrightarrow \ \sum_{i=0}^n\alpha_i + 1 = t \textrm{: il polinomio
+interpolatore ha grado } t-1.\]
+
+\begin{exe}
+Consideriamo il caso in cui non si abbiano dei dati completi:
+
+\[\begin{array}{lllc}
+x_0 & x_1  & x_2  \\
+y_0 & y_1 & y_2 \\
+y'_0 &   & y'_2 \\
+y''_0 & & y''_2 \\
+ & & y'''_2
+\end{array}\]
+\begin{flushleft}
+$
+\begin{array}{llllllll}
+x_0 & y_0  \\
+    &     & f[x_0,x_0]  \\
+x_0 & y_0 &  & f[x_0,x_0,x_0] \\
+    &     & f[x_0,x_0] &   & f[x_0,x_0,x_0,x_1] \\
+x_0 & y_0 &  & f[x_0,x_0,x_1] & & \ddots \\
+    &     & f[x_0,x_1] &   & f[x_0,x_0,x_1,x_2]  & & \ddots\\
+x_1 & y_1 &  & f[x_0,x_1,x_2]  & & & & (*)\\
+    &    & f[x_1,x_2] &   & f[x_0,x_1,x_2,x_2] \\
+x_2 & x_2 & & f[x_1,x_2],x_2\\
+   &    & f[x_2,x_2] & & f[x_1,x_2,x_2,x_2]\\
+x_2 & x_2 & & f[x_2,x_2],x_2 & & \\
+   &    & f[x_2,x_2] & & f[x_2,x_2,x_2,x_2]\\
+x_2 & x_2 & & f[x_2,x_2],x_2\\
+   &    & f[x_2,x_2] \\
+x_2 & x_2
+\end{array}
+$
+\[(*) = f[x_0,x_0,x_0,x_1,x_2,x_2,x_2,x_2].\]
+\end{flushleft}
+\end{exe}
+\newpage
+\begin{teo}
+Siano $x_0, x_1, \ldots, x_n$ punti distinti in $[a,b]$, siano $\alpha_0,
+\alpha_1, \ldots, \alpha_n$ numeri naturali, e sia:
+\[m = n + \sum_{i=0}^n\alpha_i.\]
+Sia $f(x) \in \cc^{m+1}([a,b])$ e $p(x) \in \PP_m$ il polinomio interpolatore
+generalizzante la funzione tale che:
+\[
+p^{(j)}(x_i) = f^{(j)}(x_i), \quad i = 0, \ldots, n; \ j= 0, \ldots, \alpha_i.
+\]
+Allora per ogni $x \in [a,b]$ esiste un punto $\xi_x \in I_x$ tale che:
+\[e(x) := f(x)-p(x) = \frac{f^{(m+1)}(\xi_x)}{(m+1)!}
+\underbrace{(x-x_0)^{\alpha_0+1}
+\cdot (x-x_1)^{\alpha_1+1} \cdots (x-x_n)^{\alpha_n+1}}_{\omega_m(x)}.\]
+\[I_x := [\min(x,x_0,x_1, \ldots, x_n), \max(x,x_0,x_1, \ldots, x_n)].\]
+\end{teo}
+\begin{osse}
+Se per ogni $i = 0,\ldots, n, \ \alpha_i = 0,\, $ allora vuol dire che per
+ogni punto abbiamo solo il passaggio.
+\end{osse}
+
+\begin{dimo}Sia $q \in \PP_m$ così definito:
+\[
+q(t) = p(t) + \underbrace{\frac{f(x)-p(x)}{\omega_m(x)}
+\omega_m(t)}_{\textrm{costante rispetto a }t}.
+\]
+
+\[
+q(x) = \cancel{p(x)} +\frac{f(x) \cancel{- p(x)}}{\bcancel{\omega_m(x)}}\cdot
+\bcancel{\omega_m(x)} = f(x)\ \longrightarrow \ q(t) \ \textrm{interpola}\ f 
+\ \textrm{in}\ x.
+\]
+
+\[
+q(x_i) = p(x_i) +\cancelto{0}{\frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\omega_m(x_i)} = f(x_i),\]\[ \longrightarrow \ q(t) \ \textrm{interpola}\ f 
+\ \textrm{nei punti}\ x_i \ \forall i = 0, \ldots, n.
+\]
+
+\[
+q^{(j)}(x_i) = p^{(j)}(x_i) + \cancelto{0}{\frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\omega^{(j)}_m(x_i)} = p^{(j)}(x_i) = f^{(j)}(x_i),\]
+\[\forall i = 0, \ldots, n;\ \forall j = 0, \ldots, \alpha_i.
+\]
+$q(t)$ interpola la $f$ nel punto $x$ e nei punti $x_i$ con relative 
+condizioni.
+
+\begin{flushleft}
+$p(t) \in \PP_m$,
+\[\textrm{il grado di}\ \omega_m = \sum_{i = 0}^n \left(\alpha_i +1 \right) =
+\sum_{i=0}^n\alpha_i+n+1 = m+1.\]
+\end{flushleft}
+Definiamo ora una funzione $G$ tale che:
+\[G(t) = f(t)-q(t),\]
+quanti zeri ha la funzione $G$? Intanto sappiamo che $G \in \cc^{m+1}$ poiché
+$f \in \cc^{m+1}$ e $q \in \cc^{\infty}$.
+
+\[t = x \ \longrightarrow \ G(x) = f(x) - q(x) = 0.\]
+\[t = x_i \ \longrightarrow \ G(x_i) = f(x_i) - q(x_i) = 0, 
+\quad \forall i = 0, \ldots, n.\]
+
+Inoltre fissato $i$:
+\[G^j(x_i) = f^j(x_i) - q^j(x_i) = 0, \quad \forall j=0,\ldots, n.\]
+$i = 0 \ \longrightarrow \ x_0$ è radice di molteplicità $\alpha_0 \neq 1$ 
+almeno.\\
+$\forall i, \  x_i$ è radice di molteplicità $\alpha_i \neq 1$ 
+almeno.\\
+\begin{flushleft}
+$G$ ha almeno $\left( \sum_{i=0}^n\alpha_i + 1\right) +1$ zeri, cioé ha almeno
+$m+2$ zeri.
+\end{flushleft}
+$G'$ ha almeno $m+1$ zeri per il teorema di Rolle: presi due zeri consecutivi
+la derivata prima si annulla in un punto in mezzo.\\
+$\vdots$\\
+$G^{(m+1)}$ ha almeno uno uno zero.
+\[
+\Longrightarrow\ \exists\, \xi_x \colon \ G(\xi_x) =0.
+\]
+
+\[
+\begin{array}{lcl}
+G^{(m+1)}(t) & = & f^{(m+1)}(t) - q^{(m+1)}(t) =  f^{(m+1)}(t) - \\ 
+& & - \cancelto{0}{p^{(m+1)}(t)} + \frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\underbrace{\omega^{(m+1)}_m(t)}_{(n+1)!} \\
+& = & f^{(m+1)}(t) -  \frac{f(x)-p(x)}{\omega_m(x)}\cdot(n+1)!
+\end{array}\]
+
+\[
+\longrightarrow \ 0 = G^{(m+1)}(\xi_x) = f^{(m+1)}(\xi_x) + 
+\frac{f(x)-p(x)}{\omega_m(x)}\cdot(n+1)!
+\]
+\[
+\longrightarrow \ e(x) = f(x) - p(x) = 
+\frac{f^{(m+1)}(\xi_x)\omega_m(x)}{(n+1)!}.
+\]
+
+Caso: $x_i\ y_i\ y'_i \quad i = 0,\ldots,n$.\\
+$p(x)$ polinomio interpolatore.
+\[e(x) = f(x) -p(x) = \frac{f^{(2n +2)}(\xi_x)}{(2n+2)!}(x-x_0)^2\cdots
+(x-x_n)^2.\]
+\end{dimo}
+
+\section{Interpolazione a tratti.}
+Sia $[a,b]$ un intervallo \emph{chiuso} e \emph{limitato}, e $\Delta$
+la decomposizione così definita:
+\[\Delta = \{a = x_0 < x_1 < \cdots < x_i < \cdots < x_n = b\}.\]
+Vogliamo costruire su ciascun tratto $[x_{i-1},x_i]$della decomposizione 
+$\Delta$ per ogni $i = 1, \ldots n$, una funzione lineare che interpola i 
+dati $y_{i-1}$ e $y_i$.
+
+\[
+\begin{array}{lcl}
+S^{(i)}_1 & = & y_{i-1} + f[x_{i-1},x_i](x-x_{i-1}) \\
+ & = & \frac{(x-x_{i-1})y_i + (x_i-x)y_{i-1}}{x_i-x_{i-1}}, \qquad x_{i-1} < x 
+< x_i. 
+\end{array}
+\]
+
+\[S_1(x) = \left\{\begin{array}{lcl}
+S_1^{(1)}(x) & x_0 \leq x \leq x_1 & S_1^{(1)}(x) = y_0 + f[x_0,x_1](x-x_0) \\
+S_1^{(2)}(x) & x_1 \leq x \leq x_2 & S_1^{(2)}(x) = y_1 + f[x_1,x_2](x-x_1) \\
+S_1^{(3)}(x) & x_2 \leq x \leq x_3 & S_1^{(3)}(x) = y_2 + f[x_2,x_3](x-x_2) \\
+\vdots & & \vdots \\
+S_1^{(n)}(x) & x_{n-1} \leq x \leq x_n & S_1^{(n)}(x) = y_2 
++ f[x_{n-1},x_n](x-x_n).
+\end{array}\right.
+\]
+
+$S_1(x) \in \cc^0([a,b])$.
+
+\begin{osse}
+$S_1^{(i)}(x) \in \cc^{\infty}([x_{i-1},x_i])$. Ma la rispettiva funzione
+$S_1(x)$ è solo $\cc^0$, ovvero perdiamo di regolarità nei \emph{nodi}
+($\notin \cc^1$).
+\end{osse}
+
+Prendendo un $x$ interno su un generico tratto, $x \in [x_{i-1},x_i]$ che
+errorre commettiamo?
+\[e(x) = f(x) - S_1^{(j)}(x).\]
+
+Se $f(x) \in \cc^2([a,b]) \ \longrightarrow \ f \in \cc^2([[x_{i-1},x_i])$.
+\[\longrightarrow \ e(x) = f(x) - S_1^{(j)}(x) = \frac{f''(\xi_x)}{2}
+(x-x_{i-1})(x-x_1).\]
+
+\[\begin{array}{lcl}
+|e(x)| & = & |f(x) - S_1^{(j)}(x)| \\
+& = & \frac{|f''(\xi_x)|}{2} |(x-x_{i-1})(x-x_i)| \\
+& \leq & \frac{1}{2}\max_{t \in [x_{i-1},x_i]}|f''(t)| \cdot |(x-x_{i-1})(x-x_i)|\\
+& \leq & \frac{1}{2}\max_{t \in [x_{i-1},x_i]}|f''(t)|
+\left|\left(\frac{x_{i-1}-x_i}{2} -x_{i-1}\right) \left(
+\frac{x_{i-1}}{2}-x_i\right)\right| \\
+& = & \max_{t \in [x_{i-1},x_i]}|f''(t)|\frac{1}{8}h_i^2.
+\end{array}
+\]
+
+\[
+\longrightarrow \ \left| f(x) - S_1^{(i)}(x)\right| \leq \max_{t \in [x_{i-1},x_i]}
+\left|f''(t)\right|\frac{1}{8}h_i^2.
+\]
+
+\[h = \max_{1 \leq i \leq n} h_i \textrm{ è la norma della decomposizione.}\]
+
+$\forall x \in [a,b]$:
+\[
+|f(x) - S_1(x)| \leq \max_{t \in [a,b]}|f''(t)|\frac{1}{8}h^2 = \|f''(x) \|_\infty
+\frac{1}{8}h^2\ \substack{\longrightarrow \\ h \to 0} \ 0.
+\]
+
+La logica di questa procedura è quella di prendere un intervallo,
+tagliuzzarlo e costruire il polinomio di primo grado. Aumentare i punti
+non implica aumentare il grado del polinomio ma costruiamo in questo caso
+altri polinomi di primo grado.
+
+Il fatto che l'errore tende a zero per $h$ che tende a zero ci dice che
+``raffinando'' la partizione i due grafici vanno a coincidere. In questo caso
+si parla di \emph{convergenza}.
+
+Questo è un ottimo risultato, l'unico inconveniente è il numero dei polinomi
+di primo grado da calcolare, però siamo nell'ipotesi $f \in \cc^2$.
+
+Vale un risultato analogo per $f \in \cc^0$? L'oggetto su cui discutere è
+$\|f''(x)\|_\infty$ (non l'abbiamo).
+
+\begin{defi}(Modulo di continuità)
+Sia $f(x) \in \cc^0([a,b])$, si dice \emph{modulo di continuità} della 
+funzione $f$ di parametro $\delta$ una funzione così definita:
+\[
+\omega(t,\delta) := \max |f(x_1) - f(x_2)|, \quad \forall x_1, x_2 \in [a,b]
+\colon |x_1-x_2| < \delta.
+\]
+\end{defi}
+
+\begin{osse}
+\[\lim_{\delta \to 0}\omega(f, \delta) = 0. \qquad 1 = 
+\frac{(x-x_{i-1})+(x_i-x)}{h_i}.\]
+\end{osse}
+
+\textbf{Tesi:}
+\[
+|f(x) - S_1(x)| \leq \omega(f, h)\ \substack{\longrightarrow \\ h \to 0} \ 0.
+\]
+
+\[
+\begin{array}{lcl}
+f(x) - S^{(i)}_1(x) & = & 1 \cdot f(x) - \frac{(x-x_{i-1})f(x_i) + 
+(x_i-x)f(x_{i-1})}{h_i}^{\phantom{(1)}} \\
+& = & \frac{f(x)(x-x_{i-1}) + (x_i-x)}{h_i} -
+\frac{(x-x_{i-1})f(x_i)+(x_i-x)f(x_{i-1}}{h_i}^{\phantom{(1)}} \\
+& = & \frac{(x-x_{i-1})[f(x)-f(x_i)]-(x_i-x)[f(x)-f(x_{i-1})]}{h_i}^{\phantom{(1)}}.
+\end{array}
+\]
+
+\[
+\begin{array}{lcl}
+\left|f(x) - S^{(i)}_1(x)\right| & \leq & 
+\frac{(x-x_{i-1})|f(x)-f(x_i)|-(x_i-x)|f(x)-f(x_{i-1})|}{h_i}^{\phantom{(1)}} \\
+& \leq & \frac{(x-x_{i-1})\max\{|f(x)-f(x_i)|,|f(x)-f(x_{i-1})|\}
++(x_i-x) \max\{|f(x)-f(x_i)|,|f(x)-f(x_{i-1})|\}}{h_i}^{\phantom{(1)}} \\
+& = &  \cancelto{1}{\frac{(x-x_{i-1})+(x_i-x)}{h_i}}
+\max\{|f(x)-f(x_i)|,|f(x)-f(x_{i-1})|\}^{\phantom{(1)}}.
+\end{array}
+\]
+
+\[
+\left|f(x) - S^{(i)}_1(x)\right|  \leq 
+\max_{x_i \leq x \leq x_{i-1}}\left\{|f(x)-f(x_i)|,\,|f(x)-
+f(x_{i-1})|\right\} \leq \omega(f,h_i).
+\]
+\[
+\left|f(x) - S^{(i)}_1(x)\right|  \leq \omega(f,h_i).
+\]
+\[
+\longrightarrow \ \forall x \in [a,b] \quad |e(x)| =  \left|f(x) - 
+S_1(x)\right| \leq \omega(f,h)\ \substack{\longrightarrow \\ h \to 0} \ 0.
+\]
+\[\textrm{con } h = \max_{1 \leq i \leq n}h_i.\]
+
+Quindi abbiamo ottenuto un risultato analogo per le funzioni continue.
+
+\begin{osse}
+Queste tecniche hanno senso se usiamo tabelle con dati precisi, se i dati
+fossero affetti da errori sarebbe meglio usare altre tecniche (minimi
+quadrati).
+\end{osse}
+
+Lo scopo è di semplificare l'oggetto funzione con cui lavoriamo. Abbiamo
+scoperto che possiamo farlo con l'unione dei polinomi di primo grado
+calcolati sulla partizione dell'intervallo. Il grafico dell'unione dei 
+polinomi si sivrappone ad $f$ al tendere a zero della finezza della
+partizione.
+
+\begin{exe}
+Sia $[a,b]$ il nostro intervallo, $\Delta$ la seguente decomposizione:
+\[\Delta = \left\{a = x_0 < x_1 < \cdots < x_n = b\right\}\]
+\[\begin{array}{ccccccc}
+y_0 & y_1 & \cdots &y_i &\cdots & y_n  \\
+y'_0 & y'_1 & \cdots &y'_i &\cdots & y'_n  
+\end{array}\]
+Posto $[x_{i-1}, x_i] \subset \Delta$ per ogni $i = 1, \ldots, n$, vogliamo 
+calcolare $p(x) \in \PP_3$ con $x_{i-1}\leq x \leq x_i$ tale che:
+\[
+p(x_{i-1}) = y_{i-1}, \quad p(x_i) = y_i,
+\]
+\[
+p'(x_{i-1}) = y'_{i-1}, \quad p'(x_i) = y'_i.
+\]
+\[
+p(x) = a_i + b_i(x-x_{i-1})+ c_i(x-x_{i-1})^2 + d_i(x-x_{i-1})^2(x-x_i).
+\]
+Usiamo le quattro condizioni.
+\[
+p'(x) = b_i + 2c_i(x-x_{i-1}) + 2d_i(x-x_{i-1})(x-x_i)+ d_i(x-x_{i-1})^2.
+\]
+\begin{enumerate}
+\item $y_{i-1} = p(x_{i-1}) = a_i$;
+\item $y'_{i-1} = p'(x_{i-1}) = b_i$;
+\item $y_i = a_i + b_i(x_i-x_{i-1})+ c_i(x_i-x_{i-1})^2$:
+\[\longrightarrow \ c_i = \frac{y'_i -b_i(x_i-x_{i-1})}{(x_i-x_{i-1})^2}
+= \frac{y_i -a_1 -b_i h_i}{h^2_i}.\]
+\item $y'_1 = p(x_i) = b_i + 2c_i h_i + d_i h^2_1$:
+\[\longrightarrow \ d_i \frac{y'_i - b_i - 2 c_i h_i}{h^2_i}.\]
+\end{enumerate}
+
+\[
+P(x) = \left \{
+\begin{array}{lc}
+p_3^{(1)}(x) = \ldots & x_0 \leq x \leq x_1, \\
+p_3^{(2)}(x) = \ldots & x_1 \leq x \leq x_2,\\
+\vdots \\
+p_3^{(n)}(x) = \ldots & x_{n-1} \leq x \leq x_n .
+\end{array}\right.
+\]
+
+$p_3^{(i)}(x) \in \cc^\infty([x_{i-1}, x_i]), \quad \forall i = 1, \ldots,n$.
+
+\[
+P(x) \in \cc^1([a,b])
+\]
+
+Sono i polinomi di Hermite generalizzati.
+\end{exe}
+
+\subsection{Spline cubica.}
+Vorremmo ottenere una regolarità maggiore di $P$ dell'esempio precedente.
+
+\begin{defi}
+Sia $[a,b]$ un intervallo, $\Delta$ la seguente decomposizione:
+\[\Delta = \left\{a = x_0 < x_1 < \cdots < x_n = b\right\}\]
+\[\begin{array}{ccccccc}
+y_0 & y_1 & \cdots &y_i &\cdots & y_n  \\
+y'_0 & y'_1 & \cdots &y'_i &\cdots & y'_n  
+\end{array}\]
+Posto $[x_{i-1}, x_i] \subset \Delta$ per ogni $i = 1, \ldots, n$, $h_i =
+x_i - x_{i-1},$
+\[h = \max_{1 \leq i \leq n} h_i \ \textrm{la norma della decomposizione;}\]
+si dice \emph{spline cubica interpolante} relativa alla decomposizione
+$\Delta$ la funzione $S_{3,\Delta}(x)$ tale che:
+\begin{enumerate}
+\item $S_{3,\Delta}(x)$ è una funzione polinomiale definita a tratti
+$[x_{i-1}, x_i], \ i = 1, \ldots, n,$ e su ciascun tratto è di terzo grado.
+\item $S_{3,\Delta}(x) \in \cc^2([a,b])$.
+\item $S_{3,\Delta}(x_i) = y_i, \quad i = 1, \ldots, n$.
+\end{enumerate}
+\end{defi}
+
+\[
+S_{3,\Delta}(x) = \left \{
+\begin{array}{l}
+S_{3,\Delta}^{(1)}(x) =  a_0^{(1)} + a_1^{(1)}(x-x_0) +a_2^{(1)}(x-x_0)^2
++ a_3^{(1)}(x-x_0)^3,  \\
+S_{3,\Delta}^{(2)}(x) =  a_0^{(2)} + a_1^{(2)}(x-x_1) +a_2^{(2)}(x-x_1)^2
++ a_3^{(2)}(x-x_1)^3 \\
+\vdots \\
+S_{3,\Delta}^{(n)}(x) =  a_0^{(n)} + a_1^{(n)}(x-x_{n-1}) +a_2^{(n)}(x-x_{n-1})^2
++ a_3^{(n)}(x-x_{n-1})^3.
+\end{array}\right.
+\]
+\begin{notabene}
+In cui $S_{3,\Delta}^{(1)}(x)$ vale per gli $x \in [x_0, x_1]$, 
+$S_{3,\Delta}^{(2)}(x)$  vale per gli $x \in [x_1, x_2]$, etc.
+\end{notabene}
+
+Il punto $2$ della definizione allarga la \emph{regolarità} e, chiedendo meno
+vincoli, non richiede di conoscere il valore delle derivate prime.
+
+Senza il punto $3$ abbiamo la definizione di \emph{spline} (non interpolante).
+
+\begin{flushleft}
+Gradi di libertà: $4n$.\\
+Vincoli:\\
+\begin{tabular}{rl}
+$3(n-1)$: & imporre che i due polinomi contigui si raccordino in modo
+continuo.\\
+$+ n-1$: 
+& imporre a quale quota avviene il raccordo: $S_{3,\Delta}(x_i) = y_i$.\\
+$+ 2$: & posto $S_{3,\Delta}(a) = y_0$ e $S_{3,\Delta}(b) = y_n$. \\
+$= 4n -2$.
+\end{tabular}
+
+Mancano due vincoli, quindi abbiamo $\infty^2$ spline cubiche interpolanti.
+\end{flushleft}
+
+Aggiungiamo quindi i due vincoli noi: otteniamo spline differenti a seconda 
+dei vincoli aggiunti. Ad esempio aggiungendo le derivate seconde dei due
+estremi otteniamo la \emph{spline cubica naturale}.
+
+\begin{defi}
+(Spline lineare)\\
+$S_{1,\Delta}(x)$:
+\begin{enumerate}
+\item $S_{1,\Delta}(x)$ è una funzione polinomiale definita a tratti
+$[x_{i-1}, x_i], \ i = 1, \ldots, n,$ e su ciascun tratto è di primo grado.
+\item $S_{1,\Delta}(x) \in \cc^0([a,b])$.
+\item $S_{1,\Delta}(x_i) = y_i, \quad i = 1, \ldots, n$.
+\end{enumerate}
+\end{defi}
+
+Al tendere di $h$ a zero, la spline lineare tende ad $f$ (convergenza),
+sostanzialmente questa spline unisce i punti con delle rette.
+
+\begin{defi}
+(Spline di ordine $k$)\\
+$S_{k,\Delta}(x)$:
+\begin{enumerate}
+\item $S_{k,\Delta}(x)$ è una funzione polinomiale definita a tratti
+$[x_{i-1}, x_i], \ i = 1, \ldots, n,$ e su ciascun tratto è di grado $k$.
+\item $S_{k,\Delta}(x) \in \cc^{k-1}([a,b])$.
+\item $S_{k,\Delta}(x_i) = y_i, \quad i = 1, \ldots, n$.
+\end{enumerate}
+\[
+S_{k,\Delta}(x) = \left \{
+\begin{array}{l}
+S_{k,\Delta}^{(1)}(x) = a_0^{(1)} + a_1^{(1)}(x-x_0)+ \cdots + a_k^{(1)}(x-x_0)^k \\
+\vdots \\
+S_{k,\Delta}^{(i)}(x) = a_0^{(i)} + a_1^{(i)}(x-x_{i-1}) + \cdots + 
+a_k^{(i)}(x-x_{i-1})^k \\
+\vdots \\
+S_{k,\Delta}^{(n)}(x) =  a_0^{(n)} + a_1^{(n)}(x-x_{n-1}) + \cdots 
++a_k^{(n)}(x-x_{n-1})^k.
+\end{array}\right.
+\]
+\begin{notabene}
+In cui $S_{k,\Delta}^{(1)}(x)$ vale per gli $x \in [x_0, x_1]$, 
+$S_{k,\Delta}^{(2)}(x)$  vale per gli $x \in [x_1, x_2]$, etc.
+\end{notabene}
+\end{defi}
+
+\begin{flushleft}
+Gradi di libertà: $(k+1)n$.\\
+Vincoli:\\
+\begin{tabular}{rl}
+$k(n-1)$ &$+$\\
+$ n-1$ &$+$\\
+$ n+1 $&$=$\\
+\hline 
+$(k+1)n -(k-1)$
+\end{tabular}
+\end{flushleft}
+
+Mancano $k-1$ vincoli, quindi abbiamo $\infty^{k-1}$ spline cubiche 
+interpolanti possibili. Quindi avremo bisogno di aggiungere condizioni
+pari al grado della spline meno uno ($k-1$).
+
+\subsubsection*{Momento della spline.}
+Costruiamo una spline cubica interpolante con un \emph{metodo} che da come
+vantaggio la possibilità di risolvere un sistema di ordine inferiore a
+$4n$. avremo una matrice \emph{tridiagonale}.
+\begin{itemize}
+\item[$\bullet$] Sostituiamo il problema del calcolo dei coefficienti con il
+calcolo di parametri che permetteranno di ricostruirli.
+\item[$\bullet$] Computazionalmente la spline cubica equivale ad una matrice
+di $n$ righe e $4$ colonne.
+\end{itemize}
+I parametri che calcoliamo saranno il \emph{momento della spline}.
+\begin{defi}(Momento della spline)\\
+Il \emph{momento della spline} di ordine $i$ è definito come segue:
+\[
+M_i := \left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]''_{x = x_i} = 
+\left[S_{3,\Delta}^{(i)}(x) \right]''_{x = x_i}.
+\]
+In altri termini è una riduzione delle incoglite del sistema lineare.
+\end{defi}
+
+Com'è, nel tratto $[x_{i-1}, x_i]$, la derivata seconda della spline? E'
+un polinomio di primo grado. Se conoscessimo i due valori $M_i$ e $M_{i-1}$
+avremmo la seguente forma:
+\[
+\left[S_{3,\Delta}^{(i)}(x) \right]'' = 
+\frac{(x-x_{i-1})M_i + (x_i-x)M_{i-1}}{h_i}.
+\]
+
+Integrando $[S_{3,\Delta}^{(i)}(x)]$ otteniamo:
+\[
+\left[S_{3,\Delta}^{(i)}(x) \right]' = \frac{(x-x_{i-1})^2}{2h_i}M_i 
+- \frac{(x_i-x)^2}{2h_i}M_{i-1} + A_1.
+\]
+
+Integrando ulteriormente:
+\[
+S_{3,\Delta}^{(i)}(x) = \frac{(x-x_{i-1})^3}{6h_i}M_i 
++ \frac{(x_i-x)^3}{6h_i}M_{i-1} + A_1(x-x_{i-1}) + B_i.
+\]
+
+Come otteniamo $A_i$ e $B_i$? Imponiamo l'interpolazione.
+
+\[
+y_{i-1} = S_{3,\Delta}^{(i)}(x_{i-1}) = 
+\frac{(x_i-x_{i-1})^{\cancelto{2}{3}}}{6\cancel{h_i}}M_{i-1} + B_i
+= \frac{h_i^2 M_{i-1}}{6}+ B_i.
+\]
+\[ \longrightarrow \
+B_i = y_{i-1} - \frac{h_i^2 M_{i-1}}{6}.
+\]
+
+\[
+y_{i} = S_{3,\Delta}^{(i)}(x_{i}) = h_i^3
+\frac{M_i}{6h_i} + A_ih_i+ B_i.
+\]
+\[
+A_i = \frac{y_{i} -\frac{h_i^2M_i}{6}-B_i}{h_i}.
+\]
+
+\[
+A_i = \frac{y_{i} -y_{i-1} + \frac{h_i^2 M_{i-1}}{6}-\frac{h_i^2M_i}{6}}{h_i}.
+\]
+\[\longrightarrow \
+A_i = \frac{y_{i} -y_{i-1}}{h_i} + \frac{h_i}{6}\left(M_{i-1}-M_i
+\right).
+\]
+
+\textbf{Problema $1$}: costruire il sistema che calcoli i momenti $M_i$.\\
+
+\textbf{Problema $2$}: calcolare i coefficienti $a_{k}^{(i)}\quad k = 0,\ldots,
+ 4n$ nota questa forma alternativa (i momenti) del polinomio.
+
+Iniziamo a risolvere il problema $2$.
+\begin{itemize}
+\item[$\bullet$]$a_0^{(i)} = S_{3,\Delta}^{(i)}(x_{i}) = y_{i}.$
+\item[$\bullet$]$a_1^{(i)} = $?
+\[a_1^{(i)} =
+\left[S_{3,\Delta}^{(i)}(x) \right]'_{x = x_{i-1}} 
+= \left[a_1^{(i)} + 2a_2^{(i)}(x-x_{i-1}) 
++ 3a_3^{(i)}(x-x_{i-1})^2\right]_{x = x_{i-1}}.
+\]
+\[a_1^{(i)} =
+-\frac{h_i}{2}M_{i-1} + A_i.
+\]
+\item[$\bullet$]$a_2^{(i)} = $?
+\[2a_2^{(i)} =
+\left[S_{3,\Delta}^{(i)}(x) \right]''_{x = x_{i-1}} 
+= \left[ 2a_2^{(i)} + 6 a_3^{(i)}(x-x_{i-1})\right]_{x = x_{i-1}}
+\]
+\[2a_2^{(i)} = M_{i-1}.
+\]
+\[a_2^{(i)} = \frac{M_{i-1}}{2}.\]
+\item[$\bullet$]$a_3^{(i)} = $?
+\[
+6a_3^{(i)} =
+\left[S_{3,\Delta}^{(i)}(x) \right]''_{x = x_{i-1}} = \frac{M_i - M_{i-1}}{h_i}.
+\]
+
+\[
+a_3^{(i)} = \frac{M_i - M_{i-1}}{6h_i}.
+\]
+\end{itemize}
+
+I nodi da calcolare sono $n+1$. Dobbiamo risolvere il problema $1$, ovvero
+costruire un sistema che abbia come incognite i momenti $M_i, \quad i =0,
+\ldots, n$ (gli $n+1$ nodi). Abbiamo già usato:
+\begin{itemize}
+\item[$\bullet$] l'interpolazione, ovvero abbiamo usato $\cc^0$ perchè
+il momento sinistro è uguale al momento destro della spline.
+\item[$\bullet$]$\cc^2$, sempre per l'uguaglianza tra momento sinistro e 
+destro.  
+\end{itemize}
+
+Manca da utilizzare la continuità della derivata prima nei nodi interni, 
+avendo $n-1$ vincoli restano sempre due gradi di libertà.
+
+\[
+\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'' = 
+\left[S_{3,\Delta}^{(i)}(x) \right]''
+= \frac{(x-x_{i-1})}{h_i}M_i + \frac{(x_i-x)}{h_i}M_{i-1}.
+\]
+
+\[
+\left[S_{3,\Delta}^{(i)}(x) \right]' = \frac{(x-x_{i-1})^2}{2h_i}M_i 
+- \frac{(x_i-x)^2}{2h_i}M_{i-1} +A_i.
+\]
+\[
+\left[S_{3,\Delta}^{(i)}(x) \right]' = \frac{(x-x_{i-1})^2}{2h_i}M_i 
+- \frac{(x_i-x)^2}{2h_i}M_{i-1} + \frac{y_{i} -y_{i-1}}{h_i} + 
+\frac{h_i}{6}\left(M_{i-1}-M_i\right).
+\]
+
+\[
+S_{3,\Delta}^{\phantom{(1)}}(x) = \frac{(x-x_{i-1})^3}{6h_i}M_i +
+\frac{(x_i-x)^3}{6h_i}M_{i-1} + A_i(x-x_{i-1} + B_i.
+\]
+
+Usiamo ora l'unica condizione che manca: la continuità della derivata prima
+dei nodi interni $x_1, \ldots, x_{n-1}$.
+
+\[
+\underbrace{\left[S_{3,\Delta}^{(i)}(x) \right]'}_{\substack{x_i \leq x \leq  x_{i+1} \\ 
+h_{i+1} = x_{i+1}-x_i}} = \frac{(x-x_{i})^2}{2h_{i+1}}M_{i+1} 
+- \frac{(x_{i+1}-x)^2}{2h_{i+1}}M_{i} + \frac{y_{i+1} -y_{i}}{h_{i+1}} + 
+\frac{h_{i+1}}{6}\left(M_{i}-M_{i+1}\right).
+\]
+
+Dobbiamo imporre la continuità della derivata prima nel nodo $x_i$, cioé:
+\[
+\left[S_{3,\Delta}^{(i)}(x) \right]'_{x = x_i} = \left[S_{3,\Delta}^{(i+1)}(x) 
+\right]'_{x=x_i},
+\]
+in altri termini:
+\[
+\lim_{x \to x_i^-} \left[S_{3,\Delta}^{(i)}(x) \right]' =
+\lim_{x \to x_i^+} \left[S_{3,\Delta}^{(i+1)}(x) \right]'.
+\]
+E' sufficiente calcolare i limiti nel punto:
+
+\[
+\frac{h_iM_i}{2} + \frac{h_{i}}{6}M_{i-1} - \frac{h_{i}}{6}M_{i} +
+\frac{y_{i} -y_{i-1}}{h_i} = -
+\frac{h_{i+1}M_i}{2} + \frac{h_{i+1}}{6}M_{i} - \frac{h_{i+1}}{6}M_{i+1} +
+\frac{y_{i+1} -y_{i}}{h_{i+1}}.
+\]
+\[\Updownarrow\]
+\[
+\frac{h_{i}}{6}M_{i-1} + M_i\left[\frac{h_i}{2} - \frac{h_{i}}{6} +
+\frac{h_{i+1}}{2}  - \frac{h_{i+1}}{6}\right] + \frac{h_{i+1}}{6}M_{i+1} =
+\frac{y_{i+1} -y_{i}}{h_{i+1}} - \frac{y_{i} -y_{i-1}}{h_{i}}.
+\]
+\[\Updownarrow\]
+\[
+\frac{h_{i}}{6}M_{i-1} + \frac{2}{6}M_i(h_i+h_{i+1}) + \frac{h_{i+1}}{6}M_{i+1} =
+\frac{y_{i+1} -y_{i}}{h_{i+1}} - \frac{y_{i} -y_{i-1}}{h_{i}}.
+\]
+\[\Updownarrow\]
+\[
+\frac{h_{i}}{h_{i}+h_{i+1}}M_{i-1} + 2M_i + \frac{h_{i+1}}{h_{i}+h_{i+1}}M_{i+1} =
+\frac{6}{h_{i}+h_{i+1}}\left(\frac{y_{i+1} -y_{i}}{h_{i+1}} - 
+\frac{y_{i} -y_{i-1}}{h_{i}}\right).
+\]
+
+Posti $\alpha_1$, $\beta_i$ e $d_i$ tali che:
+\[
+\alpha_1 = \frac{h_{i}}{h_{i}+h_{i+1}}, \quad\beta_i =\frac{h_{i+1}}{h_i+h_{i+1}},
+\quad d_i = \frac{6}{h_{i}+h_{i+1}}\left(\frac{y_{i+1} -y_{i}}{h_{i+1}} - 
+\frac{y_{i} -y_{i-1}}{h_{i}}\right),
+\]
+possiamo esprimere il limite di cui sopra come segue:
+\[\alpha_i M_{i-1} + 2M_i + \beta_iM_{i+1} = d_i.\]
+
+\begin{itemize}
+\item[] $i = 1$:\\
+$\alpha_1 M_0 + 2M_1 + \beta_1M_2 = d_1.$
+\item[] $i = 2$:\\
+$\alpha_2 M_1 + 2M_2 + \beta_2M_3 = d_2.$
+\item[]$\vdots$
+\item[]$i = n-1$:\\
+$\alpha_{n-1} M_{n-2} + 2M_{n-1} + \beta_{n-1}M_{n} = d_{n-1}.$
+\end{itemize}
+
+Risulta quindi un sistema di $n-1$ equazioni in $n+1$ incognite, $d_i$ è il
+vettore dei termini noti, possiamo scrivere il sistema in forma matriciale
+($A$):
+\[A = \left(
+\begin{array}{ccccccc}
+\alpha_1 & 2 & \beta_1 & 0 & &\cdots & 0 \\
+0 & \alpha_2 & 2 & \beta_2 &0&\cdots & \vdots \\
+\vdots & & & & & & 0\\
+0 & \cdots & &0 &\alpha_{n-1} & 2& \beta_{n-1}
+\end{array}
+\right), \quad d_i =
+\left(\begin{array}{c}
+d_1 \\
+d_2 \\
+\vdots \\
+d_{n-1}
+\end{array}
+\right).\]
+Occorre introdurre delle condizioni ulteriori poiché abbiamo un numero di
+incognite maggiore del numero di equazioni. 
+
+\subsection{Spline cubica naturale.}
+Una soluzione è la spline cubica
+naturale: $M_0 = M_n = 0$.
+\[
+\longrightarrow \ \left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]''_{x = x_0}
+= \left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]''_{x = x_n} = 0.
+\]
+Ora abbiamo due incognite in meno, quelle date dai momenti $M_0$ e $M_n$.
+Abbiamo ora un sistema in cui spariscono $\alpha_1$ e $\beta_{n-1}$.
+\[A = 
+\left[
+\begin{array}{ccccc}
+ 2 & \beta_1 & 0  &\cdots & 0 \\
+\alpha_2 & 2 & \beta_2 & & \vdots \\
+0 &\ddots &\ddots &\ddots &  0\\
+\vdots & &\alpha_{n-2} & 2& \beta_{n-2}\\
+0 & \cdots & 0 &\alpha_{n-1} & 2
+\end{array}
+\right].
+\]
+
+$A \in \rr^{(n-1)\times(n-1)}$ matrice tridiagonale irriducibile.
+
+\begin{osse}
+La matrice $A$ è una matrice diagonal dominante:
+\[
+\left\{ \begin{array}{l}
+\alpha_i + \beta_i = 1, \\
+\beta_1 < 1 < 2,\\
+\alpha_{n-1} < 1 < 2.
+\end{array}\right.
+\]
+\end{osse}
+
+Abbiamo quindi il seguente sistema lineare:
+\[
+Ax = d, \quad d = \left[\begin{array}{c}
+d_1 \\
+d_2 \\
+\vdots \\
+d_{n-1}
+\end{array}
+\right], \quad 
+x = \left[\begin{array}{c}
+M_1 \\
+M_2 \\
+\vdots \\
+M_{n-1}
+\end{array}
+\right].
+\]
+La proprietà di diagonaldominante è utile perchè permette di affermare che la
+matrice non ha autovalore nullo. Ovvero è non singolare.
+
+\subsection{Spline cubica a valori assegnati.}
+Posti $M_0 = \overline{M}_0$ e $M_n = \overline{M}_n$ il nuovo vettore dei
+termini noti $d$ risulta:
+\[
+d = \left[\begin{array}{l}
+d_1 -  \alpha_1\overline{M}_0\\
+d_2 \\
+\vdots \\
+d_{n-2}\\
+d_{n-1} - \beta{n-1}\overline{M}_n
+\end{array}
+\right]
+\]
+La matrice $A$ invece non cambia.
+
+\subsection{Spline cubica vincolata.}
+\[
+\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'_{x = x_0}= y'_0 
+\quad \wedge \quad  \left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'_{x = x_n} = y'_n.
+\]
+
+Sfruttando una logica diversa da prima
+otteniamo due ulteriori vincoli (equazioni), la nostra matrice $A$ 
+rappresenterà dunque un sistema lineare a $n+1$ equazioni in $n+1$ incognite.
+
+\[
+\underbrace{\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'_{x = x_0}}
+_{ x_0 \leq x \leq x_1} = \left[S_{3,\Delta}^{(1)}(x) \right]'_{x = x_0} =
+\]
+\[=
+\left[
+\frac{(x-x_{0})^2}{2h_1}M_1 
+- \frac{(x_1-x)^2}{2h_1}M_{0} + \frac{y_{1} -y_{0}}{h_1} + 
+\frac{h_1}{6}\left(M_{0}-M_1\right) \right]_{x = x_0}
+= y'_0 
+\]
+\[\Updownarrow\]
+\[
+- \frac{h_1}{2}M_0 + \frac{h_1}{6}M_0 - \frac{h_1}{6}M_1 
++ \frac{y_{1} -y_{0}}{h_1} = y'_0 
+\]
+\[\Updownarrow\]
+\[
+- M_0\left(\frac{h_1}{2}-\frac{h_1}{6} \right) - \frac{h_1}{6}M_1 
++ \frac{y_{1} -y_{0}}{h_1} = y'_0 
+\]
+\[\Updownarrow\]
+\[
+\frac{2}{6}h_1M_0 + \frac{h_1}{6}M_1  = \frac{y_{1} -y_{0}}{h_1} -y'_0 
+\]
+\[\Updownarrow\]
+\[
+2 M_0 + M_1 = 6y_1 -6y_0 - \frac{6 y'_0}{h_1}.
+\]
+
+Dunque, posto $d_0 = 6y_1 -6y_0 - \frac{6 y'_0}{h_1}$, abbiamo il seguente
+risultato:
+\[2 M_0 + M_1 = d_0.
+\]
+
+Analogamente, posto $d_n = 6y_{n} - 6y_{n-1} - \frac{6 y'_{n-1}}{h_n}$, 
+otteniamo:
+\[2 M_{n-1} + M_n = d_n.\]
+
+Otteniamo quindi la seguente matrice $A$, tridiadonale, irriducibile,
+diagonaldominante:
+\[A =
+\left[
+\begin{array}{cccccc}
+2 & 1 & 0 & \cdots & &0 \\
+\alpha_1&  2 & \beta_1 & 0  &\cdots & 0 \\
+0 &\alpha_2 & 2 & \beta_2 & & \vdots \\
+0  & &\ddots &\ddots &\ddots &  0\\
+\vdots & & &\alpha_{n-1} & 2& \beta_{n-1}\\
+0 & & \cdots & 0 &1 & 2
+\end{array}
+\right],
+\]
+ed il seguente sistema lineare:
+\[
+Ax = d, \quad d = \left[\begin{array}{c}
+d_0 \\
+d_1 \\
+\vdots \\
+d_{n-1} \\
+d_n
+\end{array}
+\right], \quad 
+x = \left[\begin{array}{c}
+M_0 \\
+M_1 \\
+\vdots \\
+M_{n-1} \\
+M_n
+\end{array}
+\right].
+\]
+
+\subsection{Spline cubica periodica.}
+
+\[
+\underbrace{\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'_{x = x_0}
+=\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]'_{x = x_n}}_{\textrm{equazione aggiuntiva}};
+\ \underbrace{\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]''_{x = x_0}
+=\left[S_{3,\Delta}^{\phantom{(1)}}(x) \right]''_{x = x_n}}_{M_0 = M_n}.
+\]
+
+Ponendo $M_0 = M_n$ riduciamo il sistema ad $n$ incognite, con l'equazione
+aggiuntiva avremo un sistema $n \times n$.

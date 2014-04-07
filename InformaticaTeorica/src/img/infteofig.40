@@ -1,0 +1,103 @@
+%!PS
+%%BoundingBox: -114 -86 72 24 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmr10 9.96265 9.96265 28:c
+%*Font: cmmi10 9.96265 9.96265 41:b0004000100021
+%%EndProlog
+%%Page: 1 1
+ 0 0.5 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinecap 1 setlinejoin 10 setmiterlimit
+newpath -14.17323 7.08661 moveto
+-28.34645 -12.75581 lineto stroke
+newpath -27.44408 -8.85872 moveto
+-28.34645 -12.75581 lineto
+-24.95268 -10.63829 lineto
+ closepath
+gsave fill grestore stroke
+-40.81035 -10.65582 moveto
+(sx) cmmi10 9.96265 fshow
+newpath 0 0 moveto
+28.34645 0 lineto
+28.34645 14.17323 lineto
+0 14.17323 lineto
+0 0 lineto
+-28.34645 0 lineto
+-28.34645 14.17323 lineto
+0 14.17323 lineto
+ closepath stroke
+newpath 70.86613 -28.34645 moveto
+70.86613 -14.17323 lineto
+42.51968 -14.17323 lineto
+70.86613 -28.34645 lineto
+42.51968 -28.34645 lineto
+42.51968 -14.17323 lineto
+14.17323 -14.17323 lineto
+14.17323 -28.34645 lineto
+ closepath stroke
+newpath 14.17323 7.08661 moveto
+28.34645 -12.75581 lineto stroke
+newpath 24.95268 -10.63829 moveto
+28.34645 -12.75581 lineto
+27.44408 -8.85872 lineto
+ closepath
+gsave fill grestore stroke
+-3.73601 17.17323 moveto
+(A) cmmi10 9.96265 fshow
+newpath -56.6929 -21.25984 moveto
+-70.86613 -41.10226 lineto stroke
+newpath -69.96376 -37.20517 moveto
+-70.86613 -41.10226 lineto
+-67.47237 -38.98474 lineto
+ closepath
+gsave fill grestore stroke
+-83.33003 -39.00227 moveto
+(sx) cmmi10 9.96265 fshow
+newpath -70.86613 -28.34645 moveto
+-70.86613 -14.17323 lineto
+-42.51968 -14.17323 lineto
+-42.51968 -28.34645 lineto
+-42.51968 -14.17323 lineto
+-14.17323 -14.17323 lineto
+-14.17323 -28.34645 lineto
+ closepath stroke
+newpath -70.86613 -49.6063 moveto
+-56.6929 -69.44872 lineto stroke
+newpath -60.08667 -67.33119 moveto
+-56.6929 -69.44872 lineto
+-57.59528 -65.55162 lineto
+ closepath
+gsave fill grestore stroke
+-54.59291 -67.34872 moveto
+(dx) cmmi10 9.96265 fshow
+newpath -113.3858 -56.6929 moveto
+-113.3858 -42.51968 lineto
+-85.03935 -42.51968 lineto
+-85.03935 -56.6929 lineto
+-85.03935 -42.51968 lineto
+-56.6929 -42.51968 lineto
+-56.6929 -56.6929 lineto
+ closepath stroke
+newpath -70.86613 -85.03935 moveto
+-70.86613 -70.86613 lineto
+-42.51968 -70.86613 lineto
+-42.51968 -85.03935 lineto
+-42.51968 -70.86613 lineto
+-14.17323 -70.86613 lineto
+-14.17323 -85.03935 lineto
+ closepath stroke
+-12.07324 -66.27544 moveto
+(C) cmmi10 9.96265 fshow
+-4.24014 -66.27544 moveto
+(AAD) cmmi10 9.96265 fshow
+19.22885 -66.27544 moveto
+(R) cmmi10 9.96265 fshow
+26.87036 -66.27544 moveto
+(\() cmr10 9.96265 fshow
+30.74466 -66.27544 moveto
+(A) cmmi10 9.96265 fshow
+38.21666 -66.27544 moveto
+(\)) cmr10 9.96265 fshow
+showpage
+%%EOF

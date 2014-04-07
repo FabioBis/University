@@ -1,0 +1,3954 @@
+%% Notes for Theoretical Computer Science Lectures (italian)
+%
+%  To generate the pdf file:
+%
+%  1. latex Appunti_Informatica_Teorica.tex
+%  2. dvipsf Appunti_Informatica_Teorica.dvi
+
+\hyphenation {
+  ab-bia-mo
+  esp-res-sio-ne
+  es-ten-sio-na-li-t
+  for-ma-liz-za
+  in-du-zio-ne
+  in-sie-me
+  in-sie-mi-sti-ca-men-te
+  in-sie-mi-sti-che
+  in-ter-pre-ta-zion-ne
+  in-ve-ce
+  pre-mes-se
+  pri-mi-ti-va
+  rap-pre-sen-tan-te
+  S--esp-res-sio-ne
+  vi-sio-ne
+  }
+
+\documentclass{book}
+
+\usepackage{latexsym}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{fancyhdr}
+
+%%--Ambienti
+\newtheorem{definizione}{Def.}[chapter]
+\newtheorem{osservazione}{Oss.}[chapter]
+\newtheorem{teorema}{Teorema.}[chapter]
+\newtheorem{lemma}{Lemma.}[chapter]
+\newtheorem{dimostrazione}{Dim.}[chapter]
+\newtheorem{corollario}{Corollario}[chapter]
+\newtheorem{esempio}{Esempio.}
+\newtheorem{ese}{Esercizio.}
+\newtheorem{notazione}{Notazione.}
+
+%%--Comandi / Macro
+\newcommand*{\Dom}{\mathop{\mathrm{Dom}}\nolimits}
+\newcommand*{\II}{$\mathbf{I}$}    %Text mode
+\newcommand*{\KK}{$\mathbf{K}$}    %Text mode
+\newcommand*{\SSS}{$\mathbf{S}$}   %Text mode
+\newcommand*{\CC}{$\mathbf{C}$}    %Text mode
+\newcommand*{\BB}{$\mathbf{B}$}    %Text mode
+\newcommand*{\WW}{$\mathbf{W}$}    %Text mode
+\newcommand*{\ii}{\mathbf{I}}    %Math mode
+\newcommand*{\kk}{\mathbf{K}}    %Math mode
+\newcommand*{\sss}{\mathbf{S}}   %Math mode
+\newcommand*{\cc}{\mathbf{C}}    %Math mode
+\newcommand*{\bb}{\mathbf{B}}    %Math mode
+\newcommand*{\ww}{\mathbf{W}}    %Math mode
+\newcommand*{\lbc}{$\lambda$-cal\-co\-lo}
+\newcommand*{\lbt}{$\lambda$-ter\-mi\-ne}
+\newcommand*{\lbts}{$\lambda$-ter\-mi\-ni}
+\newcommand*{\asse}{\vdash\!\!           }
+\newcommand*{\asset}{\vdash^T\!\!}
+
+%% A proof tree implementation.
+\input prooftree
+
+%% Arrows and so on.
+\def\ddp{\hbox{\kern-.5em\lower.63ex\hbox{${}^\succ$}}}
+\def\bijection{\mbox{$\mapstochar\,\mapsto\ddp$}}
+\def\surjection{\mbox{$\to\ddp$}}
+\def\injection{\mbox{$\mapstochar\,\mapsto$}}
+
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\headheight}{25.5pt}
+
+\fancypagestyle{plain}{%
+  \fancyhead{} % ignora, nello stile plain, le intestazioni
+  \renewcommand{\headrulewidth}{0pt} % e la linea
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+
+
+\author{Fabio Biselli}
+\title{Appunti di Informatica Teorica\\ (Prof. Ricci a.a. 2005--2006)}
+\date {}
+
+\frenchspacing
+
+\begin{document}
+
+\maketitle
+
+\chapter{Introduzione al calcolo dei combinatori}
+
+%%--Capitolo 1
+\section{Funzioni: due punti di vista}
+
+\begin{enumerate}
+\item \emph{visione estensionale:} insieme di coppie  $\langle x, y\rangle$
+
+\[\includegraphics{img/infteofig.1}\]
+
+
+\item \emph{visione operativa:} la funzione $y = x^{2} - x$  viene vista come
+un programma:
+prendi $x$ e calcolane il quadrato, sottrai quindi $x$ ed ottieni $y$.
+\end{enumerate}
+
+Nelle funzioni aritmetiche e nell'analisi le due visioni si equivalgono,
+ma vedremo che non \`e sempre cos\`i.
+
+\begin{esempio}
+La funzione pi\`u semplice \`e la funzione identit\`a $\mathbf{I}(x) = x$.
+Nella visione operativa questa, dato un argomento $x$, restituisce
+l'argomento stesso. La visione estensionale invece formalizza l'insieme
+$\bigl\{\, \langle x, x \rangle \mid x \in X \text{ per qualche }X\,\bigr\}$.
+\end{esempio}
+
+%%--Visione Estensionale
+\subsection{Visione estensionale}Nella Teoria degli Insiemi (secondo il testo
+consigliato, J.~D.~Monk, Introduzione alla teoria degli insiemi, Boringhieri, 
+1972.) i postulati formalizzano la nozione di appartenenza,
+indicata dal simbolo `$\in$' ($x \in X$); da essa derivano quella di
+insieme (``insieme piccolo'') e di classe propria (``insieme
+grande''). Gli insiemi piccoli sono quegli oggetti $x$ che stanno a
+sinistra del simbolo di appartenenza cio\`e gli $x$ tale che $x$
+appartiene a $X$ per qualche $X$. Le classi sono quegli oggetti che
+stanno a destra cio\`e gli $X$ per cui $x$ appartiene a $X$ per
+qualche $x$. Se una classe non \`e un insieme si dice propria. Un
+caso di tali classi proprie \`e quello del nostro $\mathbf{I}$.
+
+Per le funzioni esiste la nozione di applicazione di un argomento $x$ (che
+pu\`o anche essere una funzione) a una funzione, ottenendo un insieme $f(x)$.
+Quando $x$ non appartiene all'insieme degli argomenti effettivi di $f$,
+cio\`e al dominio $\Dom f = \bigl\{\,  x \mid \langle x, y \rangle \in f 
+\text{ per qualche } y \,
+\bigr\}$, il valore di $f(x)$ \`e un ? che insiemisticamente \`e espresso
+nella classe propria totale $V$:
+\[
+V = \{\, x \mid  x \text{ \`e un insieme} \,\}.
+\]
+Pertanto $\mathbf{I}(\mathbf{I}) = V$ poich\'e $\mathbf{I}$ non appartiene al
+$\Dom \mathbf{I}$ (altrimenti non sarebbe classe propria).
+Si noti che $\mathbf{I} \neq V$.
+
+
+Consideriamo ora l' idea della funzione identit\`a dal punto di vista
+operativo: lascia le cose come sono.
+Tale \emph{funzione operativa} $\mathbf{I}$ avr\`a la propriet\`a che:
+\begin{center}
+$\mathbf{I}(\mathbf{I}) = \mathbf{I}$.
+\end{center}
+Gi\`a nella funzione pi\`u semplice le due visioni sono differenti.
+
+%%--Visione Operativa
+\subsection{Visione operativa}
+
+Esistono solo regole operative (non oggetti come insiemi etc.). Tali regole
+sono formalizzate da come operano fra loro. Ci\`o avviene in due modi
+distinti: calcolo dei combinatori e $\lambda$-calcolo.
+
+Nel calcolo dei combinatori si assumono delle funzioni operative elementari
+con cui si costruiscono tutte le altre tramite una operazione detta di
+applicazione e si introducono delle nozioni di uguaglianza tra tali funzioni
+operative dipendenti da nozioni di calcolo effettivo dette \emph{riduzione}.
+Nel $\lambda$-calcolo non si assumono delle funzioni elementari, nel senso che
+esse siano da sole operativamente definite, ma solo degli oggetti su cui si
+opera con una ``applicazione''  e un'astrazione che sar\`a in un certo senso
+l'opposto dell'applicazione.
+
+Nel primo modo si costruiscono cos\`i degli oggetti, termini combinatori, che 
+corrispondono ai programmi di un linguaggio di programmazione (imperativo) 
+idealizzato che operi con delle funzioni predefinite (elementari) mediante 
+applicazione di``dati'' a una procedura. Tali dati possono essere procedure.
+Non sono ammessi richiami di sottoprocedure con parametri.
+
+Nel $\lambda$-calcolo i $\lambda$-termini invece non hanno funzioni predefinite
+ da cui partire, avranno invece le ``call'' (procedure con parametri
+richiamabili).
+
+
+%%--Combinatori
+\section{Calcolo dei combinatori}
+
+Si assume l'esistenza di una sequenza di cosiddette costanti che contenga
+almeno tre elementi: $\mathbf{I}$, $\mathbf{K}$, $\mathbf{S}$.
+Si assume l'esistenza di una sequenza numerabile infinita di cosiddette
+variabili: $x$, $y$, $z$, $u$, $v$, etc.
+Per atomo si intender\`a sia una costante che una variabile, i termini
+combinatori sono definiti dalle seguenti clausole che usano un'operazione di
+applicazione fra due termini $X$ e $Y$ che definiremo dopo e che indicheremo
+ora con l'accostamento $ XY $:
+
+\begin{enumerate}
+\item[a)]ogni atomo \`e un termine combinatorio;
+\item[b)]se $X$, $Y$ sono due termini combinatori, allora anche l'applicazione
+$XY$ \`e un termine combinatorio.
+\end{enumerate}
+
+L'applicazione \`e definita dai seguenti postulati, ove per termine composto
+si intende un termine che sia l'applicazione di altri due termini combinatori:
+\begin{enumerate}
+\item[1)]Le costanti, le variabili ed i termini composti formano tre 
+``insiemi''disgiunti.
+\item[2)]Se due termini composti sono le stesso termine, allora cos\`i \`e
+ordinatamente per i termini componenti:
+\begin{equation}
+X' Y' \equiv  X'' Y'' \Longrightarrow X' \equiv X''  \text{ e } Y' \equiv Y''
+\end{equation}
+\end{enumerate}
+
+Si intende inoltre che nessun altro oggetto \`e un termine combinatorio se
+non proviene dalle clausule a) e b).
+
+Stiamo usando ``$\equiv$''  perch\`e riserviamo ``$=$'' a delle equivalenze 
+che, pur non essendo l'identit\`a, saranno pi\`u frequenti. Stiamo usando la 
+parola insieme nel senso insiemistico, ma potremmo farne a meno.
+Insiemisticamente potremmo creare un modello dei termini combinatori prendendo
+come applicazione l'accoppiamento e come atomi opportuni insiemi.
+(L'accoppiamento insiemistico gode di maggiori propriet\`a di quelle
+dell'applicazione, ma queste non ci servono).
+
+Sempre (ab)usando nozioni insiemistiche potremmo, indicando con $T$
+l'insieme dei termini composti, concludere che:
+
+\begin{enumerate}
+\item[-]ogni atomo \`e un termine combinatorio;
+\item[-]se $X'Y' = X''Y''$ allora  $ X'=X''$ e $ Y'=Y'' $;
+\item[-]per ogni $T'$ contenuto in $T$ vale che $T' = T$ se e solo se ogni 
+  atomo appartiene a $T'$ e se $X'$, $Y'$ appartengono a $T'$ allora $X'Y'$ 
+  appartiene  a $T$.
+\end{enumerate}
+
+Tale lista di propriet\`a corrisponde a quella dei postulati di Peano:
+
+\begin{enumerate}
+\item[-]0 \`e un numero naturale;
+\item[-]se $n+1 = m+1$ allora $n = m$;
+\item[-]per ogni $N'$ contenuto in $N$ vale che  $N' = N$ sse $(0 \in N'$,
+$n \in N' \Rightarrow  n+1 \in N')$.
+\end{enumerate}
+
+Le due liste di propriet\`a differiscono ``di poco'':
+\begin{enumerate}
+\item[$\bullet$]i numeri naturali hanno un solo zero, mentre i termini
+combinatori ne possono avere molti (gli atomi).
+\item[$\bullet$]i numeri naturali provengono dallo zero mediante la funzione
+successore che \`e una operazione unaria (ad un argomento), mentre per i
+termini combinatori si usa l'applicazione che \`e binaria (a due argomenti).
+\end{enumerate}
+Per il resto nulla cambia.
+
+%Capitolo 2 - Calcolo dei Combinatori
+
+\chapter{Calcolo dei combinatori}
+Dall'analogia relativa ai postulati di Peano tra Termini Combinatori e numeri
+naturali possiamo dire che nella maggior parte dei casi per definire una
+funzione o un predicato, relativi ai termini combinatori, procederemo con una
+base di definizione (le funzioni o predicati vengono definiti per tutti gli
+atomi) e un passo induttivo (se la funzione o il predicato si suppongono
+definiti per due termini combinatori si da la costruzione per definirli
+sull'applicazione dei due termini).
+
+Lo stesso varr\`a per le dimostrazioni.
+Nella base della dimostrazione si dimostra l'asserto per gli atomi, nel passo
+induttivo, presunta la verit\`a dell'asserto per due termini, si dedurr\`a
+l'asserto per la loro applicazione.
+
+Per i termini combinatori conviene, sopratutto all'inizio, considerarne la
+rappresentazione grafica mediante alberi binari con foglie etichettate dagli
+atomi.
+
+\begin{esempio}Alcune rappresentazioni grafiche.
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.2} \]
+\caption{Rappresentazione grafica di $x\kk$.}
+
+\[ \includegraphics{img/infteofig.3} \]
+\caption{Rappresentazione grafica di $(\sss(\kk\kk))y$.}
+\end{figure}
+
+\end{esempio}
+
+Nella definizione di termini combinatori non compaiono parentesi. Le parentesi
+che scriviamo sono solo sintattiche (servono ad indicare le precedenze nella
+costruzione). Invece nella notazione dell'Analisi (espressa nella Teoria degli
+Insiemi) le parentesi possono servire ad indicare l'applicazione (insiemistica)
+ di un argomento ad una funzione: $f(x)$, $ [M_{v}]_{s} $, etc.
+Ci\`o fa s\`i che nella nostra notazione ci siano meno parentesi di quelle
+dell'Analisi. Tuttavia restano nei termini combinatori pi\`u grossi un buon
+numero di parentesi.
+
+Si pu\`o allora adottare una convenzione di semplificazione di scrittura che
+le riduce considerevolmente pur evitando ambiguit\`a:
+\emph{in ogni termine o sottotermine si omettono le coppie di parentesi
+associate a sinistra.}
+
+\begin{esempio} $(\sss(\kk\kk))y$ diventa $\sss(\kk\kk)y$. \end{esempio}
+
+Data una scrittura semplificata si pu\`o sempre risalire univocamente alla
+scrittura non semplificata o meglio all'albero.
+\begin{esempio}
+Ecco graficamente come vegono rappresentati i seguenti termini:
+
+
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.4} \]
+\caption{ $abcxy\kk\ii xa \longrightarrow (((((((ab)c)x)y)\kk)\ii)x)a$.}
+\end{figure}
+
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.5} \]
+\caption{$abc(xy\kk)(\ii x)a \longrightarrow (((ab)c)(((xy)\kk))(\ii x))a$.}
+\end{figure}
+
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.6} \]
+\caption{$\sss(\kk(\sss(xa)))$ resta invariata.}
+\end{figure}
+
+\end{esempio}
+
+%%--Operazioni
+\section{Operazioni su termini combinatori}
+In questa parte del Capitolo parleremo delle operazioni possibili sui termini
+combinatori, in particolare della sostituzione, sostituzioni multiple,
+riduzione, astrazione e riduzione multipla.
+
+%%--Sostituzione
+\subsection{Sostituzione}
+\begin{definizione}
+Per i termini combinatori si pu\`o definire un'operazione di
+\emph{sostituzione} che da una variabile e due termini combinatori
+restituisce un altro termine combinatorio.
+Siano $N$ ed $M$ termini combinatori ed $x$ una variabile, \emph{la
+sostituzione di $N$ al posto di $x$ in $M$} \`e il termine combinatorio
+$[N/x]M$ definito da:
+\begin{enumerate}
+\item$[N/x]a \equiv a$ se $a$ \`e un atomo $\neq x$;
+\item$[N/x]x \equiv N;$
+\item$[N/x]UV \equiv ([N/x]U)([N/x]V)$.
+\end{enumerate}
+Talvolta base e passo induttivo sembrano mescolati.
+\end{definizione}
+
+%%--Occorrenza
+\begin{definizione}
+Diciamo che un termine combinatorio $U$ \emph{occorre} in un termine
+combinatorio $X$ e scriviamo $U \in X$ (non \`e un'appartenenza) qualora ci\`o
+pu\`o essere dedotto da:
+\begin{enumerate}
+\item[a)]$U \in U$;
+\item[b)]Se $U \in X$ o se $U \in Y$ allora $ U \in XY$.
+\end{enumerate}
+\end{definizione}
+
+Anche questa \`e una definizione induttiva del predicato $U \in X$ con
+induzione su $U$. Infatti in $a)$ si d\`a (anche) la base ($U$ pu\`o essere
+un'atomo) mentre il passo induttivo viene dato sia da $b)$ che da $a)$.
+
+\begin{esempio}
+Vediamo esempi di sostituzioni e di $\in$.
+
+
+\vspace{0.5 cm}Sia  $M \equiv S(KK)(xI)$ e calcoliamo la sostituzione di 
+$[yS/x]M$
+\[
+\begin{array}{lll}
+[yS/x]M & \stackrel{3}{\equiv} & ([yS/x]S(KK))([yS/x]xI) \\
+& \stackrel{3}{\equiv} & (([yS/x]S)([yS/x]KK))([yS/x]xI) \\
+& \stackrel{1}{\equiv} & (S([yS/x]KK))([yS/x]xI)  \\
+& \stackrel{3}{\equiv} & (S(([yS/x]K)([yS/x]K)))([yS/x]xI) \\
+& \stackrel{1}{\equiv} & (S(KK)([yS/x]xI) \\
+& \stackrel{3}{\equiv} & (S(KK)(([yS/x]x)([yS/x]I))) \\
+& \stackrel{2}{\equiv} & (S(KK)((yS)([yS/x]I))) \\
+& \stackrel{1}{\equiv} & (S(KK)((yS)I)) \\
+& \equiv &  S(KK)(ySI).\\
+\end{array}
+\]
+Lo si sarebbe potuto individuare subito utilizzando la rappresentazione 
+grafica:
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.7} \]
+\caption{Rappresentazione grafica di $M$.}
+
+\[ \includegraphics{img/infteofig.8} \]
+\caption{Rappresentazione grafica di $[y\sss/x]M$.}
+\end{figure}
+\end{esempio}
+
+\begin{osservazione}
+La definizione di sostituzione riguarda solo atomi $x$ che siano variabili
+(\`e questa la ragione della distinzione fra variabili e costanti). In
+particolare non si possono sostituire termini al posto delle costanti
+riducibili. Come vedremo in seguito anche  una tale ``sostituzione'' pu\`o
+avere significato.
+\end{osservazione}
+
+\begin{ese}Verifichiamo se $\kk\kk \in \sss(\kk\kk)(x\ii)$ e se
+$\kk\kk(x\ii) \stackrel{?}{\in} \sss(\kk\kk)(x\ii)$.
+
+\begin{enumerate}
+\item[1)]$\kk\kk \in \sss(\kk\kk)(x\ii).$
+\item[]per $b)\ \kk\kk \stackrel{?}{\in} \sss(\kk\kk)$ oppure $\kk\kk
+\stackrel{?}{\in} x\ii$.
+\item[]Per quanto riguarda l'occorrenza di destra potremmo andare
+avanti come prima, ma non potremmo concludere che vi sia. Andiamo quindi ad
+analizzare l'occorrenza di sinistra:
+\item[]per $b)\ \kk\kk \stackrel{?}{\in} \sss$ oppure $\kk\kk
+\stackrel{?}{\in} \kk\kk$.
+\item[]$\kk\kk \notin \sss$ poich\`e $\sss$ \`e atomo e $\kk\kk$ \`e termine
+composto.
+\item[]$\kk\kk \in \kk\kk \longrightarrow$ si, per la clausola $a)$.
+\item[]Questo corrisponde al fatto che $\kk\kk$ \`e sottoalbero di
+$\sss(\kk\kk)(x\ii)$.
+\item[2)]$\kk\kk(x\ii) \stackrel{?}{\in} \sss(\kk\kk)(x\ii).$
+\item[]Possiamo fare la deduzione come sopra, ma deduciamo subito
+graficamente che non c'\`e occorrenza.
+
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.9} \]
+
+\[ \includegraphics{img/infteofig.10} \]
+\caption{$\kk\kk(x\ii)$ non \`e sottoalbero di $\sss(\kk\kk)(x\ii)$.}
+\end{figure}
+\end{enumerate}
+\end{ese}
+
+\begin{osservazione}
+In $xS(xS)$ abbiamo due verifiche che $xS \in xS(xS)$, per indicare quale dei
+due sottoalberi ci interessa parleremo di occorrenze di $xS$ in $xS(xS)$.
+\end{osservazione}
+
+%%--Sostituzione Multipla
+\subsection{Sostituzione multipla}
+In luogo di una variabile si possono contemporaneamente sostituire pi\`u
+variabili. Vediamolo nel caso di due variabili.
+\begin{definizione}Nel caso di due variabili definiamo la sostituzione di un
+termine combinatorio $N'$ al posto della variabile $x$ e di un termine
+combinatorio $N''$ al posto della variabile $y$ in un termine $M$ ed
+indicheremo il risultato con $[N'/x, N''/y]M$ mediante le seguenti clausole:
+\begin{enumerate}
+\item[-]$[N'/x, N''/y]a  \equiv  a \quad$ se $a$ \`e un atomo $\neq x, y$;
+\item[-]$[N'/x, N''/y]x  \equiv  N'$;
+\item[-]$[N'/x, N''/y]y  \equiv N''$;
+\item[-]$[N'/x, N''/y]UV  \equiv ([N'/x, N''/y]U)([N/x,  N''/y]V)$.
+\end{enumerate}
+Doppia induzione.
+\end{definizione}
+
+%--Riduzione
+\subsection{Riduzione}
+\begin{definizione}
+Diremo che il termine combinario $X$ si \emph{riduce (debolmente)} al termine
+combinatorio $Y$ e scriveremo $X \vartriangleright Y$, qualora ci\`o possa
+essere dedotto dai seguenti assiomi.
+\end{definizione}
+\begin{enumerate}
+\item[(I)]$\quad \ii X  \vartriangleright X$;
+\item[(K)]$\quad \kk XY  \vartriangleright X$;
+\item[(S)]$\quad \sss XYZ  \vartriangleright XZ(YZ)$;
+\item[($\rho$)]$\quad X \vartriangleright X$.
+\end{enumerate}
+Per ogni termine combinatorio $X$, $Y$ e $Z$ utilizziamo le seguenti regole di 
+deduzione:
+\begin{enumerate}
+\item[-]Se $X  \vartriangleright Y \quad \text{ allora } \quad XZ
+\vartriangleright YZ$;
+\item[-]se $X  \vartriangleright Y \quad \text{ allora } \quad ZX
+\vartriangleright ZY$;
+\item[-]se $X  \vartriangleright Y \ e \ Y  \vartriangleright Z
+\quad \text{ allora } \quad X  \vartriangleright Z$.
+\end{enumerate}
+
+%--Definizione di redex
+\begin{definizione}[redex]
+Diremo che un termine di tipo $\ii X$, $\kk XY$, $\sss XYZ$ \`e un \emph{redex}
+ e  che i corrispondenti termini $X$, $X$ e $XZ(YZ)$ sono i rispettivi ridotti 
+(o contratti) immediati.
+
+L' uso di uno dei tre  assiomi $(I)$, $(K)$, $(S)$ sar\`a detto contrazione.
+\end{definizione}
+
+%%--Definizione di Forma Normale
+\begin{definizione}
+Se in un termine combinatorio $Y$ non occorrono dei redex allora diremo che
+$Y$ \`e  in \emph{forma normale} e se $X  \vartriangleright Y$, diremo che
+$Y$ \`e una forma normale di $X$.
+\end{definizione}
+
+\begin{esempio}
+Consideriamo un termine combinatorio $\sss(\kk\sss)\kk$ che chiamiamo $\bb$ e 
+con essocostruiamo il termine generico $\bb XYZ$ con $X$, $Y$, $Z$ termini 
+qualsiasi. 
+Si ha:
+\end{esempio}
+
+\[
+\begin{array}{lcl}
+\bb XYZ & \equiv & \underbrace{\sss(\kk \sss)\kk X}_{\text{redex}}YZ \\
+     & \stackrel{(S)}{\vartriangleright} & \underbrace{\kk\sss X}_{
+       \text{redex}}(\kk X)YZ \\
+     & \stackrel{(K)}{\vartriangleright} & \underbrace{\sss (\kk X)YZ}_{
+       \text{redex}} \\
+     & \stackrel{(S)}{\vartriangleright} & \underbrace{\kk XZ}_{
+       \text{redex}}(YZ)  \\
+     & \stackrel{(K)}{\vartriangleright} & X(YZ). \\
+\end{array}
+\]
+
+
+L'esempio precedente mostra una caratteristica desiderabile per considerare
+``$\vartriangleright$'' come un procedimento di calcolo: almeno fino al ridotto
+$X(YZ)$ il risultato del calcolo era unico (perch\`e ad ogni passo intermedio
+del calcolo la contrazione era unica). Si noti che la riduzione $BXYZ
+\vartriangleright X(YZ)$ non \`e una contrazione, ma pu\`o comunque essere
+usata come tale per le regole di deduzione in $2.4$. 
+
+La distingueremo con 
+``$\stackrel{(B)}{\vartriangleright}$''.
+
+
+\begin{esempio} Sia $\cc \equiv \sss(\bb\bb\sss)(\kk\kk)$ per $X$, $Y$, $Z$ 
+generici, si ha:\vspace{0.5 cm}
+
+\[
+\begin{array}{lcl}
+\cc XYZ & \equiv & \underbrace{\widehat \sss\widehat{(\bb\bb\sss)}
+       \widehat{(\kk\kk)}\widehat{X}}_{\text{redex}}YZ \\
+     & \stackrel{(S)}{\vartriangleright} & \underbrace{\bb\bb\sss X}_{
+       \text{redex}}\underbrace{(\kk\kk X)}_{redex}YZ \\
+     & \stackrel{\stackrel{(B)}{\text{scelta}}}{\vartriangleright} & 
+       \underbrace{\bb(\sss X)\underbrace{(\kk\kk X)}_{\text{redex}}YZ}_{\text{
+       \text{redex}}} \\
+     & \stackrel{\stackrel{(K)}{scelta}}{\vartriangleright} & 
+       \bb(\sss X)\kk YZ \\
+     & \stackrel{(B)}{\vartriangleright} & \sss X(\kk Y)Z \\
+     & \stackrel{(S)}{\vartriangleright} & XZ(\kk YZ) \\
+     & \stackrel{(K)}{\vartriangleright} & XZY; \\
+\end{array}
+\]
+che pu\`o essere in forma normale. Per\`o contrariamente all'
+esempio precedente, le contrazioni scelte non erano le uniche possibili.
+Vediamo cosa succede cambiando le scelte:
+
+\[
+\begin{array}{lcl}
+\underbrace{\bb\bb\sss X}_{\text{redex}}\underbrace{(\kk\kk X)}_
+{\text{redex}}YZ &
+  \stackrel{\stackrel{(K)}{\text{scelta}}}{\vartriangleright} & 
+  \bb\bb\sss X\kk YZ \\
+& \stackrel{(B)}{\vartriangleright} & \bb(\sss X)\kk YZ \\
+& \stackrel{(B)}{\vartriangleright} & \sss X(\kk Y)Z \\
+& \stackrel{(S)}{\vartriangleright} & XZ(\kk YZ) \\
+& \stackrel{(K)}{\vartriangleright} & XZY. \\
+\end{array}
+\]
+
+Lo stesso succeder\`a per la seconda scelta.
+\end{esempio}
+
+Quesito: accadr\`a sempre che seguendo strade diverse si possa raggiungere
+sempre il medesimo risultato?
+
+\begin{esempio}Sia $J \equiv  \sss\kk\kk$.
+
+\[
+JX \equiv \sss\kk\kk X \stackrel{(S)}
+{\vartriangleright} \kk X(\kk X) \stackrel{(K)}{\vartriangleright}
+ X.
+\]
+
+\end{esempio}
+Cio\`e $JX  \vartriangleright  X$ cos\`i come ($\ii$), quindi potremmo fare a
+meno della $\ii$.
+
+
+%%-- 2 Lemmi
+\begin{lemma}
+Se la variabile $x \notin X$ allora $x \notin Y,\ \forall\ Y$ tale che $X
+\vartriangleright Y$.
+\end{lemma}
+\begin{lemma}
+Se $X \vartriangleright Y$ allora $[N/X]X \vartriangleright [N/X]Y$ e lo
+stesso vale per le sostituzioni multiple (la dimostrazione \`e abbastanza
+ovvia per induzione).
+\end{lemma}
+
+%%--Definizione combinatori
+\vspace{0.3 cm}\begin{definizione}
+Mentre nei termini combinatori possono occorrere atomi diversi dalle costanti
+irriducibili, nei tre esempi notevoli precedenti solo le costanti riducibili
+vi occorrono.
+Pertanto i termini (come $B$, $C$, $J$) in cui atomi diversi da tali costanti
+non occorrono si dicono \emph{combinatori}.
+\end{definizione}
+
+\subsection{Astrazione}
+%%--Definizione astrazione
+\begin{definizione}[astrazione]
+L'\emph{astrazione} di un termine combinatorio M rispetto ad una variabile $x$
+indicata con $[x]M$, \`e definita per induzione su $M$ da:
+\begin{enumerate}
+\item[a)]$[x]x \equiv I$;
+\item[b)]$[x]M \equiv KM$, \quad per $x \notin M$;
+\item[c)]$[x]Ux \equiv U$, \quad per $x \notin U$;
+\item[d)]$[x]UV \equiv S([x]U)([x]V)$, \quad altrimenti.
+\end{enumerate}
+\end{definizione}
+
+\begin{esempio}
+Astrazione dei termini $yx$ e $xy$ rispetto ad $x$:
+\begin{enumerate}
+\item[-]$[x]yx \quad \stackrel{c)}{\equiv} \quad y,\quad$  (per $y \neq x$);
+\item[-]$[x]xy \quad \stackrel{d)}{\equiv} \quad S([x]x)([x]y) \quad
+\stackrel{a b)}{\equiv} \quad SI(Ky)$.
+\end{enumerate}
+\end{esempio}
+
+%%--Teorema della riduzione(semplice) e Dimostrazione
+\subsection{Riduzione semplice}
+\begin{teorema}[riduzione semplice]
+Per ogni variabile $x$ e per tutti i termini combinatori $M$ ed $N$ si ha che:
+\[
+\bigl([x]M\bigr)N \ \vartriangleright \ [N/x]M.
+\]
+\end{teorema}
+
+%%--Dimostrazione
+\begin{dimostrazione}[riduzione semplice]
+Osserviamo dapprima che \`e sufficiente dimostrare l'asserto nel caso $N
+\equiv x$, cio\`e dimostrare che:
+\[
+\bigl([x]M\bigr)x \ \vartriangleright \ [x/x]M \equiv M.\qquad  (1)
+\]
+Come si vede facilmente dalla definizione di sostituzione, possiamo limitarci
+a tale $N$ poich\`e da $X \vartriangleright Y$ segue che $[N/X]X
+\vartriangleright [N/X]Y\quad \forall N$. Infatti nel nostro caso ci\`o ci
+porterebbe all'asserto, poich\`e $x \notin [x]M$ (come segue dalla definizione
+di astrazione) e da ci\`o viene che $[N/x]\bigl([x]M\bigr)x \equiv \bigl([x]M
+\bigr)N$.
+
+ Per dimostrare la $(1)$ procediamo per induzione combinatoria su $M$
+raggruppando i casi in corrispondenza della definizione di astrazione.
+
+\begin{enumerate}
+\item[$\bullet$]Caso $M \equiv x$.
+   \item[] $[x]M  \equiv  \ii$, per cui:
+
+ $([x]M)x
+\equiv  \ii x  \stackrel{(I)}{\vartriangleright}  x \equiv
+ M. \qquad$ da cui la 1)
+\item[$\bullet$]Caso $x \notin M$.
+    \item[]$[x]M \equiv  \kk M$,  per cui:
+
+ $([x]M)x \equiv  \kk Mx  \stackrel{(K)}{\vartriangleright}  M. \qquad$ da
+cui la 1)
+\end{enumerate}
+
+Esaurita cos\`i la base.
+\vspace{0.3 cm}
+
+\begin{enumerate}
+\item[$\bullet$]Caso $M \equiv Ux$ con $x \notin U$.
+    \item[]$[x]M \equiv  U$,  per cui:
+
+ $([x]M)x \equiv  Ux  \stackrel{(\rho)}{\vartriangleright} M \qquad$
+da cui la 1)
+\item[$\bullet$]Caso $M \equiv UV$ non gi\`a trattato, cio\`e $x \in U
+$ oppure $ ( x \neq V$ e $x \in V$).In questo caso composto servir\`a
+l'ipotesi del passo induttivo, cio\`e :
+
+\[
+ ([x]U)x \vartriangleright U\text{ e }([x]V)x \vartriangleright V.
+\qquad  (2)
+\]
+
+\item[]$[x]M \equiv  S([x]U)([x]V)$, per cui:
+
+ $([x]M)x  \equiv  \sss ([x]U)([x]V)x \stackrel{(S)}{\vartriangleright}  
+([x]U)x(([x]V)x) \stackrel{(2)}{\equiv}  UV 
+ \equiv  M$.
+\end{enumerate}
+
+\end{dimostrazione}
+
+%%--Teorema \text{redex}Riduzione Multipla
+\subsection{Riduzione multipla}
+\begin{teorema}
+Per tutte le variabili $x', x'',$ $\ldots$ $, x^{(n)}$ e per tutti i termini
+combinatori $M, N', N'',$ $\ldots,$ $N^{(n)}$ si ha che:
+\begin{center}
+$([x', x'', $ $\ldots$ $, x^{(n)}]M)N'N''$ $\ldots$ $N^{(n)} \
+\vartriangleright \ [N'/x', N''/x'', $ $\ldots$ $ N^{(n)}/x^{(n)}]M$,
+\end{center}
+qualora le $x^{(i)}$ siano distinte e $[x', x'',$ $\ldots$ $, x^{(n)}]$
+indichi l'astrazione iterata $[x']([x'']($ $\ldots$ $[x^{(n)}]N$ $\ldots$ $))$.
+\end{teorema}
+
+\begin{esempio}
+Purch\`e le variabili siano ancora distinte l'astrazione multipla pu\`o
+ridefinire i nostri combinatori, cio\`e le costanti riducibili.
+\begin{enumerate}
+\item[-]$[x]x \equiv \ii$;
+\item[-]$[x, y]x \equiv [x]([y]x) \equiv [x]\kk x \equiv \kk$;
+\item[-]$[x, y, z]xz(yz) \equiv [x,y]([z]xz(yz)) \equiv [x,y]\sss([z]xz)([z]yz)
+\equiv [x, y](\sss xy) \equiv$
+\item[]$\equiv [x]([y]\sss xy) \equiv [x]\sss x \equiv \sss$.
+\end{enumerate}
+\end{esempio}
+La dimostrazione del teorema precedente proviene facilmente da quello per la
+riduzione semplice usando le seguenti osservazioni.
+\begin{osservazione}
+Il lemma della conservazione della sostituzione da parte della
+``$\vartriangleright$'' vale anche nel caso multiplo.
+\begin{center}
+$X \vartriangleright Y \quad \Longrightarrow \quad [N'/x', $ $\ldots$ $ N^{(n)}
+/x^{(n)}]X \quad \vartriangleright \quad [N'/x', $ $\ldots$ $
+N^{(n)}/x^{(n)}]Y$.
+\end{center}
+\end{osservazione}
+
+%%--Lemma
+\begin{lemma}\label{Lc02n1}
+Se $v \notin N$, allora $[v]([v/x]N) \equiv [x]N$, cio\`e non importa come si
+chiamano le variabili d'astrazione.
+\end{lemma}
+
+\begin{lemma}\label{Lc02n2}
+Se $x \not\equiv y$ e $y \notin N$, allora $[N/x]([y]M) \equiv [y]([N/x]M)$ 
+per ogni termine $N$ ed $M$.
+\end{lemma}
+
+
+\subsection{Uso del teorema di astrazione}
+
+Mentre la ``$\vartriangleright$'' ci definisce un processo di calcolo tra 
+termini combinatori, il teorema di riduzione ci permette di trovare dei termini
+combinatori aventi certe propriet\`a di calcolo. Infatti, se vogliamo trovare
+un termine combinatorio $X$ tale che:
+\[
+XN' \ldots N^{(n)} \vartriangleright \underbrace{[N'/x', \ldots ,
+N^{(n)}/x^{(n)}]Y}_{da\ pensarsi\ assegnato}\ ,
+\]
+ci baster\`a per il teorema di riduzione nel caso multiplo calcolare:
+\[
+[x', \ldots , x^{(n)}]Y \equiv X.
+\]
+
+\begin{esempio}Cerchiamo un $X$ tale che per ogni $u$, $v$ e $z$:
+\[
+XUVZ \vartriangleright U(VZ) \equiv [U/u, V/v, Z/z]\underbrace{u(vz)}_{Y}.
+\]
+
+Possiamo trovare un tale $X$ come $[u, v, z]u(vz)$. abbiamo cos\`i:
+
+\[
+\begin{array}{lcl}
+[u,v,z]u(vz)\ & \equiv\ & [u,v]([z]u(vz)) \\ 
+& \equiv & [u, v](\sss([z]u)([z]vz)) \\ 
+& \equiv & [u,v]\sss(\kk u)v \\
+& \equiv & [u]([v]\sss(\kk u)v) \\ 
+& \equiv & [u]\sss(\kk u) \\ 
+& \equiv & \sss([u]\sss)([u]\kk u) \\ 
+& \equiv & \sss(\kk\sss)\kk .
+\end{array}
+\]
+
+Che \`e il nostro $\bb$.
+\end{esempio}
+
+%%--Section Propriet\`a di riduzione ed uguaglianza debole
+\section{Propriet\`a di riduzione ed uguaglianza debole}
+
+
+%%--Teorema Church-Rosser
+\begin{teorema}[Church-Rosser I]
+Per ogni termine combinatorio $X, Y, Z$ se $X$ si riduce a $Y$ ($X
+\vartriangleright Y$) e $X$ si riduce a $Z$ ($X \vartriangleright Z$), allora
+esiste un termine combinatorio $U$ tale che $Y \vartriangleright U$ e $ Z
+\vartriangleright U$
+\begin{figure}[!h]
+\[ \includegraphics{img/infteofig.11} \]
+\caption{Il calcolo anche se segue strade diverse pu\`o convergere.}
+\end{figure}
+\end{teorema}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+No. (induzione)
+\end{dimostrazione}
+
+(Il calcolo, anche se segue strade diverse, pu\`o convergere. Si parla di 
+propriet\`a di Church-Rosser per relazioni come la nostra 
+``$\vartriangleright$'', non per funzioni)
+
+\begin{osservazione}
+Si noti che $U$ non \`e detto che sia in forma normale. Quindi tale propriet\`a
+esprime un'unicit\`a di ``risultato'', anche quando il risultato non c'\`e.
+\end{osservazione}
+
+\begin{corollario}
+L'eventuale forma normale di un termine combinatorio \`e\emph{ unica}.
+\end{corollario}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Supponiamo che $X \vartriangleright Y, Z$ ove $Y$ e $Z$ sono in forma normale.
+Poich\`e esiste $U$ tale che $Y, Z \vartriangleright U$ e poich\`e $Y$, $Z$
+non hanno alcun redex, tali ultime riduzioni non sono contrazioni, cio\`e
+provengono dall'assioma di riflessivit\`a ($\rho$).
+Pertanto $Y \equiv U \equiv Z$ cio\`e per trasitivit\`a $Y \equiv Z$.
+\end{dimostrazione}
+
+\begin{definizione}
+Diremo che $X$ \`e \emph{(debolmente) uguale}, e scriveremo $X = Y$ qualora
+ci\`o si possa dedurre come nella definizione di riduzione ( con $=$ al posto
+di $\vartriangleright$) con l'aggiunta della regola di deduzione di simmetria:
+\[
+X = Y \Longrightarrow Y = X
+\]
+Cos\`i facendo si intuisce subito che l'uguaglianza debole \`e la chiusura
+simmetrica della riduzione. Si pu\`o anche facilmente vedere che:
+
+\begin{enumerate}
+  \item[-]Se $X \vartriangleright Y$ allora esiste una catena finita di
+    contrazioni che porta da $X$ a $Y$, cio\`e esistono $X', X'', \ldots
+    X^{(n)}$ tali che $X \equiv X' \vartriangleright, \ldots \vartriangleright
+    X^{(n)} \equiv Y$, ove le ``$\vartriangleright$'' sono contrazioni.
+  \item[-]Se $X = Y$ allora esiste una catena finita di contrazioni e
+    contrazioni inverse, che porta da $X$ a $Y$ come sopra.
+\end{enumerate}
+\end{definizione}
+
+%%--Teorema Church-Rosser II
+\begin{teorema}[Church-Rosser II]
+Se $X = Y$ allora esiste $Z$ tale che $X \vartriangleright Z$ e $Y
+\vartriangleright Z$.
+\end{teorema}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Consideriamo una catena di contrazioni e contrazioni inverse da $X$ a $Y$,
+come nel precedente lemma, di lunghezza $m$ e procediamo per induzione
+aritmetica su $n = m+1$.
+\begin{enumerate}
+  \item[$\bullet$]$n = 0$, non ci sono contrazioni $X \vartriangleright Y$ n\`e
+    $Y \vartriangleright X$, per l'asserto ($\rho$) $X \equiv Y$. Pertanto
+    basta prendere $Z \equiv X, Y$ e usare ($\rho$).
+  \item[$\bullet$]Supponiamo l'asserto vero per catene di lunghezza $n$ e
+    consideriamo una catena di lunghezza $n+1$.
+    Avremo allora che esiste uno $Z'$ tale che $X \vartriangleright Z'$ e
+    $X^{(n)} \vartriangleright Z'$ mentre potranno esserci due casi: $X^{(n)}
+    \stackrel{contraz.}{\vartriangleright} Y\ $, $\ Y
+    \stackrel{contraz.}{\vartriangleright} X^{(n)}$.
+
+  \item[-]Caso $X^{(n)} \vartriangleright Y$ si ha:
+  \begin{figure}[!ht]
+    \[ \includegraphics{img/infteofig.12} \]
+    \caption{Le frecce indicano contrazioni (dirette ed inverse).}
+  \end{figure}  
+
+    Pertanto per transitivit\`a della $\vartriangleright$ si ha l'asserto.
+
+  \item[-]Caso $Y \vartriangleright X^{(n)}$,
+    basta solo la transitivit\`a:
+  \begin{figure}[!ht]
+    \[ \includegraphics{img/infteofig.13} \]
+    \caption{\`E sufficiente prendere $Z \equiv Z'$.}
+  \end{figure}  
+\end{enumerate}
+\end{dimostrazione}
+
+%%--Corollario A
+\begin{corollario}[A]
+Se $X = Y$ e $Y$ \`e in forma normale, allora $X \vartriangleright Y$.
+\end{corollario}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Per il teorema di \emph{Church-Rosser II} esiste $Z$ tale che $X,Y
+\vartriangleright Z$. Nella $Y \vartriangleright Z$ non ci pu\`o essere
+contrazione, cio\`e si usa ($\rho$).
+\end{dimostrazione}
+
+%%--Corollario B
+\begin{corollario}[B]
+Se $X = Y$ o $X$ e $Y$ non hanno forma normale oppure hanno la stessa forma
+normale.
+\end{corollario}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Consideriamo la prima alternativa e procediamo per assurdo, cio\`e supponiamo
+che $X$ abbia forma normale mentre $Y$ non l'abbia (o viceversa).
+
+Sia $Z$ la forma normale di $X$ allora per corollario A si ha che $Z$ \`e
+forma normale anche di $Y$ poich\`e $Z \vartriangleleft X = Y$. Pertanto o
+vale la prima alternativa o c'\`e questa comune forma normale che (per
+Corollario di Church-Rosser I) \`e unica.
+\end{dimostrazione}
+
+%%--Corollario C
+\begin{corollario}[C]
+Se $X$ e $Y$ sono in forma normale, allora il fatto che $X\ \not\equiv Y$ 
+implica che $X \neq Y$.
+\end{corollario}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Supponiamo per assurdo che $X = Y$. Applichiamo il Corollario B, cio\`e
+otterremmo che $X \equiv Y$ che \`e assurdo.
+\end{dimostrazione}
+
+\vspace{0.5 cm}(Corollario di ``consistenza'' logica del calcolo dei
+combinatori relativamente all'uguaglianza debole. Infatti esistono ovvi
+termini combinatori in forma normale che non sono identici.)
+
+
+%%--Sezione 2.3 ``Interpretazione utile CdC''
+\section{Interpretazione ``utile'' del calcolo dei combinatori}
+L'interpretazione ``utile'' considera i termini combinatori come delle funzioni
+insiemistiche, contrariamente al fatto che non lo possono essere, come visto
+nella diversit\`a per combinatore identit\`a e classe (insieme grande)
+identit\`a.
+
+%%--Sottosezione Richiami Teoria degli Insiemi
+\subsection{Richiami sulla teoria degli insiemi}
+Nella formulazione del testo consigliato di Teoria degli Insiemi le
+funzioni sono particolari insiemi e gli insiemi delle classi costruite
+con degli assiomi a partire dallo zero (nei combinatori abbiamo invece
+parecchi atomi).
+
+Che $\emptyset$ sia l'unico insieme atomico \`e una conseguenza dell'assioma
+di estensionalit\`a (che dice che due insiemi, non importa come costruiti,
+sono lo stesso insieme se e solo se hanno gli stessi elementi).
+
+Fra i primi insiemi definibili ci sono le coppie $\langle a, b \rangle$.
+Insiemi di coppie sono detti relazioni. Da una relazione $r$ si definiscono il
+suo dominio:
+\[
+\Dom R = \bigl\{\,a \mid \langle a, b \rangle\ \in\ r\ \,\bigr\};
+\]
+e la controimmagine del dominio $\bigl\{\,b \mid \langle a, b \rangle\ \in\ 
+r\ \,\bigr\}$
+(tali oggetti sono definiti \emph{dopo} la relazione $r$).
+
+Una relazione si dice funzione se soddisfa la condizione di funzionalit\`a:
+\[
+\langle a, b'\rangle ,\ \langle a, b'' \rangle \in f \Longrightarrow b' = b''.
+\]
+La scritta $f \colon A \to B$ significa che $f$ \`e una funzione, che
+$A$ \`e il suo dominio ($\Dom f$) e che $B \supseteq \bigl\{\, b \mid\ \langle
+a, b\rangle \in\ f \,\bigr\}$ cio\`e che gli ``argomenti'' di $f$
+costituiscono $A$ e che i suoi ``valori'' stanno in $B$.
+
+Con $r^{-1}$ si intende la conversa di una relazione cio\`e $\bigl\{\,
+\langle b, a \rangle \mid\ \langle a, b\rangle \in\ r \, \bigr\}$. Se per una
+funzione $f\colon A \to B$ si ha che $f^{-1}$ sia funzione scriviamo
+$f: A \injection B$.
+Se $B$ \`e la controimmagine del dominio scriviamo $f: A \surjection B$
+(suriezione su $B$) e se vogliamo entrambe scriviamo $f: A \bijection B$ 
+(biiezione da $A$ su $B$).
+
+
+\subsection{``Tipi'' delle funzioni insiemistiche}
+L'asserzione $f: A \longrightarrow B$ serve per definire l'insieme
+\emph{potenza fra due insiemi}:
+\[
+B^{A} = \{ f \mid f\colon A \to B \}.
+\]
+pertanto $f: A \longrightarrow B$ sse $f \in B^{A}$.
+\begin{description}
+\item[Nota:] Sul testo consigliato si usa mettere l'esponente sulla
+sinistra ${}^{A}\textrm{B}$ poich\`e conserva l'ordinamento.
+\end{description}
+Vi sono poi altre costruzioni, per esempio il \emph{prodotto}
+di una funzione $A: I \longrightarrow B$.
+\[
+\prod_{i \in I}A_{i} = \biggl\{\,f \mid  f: I \longrightarrow
+\bigcup_{i \in I}A_{i}\  e \ f_{i} \in A_{i} \,\biggr\}
+\]
+Siccome questo prodotto \`e un sottoinsieme della potenza la cui base \`e
+$\bigcup_{i \in I}A_{i} \subseteq \cup B$
+\[
+\prod_{i \in I}A_{i} \subseteq \Biggl(\ \bigcup_{i \in I}A_{i}\ \Biggr)^{I}
+\subseteq \left(\cup B\right)^I,
+\]
+questa costruzione \`e secondaria. Noi consideremo principalmente la potenza.
+Iterando le potenze si possono ottenere strutture di potenze: $(C^{B})^A$,
+$C^{B^{A}}$, \ldots
+
+\begin{esempio}
+\[
+f(x) = \int_{a}^{x},
+\]
+ inteso come funzione della funzione itegranda $g$, \`e una funzione $f$ tale 
+che:
+
+\[
+f \in (R^R)^{R^{R}},
+\]
+
+
+l'esponente al di fuori delle parentesi \`e dovuto alla $g$
+tale che $\int_{a}^{x}g(y) \, \mathrm{d} x = f(x)$,
+ovvero $f \in (R^{R^{R}})^R$ se si considera la $x$ come prima variabile.
+Pertanto avremo a che fare con delle funzioni $F: A \longrightarrow B$ dove
+$A$ e $B$ saranno costruzioni insiemistiche complesse, fra cui tali potenze
+iterate.
+
+Diremo che la parte destra dell'asserzione $F: A \longrightarrow B$ \`e il
+tipo insiemistico di $F$. Quindi il tipo \`e una potenza in cui base ed
+esponente possono essere complessi.
+\end{esempio}
+
+%%--Interpretazione Insiemistica delle Costanti Riducibili
+\subsection{Interpretazione Insiemistica delle costanti riducibili}
+L'interpretazione ``arborea'' finora considerata \`e quella corretta.
+\begin{figure}
+\[
+\begin{array}{ccc}
+\includegraphics{img/infteofig.14}  & \vartriangleright & \dot{x} \\
+\\
+
+\includegraphics{img/infteofig.15}  & \vartriangleright & \dot{x} \\
+\\
+
+\includegraphics{img/infteofig.16}  & \vartriangleright &
+\includegraphics{img/infteofig.17} \\
+\end{array}
+\]
+\caption{Interpretazione ``arborea'' delle costanti riducibili.}
+\end{figure}
+L'interpretazione utile \`e invece quella che vede negli $\ii$, $\kk$, $\sss$ 
+delle funzioni insiemistiche che partono sempre dagli assiomi riferiti
+all'uguaglianza debole vista come uguaglianza insiemistica.
+
+$\ii X = X$ mi dice che $\ii$ \`e identit\`a, 
+possiamo (sbagliando) pensarla come identit\`a sulla classe $V$ di tutti gli 
+insiemi, allora: $\ii\colon V \to V$ oppure come identit\`a su un 
+insieme qualsiasi $\ii\colon A \to A$
+
+Si noti che nel secondo caso si ha anche che $\ii\colon A \to B$ per 
+ogni $B \supseteq A$.
+
+\vspace{0.5 cm}Consideriamo $\kk XY = X$, insiemisticamente ci\`o ci dice che
+abbiamo una funzione $\kk_{X}$ tale che $\kk_{X}(Y) = X$. Quindi tale $\kk_{X}$
+ \`e una funzione costante e $\kk_{X}: A \longrightarrow B$ ove $A \ni Y$ e 
+$B \ni X$.
+
+Pertanto con tali $A$ e $B$ si ha che $\kk\colon B \to B^A$ e $K$ ha come
+valori delle costanti, in definitiva $K$ \`e insiemisticamente un generatore
+di costanti.
+
+\vspace{0.5 cm}Consideriamo $\sss XYZ = XZ(YS)$, aiutiamoci con la scrittura 
+delle applicazioni insiemistiche:
+\[
+[\sss(X)]_{Y}(Z) = X_{Z}(Y_{Z}).
+\]
+Quindi considerato $Y_Z$ $Y: C \longrightarrow B$ ove $C \ni Z$ e 
+$X_{Z}\colon B \to A$, da cui $X \colon C \longrightarrow A^B$.
+
+\begin{esempio}Definiamo i sopracitati insiemi $C$, $X$ e $Y$ nel seguente 
+modo:
+\[
+C = \{0, 1, 2, \} \quad
+Y = 
+\begin{tabular}{|r|l|}
+  \hline
+  $Z$ & $Y_{Z}$ \\
+  \hline
+  0 & 5 \\
+  1 & 4 \\
+  2 & 2 \\
+  \hline
+\end{tabular}
+\qquad
+X = 
+\begin{tabular}{|r|l|}
+  \hline
+  $Z$ & $X_{Z}$ \\
+  \hline
+  $0$ & successore \\
+  $1$ & $\sqrt{\phantom{1}}$ \\
+  $2$ & dimezzamento \\
+  \hline
+\end{tabular}
+\]
+
+Cosicch\`e $X_{Z}Y_{Z}$ vale $6$, $2$ o $1$ a seconda che $Z$ sia $0$, $1$ o
+$2$. In sostanza $Z$ \`e un indice per dei vettori $X$ e $Y$. Il vettore $X$
+\`e un vettore di funzioni (come operazioni unarie) e $Y$ lo \`e di numeri.
+
+\[
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  $X_{Z}$ & successore & $\sqrt{\phantom{1}}$ & dimezzamento \\
+  \hline
+  $Y_{Z}$ & $5$ & $4$ & $2$ \\
+  \hline
+  $X_{Z}Y_{Z}$ & $6$ & $2$ & $1$ \\
+  \hline
+\end{tabular}
+\]
+
+\vspace{0.3 cm}
+L'ultimo vettore dei risultati \`e stato ottenuto applicando ``in parallelo''
+$Y$ ad $X$. Tale vettore corrisponder\`a a $SXY$ poich\`e $(SXY)Z = XZ(YZ)$
+ovvero riscrivendo: $([S(X)]_{Y})(Z) = X_{Z}(Y_{Z})$.\\Analogamente $SX$ overo
+$S(X)$ corrisponder\`a all'operatore che consente tale operazione parallela ad
+$X$ di un vettore di argomenti qualsiasi poich\`e $[S(X)]_{y}$ con $y$
+variabile f\`a ci\`o.
+
+Ma allora $S$ non \`e altro che l'operatore \emph{parallelizzazione} che da
+$X$ ci da il precedente $S(X)$ per $X$ vettore di operazioni unarie qualsiasi.
+\end{esempio}
+
+\vspace{0.3 cm}
+Osserviamo ora i tipi:
+\begin{displaymath}
+\text{Per le notazioni precedenti } \left\{ \begin{array}{l}
+Z \in C; \\
+Y: C \longrightarrow B; \\
+X: C \longrightarrow A^B.
+\end{array}\right.
+\end{displaymath}
+Se consideriamo $[S(X)]_{Y}: C \longrightarrow A$, poich\`e $[S(X)]_{Y}(Z) =
+XZ(YZ)$, allora:
+\[
+S(X): B^C \longrightarrow A^C \text{ \ poich\`e\ }[S(X)]_{Y}: C 
+\longrightarrow A \text{ \  e\ } Y \in B^C
+\]
+\begin{center}e\end{center} 
+\[
+S: (A^B)^C \longrightarrow (A^C)^{B^C}\text{ \ poich\`e\ }X \in (A^B)^C\
+\text{ e\ }S(X) \in (A^C)^{B^C}.
+\]
+Quanto fatto ora pu\`o essere ripetuto per altri termini.
+
+Consideriamo $\bb$ e $\bb XYZ = X(YZ)$. Sia $A \ni Z$ e $Y\colon A
+\to B$ ove $B$ sia il dominio di $X$. Pertanto detto $C$ un
+insieme che contenga i valori di $X$ si ha che $X$ sar\`a funzione che va da
+$B$ in $C$ ($X\colon B \to C$). Per la nostra relazione di uguaglianza
+``$=$'' $\bb XY$ non \`e altro che la composizione funzionale di $Y$ ed $X$, 
+cio\`e $\bb XY = X \circ Y$ e $\bb XY \colon A \to C$.
+
+Pertanto $\bb X$ \`e l'operatore che compone una funzione arbitraria $Y$ con 
+$X$ e si pensa che $\bb X\colon B^A \to C^A$ poich\`e $Y \in B^A$ e $BXY \in
+C^A$, in definitiva si pensa a:
+\begin{displaymath}
+B: C^B \longrightarrow (C^A)^{B^A};
+\end{displaymath}
+il quale \`e un operatore di composizione funzionale invertito (in $BXY =
+ X \circ Y$ il primo \`e $Y$ anche se si scrive $(X \circ Y)(Z) = (Y(Z))$.
+ ``Ragione storica'' per notazione convenzionale dell'applicazione 
+insiemistica nata tre secoli fa.
+
+%%--Teorema del punto fisso
+\section{Teorema del punto fisso}
+Ricordiamo che una funzione insiemistica  $f$ si dice abbia un punto fisso
+qualora esista nel suo dominio un $a$ tale che $f(a) = a$.
+Le funzioni insiemistiche possono comunque non avere punti fissi; per esempio
+nel campo reale $f(x) = x + 1$ ci da una funzione che ne \`e priva.
+
+\begin{teorema}[punto fisso]
+Ogni termine combinatorio (rispetto all'applicazione combinatoria) $X$ ha un
+punto fisso poich\'e esiste un termine combinatorio $Y$, detto \emph{
+combinatore di punto fisso}, i cui valori sono punti fissi per $X$ qualunque
+$X$ si scelga.
+\[
+X(YX) = YX.
+\]
+\end{teorema}
+
+%%--Dimostrazione
+\begin{dimostrazione}[punto fisso]
+Definiamo $Y$ come segue:
+\[ Y = [x]\bigl([y]x(yy)\bigr)\bigl([y]x(yy)\bigr). \]
+Allora dal teorema di riduzione si ha:
+
+\[
+\begin{array}{lcl}
+YX & \vartriangleright & [y]\underbrace{X(yy)}_{M}\underbrace{\bigl([y]X(yy)
+\bigr)}_{N} \\
+& \vartriangleright & X\Bigl(\bigl([y]X(yy)\bigr)\bigl([y]X(yy)\bigr)\Bigr)\\
+& \vartriangleleft & X\Bigl(\underbrace{[x]\bigl([y]x(yy)\bigr)\bigl([y]x
+(yy)\bigr)}_{Y}X\Bigr) \\
+& \equiv & X(YX). \\
+\end{array}
+\]
+Abbiamo supposto per semplicit\`a che $x, y \notin X$, si vedano i lemmi 
+\ref{Lc02n1} e \ref{Lc02n2}.
+\end{dimostrazione}
+
+\begin{osservazione}
+Le riduzioni dirette (o inverse) considerate comportano delle contrazioni.
+Quindi $YX$ non pu\`o essere in forma normale, ma anche $X(YX)$ non pu\`o
+esserlo:
+\[ YX = X(YX) = X\bigl(X(YX)\bigr) = \ldots \]
+Quindi abbiamo dei termini combinatori che non possono avere forma normale, 
+per esempio ci\`o accade prendendo per $X$ una variabile.
+Talvolta tale $Y$ \~e servito per implementare la ricorsione nei linguaggi di
+programmazione.
+\end{osservazione}
+
+\begin{osservazione}
+\label{est}
+L'uguaglianza debole non conserva l'astrazione e non vale la propriet\`a di
+estensionalit\`a (est).
+\begin{enumerate}
+\item[a)]L'uguaglianza debole non conserva l'astrazione, cio\`e:
+  \[ 
+  X = Y \Longrightarrow [x]X = [x]Y, \quad \text{(in generale).} 
+  \]
+  Controesempio:
+  \[ 
+  X \equiv \sss xyz \text{, } Y \equiv xz(yz), \ \text{per (S) e 
+  $X = Y$,  ma:} 
+  \]
+  \[ 
+  [x]X \equiv \sss\bigl([x]\sss xy\bigr)\bigl([x]z\bigr) \equiv 
+  \sss(\sss\sss(\kk y))(\kk z); 
+  \]
+  \[ 
+  [x]Y \equiv \sss\bigl([x]xz\bigr)\bigl([x]yz\bigr) \equiv 
+  \sss\bigl(\sss\ii(\kk z)\bigr)\bigl(\sss(\kk y)(\kk z)\bigr). 
+  \]
+  Sia $[x]X$ che $[x]Y$ sono in forma normale, ma non sono 
+  equivalenti e per il corollario del teorema di Church-Rosser devono essere
+  non debolmente uguali ($\neq$).
+\item[b)]Non vale la propriet\`a di estensionalit\`a:
+  \[ XZ = YZ \text{ per ogni termine combinatorio } Z \text{ allora } X = Y;
+  \qquad \text{(est)} \]
+  ci\`o si pu\`o vedere dal controesempio precedente, poich\`e per 
+  $X' \equiv [x]X$ e $Y' \equiv [x]Y$:
+
+  \[
+   \begin{array}{lcl}
+    X'Z & = & SZyz \\
+        & = & Zz(yz) \\
+        & \equiv & [Z/x]xz(yz) \\
+        & = & Y'Z.
+  \end{array}
+  \]
+
+\end{enumerate}
+La propriet\`a (est) \`e detta di \emph{estensionalit\`a}. Infatti essa
+corrisponde a quella di estensionalit\`a delle funzioni insiemistiche (che
+deriva dall'assioma di estensionalit\`a degli insiemi) che asserisce:
+\[ f(a) = g(a) \ \forall \ a \Longrightarrow f = g \]
+Si noti che per i termini combinatori l'uguaglianza debole deriva dalla 
+riduzione debole che rappresenta un processo di calcolo idealizzato su un 
+programma completo (dei suoi dati). 
+\end{osservazione}
+
+%%--Esercizi Significativi
+\section{Esercizi significativi}
+In questa sezione del capitolo mostreremo due esercizi importanti svolti in 
+classe con la relativa interpretazione funzionale.
+
+\subsection{Diagonalizzatore}
+Partendo dal seguente esercizio otterremo un'operatore che dato un termine 
+combinatorio $X$, visto come una matrice, ne trova la diagonale.
+
+\begin{ese}
+Trovare un termine combinatorio $\ww$ tale che:
+\[
+\ww XY \vartriangleright XYY.
+\]
+\end{ese}
+Quindi consideriamo: $\ww xy \vartriangleright xyy$.
+
+\[
+\begin{array}{lcl}
+  \ww & \equiv & [x,y]xyy \\
+   & \equiv & [x]\bigl([y]xyy\bigr) \\
+   & \equiv & [x]\Bigl(\sss \bigl([y]xy\bigr)\bigl([y]y\bigr)\Bigr) \\
+   & \equiv & [x](\sss x\ii) \\
+   & \equiv & \sss\bigl([x]\sss x\bigr)\bigl([x]\ii \bigr) \\
+   & \equiv & \sss\sss (\kk \ii). \\
+\end{array}
+\]
+Applichiamo ora tale $\ww \equiv \sss\sss (\kk \ii)$ alle variabili richieste 
+$xy$:
+\[
+\begin{array}{lcl}
+\ww xy & \equiv &  \sss\sss (\kk \ii)xy \\
+    & \vartriangleright & \sss x(\kk \ii x)y \\
+    & \vartriangleright & \sss x\ii y\\
+    & \vartriangleright &  xy(\ii y)\\
+    & \vartriangleright &  xyy.\\
+\end{array}
+\]
+Questo dimostra che il termine combinatorio $\ww$ sopra definito \`e corretto.
+
+\subsection{Interpretazione funzionale}
+Partendo dal secondo membro ($xyy$) si nota che $x$ \`e una funzione i cui 
+argomenti sono pensabili come $y \in A$ per qualche $A$. Ma i suoi valori 
+($xy$) sono a loro volta funzioni i cui argomenti sono contenuti in un insieme 
+$B$. 
+
+Allora $xy$ \`e da pensare come $x_y\colon A \to B$.
+Pertanto:
+
+$$x\colon A \to B^A.$$
+
+Per esempio se consideriamo una matrice quadrata $X$ (nel senso di array) vista
+ per colonne, potremmo pensare a $B$ come ad un insieme che contenga gli 
+elementi delle colonne.
+
+Se noi uguagliamo $xyy$ a $Wxy$ possiamo ora considerare il primo membro $Wxy$
+come il valore in $y$ (colonna o riga $y$-esima) di una funzione $Wx$ che \`e
+definita da $X$. Tale $Wx$ (o $W_x$) restituisce allora $x_y(y)$, cio\`e il
+$y$-esimo elemento della $y$-esima colonna (o riga) di $X$.
+
+Perci\`o $W_x$ \`e la funzione che ci da la diagonale della matrice $X$. 
+Potremo quindi dire che $W$ \`e un diagonalizzatore.
+
+\subsection{Estrattore parametrico}
+\label{Phi}
+Nel precedente esercizio $\ww$ estraeva da una matrice il ``percorso'' della
+sua diagonale, cio\`e quello definito dai parametri $U$, $V \equiv \ii$ per
+cui $Uy = y$ e $Vy = y$ individuano un elemento di diagonale.
+Partendo dal seguente esercizio otterremo un'operatore che dato un termine 
+combinatorio $X$ visto come una matrice, estrae il percorso definito 
+parametricamente da $U$ e $V$ arbitrariamente (con indice $Y$).
+
+\begin{ese}
+Trovare un termine combinatorio $\Phi$ tale che:
+\[
+\Phi XUVY \vartriangleright X(UY)(VY).
+\]
+\end{ese}
+Quindi consideriamo: $\Phi xuvy \vartriangleright x(uy)(vy)$.
+
+\[
+\begin{array}{lcl}
+\Phi & \equiv & [x,u,v,y]x(uy)(vy) \\
+     & \equiv & [x,u,v]\bigl([y]x(uy)(vy)\bigr) \\
+     & \equiv & [x,u,v]\Bigl(\sss \bigl([y]x(uy)\bigr)\bigl([y]vy\bigr)\Bigr)\\
+     & \equiv & [x,u,v]\Bigl(\sss \bigl(\sss ([y]x)([y]uy)\bigr)v\Bigr) \\
+     & \equiv & [x,u,v]\Bigl(\sss \bigl(\sss (\kk x)u\bigr)v\bigr) \\
+     & \equiv & [x,u]\Bigl([v]\sss \bigl(\sss (\kk x)u\bigr)v\bigr) \\
+     & \equiv & [x,u]\sss \bigl(\sss (\kk x)u\bigr) \\
+     & \equiv & [x]\Bigl([u]\sss \bigl(\sss (\kk x)u\bigr)\Bigr) \\
+     & \equiv & [x]\sss \bigl(\sss (\kk x)\bigr) \\ 
+     & \equiv & \sss([x]\sss)\Bigl([x] \bigl(\sss (\kk x)\bigr) \Bigr)\\
+     & \equiv & \sss(\kk\sss)\bigl(\sss([x]\sss)([x]\kk x)\bigr) \\
+     & \equiv & \sss(\kk\sss)\bigl(\sss(\kk\sss)\kk\bigr).\\
+\end{array}
+\]
+
+\subsection{Interpretazione funzionale}
+$\Phi$ differisce da $\ww$ solo perch\`e in luogo di $U$ e $V$ (arbitrarie) 
+usiamo le $\ii$ (identit\`a).
+Ma allora specificando diversamente $U$ e $V$ si da un percorso differente 
+dalla diagonale. Il percorso \`e ``specificato parametricamente'' da $U$ e $V$
+mentre $Y$ \`e sempre l'indice d ``percorrenza''.
+$\Phi$ \`e quindi un ``estrattore parametrico''.
+
+\subsection{Conclusioni}
+Con le costanti riducibili (le primitive del linguaggio di programmazione
+idealizzato) $\sss$ e $\kk$ siamo stati in grado di costruire altri operatori
+(diversi dal generatori di costanti e dal parallelizzatore):
+
+\begin{enumerate}
+\item[-]$\bb$: operatore di composizione invertito;
+\item[-]$\cc$: invertitore, che come vedremo sotto generalizza la 
+trasposizione;
+\item[-]$\ww$: diagonalizzatore;
+\item[-]$\Phi$: estrattore parametrico.  
+\end{enumerate}
+
+
+Da $\cc XYZ \vartriangleright XZY$ con il ragionamento visto per $\ww$ si ha 
+che, pensando ad $X$ come matrice per colonne, $\cc X$ \`e la stessa mastrice 
+ma per righe. Cio\`e $\cc$ \`e la generalizzazione della trasposizione 
+matriciale.
+Si noti anche che il nome \`e necessario e che la matrice $X$ sia pensata
+quadrata.
+
+Con i soliti riferimenti insiemistici si pu\`o vedere la $\cc$ come:
+\[
+\cc \colon (A^B)^C \to (A^C)^B.
+\]
+
+Ci si pu\`o allora chiedere che cosa d'altro le nostre primitive consentano di
+calcolare.
+
+%%
+%%--Capitolo 3
+%%
+\chapter{Funzioni ricorsive}
+Secondo la tesi di Church (e l'equivalente tesi di Turing), tutto ci\`o
+che \`e calcolabile pu\`o essere definito come tutto ci\`o che ci viene dato 
+da qualche funzione parziale ricorsiva.
+
+\section{Funzioni parziali ricorsive}
+Una funzione fra numeri naturali si dice parziale ricorsiva quando pu\`o essere
+ ottenuta da delle funzioni base mediante due operatori.
+
+\begin{description}\item[Funzioni di base]:
+
+\begin{enumerate}
+\item[-]costante $0$;
+\item[-]somma;
+\item[-]proiezioni $U_{i}^{n}(x_0, \ldots  , x_{n-1}) = x_i$.
+\end{enumerate} 
+\end{description}
+\begin{description}
+\item[Operatori]:
+
+\begin{enumerate}
+\item[-]Composizione multipla;
+  \item[]data una funzione $f$ ad $n$ argomenti ed $n$
+  funzioni $g_i$ ad $m$ argomenti, otteniamo una funzione $h$  ad $n$ argomenti
+  tale che: 
+  \[
+  h(x_0, \ldots, x_{n-1}) = f\bigr(g_0(x_0, \ldots , x_{m-1}), 
+  \ldots, g_{n-1}(x_0, \ldots  , x_{m-1})\bigr).
+  \]
+\item[-]Minimalizzazione;
+  \item[]data una funzione $g$ ad $n+1$ argomenti otteniamo una funzione 
+    $h$  ad $n$ argomenti tale che: $h(x_0, \ldots, x_{n-1}) = \text{min } y$ 
+    per il quale $g(y, x_0,\ldots , x_{n-1}) = 0$ e si scrive:
+    \[
+    h(x_0, \ldots, 
+    x_{n-1}) = \mu_y \bigl[g(
+    y,  x_0, \ldots , x_{n-1}) = 0\bigr].
+    \]
+
+\end{enumerate}
+In realt\`a l'operatore $\mu$ \`e un operatore d'inversione.
+\end{description}
+\begin{esempio}Vediamo una possibile applicazione dell'operatore $\mu$:
+\[
+\mu_y(x_oy - x_1 = 0) = \frac{x_1}{x_0}
+\] 
+cio\`e $\mu$ ha invertito la moltiplicazione.
+\end{esempio}
+Per certe operazioni vi possono essere pi\`u risultati d'inversione.
+\begin{esempio}L'equazione:
+\[
+(y-2)^2 - x_0 = 0
+\]
+per $x_0 = 4$ restituisce sia $0$ che $4$, al fine di ottenere un solo 
+risultato si sceglie il minimo.
+\end{esempio}
+
+%%--Calcolabilita' delle funzioni parziali ricorsive
+\section{Alcune considerazioni}
+Che la classe delle funzioni parziali ricorsive possa essere una candidata
+per la definizione della classe delle funzioni calcolabili segue dalle seguenti
+considerazioni:ù
+\begin{enumerate}
+  \item[A]le funzioni di base sono notoriamente calcolabili,
+  \item[B]le costruzioni date dagli operatori di composizione multipla e 
+ minimizzazione ($\mu$) conservano la calcolabilit\`a\footnote{La composizione 
+    multipla fra funzioni calcolabili ci da sempre una funzione calcolabile 
+    mediante il ``passaggio'' dei valori delle $g_i$ agli argomenti della $f$. 
+    Anche dalla $\mu$ otteniamo funzioni calcolabili, basta eseguire le 
+    seguenti procedure:
+    \begin{enumerate}
+    \item[a)]$y = 0$;
+    \item[b)]calcola $g(y, x_0,\ldots )$;
+    \item[c)]verifica se $g(y, x_0,\ldots ) = 0$, se si esci;
+    \item[d)]altrimenti incrementa $y$ e vai a $b)$.
+    \end{enumerate}
+    Si pu\`o verificare che esiste una procedura equivalente, sia pure pi\`u
+    complicata, anche per il caso che qualche valore di $g$ non sia definito.}.
+\end{enumerate}
+Tale classe \`e detto di funzioni parziali perch\`e la $\mu$ anche nel caso di
+$g$ ovunque definita pu\`o dare una fuzione che non \`e ovunque definita 
+(esempio $\mu_y(2y - x = 0)$ \`e una funzione di $x$ definita solo per gli $x$ 
+pari).
+
+Tali funzioni si dicono semplicemente \emph{ricorsive} quando sono ``totali'', 
+cio\`e definite per qualunque scelta degli argomenti.
+In generale le funzioni parziali ricorsive sono dette ``ricorsive'' perch\`e si
+pu\`o dimostrare che con gli operatori funzionali e funzioni di base si possono
+generare funzioni definite tramite delle ricorsioni.
+
+%%--Ricorsione
+\section{Ricorsione primitiva}
+Vi sono parecchi casi di ricorsione. Uno dei pi\`u semplici ed apparentemente
+potente \`e quello della \emph{ricorsione primitiva}.
+
+\begin{definizione}
+Una funzione $h$ di $n + 1$ argomenti si dice ottenuta per \emph{ricorsione 
+primitiva} da una funzione $g$ ad $n$ argomenti e da una funzione $f$ a $n + 2$
+ argomenti se:
+\[
+\left\{ 
+\begin{array}{l}
+h(0, x_0, \ldots , x_{n-1}) = g(x_0, \ldots , x_{n-1});
+ \\
+h(k+1, x_0, \ldots , x_{n-1}) = f\bigl(k, h(k, x_0, \ldots , x_{n-1}),
+x_0, \ldots , x_{n-1}\bigr). \\
+\end{array} \right.
+\]
+\end{definizione}
+Si noti che se la $f$ e la $g$ sono totali, tali equazioni definiscono una $h$
+che \`e totale a sua volta e conserva ovviamente la calcolabilit\`a.
+
+\begin{osservazione}
+Non tutte le costruzioni ricorsive sono primitive
+\end{osservazione}
+\begin{esempio}
+Le due seguenti condizioni (ove $\frac{k}{2}$ indica il quoziente di $k$ diviso
+$2$) ci definiscono una $l$ ad un argomento che \`e totale.
+\[l(0) = 0\]
+\[l(k+1) = l\left(\frac{k}{2}\right) + 1\]
+Infatti da esse si ha:
+\[
+\begin{tabular}{c|c}
+n & l(n) \\
+\hline
+0 & 0 \\
+1 & 1 \\
+2 & 1 \\
+3 & 2 \\
+4 & 2 \\
+\vdots & \vdots \\
+7 & 3 \\
+8 & 3 \\
+\vdots & \vdots \\
+15 & 4 \\
+\end{tabular}
+\]
+Cio\`e ``quasi un logaritmo''.
+
+Tuttavia la costruzione della $l$ \emph{non} \`e ricorsiva primitiva. Infatti 
+il passo di ricorsione \`e diverso (usa un valore ``$\frac{k}{2}$'' differente 
+dal  predecessore per calcolare $l(k+1)$).
+\end{esempio}
+
+%%--Funzioni ricorsive primitive
+\section{Funzioni ricorsive primitive}
+Usando opportune funzioni di base (totali): la precedente composizione multipla
+ e tale ricorsione primitiva, si pu\`o definire un'ampia sottoclasse delle 
+funzioni parziali ricorsive dette \emph{funzioni primitive ricorsive}.
+Per quanto osservato tali funzioni sono totali.
+Si vede facilmente che fra di esse vi sono:
+\begin{enumerate}
+\item[] $h(x, y) = x + y$;
+\item[] $h(x, y) = xy$;
+\item[] $h(x, y) = x^y$;
+\item[] $h(x, y) = \left\{ \begin{array}{ll}
+                           0 & \text{se } x < y; \\
+			   x - y & \text{altrimenti}; \\
+			 \end{array} \right.$
+\item[] etc.
+\end{enumerate}
+Tuttavia esistono funzioni chiaramente calcolabili, anche totali, che non sono
+primitive ricorsive, cio\`e tali che non pu\'o esistere alcuna costruzione di 
+esse nella classe delle funzioni primitive ricorsive. Una di esse \`e la 
+funzione di Ackerman.
+
+Tale funzione in due variabili: $ack(x, y)$ al crescere di $y$ restituisce
+delle funzioni in $x$ come le seguenti:
+
+$\begin{array}{l}
+\vdots \\
+x \\
+x^2 \\
+x^{x} \ldots \\
+\vdots \\
+\text{(superesponenziale)} \\
+\end{array}$
+
+Essa \`e totale ed esiste una definizione ricorsiva (non primitiva) abbastanza 
+semplice per tale $ack$.
+
+(Si noti che per la funzione $l$ vista in precedenza l'esistenza della
+costruzione ricorsiva non primitiva vista \emph{non} \`e sufficiente per
+affermare che tale funzione non sia primitiva.)
+
+%%--Lemma di Parzialita'
+\section{Lemma di parzialit\`a}
+Si potrebbe pensare che possa esistere una classe cos\`i ampia di funzioni 
+totali (che contenga ad esempio $ack$) e costruibile senza costruzioni (come 
+la $\mu$), che non conservano la totalit\`a, da contenere ogni funzione 
+``ragionevolemente calcolabile''. Tuttavia esiste un lemma che, definendo 
+opportunamente delle condizioni di ragionevolezza di calcolabilit\`a, mostra
+la costruzione della classe necessita di operatori (come $\mu$) che non 
+conservano la totalit\`a.
+
+%%--Tesi di Church
+\section{Tesi di Church}
+La tesi di Church afferma che la definizione delle funzioni fra numeri 
+naturali, che formalizza nel modo pi\`u ampio possibile la nozione di 
+calcolabilit\`a, \`e quella della classe delle funzioni parziali ricorsive. 
+Pertanto tale classe non \`e solo una candidata ma, a meno di equivalenze, la
+soluzione del problema definitorio.
+
+La giustificazione di tale tesi consiste nelle seguenti asserzioni:
+
+\begin{enumerate}
+\item[-]\emph{Sufficienza puntuale}. Non \`e mai stata trovata una funzione 
+  che si fosse in grado di calcolare per la quale si potesse dimostrare che 
+  non era nella nostra classe (per esempio $ack$, anche se definita con una
+  ricorsione senza minimalizzazione, \`e dimostrato che sia definibile con
+  le costruzioni della nostra classe).
+\item[-]\emph{Sufficienza di classe}. Tutte le classi notevoli di funzioni
+  sinora scoperte sono state dimostrate essere contenute nella nostra classe.
+  In particolare si \`e dimostrata l'uguaglianza con classi di funzioni la cui
+  generalit\`a di calcolabilit\`a era intuibile da considerazioni differenti 
+  (ad esempio la classe delle funzioni calcolabili secondo Turing).
+\end{enumerate}
+
+%%--Forma normale delle funzioni parziali ricorsive
+\section{Forma normale delle funzioni parziali ricorsive}
+Secondo la tesi di Church funzione calcolabile, cio\`e parziale ricorsiva,
+pu\`o essere definita a 
+partire dalle funzioni di base ($0$, $+$, $U_i^n$) relative mediante un uso 
+iterato degli operatori di composizione (multipla) e $\mu$.
+Il seguente teorema ci dice che per qualunque funzione parziale ricorsiva 
+basta una sola $\mu$, a patto di usare delle funzioni primitive ricorsive.
+
+Quest'ultime sono definite a partire da funzioni di base come le precedenti, 
+ma con la somma sostituita dal \emph{successore} da degli operatori che
+conservano la totalit\`a delle funzioni (non c'\`e la $\mu$).
+Le funzioni parziali ricorsive pertanto sono realizzabili da programmi che 
+danno sempre il risultato della funzione. L'operatore cirico ($\mu$), che 
+invece produce funzioni parziali, potrebbe essere usato una volta sola.
+
+\begin{teorema}
+Per ogni funzione parziale ricorsiva $\varphi$ ad $n$ argomenti esistono due
+funzioni primitive ricorsive $f$ ad un argomento e $g$ a $n + 1$ argomenti
+tale che per tutte le $n$-uple $(x_0, \ldots , x_{n-1})$ nel suo dominio si ha:
+\[
+\varphi(x_0, \ldots , x_{n-1}) = f\Bigl(\mu_y\bigl(g(y, x_0, \ldots , x_{n-1}
+) = 0 \bigr) \Bigr).
+\]
+\end{teorema}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+Il teorema pu\`o essere dimostrato mediante la macchina di Turing. Si 
+formalizza tramite delle funzioni primtive ricorsive il funzionamento di una 
+macchina che inizia a calcolare con dati iniziali $(x_0, \ldots , x_{n-1})$.
+Le transizioni di configurazioni della macchina di Turing corrispondono 
+sostanzialmente al parametro $y$ e la funzione primitiva ricorsiva $g$ 
+rappresenta, quando ha valore nullo, l'arresto della macchina.
+Dalla configurazione corrispondente a tale $y$ ``nullificante'' la $f$ 
+estrae il risultato.
+
+%%--
+%%--Capitolo Rappresentazione combinatoria delle funzioni parziali ricorsive
+%%--
+\chapter[Rapp.ne funz. parz. ric.]{Rappresentazione combinatoria delle 
+funzioni parziali ricorsive}
+Il calcolo dei combinatori (e il $\lambda$-calcolo) sono nati anche come 
+possibile fondazione della matematica, alternativa alla teoria degli insimi.
+Siccome la seconda \`e stata sviluppata precedentemente, non \`e stata 
+sviluppata (completamente) la prima. Tuttavia esiste la dimostrazione che tale 
+calcolo avrebbe potuto diventare una fondazione alternativa. Tale dimostrazione
+ consiste nel mostrare come all'interno del calcolo dei combinatori si possano 
+rapresentare le funzioni parziali ricorsive. Per vedere ci\`o occorre dapprima 
+rappresentare i numeri naturali.
+
+Vi sono parecchi modi per rappresentare i numeri naturali con termini combinatori, quello che vedremo consiste in una rappresentazione ``naturale'' mediante 
+soli combinatori, detti \emph{iteratori di Church}. Essi catturano il significato \emph{operativo} di un numero naturale appunto come ``iteratore''. Ci\`o 
+sar\`a dimostrato dal primo lemma seguente.
+
+\begin{notazione}
+Conveniamo di indicare con $X^{n}Y \text{ ove } \ n \in \mathbb{N}$ i termini 
+seguenti:
+
+\[
+X^0Y \equiv Y;
+\]
+
+\[
+X^{n+1}Y \equiv \underbrace{X(X(\ldots (X}_{n+1}Y)\ldots )).
+\]
+
+Definiamo per ogni numero naturale $n$ il suo \emph{rappresentante combinatorio
+} come il combinatore $\overline{n}$ tale che:
+
+\[
+\overline{0} \equiv KI;
+\]
+
+\[
+\overline{n+1} \equiv (SB)^{n+1}(KI) \text{ ovvero } \overline{n+1} = SB(
+\overline{n}).
+\]
+
+\end{notazione}
+
+%%--Lemma
+\begin{lemma}
+Per ogni termine combinatorio $F$ e $Y$ si ha che:
+
+\[
+\overline{n}FY = F^nY \text{ o meglio } \overline{n}FY \vartriangleright
+ F^nY.
+\]
+
+\end{lemma}
+
+%%--Dimostrazione
+\begin{dimostrazione}
+Per induzione su $n$.
+
+\begin{enumerate}
+
+\item[$\bullet$]Base  $n = 0$.
+  
+$\begin{array}{lll}
+    \overline{0}FY & \equiv & KIFY \\
+                   & \vartriangleright & IY \\
+                   & \vartriangleright & Y \\
+                   & \equiv & F^0Y.
+  \end{array}
+$
+
+\item[$\bullet$]Ipotesi induttiva $\overline{n}FY \vartriangleright F^nY$.
+\item[$\bullet$]Passo induttivo:
+
+$\begin{array}{lll}
+    \overline{n+1}FY & \equiv & SB\overline{n}FY \\
+                     & \vartriangleright & BF(\overline{n}F)Y \\
+                     & \vartriangleright & F(\overline{n}FY) \\
+                     & \vartriangleright & F(F^nY) \\
+                     & \equiv & F^{n+1}Y.
+  
+  \end{array}
+$
+
+\end{enumerate}
+ 
+\end{dimostrazione}
+
+\begin{definizione}
+Data una funzione tra numeri naturali $\varphi$ ad $n$ argomenti diremo che 
+un termine combinatorio $X$ la \emph{rappresenta combinatoriamente (in senso 
+debole)} qualora:
+
+\[
+X\overline{x}_0\overline{x}_1 \ldots \overline{x}_{n-1} = \overline{\varphi(x_0, x_1,  \ldots, x_{n-1})} \quad \forall \ 
+x_0, x_1,  \ldots, x_{n-1} \in \Dom{\varphi}.
+\]
+\end{definizione}
+
+Se inoltre succede che per le variabili $x_0, x_1,  \ldots, x_{n-1}$ fuori
+dal dominio di $\varphi$ il primo membro non ha forma normale diremo che $X$ la
+rappresenta combinatoriamente \emph{in senso forte}. Le rappresentazioni in 
+senso forte non sono per\`o necessarie per noi.
+
+\begin{osservazione}
+Si noti che mentre l'applicazione insiemistica per la $\varphi$ riguardi 
+argomenti che sono $n$-uple, quella combinatoria per la $X$ riguarda un singolo
+ argomento (cio\`e $x_0$). Tuttavia tale applicazione viene iterata (su $x_1
+\ldots x_{n-1}$).
+
+Questo non dipende dal fatto che nel calcolo dei combinatori non si possano 
+rappresentare delle $n$-uple; essa \`e solo una scelta di semplicit\`a ``suffi
+ciente'' per i nostri scopi (cos\`i come quella della riduzione debole).
+Inoltre nei lemmi per la rappresentazione delle funzioni parziali ricorsive si 
+devono comunque introdurre delle rappresentazioni (di coppie) e queste 
+farebbero confusione con quelle per gli argomenti.
+\end{osservazione}
+
+%%--Teorema di rappresentazione
+\begin{teorema}[di rappresentazione]
+Ogni funzione parziale ricorsiva pu\`o essere rappresentatan in senso debole 
+da qualche termine combinatorio.
+\end{teorema}
+Di questo enunciato non daremo la 
+dimostrazione completa, ma solo dei cenni ad essa ed ai lemmi che usa.
+
+%%--Dimostrazione
+\begin{dimostrazione}[cenno]
+Per il teorema della forma normale delle funzioni parziali ricorsive $\varphi(
+x_0, \ldots , x_{n-1}) = f(\mu_y(g(y, x_0, \ldots , x_{n-1}) = 0))$, data una 
+tale $\varphi$ esistono due funzioni primitive ricorsive $f$ e $g$ che la 
+definiscono mediante $\mu$. Pertanto basta dimostrare che ogni funzione 
+primitiva ricorsiva \`e rappresentabile combinatoriamente e che date una $g$ 
+ed una $f$ cos\`i rappresentabili, \`e pure rappresentabile la minimizzazione 
+della $g$ e la composizione di una funzione rappresentabile con la $f$.
+
+Noi trascureremo la rappresentabilit\`a della $\mu$ e accenneremo a quella 
+delle funzioni ricorsive primitive (che comporta anche un caso di 
+composizione).
+\end{dimostrazione}
+
+%%--Lemma
+\begin{lemma}
+Ogni funzione primitiva ricorsiva \`e rappresentabile combinatoriamente in 
+senso debole.
+\end{lemma}
+
+%%--Dimostrazione
+\begin{dimostrazione}[cenno]
+Occorre dimostrare che le funzioni di base per la ricorsione primitiva sono
+ rappresentabili. Queste sono:
+\begin{enumerate}
+\item[-]$0$, inteso come una funzione (costante) di zero argomenti (o anche 
+  come  una funzione costante di un argomento);
+\item[-]$s$, successore;
+\item[-]$U_i^n$, proiezioni.
+\end{enumerate}
+Esse sono immediatamente rappresentabili poich\`e:
+\begin{enumerate}
+\item[-]$\overline{0}$ cio\`e $KI$, \`e gi\`a stato rappresentato (c'\`e una 
+  piccola modifica per lo $0$ con un argomento);
+\item[-]$\overline{s}$ altro non \`e che $S\!B$ poich\`e $S\!B\overline{n}\ = 
+\ \overline{n+1}\ =\ \overline{s(n)}$;
+\item[-]$\overline{U_i^n}$ si ottengono dagli $X \equiv [x_0, \ldots , x_{n-1}]
+  x_i$, poich\`e dal teorema di riduzione si ha che $X\overline{x}_0\,
+  \overline{x}_1 \cdots \overline{x}_{n-1} = \overline{x}_i$, ove gli $x_i$
+  siano numeri naturali.
+\end{enumerate}
+Una volta ottenuta la rappresentabilit\`a  di tali funzioni di base occorre 
+dimostrare che la rappresentabilit\`a si conserva per composizione (multipla) 
+e ricorsione primitiva.
+
+Per la composizione si osservi che date $f$ ad $m$ argomenti e $g_0, \ldots , 
+g_{m-1}$ tutte ad $n$ argomenti, il rappresentanto della $h$ tale che:
+\[
+h(x_0, \ldots , x_{n-1}) = f(g_0(x_0, \ldots , x_{n-1}), \ldots ,  g_{m-1}(x_0,
+ \ldots , x_{n-1});
+\]
+pu\`o ovunque essere definito dai rappresentanti $\overline{f}$, 
+$\overline{g}_0$, $\ldots$ , $\overline{g}_{n-1}$ mediante:
+
+\[
+\overline{h} = [x_0, \ldots , x_{n-1}] \overline{f}(\overline{g}_0x_0
+x_{1}\cdots x_{n-1})\cdots (\overline{g}_{m-1}x_0x_{1}\cdots x_{n-1}).
+\]
+Che tale termine combinatorio $\overline{h}$ sia effettivamente il 
+rappresentante richiesto segue ancora dal teorema di riduzione multipla:
+\[
+\overline{h}\,\overline{x}_1\cdots\overline{x}_{n-1} \ = \ \overline{f}(
+\overline{g}_0\,\overline{x}_0 \cdots \overline{x}_{n-1})\cdots(
+\overline{g}_{m-1}\,\overline{x}_0\cdots\overline{x}_{n-1}).
+\]
+Per la ricorsione primitiva si procede in due passi:
+\begin{enumerate}
+\item[\rm{I)}]Si dimostra che la rappresentabilit\`a si conserva nel caso che 
+  la funzione $g$, nella clausola di base della ricorsione, sia una funzione a 
+  zero argomenti.
+\item[\rm{II)}]Si estende tale dimostrazione al caso di pi\`u argomenti.
+\end{enumerate}
+Noi omettiamo il passo $\rm{II)}$  ed accenniamo al primo.
+
+Nel caso di zero argomenti definiamo una $\varphi$ ad un argomento mediante 
+una ricorsione primitiva semplificata del tipo:
+\[
+\left \{ \begin{array}{lc}
+  \varphi(0) = c;  & \text{(costante)} \\
+  \varphi(n + 1) = \chi\bigl(n , \varphi(n)\bigr). & \\
+\end{array}
+\right .
+\]
+
+L'idea su cui si basa la dimostrazione \`e la seguente. Consideriamo la 
+$\varphi$ (che \`e funzione insiemistica) come l'insieme delle coppie: 
+\[
+\Bigl\{
+\bigl \langle 0, c \bigr\rangle, \bigl\langle 1, \varphi(n) \bigr\rangle , 
+\ldots , \bigl\langle n, 
+\varphi(n) \bigr\rangle , \ldots 
+\Bigr\}.
+\] 
+In tali coppie si ha che $\varphi(n + 1)$ \`e uguale a $\chi\bigl(n, \varphi(n)
+\bigr)$; per esempio si ha la coppia $\langle 1, \chi(0, c) \rangle$. 
+
+Pertanto possiamo enumerare tale insieme 
+mediante una funzione $f$ dipendente da $\chi$, $f = q_{\chi}$, tale che:
+
+\[
+f\bigl(n, \varphi(n)\bigr) 
+= \Bigl\langle n+1,\ \varphi(n+1) \Bigr\rangle 
+= \Bigl\langle n+1,\ \chi \bigl(n, \varphi(n)\bigr) \Bigr\rangle.
+\]
+
+Se saremo in grado di rappresentare tale $f$ mediante un termine combinatorio 
+$F$ potremo ottenere la rappresentazione della generica coppia $\langle n+1, \ 
+\varphi(n+1) \rangle$ mediante iterazione fatto sulla $F$. In altre parole 
+potremo potremo ridurre il nostro caso semplificato (zero argomenti) di 
+ricorsione primitiva a una semplice iterazione usando $F^n$, cio\`e 
+utilizzando gli iteratori come nel lemma d'iterazione.
+
+Per precisare tale idea occorre tuttavia essere in grado di rappresentare 
+coppie di numeri naturali e di manipolarle in modo da poter estrarre dal 
+rappresentante di $\langle n, \ \varphi(n) \rangle$ il secondo componente 
+$\varphi(n)$ una volta individuato il primo.
+\end{dimostrazione}
+
+%%--Section Rappresentazione delle coppie insiemistiche
+\section{Rappresentazione delle coppie insiemistiche}
+Una prima idea per rappresentare una coppia di termini combinatori con un'altro
+ termine \`e quella di considerare l'applicazione di due termini componenti.
+Tuttavia ci\`o non funziona nonostante che l'applicazione goda (per 
+definizione) di alcune propriet\`a delle coppie insiemistiche. Esistono 
+funzioni di ``decomposizione'' $p$ ed $s$ tali che:
+
+\[
+p\bigl(\langle A, B\rangle\bigr) =  A\quad \text{e}\quad s\bigl(\langle A, 
+B\rangle\bigr) = B. 
+\]
+Ci\`o non \`e possibile con l'applicazione poich\`e nella rappresentazione 
+l'uguale insiemitico deve diventare l'uguale combinatorio (definito da un 
+processo di calcolo). Infatti si ha ad esempio che non pu\`o esistere un $P$
+che si comporti come il $p$ insiemistico, cio\`e non esiste un termine 
+combinatorio $P$ tale che:
+\[
+P(XY) = X, \quad \text{per ogni termine combinatorio } X \text{ e }Y.
+\]
+
+Altra idea. Definiamo $D' \equiv [x,y,z]zxy$, dati $X$ e $Y$ abbiamo cos\`i il
+termine combinatorio $D'XYZ = ZXY$ per ogni $Z$. Se prendiamo $Z \equiv \kk$
+\[
+D'XYZ = \kk XY = X;
+\]
+pertanto possiamo definire come rappresentante della coppia $X$ e $Y$ il 
+termine combinatorio $D'XY$ e come $P$:
+\[
+P \equiv [x]xK, \quad \text{(di modo che } P(D'XY) = D'XY\kk = X \text{ ).}
+\]
+
+Oltre a tale $D'$ esistono parecchi combinatori che consentono di rappresentare
+ le coppie insiemistiche. Il combinatore di ``coppia'' che chiameremo 
+\emph{diade}, che serve nel nostro caso, usa come termini $P$ ed $S$ (per 
+rappresentare $s$) dei termini
+derivati da rappresentanti numerici. Infatti definiamo:
+\[
+D \equiv [x, y, z]z(\kk y)x.
+\]
+Si ha allora che $DXY\overline{0}$ per il teorema di riduzione:
+\[
+DXY\overline{0} = \overline{0}(\kk Y)X = \kk \ii(\kk Y)X = \ii X = X;
+\]
+\[
+DXY\overline{n+1}\ = \ \cdots \ = \ Y.
+\]
+Cio\`e da $DXY$ possiamo estrarre $X$ o $Y$ mediante $P$ ed $S$ come i 
+precedenti, ma definiti a partire dai rappresentanti numerici.
+
+Usando tale $D$ possiamo dimostrare il seguente lemma.
+
+%%--Lemma
+\begin{lemma}
+Esiste un combinatore $\mathbf{R}$, che ha forma normale, tale che:
+\begin{enumerate}
+  \item[1)] $\mathbf{R}XY\overline{0} \ = \ X$;
+  \item[2)] $\mathbf{R}XY\overline{n+1} = Y\overline{n}(\mathbf{R}XY
+    \overline{n})$.
+\end{enumerate}
+Tale operatore di ricorsione pu\`o essere usato allora per rappresentare la 
+ricorsione primitiva semplificata ($n = 0$) poich\`e $X$ pu\`o essere preso 
+come il rappresentante di $c$ ($\overline{c}$) ed $Y$ come il rappresentante di
+$\chi$ ($\overline{\chi}$), per cui, dalla 1) e 2) $\mathbf{R}XY$ 
+rappresenta $\varphi$ in accordo a $\varphi(0) = c$ e $\varphi(n+1) = \chi\bigl
+(n,\varphi(n)\bigr)$.
+\end{lemma}
+
+%%--Dimostrazione
+\begin{dimostrazione}[cenno]
+Si segue l'idea precedente di numerare i rappresentanti delle coppie $\langle n
+, \varphi(n) \rangle$ mediante il rappresentante di $f = q_{\chi}$.
+Pertanto si definisce un termine $Q$ che rappresenti $q$, cio\`e tale che $QY$
+rapresenti la $f$, quindi la $Y$ rappresenta la $\chi$. Tale $Q$ \`e costruita
+tramite la diade $D$, infatti si ha 
+
+\[Q \equiv [x, d]D\bigl(SB(d\overline{0})\bigr)
+\bigl(x(d\overline{0})(d\overline{1})\bigr);\]
+ ove la $x$ servir\`a per $\chi$ e la $d$ per
+$\langle n, \varphi(n) \rangle$. Mediante tale $Q$ si pu\`o poi costruire il 
+termine combinatorio $\mathbf{R}$ tramite iterazione ed utilizzando 
+l'estrazione dei componenti della coppia rappresentata ottenendo la 1) e la 2).
+In definitiva dal lemma di iterazione si ottiene un lemma di ricorsione 
+primitiva semplificata.
+\end{dimostrazione}
+
+%%--Viceversa del Teorema di rappresentabilita' delle f.ni par. ric.
+\begin{lemma}
+Qualsiasi funzione rappresentabile combinatoriamente \`e parziale ricorsiva.
+\end{lemma}
+
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+Non si fa perch\`e \`e ovvio a causa dell'equivalenza fra calcolabilit\`a
+secondo Turing e funzioni parziali ricorsive.
+
+%%
+%%-- Capitolo - Indecidibilit\`a
+%%
+\chapter{Indecidibilit\`a}
+La teoria e ``filosofia'' di A.~Turing ha chiarito che ``tutto il fattibile'' 
+\`e tale se e solo se qualche macchina di Turing lo pu\`o fare.
+
+\[
+\includegraphics{img/infteofig.18}
+\]
+
+Se si danno in entrata dei dati e si aspettano in uscita i risultati, allora
+non si pu\`o distinguere se all'interno della scatola vi sia un ``uomo'' o
+un'opportuna macchina di Turing (M. di T.).
+Turing si \`e inoltre occupato delle limitazioni di tale ``fattibilit\`a 
+totale''\footnote{Precedentemente a Turing, K.~G\"odel aveva trovato dei 
+risultati a proposito delle limitzioni della dimostrabilit\`a totale in 
+matematica.}.
+La prima di tali limitazioni \`e data dal teorema dell'arresto: non pu\`o
+esistere alcuna M. di T. che, ricevendo in entrata la descrizione di un'altra
+M. di T. qualsiasi e dei relativi dati d'ingresso, sia in grado di dare in 
+uscita per il si e per il no risposta al quesito ``il calcolo della seconda
+macchina da un risultato, cio\`e la seconda macchina si arresta?''.
+
+Dal teorema dell'arresto derivano numerosi altri risultati di 
+\emph{indecidibilit\`a}. Per esempio:
+\begin{enumerate}
+\item Non \`e possibile decidere sempre se una funzione (calcolabile) sia
+  definita per certi argomenti; 
+\item Non \`e possibile decidere sempre se una funzione (calcolabile) abbia per
+  qualche argomento un certo valore;
+\item Come corollario del $2)$ si ha che non \`e possibile calcolare una 
+  funzione reale di variabili reali discontinua\footnote{La calcolabilit\`a
+  riferita a funzioni tra numeri naturali si estende a quelle fra reali 
+considerando ad esempio le rappresentazioni posizionali dei numeri reali che
+sono assegnabili come funzioni fra numeri naturali};
+\item Non \`e possibile decidere sempre se due funzioni (calcolabili) siano
+  uguali oppure no.
+\item Si recuperano i risultati di indecidibilit\`a della logica matematica;
+\item[\vdots] 
+\end{enumerate}
+Buona parte di tali risultati di indecidibilit\`a, provenienti dal teorema 
+dell'arresto sono ``condensati'' in un (pesante) teorema 
+(di Rice-Shopiro-Myhill) che asserisce qualcosa di grossolanamente simile a
+``qualsiasi cosa che sia sistematicamente prevedibile a proposito delle
+funzioni effettivamente calcolabili \`e banale''.
+
+I risultati di indecidibilit\`a servono nello sviluppo del software. Per 
+esempio, se si vuole progettare un linguaggio di programmazione che abbia la
+garanzia di dare programmi che diano sempre un risultato (evitando ad esempio
+cicli non voluti dal programmatore) allora tale linguaggio \emph{non} pu\`o 
+essere universale, cio\`e non deve consentire che sia programmabile qualsiasi
+funzione calcolabile. Tali limitazioni dell'universalit\`a possono essere 
+suggeriti dalla teoria dell'indecidibilit\`a.
+
+%%--Section - Indecidibilit\`a per i termini combinatori
+\section{Indecidibilit\`a per i termini combinatori}
+Mentre l'indecidibilit\`a secondo Turing riguarda inizialmente solo l'agente di
+calcolo (M. di T.), per il calcolo combinatorio si hanno subito dei risultati
+d'indecidibilit\`a che riguardano i programmi idealizzati espressi dai termini
+combinatori. In particolare avremo un risultato simile al $4.$ precedente, che
+spesso sostituisce (tramite dei corollari immediati) il teorema di 
+Rice-Shopiro-Myhill.
+
+Si parte con la ``G\"odellizzazione'' dei termini combinatori. Ci\`o significa 
+che ogni termine combinatorio $X$ viene identificato da un numero naturale 
+$gd(X)$ secondo una enumerazione, data da una funzione $gd$ che abbia delle 
+caratteristiche di fattibilit\`a. In particolare si richiede che esistano una
+funzione ricorsiva (totale) $\mu$ a due argomenti ed una ricorsiva totale $\nu$
+ad un argomento tali che:
+
+\[
+\mu\bigl(gd(X), gd(Y)\bigr) = gd(XY) \quad \forall \ \text{termine combinatorio
+$X$ e $Y$};
+\]
+
+\[
+\nu(n) = gd(\overline{n}) \quad \forall \ n \in \mathbb{N}.
+\]
+Noi trascureremo come definire una tale $gd$, poich\`e non dimostreremo il 
+teorema.
+
+\begin{definizione}
+Diremo che due insiemi $\mathcal{A}$ e $\mathcal{B}$ di numeri naturali sono
+\emph{ricorsivamente separabili} quando esiste una funzione ricorsiva (totale)
+con valori $0$ ed $1$ tale che:
+\begin{enumerate}
+\item[-]se $n \in \mathcal{A} \ \Longrightarrow \ \varphi(n) = 0$;
+\item[-]se $n \in \mathcal{B} \ \Longrightarrow \ \varphi(n) = 1$.
+\end{enumerate}
+\end{definizione}
+Si noti che il semplice fatto che $\varphi$ sia funzione implica che 
+$\mathcal{A} \cap \mathcal{B} = \emptyset$. Tuttavia non vale il viceversa,
+poich\`e richiediamo che $\varphi$ sia anche ricorsiva.
+
+In sostanza la $\varphi$ \`e una funzione calcolabile che sia la funzione
+caratteristica di un insieme $\mathcal{B'}$ contenente $\mathcal{B}$ e 
+disgiunto da $\mathcal{A}$.
+\[
+\includegraphics{img/infteofig.19}
+\]
+
+\begin{definizione}
+Diremo che un insieme $\mathcal{A}$ \`e \emph{ricorsivo} quando la sua funzione
+caratteristica $\varphi$:
+\[
+\varphi(n) = \left\{ \begin{array}{ll}
+                      1 & \text{ se } n \ \in \ \mathcal{A}; \\
+		      0 & \text{ altrimenti;} \\
+		    \end{array}
+            \right.
+\]
+\`e ricorsiva.
+
+Similmente per una relazione fra numeri naturali diremo che
+\`e \emph{ricorsiva} se la sua funzione caratteristica lo \`e: 
+\[
+\varphi(n, m) = \left\{ \begin{array}{ll}
+                      1 & \text{ se }\langle n, m \rangle\ \in \ r; \\
+		      0 & \text{ altrimenti.} \\
+		    \end{array}
+            \right.
+\]
+\end{definizione}
+Tali definizioni relative a numeri naturali sono estese ai termini combinatori
+considerando i numeri di G\"odel che li identificano.
+
+\begin{definizione}
+Diremo che un insieme $A$ di termini combinatori \`e \emph{chiuso rispetto 
+all'uguaglianza (debole)} quando:
+\[
+X \in A \text{ e } Y = X \text{ implica } Y \in A.
+\]
+\end{definizione}
+
+\begin{teorema}[inseparabilit\`a ricorsiva]
+Nessuna coppia di insiemi $A$ e $B$ non vuoti di termini combinatori chiusi
+rispetto all'uguaglianza debole \`e ricorsivamente separabile.
+\end{teorema}
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+Contrariamente all'uso precedente di nozioni insiemistiche (che era evitabile),
+ora le nozioni di insieme sono essenziali. In effetti le nostre definizioni e 
+teoremi non sono propriamente della teoria dei combinatori.
+
+\begin{corollario}[A]
+Nessun insieme non banale (non vuoto o non totale) di termini combinatori che
+sia chiuso rispetto all'uguaglianza (debole) pu\`o essere ricorsivo.
+\end{corollario}
+
+\begin{dimostrazione}
+Basta prendere, nel teorema d'inseparabilit\`a ricorsiva, la coppia d'insiemi
+formata da tale insieme e dal suo complemento (rispetto all'isieme di tutti i
+termini combinatori).
+\end{dimostrazione}
+
+\begin{corollario}[B]
+L'insieme di tutti i termini combinatori aventi forma normale non \`e 
+ricorsivo.
+\end{corollario}
+
+\begin{dimostrazione}
+Basta vedere che non \`e banale ed usare il corollario A (non \`e vuoto 
+perch\`e gli atomi stanno in esso e non \`e totale poich\`e vi sono termini
+combinatori senza forma normale).
+\end{dimostrazione}
+Si noti che questo corollario corrisponde al teorema dell'arresto.
+
+\begin{corollario}[C]
+La relazione di uguaglianza debole non \`e ricorsiva.
+\end{corollario}
+
+\begin{dimostrazione}
+Basta considerare per assurdo l'insieme dei termini uguali a un dato termine
+combinatorio. Allora dalla funzione caratteristica dell'uguaglianza debole 
+possiamo costruire quella di tale insieme in modo che resti ricorsiva.
+\end{dimostrazione}
+
+%%
+%%-- Capitolo - Introduzione al lambda calcolo
+%%
+\chapter{Introduzione al \lbc}
+Per introdurre il \lbc~ l'idea di partenza \`e quella di effettuare 
+un'inversione logica del teorema di riduzione dei termini combinatori:
+\[
+\bigl([x]M\bigr)N \ \vartriangleright \ [N/x]M;
+\]
+da questa si potevano trovare le costanti riducibili. 
+
+Pertanto se incorporiamo 
+nelle nostre definizioni tale asserto non avremo bisogno delle costanti
+riducibili $\ii$, $\kk$, $\sss$. Il primo passo sar\`a quello di incorporare
+l'astrazione combinatoria nei termini.
+
+\section{\lbts}
+Definiamo delle sequenze di variabili e di costanti per definire gli atomi, ma 
+non richiediemo che fra le costanti ci siano  $\ii$, $\kk$, $\sss$. Pertanto
+gli atomi potrebbero anche provenire solo dalla sequenza infinita delle 
+variabili.
+
+Definiamo i \lbts~ con le clausole:
+
+\begin{enumerate}
+\item[a -]Ogni atomo \`e un \lbt;
+\item[b -]Se $X$ e $Y$ sono \lbts ~allora $XY$ \`e un \lbt;
+\item[c -]Se $x$ \`e una variabile e $X$ \`e un \lbt, allora $\lambda x.X$ \`e
+un \lbt;
+\item[]($\lambda x.X$ \`e da pensare come $[x]X$).
+\end{enumerate}
+Nella clausola $b$ si definisce l'applicazione (come nel caso dei termini 
+combinatori), nella clausola $c$ si definisce invece la $\lambda$-astrazione 
+che non \`e un operatore esterno sui termini, ma \`e incorporato in essi. Tale
+$\lambda$-astrazione \`e definita analogamente alla applicazione, cio\`e:
+\begin{enumerate}
+\item[-]$\lambda x'.X' \equiv \lambda x''.X''$ implica $x' \equiv x'' 
+\text{ e } X' \equiv X''$;
+\item[-]Solite clausole di disgiunzione\footnote{Atomi, \lbts ~composti per 
+applicazione, \lbts ~composti per astrazione formano ``insiemi'' disgiunti.}.
+\end{enumerate}
+\begin{description}\item[Notazioni semplificative:]
+\begin{enumerate}
+\item[-]Parentesi sintattiche omesse se associate a sinistra (come per i 
+termini combinatori); 
+\item[-]Parentesi sintattiche per $\lambda$-astrazione omesse se associate a 
+destra.
+\end{enumerate}
+\end{description}
+
+\begin{esempio}
+\[
+X(((\lambda x.Y)X)Y) \text{ pu\`o diventare } X((\lambda x.Y)XY).
+\]
+\[
+\lambda x.(\lambda y.(\lambda z.X)) \text{ pu\`o diventare } \lambda xyz.X
+\quad \text{(come per $[x,y,z]X$)}. 
+\]
+
+\end{esempio}
+
+Per visualizzare la struttura di un \lbt ~ora non bastano gli alberi binari
+(con sola etichettatura delle foglie). Ci serviremo di alberi 
+``al pi\`u binari'' con i nodi unari corrispondenti alle $\lambda$-astrazioni
+etichettati dalla variabile di astrazione.
+
+\begin{esempio}Alcune rappresentazioni grafiche.
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.20}\]
+\caption{$\bigl((\lambda x.y)(\lambda x.zy)\bigr)x$}
+\end{figure}
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.21}\]
+\caption{$\lambda xyz.zy = \lambda x.\bigl(\lambda y.(\lambda z.zy)\bigr)$}
+\end{figure}
+\end{esempio}
+
+\begin{definizione}
+Diremo che $X$ \emph{occorre} in $Y$ e scriveremo $X \in Y$ quando ci\`o pu\`o
+essere dedotto da:
+\begin{enumerate}
+\item[-]$X \in X$;
+\item[-]Se $X \in U$ o $X \in V$ allora $X \in UV$;
+\item[-]Se $X \in V$ allora per ogni $x$ variabile $X \in \lambda x.V$.
+\end{enumerate}
+\`E da notare che $x \notin \lambda x.y$ per ogni $y \neq x$.
+\end{definizione}
+Siccome $\lambda x.$ \`e da pensare come ``$[x]$'' e sappiamo che 
+nell'astrazione combinatoria i nomi delle variabili d'astrazione non contano
+($[x]X = [y]([y/x]X)$), allora dobbiamo distinguere le occorrenze di variabili 
+a seconda che ``contino'' o no.
+
+\begin{definizione}
+Un'occorrenza di una variabile $x$ in un \lbt~ $Y$ si dir\`a \emph{vincolata}
+---cio\`e ivi il nome di $x$ non conta--- quando tale occorrenza sia presente 
+in un sottotermine di $Y$, che sia del tipo $\lambda x.X$ (cio\`e stia in $X$).
+Se ogni occorrenza di $x$ in $Y$ \`e vincolata diremo che $x$ \`e 
+\emph{vincolata} in $Y$. Se invece esiste almeno una occorrenza di $x$ in $Y$
+che non sia vincolata diremo che $x$ \`e \emph{libera} in $Y$.
+\end{definizione}
+Con le nostre convenzioni di rappresentazione grafica tali nozioni sono pi\`u
+semplici:
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.22}\]
+\caption{$X \in Y$ quando l'albero di $X$ \`e un sottoalbero di $Y$.}
+\end{figure}
+In particolare per $X \equiv x$ avremo una foglia.
+
+Sempre considerando la rappresentazione grafica, 
+possiamo notare che $x$ 
+occorre libera in $Y$ quando da almeno una foglia etichettata con $x$ si pu\`o
+risalire alla radice senza incontrare un nodo  (unario) etichettato con $x$.
+Un'occorrenza di $x$ in $Y$ \`e vincolata se risalendo da tale foglia si
+incontra almeno un tale nodo.
+
+\[\includegraphics{img/infteofig.23}\]
+
+\begin{definizione}
+Si definisce la \emph{sostituzione} $[N/x]M$ \emph{del} \lbt ~$N$ \emph{al
+posto} della variabile $x$ \emph{nel} \lbt ~$M$ con le clausole\footnote{
+L'ultima clausola non \`e stata formalizata poich\'e rappresenta
+un ``caso'' abbastanza complicato.} del tipo:
+\begin{enumerate}
+\item[-]$[N/x]x \equiv N$;
+\item[-]$[N/x]a \equiv a$ per $a \not\equiv x$ atomo;
+\item[-]$[N/x]UV \equiv \bigl([N/x]U\bigr)\bigl([N/x]V\bigr)$;
+\item[-]$[N/x]\lambda x.X \equiv \lambda x.X$ (poich\`e le occorrenze di $x$ 
+  sono vincolate);
+\item[-]$[N/x]\lambda y.X \equiv \left\{ \begin{array}{l}
+                      \text{si distinguono due casi a seconda che } y 
+		      \text{ occorra in } N  \\
+		      \text{(libera) in tal caso si rinomina } y. \\
+		    \end{array} \right.$
+
+\end{enumerate} 
+\end{definizione}
+
+\begin{definizione}
+Diremo che un \lbt ~ $X$ \`e congruente ad un \lbt ~$Y$ e d'ora in poi 
+scriveremo $X \equiv Y$ (non pi\`u identit\`a) quando si pu\`o ottenere $Y$ da
+$X$ mediante una ``ridenominazione completa'' di variabili in occorrenze 
+vincolate.
+\end{definizione}
+\begin{esempio}
+$\lambda x.yx \equiv \lambda z.yz$
+\end{esempio}
+Coerentemente alla nostra interpretazione della $\lambda$-astrazione le
+differenze tra \lbts ~congruenti saranno da ignorare. In sostanza il nostro
+``$\equiv$'' (che non \`e un identit\`a) sar\`a da pensare equivalente 
+all'identit\`a ``$\equiv$'' per i termini combinatori.
+
+\begin{definizione}
+Un \lbt ~della forma $(\lambda x.M)N$ che occorra in $X$ si dir\`a un 
+\emph{redex} di $X$. Diremo sua contrazione il \lbt ~ $[N/x]M$.
+Diremo che $X$ si riduce a $Y$ e scriveremo $X \vartriangleright Y$ (nella 
+letteratura ci sono altre definizioni) quando $Y$ si ottenga da $X$ tramite
+una sequenza finita di contrazioni. Formalmente quando ci\`o provenga da:
+\[
+(\lambda x.M)N \vartriangleright [N/x]M;
+\]
+
+\[
+X \vartriangleright X;
+\]
+mediante le solite regole di deduzione.
+\end{definizione}
+Mediante simmetrizzazione e congruenza si definisce l'uguaglianza debole 
+``$=$''.
+
+Per $\lambda$-$\beta$ riduzione s'intende la relazione ottenuta aggiungendo 
+all'assioma di contrazione precedente quello di cambiamento delle variabili
+vincolate. Continueremo ad indicarla con ``$\vartriangleright$'', ma la useremo
+solo nei teoremi, mentre negli esempi od esercizi useremo la riduzione senza
+cambiamenti di variabili vincolate.
+
+L'uguaglianza debole per \lbt ~viene anche chiamata $\lambda$-conversione o
+$\lambda$-uguaglianza.
+
+\begin{esempio}
+Vediamo come esercizio alcune applicazioni di riduzioni partendo da redex.
+
+\begin{equation}
+\begin{array}{lcl}
+(\lambda x.xy)F & \vartriangleright & [F/x]xy \\
+                & \equiv & Fy. \\
+\end{array}
+\end{equation}
+
+\begin{equation}
+\begin{array}{lcl}
+(\lambda x.y)F & \vartriangleright & [F/x]y \\
+               & \equiv & y.  \\
+\end{array}
+\end{equation}
+
+\begin{equation}
+\label{c6e4}
+\begin{array}{lcl}
+\underbrace{\bigl(\lambda x.(\underbrace{\lambda y.yx)z}\bigr)v}
+_{redex} 
+           & \vartriangleright & \bigl(\lambda x.[z/y]yx\bigr)v \\
+           & \equiv            & (\lambda x.zx)v \\
+           & \vartriangleright & [v/x]zx \\
+	   & \equiv            & zv.
+\end{array}
+\end{equation}
+Nel caso di cui sopra abbiamo scelto di contrarre per primo il redex interno,
+vediamo cosa succede se avessimo scelto il redex pi\`u esterno:
+\begin{equation}
+\begin{array}{lcl}
+\underbrace{\bigl(\lambda x.(\underbrace{\lambda y.yx)z}\bigr)v}
+_{redex} 
+           & \vartriangleright & [v/x](\lambda y.yx)z \\
+           & \equiv & (\lambda y.yv)z \\
+           & \vartriangleright & [z/y]yv \\
+           & \equiv & zv.
+\end{array}
+\end{equation}
+Analogamente a quanto detto per i termini combinatori, anche nel \lbc, pur
+seguendo strade diverse otteniamo il medesimo risultato.
+\begin{equation}
+\label{c6e5}
+\begin{array}{lcl}
+(\lambda x.xxy)(\lambda x.xxy) 
+    & \vartriangleright & [\lambda x.xxy/x]xxy \\
+    & \equiv            & (\lambda x.xxy)(\lambda x.xxy)y \\
+    & \vartriangleright & [(\lambda x.xxy)/x]xxyy \\
+    & \equiv            & (\lambda x.xxy)(\lambda x.xxy)yy \\
+    & \vdots            & \vdots \\
+    & \equiv            & (\lambda x.xxy)(\lambda x.xxy)y\cdots y. \\
+\end{array}
+\end{equation}
+La riduzione   pu\`o continuare con contrazioni infinite.
+\begin{equation}
+\label{c6e6}
+\begin{array}{lcl}
+(\lambda x.xx)(\lambda x.xx) 
+    & \vartriangleright & [\lambda x.xx/x]xx \\
+    & \equiv            & (\lambda x.xx)(\lambda x.xx) \\
+    & \vartriangleright & [(\lambda x.xx)/x]xx \\
+    & \equiv            & (\lambda x.xx)(\lambda x.xx) \\
+    & \vdots            & \vdots \\
+    & \equiv            & (\lambda x.xx)(\lambda x.xx). \\
+\end{array}
+\end{equation}
+La riduzione   pu\`o continuare con contrazioni infinite (effettive), ma di
+fatto ``non contraggono''.
+\end{esempio}
+Da tali esempi si vede come si definisce per il \lbt~ la forma normale o la
+sua assenza come in \ref{c6e5} e \ref{c6e6}. L'equazione \ref{c6e4} ci 
+preannuncia il primo teorema di Church-Rosser per i \lbts~ (che non 
+dimostreremo) cos\`i come il corollario sull'unicit\`a della forma normale, che
+vale a meno di congruenze e che ha la stessa dimostrazione vista.
+Vale pure il secondo teorema di Church-Rosser (con la medesima dimostrazione)
+sempre a meno di congruenze e relativi corollari.
+
+Come per i termini combinatori non vale la regola di estensionalit\`a.
+
+\begin{esempio}Non estensionalit\`a. 
+\[
+X \equiv \lambda x.yx, \ Y \equiv y \ \text{ allora per ogni \lbt} \ V, \
+XV = yV \equiv YV.
+\]
+Tuttavia $X \neq Y$ poich\`e sono in forma normale e non congruenti.
+\end{esempio}
+
+\section{Alberi di De Bruijn}
+Gli Alberi di De Bruijn costituiscono una definizione alternativa dei \lbts~
+che evita il problema delle variabili vincolate. Quindi non c'\`e bisogno di
+introdurre congruenze, la riduzione debole diventa la $\lambda$-$\beta$ 
+riduzione. Oltre a tali vantaggi per la teoria essi possono servire 
+nell'implementazione del linguaggio LISP che accenneremo, poich\`e permettono
+controlli di congruenza immediati.
+
+Ritorniamo alla rappresentazione grafica di un \lbt
+
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.24}\]
+\caption{$\bigl(\lambda x.x(\lambda y.yx)\bigr)z$}
+\end{figure}
+e consideriamo il ruolo delle variabili.
+\begin{enumerate}
+\item[-]La $z$ \`e una variabile libera che possiamo considerare come la prima
+nella successione delle variabili libere. Quindi la possiamo chiamare $1$.
+\item[-]La $x$ \`e invece vincolata (come la $y$). Il suo ruolo nell'albero \`e
+identificato dal nodo unario etichettato $x$. Se vogliamo ignorare le 
+congruenze , non importa che sia stata chiamata $x$, a tale fine non \`e 
+necessario avere tale nodo, basta sapere dov'\`e. Tale posizione \`e 
+univocamente determinata dal numero di nodi binari che dobbiamo risalire dalla
+foglia nominati $x$ per raggiungere tale nodo unario, cio\`e dal \emph{livello
+d'astrazione}. Nel nostro caso \`e $1$ o $2$. Possiamo allora convenire che
+tale occorrenza di $x$ nella foglia sia indicata dall'opposto $-1$ di tale 
+livello d'astrazione.
+\item[-]Per le $y$ valgono ancora le osservazioni precedenti e continuiamo a 
+chiamarla $-1$.
+\end{enumerate}
+Pertanto il nostro albero al pi\'u binario diventa un puro albero binario con
+foglie etichettate da numeri interi.
+
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.25}\]
+\caption{Albero di De Bruijn.}
+\end{figure}
+
+Si noti che per le variabili libere possiamo stabilire una corrispondenza 
+biunivoca fra i loro nomi e l'intero positivo che la identifica. Ci\`o non vale
+per le variabili vincolate. Nel nostro esempio il nome $x$ corrisponde sia a
+$-1$ che a $-2$, invece il numero $-1$ corrisponde sia al nome $x$ che al nome
+$y$.
+
+Anche se la dimostrazione \`e un po' complicata \`e chiaro che da ogni albero 
+al pi\`u binario di un \lbt~corrisponde un unico albero del secondo tipo che
+chiameremo \emph{albero di De Bruijn}. Viceversa dato un albero binario con
+foglie etichettate da interi  possiamo sempre costruire almeno un albero del
+primo tipo con opportune altre convenzioni Si pu\`o dimostrare che tutti gli 
+alberi cos\`i costruiti sono quelli di \lbts~congruenti.
+
+\begin{esempio}Vediamo alcune trasformazioni.
+\begin{figure}[!ht]
+\[\includegraphics{img/infteofig.26}\]
+\caption{$(\lambda x.x)y$}
+\end{figure}
+\begin{figure}[!ht]
+\[ \includegraphics{img/infteofig.27} \]
+\caption{altra possibile interpretazione, $(\lambda z.z)y$.}
+\end{figure}
+
+Similmente, convenendo che in mancanza di nodi binari si conteggino nodi 
+d'astrazione, si ha che:
+
+\[ \includegraphics{img/infteofig.28} \]
+
+ci da ad esempio $\lambda xwyuv.xyv$:
+
+
+\[ \includegraphics{img/infteofig.29} \]
+
+\end{esempio}
+
+In conclusione possiamo ridefinire i \lbts~a meno di congruenze, semplicemente
+come alberi binari su foglie di interi qualsiasi. L'uso delle variabili
+vincolate \`e solo per facilit\`a di comprensione.
+
+%%--Section Uguaglianza estensionale
+\section{Uguaglianza estensionale}
+Sinora l'uguaglianza per i termini combinatori e i \lbts~era debole poich\'e
+non valeva la regola di estensionalit\`a \ref{est}. Tale uguaglianza \`e 
+sufficiente per i risultati visti (teorema di Church-Rosser e conseguenze,
+esempi di ``consistenza logica'' ed altri), tuttavia non \`e sufficiente per 
+dimostrare l'equivalenza tra \lbc~e calcolo dei combinatori, come vedremo.
+
+Si noti che possiamo considerare i \lbts~ed i termini combinatori come
+programmi idealizzati per un linguaggio di programmazione senza o con 
+primitive\footnote{Nel caso di \lbts~in luogo di primitive abbiamo la 
+$\lambda$-astrazione che pu\`o essere considerata come la generazione di una
+procedura con passaggio di parametri secondo la nostra definizione di 
+contrazione $(\lambda x.M)N \vartriangleright [N/x]M$.}.
+
+Con ``$=$'' identifichiamo cos\`i, in ambedue i casi, un'uguaglianza di
+programmi idealizzati comprensivi dei loro ``dati''. Tale equivalenza asserisce
+che due programmi o hanno lo stesso risultato (forma normale eventualmente a 
+meno di congruenze) oppure il loro calcolo pu\`o essere ricondotto sempre allo
+stesso punto nel senso del secondo teorema di Church-Rosser.
+
+Invece un'uguaglianza che soddisfi la regola (est) riguarda programmi non 
+necessariamente completi dei loro dati (in est il dato \`e $V$). Quindi mentre
+in Teoria degli Insiemi si ha una sola nozione di uguaglianza, proveniente 
+dall'assioma di estensionalit\`a, l'uguaglianza dal punto di vista operativo
+o \emph{intensionale} si divide in due diverse nozioni.
+
+Consideriamo ora tre regole diverse da (est).
+
+\begin{enumerate}
+\item[$(\zeta)$]$Xx = Yx$ per ogni variabile $x$ che non occorra in $X$ o $Y$,
+implica $X = Y$.
+\end{enumerate}
+\`E una semplificazione della (est), ma come quest'ultima ha una premessa 
+infinita poich\'e le variabili che non occorrono nei due termini sono infinite,
+tuttavia si pu\`o considerare come una singola premessa.
+Tale regola pu\`o riguardare sia \lbts~che termini combinatori.
+\begin{enumerate}
+\item[$(\xi)$]$X = Y$ implica $[x]X = [x]Y$ per ogni variabile $x$ (che 
+ riguarda solo i termini combinatori).
+\end{enumerate}
+A differenza della (est) e ($\zeta$) la premessa \`e singola. Infine per i 
+\lbts~abbiamo:
+\begin{enumerate}
+\item[$(\eta)$]$\lambda x.Xx = X$ per ogni variabile $x$ che non occorra in 
+$X$.
+\end{enumerate}
+Si noti che ($\eta$) non \`e un implicazione e pu\'o essere essere aggiunta 
+come assioma ad una definizione di uguaglianza. In pratica essa amplia il tipo
+dei redex da considerare. Essa corrisponde alla terza clausola della 
+definizione di astrazione per i termini combinatori.
+
+\begin{teorema}
+La regola (est) \`e equivalente a: ($\zeta$) nel caso dei \lbts~o termini 
+combinatori, ($\xi$) nel caso dei termini combinatori ed ($\eta$) nel caso dei
+\lbts.
+\end{teorema}
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+Nell'ultimo caso l'uguaglianza ottenuta (fra \lbts) viene detta
+\emph{$\lambda \beta \eta$ convertibilit\`a}.
+
+%%--Section Riduzione forte (cenno)
+\section{Riduzione forte (cenno)}
+Nel caso dell'uguaglianza debole potevamo caratterizzarla come la chiusura
+simmetrica della riduzione ``$\vartriangleright$'' (debole per i termini
+combinatori o $\lambda \beta$ per i \lbts). Ci  si pu\`o chiedere se esista
+un'analoga relazione ``$\succ$'' per il caso dell'uguaglianza estensionale. La
+risposta \`e affermativa e la ``$\succ$'' viene detta riduzione forte. Pertanto
+si pu\`o pensare all'uguaglianza forte come ad un'equivalenza generata da un
+``processo di calcolo''. Tuttavia tale processo \`e pi\`u complicato delle 
+varie riduzioni.
+
+In corrispondenza alle uguaglianze forti si hanno  le varianti delle nozioni 
+relative alla forma normale dei teoremi di Church-Rosser e d'inseparabilit\`a
+ricorsiva sia per i \lbts~che per i termini combinatori. Con alcune limitazioni
+si avranno anche delle varianti dei risultati di decidibilit\`a che vedremo in
+seguito.
+
+Ci\`o permette di utilizzare le uguaglianze estensionali per risolvere 
+problemi di decidibilit\`a che nascono in Teoria degli Insiemi a patto di
+poterli tradurre in problemi relativi a \lbts~e termini combinatori\footnote{
+Tale traduzione pu\`o essere assai difficile.}.
+
+%%--Section Equivalenza tra \lbc e calcolo dei combinatori
+\section{Equivalenza tra \lbc~e calcolo dei combinatori}
+In questa parte del testo verificheremo l'equivalenza tra \lbc~e calcolo dei 
+combinatori, per facilitare la notazione il simbolo ``$=$'' indicher\`a solo
+l'uguaglianza estensionale.
+
+\begin{definizione}
+Dato un \lbt~$X$ diremo suo \emph{H-trasformato} il termine combinatorio
+$X_H$, ottenuto per induzione combinatoria, tale che:
+\begin{enumerate}
+\item[-]$a_H \equiv a$ per ogni atomo\footnote{Si suppone che tutti gli atomi
+siano gli stessi nei due sistemi (\lbc~e calcolo dei combinatori), salvo le 
+costanti riducibili.};
+\item[-]$(UV)_H \equiv U_H V_H$;
+\item[-]$(\lambda x.X)_H \equiv [x]X_H$.
+\end{enumerate}
+\end{definizione}
+
+\begin{definizione}
+Dato un termine combinatorio $X$ diremo suo $\lambda$-tras\-for\-ma\-to il 
+\lbt~$X_\lambda$ tale che:
+\item[-]$a_\lambda \equiv a$ per ogni atomo diverso dalle costanti riducibili;
+\item[-]$\ii_\lambda \equiv \lambda x.x$;
+\item[-]$\kk_\lambda \equiv \lambda xy.x$;
+\item[-]$\sss_\lambda \equiv \lambda xyz.xz(yz)$;
+\item[-]$(UV)_\lambda \equiv U_\lambda V_\lambda$. 
+\end{definizione}
+
+\begin{esempio}Vediamo alcune H e $\lambda$ trasformazioni.
+
+\[
+\begin{array}{lcl}
+\bigl(y(\lambda x.xzy)\bigr)_H
+   & \equiv & y_H (\lambda x.xzy)_H \\
+   & \equiv & y\bigl([x](xzy_H \bigr) \\
+   & \equiv & y\bigl([x]xzy\bigr) \\
+   & \equiv & y\bigl(\sss([x]xz)(\kk y)\bigr) \\
+   & \equiv & y\Bigl(\sss \bigl( \sss \ii (\kk z)\bigr) (\kk y) \Bigr). \\
+\end{array}
+\]
+
+\[
+\begin{array}{c}
+   \biggl(y\Bigl(\sss \bigl( \sss \ii (\kk z)\bigr) (\kk y) 
+              \Bigr)\biggr)_\lambda  \\
+    \equiv \\ y_\lambda
+             \Bigl(\sss \bigl( \sss \ii (\kk z)\bigr) (\kk y) \Bigr)_\lambda \\
+    \equiv \\ y\biggl( \Bigl(\sss \bigl( \sss \ii (\kk z)\bigr) \Bigr)_\lambda
+              (\kk y)_\lambda \biggr) \\
+    \equiv \\ y\biggl(\Bigl( \sss_\lambda \bigl( \sss \ii (\kk z)\bigr)_\lambda
+              \Bigr) (\kk_\lambda y_\lambda) \biggr) \\
+    \equiv \\ y\biggl(\Bigl(\bigl(\lambda xyz.xz(yz)\bigr) 
+              \bigl((\sss \ii)_\lambda (\kk z)_\lambda \bigr) \Bigr)
+              \bigl((\lambda xy.x)y\bigr) \biggr) \\
+    \equiv \\ y\biggl(\Bigl(\bigl(\lambda xyz.xz(yz)\bigr) 
+              \bigl((\sss_\lambda \ii_\lambda) (\kk_\lambda z_\lambda)
+              \bigr) \Bigr)\bigl((\lambda xy.x)y\bigr) \biggr) \\
+    \equiv \\ y\Biggl(\biggl(\bigl(\lambda xyz.xz(yz)\bigr) 
+              \Bigl(\bigl((\lambda xyz.xz(yz)) (\lambda x.x)\bigr) \bigl(
+             (\lambda xy.x)z\bigr) \Bigr)\bigl((\lambda xy.x)y\bigr) \Biggr).\\
+\end{array}
+\]
+Pur essendo partiti dall'H-trasformazione di $\bigl(y(\lambda x.xzy)\bigr)$
+\emph{non} abbiamo riottenuto lo stesso termine applicando la 
+$\lambda$-trasformazione al risultato intermedio. Potrebbe valere l'uguaglianza
+debole?
+\end{esempio}
+Per verificarne l'uguaglianza (debole) dovremmo cercare la forma normale del
+risultato della seconda equazione, il calcolo \`e lungo, tuttavia possiamo
+considerare un'occorrenza di tale risutato: $(\lambda xy.x)y$.
+Per riduzione e cambiamento di variabile si ottiene $\lambda u.y$ che non pu\`o
+essere congruente ad alcun sottotermine nel \lbt~di partenza, rappresentato 
+graficamente da:
+
+
+\[ \includegraphics{img/infteofig.30} \]
+mentre la nostra occorrenza \`e rappresentata da: 
+\[ \includegraphics{img/infteofig.31} \]
+
+Tale occorrenza potrebbe scomparire per effetto di altre riduzioni, ma in tal
+caso scomparirebbe anche la variabile libera $y$ contrariamente al fatto che 
+nell'albero sia la seconda occorrenza libera di $y$.
+In definitiva possiamo concludere che $\Bigl(\bigl(y(\lambda x.xzy)\bigr)_H 
+\Bigr)_\lambda$ non \`e debolmente uguale a $y(\lambda x.xzy)$
+
+\begin{teorema}(di equivalenza)
+
+\begin{enumerate}
+\item[-]Se $X$ e $Y$ sono termini combinatori, allora:
+\[X = Y\text{ se e soltanto se }
+X_\lambda = Y_\lambda.\]
+\item[-]Se $X$ e $Y$ sono \lbts, allora:
+\[X = Y \text{ se e soltanto se }
+X_H = Y_H.\]
+\item[-]Se $X$ \`e termine combinatorio, allora: \[(X_\lambda)_H \equiv X.\]
+\item[-]Se $X$ \`e \lbt, allora: \[(X_H)_\lambda \equiv X.\]
+\end{enumerate}
+\end{teorema}
+Tale teorema ``aggiusta'' l'esempio precedente.
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+
+Quindi se consideriamo i termini combinatori come programmi di un linguaggio di
+programmazione idealizzato con primitive (\II, \KK, \SSS) e i \lbts~come
+programmi senza primitive (ma con procedure richiamabili con parametri), 
+vediamo che i due linguaggi idealizzati sono equivalenti a patto di considerare
+tali programmi come non completi dei loro dati (uguaglianza estensionale).
+
+%%
+%%-- Capitolo - Sistemi combinatori alternativi
+%%
+\chapter{Sistemi combinatori alternativi}
+Abbiamo implicitamente visto che il sistema di termini combinatori basato sulle
+costanti riducibili \II, \KK, \SSS~potrebbe essere sostituito, a meno di
+uguaglianze estensionali, da quello basato solo da \KK~e \SSS.
+
+Di sistemi alternativi, in tal senso, ve ne sono parecchi altri. Uno di 
+particolare importanza \`e il sistema \BB-\CC-\KK-\WW, ove tali costanti
+riducibili sono definite dai seguenti assiomi:
+
+\begin{enumerate}
+\item[(B)]$\quad\bb XYZ \vartriangleright X(YZ)$;
+\item[(C)]$\quad\cc XYZ \vartriangleright XZY$;
+\item[(K)]$\quad\kk XY  \vartriangleright X$;
+\item[(W)]$\quad\ww XY  \vartriangleright XYY$.
+\end{enumerate}
+
+Per vedere l'equivalenza di tale sistema con i precedenti, si potrebbe per 
+esempio usare l'equivalenza con il \lbc, ma basta vedere con i seguenti esempi 
+che si pu\`o definire sempre 
+l'astrazione di un termine in modo che valga il teorema di riduzione.
+
+\begin{esempio}
+Cerchiamo $[x, y, z]xz(yz)$ che, se varr\`a il teorema di riduzione, ci dar\`a
+\SSS. 
+
+\begin{osservazione}Se manteniamo nel nuovo sistema la terza clausola 
+dell'astrazione: 
+$$[x]Mx \equiv M,$$ con $x \notin M$, ci baster\`a costruire un 
+termine $S'$ tale che $S'xyz = xz(yz)$ e tale che $x, y, z \notin S'$. 
+Infatti per la terza clausola varr\`a  che $S' = [x, y, z]xz(yz)$ e varr\`a il 
+teorema di riduzione.
+\end{osservazione}
+Gli assiomi precedenti se letti all'incontrario ci permettono tale costruzione.
+Infatti $(B)$ consente di eliminare le parentesi sintattiche, $(C)$ di 
+scambiare fra loro dei sottotermini, $(K)$ di ``inventare'' termini che non
+c'erano e $(W)$ di eliminare doppie occorrenze (adiacenti nell'applicazione)di 
+termini.
+\end{esempio}
+Vediamo come ottenere $S'$.
+\[
+\begin{array}{lcl}
+xz(yz) & = & \cc x(yz)z \\
+       & = & \bb (\cc x)yzz \\
+       & = & \ww \bigl( \bb (\cc x)y\bigr)z \\
+       & = & \ww ( \bb \bb \cc xy)z \\
+       & = & \bb \ww (\bb \bb \cc x)yz \\
+       & = & \bb (\bb \ww)(\bb \bb \cc)xyz. \\
+\end{array}
+\]
+Quindi otteniamo $S' \equiv \bb (\bb \ww)(\bb \bb \cc)$ e tale $S'$ avr\`a
+la propriet\`a $(S)$.
+
+\section{Uso del sistema \BB-\CC-\KK-\WW}
+L'esprimere un termine combinatorio nel sistema \BB-\CC-\KK-\WW~(con la 
+procedura accennata) ha dei vantaggi quando si voglia usare il calcolo 
+combinatorio in Matematica (in particolare in Algebra). 
+
+La Matematica solita \`e (almeno idealmente) fondata sulla Teoria degli 
+Insiemi. I primi sviluppi a partire da tale fondazione sono di tipo 
+estensionale: di un oggetto (di solito funzione) ci si cura di pi\`u delle
+propriet\`a (che lo collocano in un estensione di oggetti simili) che non di 
+come sia costruito.
+
+Il come \`e costruito pu\`o essere trovato insiemisticamente (con parecchia
+fortuna) oppure tramite il calcolo dei combinatori ``intensionalmente''. Nel
+secondo modo, che comunque pu\`o servire ad ispirare il primo, si hanno a 
+disposizione metodi standard (teorema di riduzione).
+
+Per quanto il sistema \II, \KK, \SSS, appaia pi\`u semplice da usare rispetto
+al \BB-\CC-\KK-\WW, esso \`e meno adatto per ottenere i risultati di cui 
+sopra. Ci\`o dipende dal fatto che il parallelizzatore \SSS~ha meno propriet\`a
+``categoriche'' dei \BB, \CC, \WW. Accenneremo in seguito a tali 
+propriet\`a. Queste propriet\`a consentono di trovare propriet\`a algebriche
+degli oggetti costruiti.
+
+\section{Possibile uso di sistemi combinatori alternativi}
+Se in ogni termine combinatorio del sistema \KK, \SSS~sostituissimo \SSS~con il
+termine che lo rappresenta nel sistema \BB-\CC-\KK-\WW, allora otterremmo un
+sistema equivalente al secondo. In sostanza avremmo fatto una ``sostituzione 
+multipla'': $$[\kk / \kk,\ \bb (\bb \ww ) ( \bb \bb \cc ) / \sss ]$$ sulle 
+costanti riducibili
+anzich\`e sulle variabili. In pratica tali ``sostituzioni'' servono a tradurre
+un programma idealizzato nel primo linguaggio di programmazione (sistema \II, 
+\KK, \SSS) in uno relativo al secondo (sistema \BB-\CC-\KK-\WW).
+
+Pertanto abbiamo un esempio di traduttore di linguaggi di programmazione
+idealizzati. L'uso di tali ``traduttori ideali'' pu\`o servire a studiare 
+propriet\`a dei traduttori reali. Pu\`o anche servire a definire, in ambito
+puramente linguaggistico, nozioni equivalenti a quelle note dalla Teoria di 
+Turing (per esempio l'universalit\`a) che sono espresse tramite agenti di 
+calcolo.
+
+\section{Sistemi di riscrittura}
+Quale che sia il sistema combinatorio di riferimento, abbiamo una nozione di
+riduzione espressa, oltre che da regole di deduzione, da assiomi del tipo:
+\[
+\Gamma X' X'' \cdots X^{(n)} \vartriangleright T,
+\] 
+ove $T$ \`e un termine formato dagli $X^{(i)}$.
+
+In realt\`a per definire una nozione di calcolo ``$\vartriangleright$'', non
+\`e necessario che gli assiomi siano fatti in tal modo\footnote{Per esempio che
+la costante riducibile $\Gamma$ stia in testa o che si abbia un'applicazione
+binaria};  infatti nei linguaggi di programmazione effettivamente usati tale
+restrizione non esiste. D'altra parte il tipo di risultati che si ottengono con
+il calcolo combinatorio, per dei linguaggi idealizzati, \`e molto interessante
+anche per quelli effettivamente utilizzati.
+
+Per rispondere a tale esigenza sono stati definiti i ``sistemi di riscrittura''
+(rewriting systems) in cui gli assiomi possono essere scritti pi\`u 
+liberamente.
+In tali sistemi si richiede che valga comunque il teorema di Church-Rosser, in
+modo che la relazione ``$\vartriangleright$'' abbia quelle carateristiche di
+``quasi funzionalit\`a'' che l'idea di calcolo richiede.
+\begin{description}
+\item[Nota:]i sistemi di riscrittura \emph{non} sono imparentati con i 
+``sistemi di riscrittura  parallela'' che riguardano si l'informatica teorica, 
+ma solo quella algebrica.
+\end{description}
+
+\begin{ese}
+Trovare nel sistema \BB-\CC-\KK-\WW~un combinatore equivalente al ``$\Phi$'',
+visto in \ref{Phi}, tale che:
+\[
+\Phi XYZU = X(YU)(ZU).
+\]
+
+\[
+\begin{array}{lcl}
+x(yu)(zu) & \stackrel{(B)}{\equiv} & \bb xyu(zu) \\
+          & \stackrel{(C)}{\equiv} & \cc (\bb xy)(zu)u \\
+          & \stackrel{(B)}{\equiv} & \bb \bigl(\cc (\bb xy)\bigr)zuu \\
+          & \stackrel{(W)}{\equiv} & \ww \Bigl(\bb\bigl(\cc(\bb xy)\bigr)\Bigr)
+                                     zu \\
+          & \stackrel{(B)}{\equiv} & \ww\Bigl(\bb\bigl(\bb\cc(\bb x)y\bigr)
+                                     \Bigr)zu \\
+          & \stackrel{(B)}{\equiv} & \bb\ww\bb\bigl(\bb\cc(\bb x)y\bigr)zu \\
+          & \stackrel{(B)}{\equiv} & \bb\ww\bb\bigl(\bb(\bb\cc)\bb xy\bigr)zu 
+                                     \\
+          & \stackrel{(B)}{\equiv} & \bb\ww\bb(\bb\bb\bb\cc\bb xy)zu \\
+          & \stackrel{(B)}{\equiv} & \bb(\bb\ww\bb)\bb\bb\bb\cc\bb xyzu \\
+          & \stackrel{(B)}{\equiv} & \bb\bb\bb\ww\bb\bb\bb\bb\cc\bb xyzu. \\
+\end{array}
+\]
+
+Togliendo le variabili $xyzu$ si ha un tale $\Phi '$.
+\end{ese}
+
+%%
+%%-- Capitolo - Tipi e termini con tipo
+%%
+\chapter{Tipi e termini con tipo}
+In Teoria degli Insiemi si considera la nozione di appartenenza, tramite tale 
+nozione ``$x \in X$'' se ne ottengono altre: $f\colon A \to B$ o $f\colon A^X
+\to B^X$ etc. Nella logica combinatoria tale appartenenza non c'\`e. Si ha 
+invece la nozione (operativa) di tipo.
+
+Si assume l'esistenza di una sequenza (non vuota) di \emph{tipi} detti \emph{
+fondamentali}: $\alpha$, $\beta$, $\gamma$, $\ldots$ . Un tipo fondamentale 
+pu\'o essere correttamente inteso come l'indicazione dove trovare qualcosa, per
+esempio l'etichetta di un supporto dati, il nome di una periferica, etc.
+Non correttamente (ma utilmente) lo si pu\`o interpretare come un insieme di 
+base (con cui poi costruire altri insiemi mediante esponenziazione).
+
+\begin{definizione}
+I tipi sono defini dalle seguenti clausole.
+\begin{itemize}
+\item[-]Ogni tipo fondamentale \`e un tipo;
+\item[-]Se $\alpha$ e $\beta$ sono tipi, allora $F\alpha\beta$ \`e un tipo.
+\end{itemize}
+Ivi $F\alpha\beta$ indica un'applicazione diversa da quella per i termini 
+combinatori, ma definita allo stesso modo (cio\`e si scrive $F$ come funzione
+solo per agevolare la scrittura).
+\end{definizione}
+Per attribuire tipi a dei termini ci sono due modi parziali e uno 
+completo\footnote{Che non faremo, ma si trova sul testo ``non consigliato'' e
+successivo di Hindley e altri.}. 
+
+Consideriamo ora il primo modo; consiste nel ridefinire i termini combinatori
+(si pu\`o fare anche per i \lbts~ma non lo vedremo) in modo che vengano 
+generati con un tipo fisso.
+
+Si assume per ogni tipo $\mathcal{t}$ una successione infinita di variabili
+e per indicare che una variabile $x$ \`e di tipo $\mathcal{t}$ scriveremo
+$x^\mathcal{t}$. Similmente per ogni costante non riducibile $a$ avremo 
+$a^\mathcal{t}$. Per ogni tipo $\alpha$ avremo una costante (riducibile) 
+$\ii_\alpha$ alla quale attribuiremo il tipo $F\alpha\alpha$. Per ogni coppia
+di tipi $\alpha$, $\beta$ avremo una costante $\kk_{\alpha,\beta}$ a cui
+attribuiremo tipo $F\alpha(F\beta\alpha)$. Infine per ogni terna di tipo
+$\alpha$, $\beta$, $\gamma$ avremo una costante $\sss_{\alpha,\beta,\gamma}$ 
+cui attribuiamo tipo 
+$F(F\alpha(F\beta\gamma))(F(F\alpha\beta)(F\alpha\gamma))$.
+
+Si suppone che tutti questi oggetti, che chiamiamo \emph{atomi} siano distinti.
+
+\begin{definizione}
+I termini con tipo sono definiti dalle seguenti clausole.
+\begin{itemize}
+\item[-]Ogni atomo \`e un termine con tipo;
+\item[-]Se $U$ \`e un termine con tipo $F\alpha\beta$ e $V$ \`e un termine con
+tipo $\alpha$, allora $UV$ \`e un termine di tipo $\beta$.
+\end{itemize}
+\end{definizione}
+Verranno considerati solo termini costruiti come sopra (nel primo modo 
+par\-zia\-le). Vale la solita definizione di applicazione con le clausole di
+disgiunzione.
+
+\begin{description}
+\item[Nota:]spesso si hanno tipi complicati come
+$F\alpha_1(F\alpha_2(\ldots(F\alpha_n \beta)\ldots))$, tale scrittura si
+semplifica nel seguente modo: $F_n \alpha_1 \alpha_2 \cdots \alpha_n \beta$.
+Per esempio possiamo scrivere $F_2 \alpha\beta\alpha$ come tipo per
+$\kk_{\alpha,\beta}$ e $F_3 (F_2 \alpha\beta\gamma)(F\alpha\beta)\alpha\gamma$
+come tipo di $\sss_{\alpha,\beta,\gamma}$.
+\end{description}
+
+\begin{lemma}
+Per ogni tipo $\alpha$, $\alpha \not\equiv F\alpha\beta$, $F\beta\alpha$.
+\end{lemma}
+\begin{dimostrazione}
+Nel caso $\alpha$ sia tipo fondamentale ci\'o deriva dall'ipotesi di 
+disgiunzione implicita nella definizione: $F\alpha\beta$ \`e un'applicazione.
+Altrimenti si procede per induzione binaria secondo la definizione di tipo
+(in sostanza si ritorna al caso fondamentale).
+\end{dimostrazione}
+
+\begin{definizione}
+La sostituzione $[Y^\alpha / x^\alpha]X$ \`e definita come per il \lbts, ma
+con la restrizione che la variabile e il termine sostituito abbiano lo stesso
+tipo.
+\end{definizione}
+
+\begin{definizione}
+Diremo che un termine combinatorio $X$ si riduce (debolmente) a un termine
+combinatorio $Y$ e scriveremo $X \vartriangleright Y$ quando ci\`o pu\`o essere
+dedotto dagli assiomi:
+\begin{itemize}
+\item[($I_\alpha$)]$\ii_\alpha X^\alpha \vartriangleright X^\alpha$.
+\item[($K_{\alpha,\beta}$)]$\kk_{\alpha,\beta}X^\alpha Y^\beta 
+\vartriangleright X^\alpha$.
+\item[($S_{\alpha,\beta,\gamma}$)]$\sss_{\alpha,\beta,\gamma} 
+X^{F\alpha(F\beta\gamma)}Y^{F(F\alpha\beta)(F\alpha\gamma)}Z^\alpha
+\vartriangleright XZ(YZ)$ che tipo avr\`a?
+\item[]Mediante le regole di deduzione:
+  \begin{itemize}
+    \item[-]Assioma di riflessivit\`a.
+    \item[-]$X^{F\alpha\beta} \vartriangleright Y^{F\alpha\beta}$ implica
+            $X^{F\alpha\beta}Z^\alpha \vartriangleright 
+            Y^{F\alpha\beta}Z^\alpha$.
+    \item[-]$X^\alpha \vartriangleright Y^\alpha$ implica $Z^{F\alpha\beta}X
+            \vartriangleright Z^{F\alpha\beta}Y^\alpha$.
+    \item[-]Transitivit\`a.
+\end{itemize}
+\end{itemize}
+\end{definizione}
+Sostituendo ``$=$'' al simbolo ``$\vartriangleright$'' e aggiungendo la regola
+di simmetria si definisce l'uguaglianza debole ($=$).
+
+\begin{teorema}
+Se $X = Y$, allora $X$ e $Y$ hanno lo stesso tipo.
+\end{teorema}
+
+\begin{dimostrazione}
+Applichiamo le definizioni di uguaglianza ($=$) considerando dapprima gli 
+assiomi.
+\begin{itemize}
+\item[($I_\alpha$)]Immediata dalla clausola di composizione.
+\item[($K_{\alpha,\beta}$)]Quasi immediata. $\kk_{\alpha,\beta}$ ha tipo 
+  $F\alpha(F\beta\alpha)$ e $X$ ha tipo $\alpha$ per cui 
+  $\kk_{\alpha,\beta}X^\alpha$ ha tipo $F\beta\alpha$ e 
+  $\kk_{\alpha,\beta}X^\alpha Y^\beta$ avr\`a tipo $\alpha$ come il secondo 
+  membro dell'applicazione ($X^\alpha$).
+\item[($S_{\alpha,\beta,\gamma}$)]Consideriamo dapprima il secondo membro 
+  $XZ(YZ)$. Per essere un termine combinatorio con tipo (che indicheremo con
+  $\gamma$) il primo componente $XZ$ dovr\`a avere tipo  $F\beta\gamma$ per 
+  qualche $\beta$. Affinch\`e ci\`o sia possibilie $X$ dovr\`a avere tipo 
+  $F\alpha(F\beta\gamma)$ per qualche $\alpha$. Similmente affinch\`e $YZ$
+  abbia tipo $\beta$, $Y$ dovr\`a avere tipo $F\delta\beta$ ove $\delta$ sia
+  il tipo di $Z$, ma per la costruzione di $XZ$ tale $\delta$ \`e $\alpha$,
+  cio\`e $Y$ ha tipo $F\alpha\beta$. In definitiva:
+  \[\begin{array}{rl}
+    Z & \text{ha tipo } \alpha. \\
+    Y & \text{ha tipo } F\alpha\beta. \\
+    X & \text{ha tipo } F\alpha(F\beta\gamma). \\
+    XZ(YZ) & \text{ha tipo } \gamma. \\
+  \end{array}\]
+
+  Passiamo ora al primo membro dell'uguaglianza, che dovr\`a risultare di tipo
+  $\gamma$. Avendo assegnato 
+  $F(F\alpha F\beta\gamma)(F(F\alpha\beta)(F\alpha\gamma))$ a 
+  $\sss_{\alpha,\beta,\gamma}$ per la clausola di composizione (e per il tipo
+  di $X$) si ha che $\sss_{\alpha,\beta,\gamma}X$ \`e termine combinatorio con
+  tipo che risulta $F(F\alpha\beta)(F\alpha\gamma).$ Da qui troviamo il tipo di
+  $\sss_{\alpha,\beta,\gamma}XY$ allo stesso modo, cio\`e $F\alpha\gamma$.
+  Come prima si trova il tipo desiderato di $\sss_{\alpha,\beta,\gamma}XYZ$, 
+  ovvero $\gamma$.
+\end{itemize}
+Infine \`e immediato controllare che tale conservazione del tipo viene 
+rispettata dalle regole di deduzione.
+\end{dimostrazione}
+
+\begin{definizione}
+Data una variabile $x^\alpha$ e un termine $X^\beta$ definiamo l'astrazione
+$[x]X$ con le segenti clausole:
+\begin{itemize}
+\item[-]$[x]x \equiv \ii_\alpha$
+\item[-]$[x]M \equiv \kk_{\beta,\alpha}M$ ove $x \notin M$ e $\beta$ sia il 
+  tipo di $M$
+\item[-]$[x]Ux \equiv U$ ove $x \notin U$
+\item[-]$[x]UV \equiv \sss_{\alpha,\delta,\beta}([x]U)([x]V)$ ove $\delta$
+  sia il tipo di $V$ e $F\delta\beta$ il tipo di $U$.
+\end{itemize}
+\end{definizione}
+
+\begin{lemma}
+$[x^\alpha ]X^\beta$ ha tipo $F\alpha\beta$.
+\end{lemma}
+\begin{dimostrazione}
+Per induzione combinatoria su $X$ (seguendo il raggruppamento della 
+definizione).
+\begin{itemize}
+\item[a)]$[x^\alpha]X^\beta \equiv \ii_\alpha$ che ha tipo $F\alpha\alpha$,
+  ma $X^\beta \equiv x^\alpha$, cio\`e $\beta \equiv \alpha$.
+\item[b)]$[x^\alpha]X^\beta \equiv \kk_{\beta,\alpha}X^\beta$ che, per clausole
+  combinatorie\footnote{$\kk_{\beta,\alpha}$ ha tipo $F\beta(F\alpha\beta)$.}
+  ha tipo $F\alpha\beta$.
+\item[c)]$[x^\alpha]X^\beta \equiv U$ poich\'e $X^\beta \equiv Ux$, avendo $x$ 
+  tipo
+  $\alpha$, per le solite clausole $U$ deve avere tipo $F\beta\alpha$.
+\item[d)]$[x^\alpha]X^\beta \equiv \sss_{\alpha,\delta,\beta}([x]U)([x]V)$.
+
+ In questo caso ser\-vo\-no le premesse di induzione 
+ $([x]U)^{F\alpha(F\delta\beta)}$ e $([x]V)^{F\alpha\delta}$. Da tali premesse,
+ poich\`e $\sss_{\alpha,\delta,\beta}$ ha tipo $F(F\alpha(F\delta\beta))
+ (F(F\alpha\delta)(F\alpha\beta))$ si ha dapprima che 
+ $\sss_{\alpha,\delta,\beta}([x]U)$ \`e termine combinatorio con tipo che 
+ risulta $F(F\alpha\delta)(F\alpha\beta)$ e poi che 
+ $\sss_{\alpha,\delta,\beta}([x]U)([x]V)$ \`e termine combinatorio di tipo
+ $F\alpha\beta$.
+\end{itemize}
+\end{dimostrazione}
+
+\begin{osservazione}
+Si noti che da tale lemma si ha che per un'astrazione multipla (iterata come
+al solito) il tipo di $[x^{\alpha_1}, x^{\alpha_2}, \ldots, x^{\alpha_n}]
+X^\beta$ \`e $F_n \alpha_1\alpha_2\cdots\alpha_n\beta$ (giustificazione della 
+semplificazione $F_n$).
+\end{osservazione}
+
+%%--Section Risultati
+\section{Risultati}
+Il sistema dei termini con tipo pu\`o essere considerato come una restrizione
+di un sistema \II, \KK, \SSS~(espanso agli $\ii_\alpha$, $\kk_{\alpha,\beta}$,
+$\sss_{\alpha,\beta,\gamma}$) poich\'e certe applicazioni non sono ammesse.
+Pertanto \`e abbastanza ovvio che tutti i risultati per \II, \KK, \SSS~valgano
+ancora (con dimostrazioni leggermente variate). Non vale invece il teorema
+(insiemistico) di inseparabilit\`a ricorsiva. Infatti oltre ai predetti
+risultati si ha il seguente teorema.
+
+\begin{teorema}
+Ogni termine con tipo ha forma normale.
+\end{teorema} 
+\begin{dimostrazione}
+No (idea: mancanza di universalit\'a).
+\end{dimostrazione}
+
+\begin{corollario}
+L'uguaglianza fra termini con tipo \`e decidibile.
+\end{corollario}
+\begin{dimostrazione}
+Segue dal terzo corollario di Church-Rosser $II$.
+\end{dimostrazione}
+
+\begin{description}
+\item[Nota:]Si pu\`o pensare di fare in ``parallelo'' tutte le riduzioni
+possibili e di controllare ogni volta se abbia una forma normale che sappiamo
+per il teorema esistere.
+\end{description}
+
+Ci\`o permette di verificare l'uguaglianza per programmi idealizzati. Risultati
+di questo tipo sono stati ottenuti anche per linguaggi di programmazione
+non idealizzati (reali). Ci\`o ha dato luogo allo sviluppo della programmazione
+strutturale o modulare. 
+
+Con opportuni linguaggi di programmazione si
+costringe il programmatore a strutturare il programma in moduli che abbiano 
+delle configurazioni d'entrata ed uscita ben precisate e compatibili. Non solo
+tali programmi sono a ``terminazione garantita'' ma in fase di compilazione il
+compilatore si accorge di errori in un'ampia classe di errori, rilevabili 
+cos\`i \emph{automaticamente} prima dell'esecuzione (ovviamente si perde
+l'universalit\`a).
+
+%%-- Section assegnamento di tipi a termini senza tipo
+\section{Assegnazione di tipi a termini senza tipo}
+Considerando che i precedenti termini con tipo non sono tutti quelli senza tipo
+(estesi), ci si pu\`o chiedere quando un termine senza tipo corrisponda ad uno
+con tipo.
+A tal fine (re)introduciamo i termini senza tipo ma con costanti che 
+comprendano i tipi fondamentali ed $F$ (oltre ad \II, \KK, \SSS). Pertanto
+avremo come termini anche $F\alpha\beta$ (inteso come al solito 
+$(F\alpha)\beta$), $F\alpha$, $F$, etc\footnote{Ci\'o serve ad applicazioni
+relative alla Logica Matematica e alla Teoria delle Strutture di Dati, che
+non vedremo.}. 
+Nella definizione di assegnazione introdurremo la notazione:
+\begin{itemize}
+\item[$(1)$] $\quad\asse \alpha X$
+\end{itemize}
+per indicare che un tipo $\alpha$ pu\`o essere assegnato ad un termine $X$ 
+(infatti nelle applicazioni logiche, che non faremo, ci\'o si legger\`a ``\`e 
+dimostrato che $X$ ha la propriet\`a $\alpha$). Si noti che, in accordo con 
+l'interpretazione (scorretta ma utile) insiemistica dei tipi, ci\'o pu\`o 
+essere letto come $X$ appartiene ad $\alpha$.
+\begin{esempio}
+ $\asse F\alpha\alpha\ii$ corrisponde insiemisticamente
+a $\ii \in \alpha^\alpha$ cio\`e $\ii \colon \alpha \to \alpha$.
+\end{esempio}
+
+L'appartenenza ad un insieme \`e (classicamente) la soddisfazione di una 
+propriet\`a (insieme $\leftrightarrow$ propriet\`a). Una scrittura come la 
+$(1)$ sar\`a detta \emph{enunciato}, mentre $X$ sar\`a detto il \emph{soggetto}
+ed $\alpha$ il \emph{predicato}.
+
+\begin{definizione}
+Diremo \emph{base} una sequenza di enunciati come la $(1)$.
+\end{definizione}
+
+\begin{definizione}
+Diremo che un tipo $\alpha$ \`e \emph{assegnato (debolmente)} a un termine 
+combinatorio $X$ e scriviamo $\asse \alpha X$ quando ci\`o pu\`o essere dedotto
+dai seguenti assiomi:
+\begin{itemize}
+\item[$(FI)$]$\quad \asse F\alpha\alpha\ii$ per ogni tipi $\alpha$
+\item[$(FK)$]$\quad \asse F\alpha(F\beta\alpha)\kk$ per ogni tipo $\alpha$,
+  $\beta$
+\item[$(FS)$]$\quad \asse F\bigl(F\alpha(F\beta\gamma)\bigr)
+  \bigl(F(F\alpha\beta)(F\alpha\gamma)\bigr)$ per ogni tipo $\alpha$, $\beta$, 
+  $\gamma$
+\end{itemize}
+mediante la regola:
+\begin{itemize}
+\item[$(F)$]$\quad \asse F\alpha\beta U$ e $\asse\alpha V$ implica $\asse 
+\beta(UV)$
+\end{itemize}
+
+\end{definizione}
+
+\begin{description}
+\item[Nota: ]tale scrittura viene di solito abbreviata in:
+
+$
+F\alpha\beta U,\ \alpha V\ \asse \beta(UV),
+$
+
+e similmente per enunciati di una base.
+\end{description}
+
+Con tale definizione possiamo assegnare tipi solo a dei combinatori. Nel caso
+generale si considera una base $B$ e si definisce l'assegnazione 
+$B \asse \alpha X$ come nella definizione precedente per\`o aggiungendo 
+$B$ agli assiomi.
+
+\begin{definizione}
+Consideriamo una base $B$ in cui non occorrano variabili, diremo che un termine
+$X$ \`e \emph{stratificato relativamente} a $B$ se esiste un tipo $\alpha$ tale
+che:
+\[
+B \asse \alpha X.
+\]
+Se $B$ \`e vuota diremo che $X$ \`e \emph{stratificato} (non stiamo usando una 
+base).
+\end{definizione}
+Si pu\`o vedere che tale definizione riguarda solo degli $X$ ``costanti'', 
+cio\`e privi di variabili.
+
+\begin{definizione}
+Nel caso in cui le variabili $x_1, x_2, \ldots, x_n$ occorrano in $X$ diremo
+che $X$ \`e stratificabile relativamente a $B$ qualora esistano dei tipi
+$\xi_1, \xi_2, \ldots, \xi_n$ ed $\alpha$ tali che:
+\[
+B, \xi_1x_1, \xi_2x_2, \ldots, \xi_nx_n\ \asse \alpha X
+\]
+Se $B$ \`e vuota $X$ si dice \emph{stratificabile}.
+\end{definizione}
+
+In pratica determinare se un termine \`e stratificato (o straficabile) 
+relativamente a $B$  significa cercare di trovarne il tipo e vedere cosa 
+succede. Per esempio consideriamo $X \equiv \kk \sss$.
+
+Da $(FS)$ vediamo che possiamo applicare la regola $(F)$ qualora in $(FK)$ si
+prenda come $\alpha$ un tipo $\alpha'$ come ivi indicato.
+\[
+\asse F\underbrace{\Bigl(F\bigl(F\alpha(F\beta\gamma)\bigr)
+\bigl(F(F\alpha\beta)(F\alpha\gamma)\bigr)\Bigr)}_{\alpha'} \bigl(F\beta'
+\underbrace{(\ldots)}_{\alpha'}\bigr)\kk \qquad \asse \underbrace{(\ldots)}
+_{\alpha'}\sss .
+\]
+Usando la regola $(F)$
+\[
+\asse F\beta'\bigl(\underbrace{(\ldots)}_{\alpha'}\bigr)(\kk\sss).
+\]
+Quando il termine \`e ancora un po' pi\`u complicato, per esempio per 
+$X \equiv \bb \equiv \sss(\kk\sss)\kk$, tali esplosioni dei sottotipi necessari
+per applicare la $(F)$ diventano proibitive (almeno manualmente). Ci\`o avviene
+nonostante che il tipo di $\bb$ sia relativamente semplice.
+\[
+\asse F(F\beta\gamma)\bigl(F(F\alpha\beta)(F\alpha\gamma)\bigr)\bb
+\]
+D'altra parte a tale tipo di \BB~si arriva molto pi\`u facilmente utilizzando 
+l'interpretazione insiemistica ($\bb\leftrightarrow$ composizione invertita)
+per la quale:
+\[
+\bb \colon C^B \to (C^A)^{B^A}.
+\]
+Pertanto ci si pu\`o chiedere se in un'assegnazione $\asse \alpha X$ non si 
+possa utilizzare (questa volta rigorosamente) lo stesso procedimento.
+Tale procedimento insiemistico era basato sull'uso dell'astrazione (se un 
+argomento di $f$ st\`a in $A$ e $f_a$ st\`a in $B$ allora $f\colon A \to B$).
+Vedremo in seguito che ci\`o vale.
+
+\begin{esempio}
+Consideriamo \SSS\II\II.
+Esso \`e ``cattivo'' nel senso che per ogni $X$ $\sss\ii\ii X = XX$, che 
+insiemisticamente non ha un'interpretazione pulita. Verifichiamo se \`e 
+stratificato. Se lo fosse ci sarebbe $\alpha$ tale che:
+\begin{itemize}
+\item[$(2)$]$\quad \asse\alpha(\sss\ii\ii)$;
+\end{itemize}
+ma la $(2)$ pu\`o provenire solo dalla $(F)$ poich\'e il termine \`e composto.
+Allora dovrebbe esistere un $\beta$ tale che:
+\[
+\asse F\beta\alpha(\sss\ii), \ \asse\beta\ii.
+\]
+analogamente dovrebbe esserci $\delta$ tale che:
+\begin{itemize}
+\item[$(3)$]$\quad \asse F\delta(F\beta\alpha)\sss$;
+\item[]$\quad \asse \delta\ii$.
+\end{itemize}
+Ma la $(3)$ deve essere un caso di $(FS)$ perci\`o $\delta \equiv F\alpha'(F
+\beta'\gamma')$, $\beta \equiv F\alpha'\beta'$ e $\alpha \equiv F\alpha'\gamma'
+$ per qualche $\alpha'$, $\beta'$, $\gamma'$. Tuttavia dell'assegnazione di
+$\beta$ ad $\ii$ ($\asse\beta\ii$) sappiamo che $\alpha' \equiv \beta'$.
+Da ci\'o e da $\asse \delta\ii$ si ha che (essendo $\alpha' \equiv F\beta'
+\gamma'$) $\beta' \equiv F\beta'\gamma'$. Quindi se vi fosse $\alpha$ tale che
+$\asse(\sss\ii\ii)$ avremmo un $\beta'$ che coincide con un suo sottotipo. In
+definitiva $\sss\ii\ii$ non \`e stratificato.
+\end{esempio}
+
+Ci\'o pu\`o far sembrare che sia collegato con la propriet\`a precedente
+($\sss\ii\ii$ era combinatore di autoapplicazione). I due esempi successivi
+chiariscono il problema.
+\begin{esempio}
+\KK\KK~\`e stratificato. Infatti per la $(FK)$ abbiamo le due premesse della 
+deduzione:
+\[
+\asse F\alpha(F\beta\alpha)\kk,
+\]
+\[
+\asse F\bigl(F\alpha(F\beta\alpha)\bigr)\Bigl(F\beta'\bigl(F\alpha(F\beta\alpha
+)\bigr)\Bigr)\kk.
+\]
+Tramite la regola $(F)$ otteniamo:
+\[
+\asse F\beta'\bigl(F\alpha(F\beta\alpha)\bigr)(\kk\kk).
+\]
+\end{esempio}
+
+\begin{esempio}
+$xx$ per ogni variabile $x$ non \`e stratificabile. Infatti se lo fosse 
+avremmo $\xi$ ed $\alpha$ tali che $\xi x \asse \alpha(xx)$. Essendo $xx$
+composto ci\'o dovrebbe provenire dalla $(F)$ per cui
+\[
+\xi x \asse F\xi\alpha x,
+\]
+\[
+\xi x \asse \xi x.
+\]
+Tramite la regola $(F)$ otteniamo:
+\[
+\xi x \asse \alpha(xx).
+\]
+Mentre la seconda premessa \`e valida, la prima ci dice che $\xi \equiv F\xi
+\alpha$ che \`e impossibile.
+\end{esempio}
+
+\begin{description}
+\item[Nota: ]il procedimento visto negli esempi pu\`o essere generalizzato
+in un algoritmo che consente di terminare con esito positivo o negativo 
+(algoritmo ricorsivo) se un termine \`e stratificato (o stratificabile) 
+relativamente a delle basi (sufficientemente generali).
+\end{description}
+
+Pertanto nell'insieme $\mathcal{T}$ dei termini combinatori, il sottoinsieme
+$\mathcal{T'}$ dei termini stratificati (o stratificabili)\footnote{Nel quale
+l'uguaglianza debole diventa decidibile.} \`e ricorsivo. Sostanzialmente questa
+\`e la ragione per cui nella programmazione strutturata la compilazione 
+\`e in grado di trovare i ``bachi'' che con altri linguaggi di programmazione 
+non era possibile trovare.
+
+\begin{teorema}
+Se $B$ \`e una base senza variabili e se per ogni variabile $x$ e termine $X$
+$ B, \alpha x \asse \beta X$,
+allora:
+\[ B \asse F\alpha\beta([x]X). \]
+\end{teorema}
+\begin{dimostrazione}
+Come per il lemma analogo dei termini con tipo.
+\end{dimostrazione}
+Possiamo quindi utilizzare l'astrazione per calcolare i tipi (come si faceva
+nell'interpretazione insiemistica).
+
+%%--Teorema di Riduzione del soggetto
+\begin{teorema}[riduzione del soggetto]
+Sia $B$ una base in cui ogni soggetto sia irriducibile rispetto alla 
+``$\vartriangleright$'' e in cui esso non cominci con un combinatore.
+Se $B \asse \alpha X$ e $X \vartriangleright Y$ allora:
+\[ B \asse \alpha Y. \]
+\end{teorema}
+\begin{dimostrazione}
+No.
+\end{dimostrazione}
+
+Si noti che nella terminologia logica introdotta ci\'o significa che una 
+propriet\`a espressa dal predicato $\alpha$ a proposito del soggetto $X$ viene
+sempre ereditata da un soggetto $Y$ cui si pervenga tramite il nostro processo
+di calcolo ``$\vartriangleright$'' partendo da $X$.
+Di tale teorema esiste anche l'estensione relativa al processo di calcolo
+``$\succ$'' (riduzione forte che definisce l'uguaglianza estensionale). Non
+vale tuttavia tale conservazione per ``$=$'' (sia debole che forte) poich\'e 
+nella premessa del teorema non si pu\`o sostituire la clausola 
+$X \vartriangleright Y$ con $Y \vartriangleright X$.
+
+\begin{esempio}
+Sia $Y \equiv \sss\kk\sss\ii$. 
+
+Allora si pu\`o vedere che (dalla base vuota)
+$\asse F\delta\delta Y$ vale solo per dei $\delta$ composti.
+Invece considerando che:
+ $$Y \vartriangleright \kk\ii(\sss\ii) \vartriangleright
+\ii \equiv X.$$ abbiamo che $\asse F\delta\delta X$ per ogni $\delta$.
+\end{esempio}
+In modo analogo si pu\`o vedere che per $Y \equiv \sss\ii\ii\ii 
+\vartriangleright \ii\ii(\ii\ii) \vartriangleright \ii \equiv X$, mentre $X$ 
+\`e ovviamente 
+stratificata, $Y$ non pu\`o esserlo --- poich\'e se lo fosse lo sarebbe
+$\sss\ii\ii$ che abbiamo visto non esserlo (problema espansione del soggetto).
+
+Consideriamo l'enunciato del teorema d'astrazione nel caso semplificato di base
+vuota (che ovviamente soddisfa le condizioni sulle variabili).
+\[
+\asse \alpha x, \ \asse \beta X \text{ implica } \asse 
+F\alpha\beta([x]X).
+\]
+(non c'e' $\asse \alpha x$ nella conclusione)
+
+In sostanza abbiamo dedotto $F\alpha\beta$ per $[x]X$ senza una base, ma usando
+una premessa $\asse\alpha x$ della deduzione che \`e ``scomparsa''. Quindi per
+usare tali deduzioni si devono ``cancellare'' tali premesse.
+
+Da tale asserto nasce la seguente definizione.
+
+\begin{definizione}
+Diremo che, assegnata una base $B$ in cui non occorrano variabili, possiamo
+assegnare \emph{naturalmente} il tipo $\alpha$ ad un termine combinatorio $X$
+e scriveremo $B \asset \alpha X$ quando ci\'o pu\`o essere dedotto dagli 
+enunciati in $B$ tramite le regole:
+\begin{itemize}
+\item[$(F)$]$\quad B \asset F\alpha\beta X$ e $B \asset \alpha Y$ implica $B 
+  \asset\beta (XY)$.
+\item[$(F_i)$]$\quad B, \alpha x \asset \beta X$ implica $B \asset F\alpha\beta
+  ([x]X)$ ove in tutte le premesse dei passi induttivi precedenti si cancellano
+  le assegnazioni provvisorie.
+\end{itemize}
+\end{definizione}
+
+Si noti che non vi sono assegnazioni per le costanti riducibili. Nel caso di
+base vuota ``si parte da niente'', nel senso che le assegnazioni da cui si
+parte devono essere cancellate. Si noti, inoltre, che la clausola di 
+cancellazione \`e automaticamente soddisfatta nel caso in cui l'assegnazione
+provvisoria da cancellare non esista.
+
+Nel caso della vecchia assegnazione ``$\vdash$'' la deduzione di un tipo 
+$\alpha$ per $X$ consisteva in un albero binario (isomorfo a quello di $X$) le
+cui foglie corrispondono alle assegnazioni per le costanti riducibili e agli
+enunciati in $B$, mentre gli altri nodi corrispondevano ad impieghi della
+regola $(F)$.
+
+Ora tale albero per una deduzione ``$\asset~$'', oltre a non avere le foglie 
+per le costanti riducibili, ha dei nodi corrispondenti agli impieghi della
+$(F_i)$. Tali nodi sono unari perch\`e dalla singola assegnazione (genitore)
+ad $X$ si passa all'assegnazione per $[x]X$.
+Quindi l'albero ora \`e \emph{al pi\`u} binario. Inoltre occorre ad ogni uso 
+della $(F_i)$ fare le cancellazioni. Per fare ci\'o si marca ogni impiego 
+delle $(F_i)$ con un'etichetta da ripetere sull'eventuale assegnazione da 
+cancellare.
+
+\begin{teorema}
+Per ogni base $B$ in cui non occorrono variabili si ha che:
+\[
+B \asse \alpha X \text{ se e solo se } B \asset \alpha X \text{per ogni 
+$\alpha$ ed $X$.}
+\]
+\end{teorema}
+
+\begin{dimostrazione}
+La parte ``se'' deriva dal teorema d'astrazione. Per la parte ``solo se'' basta
+mostrare che gli assiomi $(FI)$, $(FK)$ ed $(FS)$ possono essere dedotti col 
+nuovo sistema. Saltiamo i primi due, che sono abbastanza banali (per $(FK)$ si
+cancella una premessa che non esiste), consideriamo $(FS)$.
+Notiamo che $[z]xz(yz) \equiv \sss xy$ (dall'ultima clausola per l'astrazione).
+Perci\'o useremo la $(F)$ con assegnazione provvisoria fino a raggiungere 
+$xz(yz)$ e poi useremo $(F_i)$.
+
+\[\begin{prooftree}
+              \asse F\alpha(F\beta\gamma)x  \phantom{1}^{[3]}   \qquad      
+              \asse \alpha z \phantom{1}^{[1]}                  
+      \justifies              
+                F\beta\gamma (xz)                
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (F)
+\end{prooftree}\]
+
+\[\begin{prooftree}
+               \asse F\alpha\beta y \phantom{1}^{[2]}  \qquad      
+                \asse \alpha z \phantom{1}^{[1]}          
+      \justifies              
+                 \asse \beta (yz)               
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (F)
+\end{prooftree}\]
+
+\[\begin{prooftree}
+            \asse F\alpha\beta y     \qquad      
+            \asse \beta (yz)              
+      \justifies              
+            \asse \gamma \bigl(xz(yz)\bigr)                    
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (F)
+\end{prooftree}\]
+
+\[\begin{prooftree}
+\justifies              
+            \asse F\alpha\gamma \qquad         [z]xz(yz)    
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (Fi)  \quad [1]
+\end{prooftree}\]
+
+\[\begin{prooftree}
+\justifies              
+      \asse F(F\alpha\beta)(F\alpha\gamma) \qquad  \sss x \equiv [y]\sss xy   
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (Fi)  \quad [2]
+\end{prooftree}\]
+
+\[\begin{prooftree}
+\justifies              
+        \asse F\bigl(F\alpha(F\beta\gamma)\bigr)\bigl(F(F\alpha\beta)(F\alpha\gamma)
+\bigr) \qquad \sss                                                    
+      \thickness=0.08em
+      \shiftright 2em
+      \using
+              (Fi)  \quad [3]
+\end{prooftree}\]
+\end{dimostrazione}
+
+%%
+%%-- Capitolo - Applicazioni matematiche
+%%
+\chapter{Applicazioni matematiche}
+
+\section{Logica Matematica} Il calcolo dei combinatori serve allo studio di 
+sistemi di Logica Formale. Si introducono nuove costanti per esprimere ad 
+esempio i quantificatori, l'implicazione, etc. Le propriet\`a combinatorie 
+ci danno propriet\`a di tali sistemi (coerenza, completezza, etc.). 
+La deduzione precedente ci fornisce il sistema di ``deduzione naturale di 
+Guntzen''.
+\section{Algebra (e informatica algebrica)}
+\begin{description}
+\item[Premessa.]Molte propriet\`a algebriche discendono da propriet\`a 
+insiemistiche delle funzioni. In particolare da quelle delle classi di funzioni
+iniettive (\injection), suriettive (\surjection), e biettive (\bijection) su
+qualche insieme.
+
+\begin{figure}
+\[ \includegraphics{img/infteofig.32} \]
+\caption{Classi delle funzioni iniettive, biiettive e suriettive.}
+\end{figure} 
+Tali classi sono ciascuna chiusa rispetto alla composizione funzionale ed hanno
+elementi neutri a destra e a sinistra (tramite opportune restrizioni ci\`o d\`a
+luogo ad importanti \emph{categorie}).
+\end{description}
+Per tali applicazioni il sistema \BB-\CC-\KK-\WW~\`e particolarmente utile.
+Analizziamo le nostre costanti riducibili.
+
+\subsection{Combinatore \BB}
+Dopo applicazione a sinistra ``conserva'' tali classi di 
+funzioni qualora lo si intenda nell'interpretazione insiemistica. Ovvero:
+
+\[
+f \colon A \injection B \text{ implica } \bb_X f \colon A^X \injection B^X;
+\]
+
+ove $\bb_X$ indica l'operatore funzionale insiemistico di ``tipo'':
+
+\[
+\bb_X \colon B^A \to (B^X)^{A^X}.
+\]
+Si pu\`o dimostrare facilmente anche che:
+\[
+f \colon A \surjection B \text{ implica } \bb_X f \colon A^X \surjection B^X.
+\]
+Tale $\bb$ \`e di composizione invertita. Vedremo poi quello di composizione
+diretta \CC\BB.
+
+\subsection{Combinatore \CC}
+Insiemisticamente $\cc \colon (G^B)^{A} \to (G^A)^B$ e si 
+vede facilmente che:
+\[
+\cc \colon (G^B)^{A} \bijection (G^A)^B.
+\] 
+Inoltre con la solita
+notazione per iterazione $\cc^2 = \ii$. Tale \CC~compare in propriet\`a
+algebriche dette universalit\`a dei prodotti diretti (che oltre 
+all'esponenziazione insiemistica coinvolgono anche il prodotto insiemistico).
+Componendo con \BB~si ha l'operatore di composizione diretta.
+\[
+\cc\bb_X \colon A^X \to (B^X)^{B^A}.
+\]
+Tale operatore \`e ben noto in algebra (monoidi, sottomonoidi, categorie e
+composizione funzionale) ma \`e importante anche al di fuori di tale 
+interpretazione.
+
+\begin{esempio}
+Rappresentazione matriciale.
+
+Sia $E \subseteq A^A$ l'insieme degli indomorfismi di uno spazio vettoriale su 
+$A$. Una funzione  $b \colon X \to A$ \`e una base dello spazio se e soltanto 
+se
+\[
+\cc\bb_Xb \colon E\, \bijection A^X
+\]
+cio\`e se e soltanto se per ogni $h \in E, \ \cc\bb_Xbh = \bb_Xhb = h \circ b 
+\colon X \to A$ rappresenta biunivocamente $h$.
+\end{esempio}
+In altre parole \CC\BB~ci permette di rappresentare endomorfismi tramite una 
+\emph{base} $b$ (sistema di riferimento) con delle \emph{matrici} in $A^X$ ove
+per ogni $m$ tale che:
+\[m \colon X \to A\]
+ ($m = h \circ b$) $m_x$ \`e la
+colonna $x$-esima della matrice.
+La differenza con la presentazione geometrica di tali nozioni \`e che abbiamo 
+usato dei combinatori. Siamo andati a vedere dal punto di vista operativo, o
+``intensionale'', come vanno le cose. Ci\`o fa si che tale costruzione funzioni
+anche al di fuori degli spazi vettoriali.
+Vi sono infatti algebre che non sono spazi vettoriali (monoidi, gruppi, 
+reticoli, etc.) considerate in Matematica e molte altre considerate in
+Informatica Algebrica.
+Ci\`o fa si che l'implementazione  dell'Algebra Lineare  (nel senso di 
+Geometria Analitica) possa ``transitare'' su tutte le altre algebre. Questo
+realizza la congettura di A.~N.~Whitehead su di un metodo d'interpretazione 
+unica per tutte le algebre derivate dall'Algebra Lineare.
+Mediante tale impostazione sono stati riscritti problemi che l'Algebra aveva 
+posto ma non risolto.
+
+\subsection{Combinatore \KK}
+Nell'interpretazione insiemistica \`e iniettivo:
+\[
+\kk \colon A\, \injection A^B;
+\]
+cio\`e: $\kk_a = \kk_{a'} \text{ implica } a = a'$.
+
+\subsection{Combinatore \WW}
+Nell'interpretazione insiemistica \`e suriettivo:
+\[
+\ww \colon (B^A)^A\, \surjection B^A;
+\]
+cio\`e per ogni $g \colon A \to B, \text{ esiste }
+f \colon A \to B^A \text{ tale che } g = \ww f$.
+
+%%
+%%-- Capitolo - Applicazioni informatiche
+%%
+\chapter{Applicazioni informatiche}
+In questo capitolo vedremo le varie applicazioni dei termini combinatori in 
+ambito informatico. Salteremo, avendola gi\`a considerata nel capitolo dei
+termini con tipo, la \emph{programmazione strutturata}, mentre vedremo in breve
+il linguaggio di programmazione LISP.
+
+\section{Introduzione al LISP}
+\begin{description}
+\item[Storia:]
+Nel 1960 McCarty (allievo di Church) propose un linguaggio di programmazione
+basato sul \lbc. Nel 1962 abbiamo la prima implementazione (funzionante).
+Fino ad allora la programmazione veniva fatta esclusivamente in Assembler.
+Nel 1964 furono proposti dapprima l'Algol, poi il Fortran; linguaggi orientati 
+al calcolo numerico. Il Fortran era sostanzialmente solo un Assembler 
+potenziato con un traduttore di formule e divenne operativo nel 1968. L'Algol
+era pi\`u elevato, ma fu ``ucciso'' commercialmente a causa della ``non 
+linearit\`a''\footnote{Per mercato non lineare si intende un mercato che non 
+segue le regole ``canoniche'', in cui un prodotto migliore o conveniente ha 
+pi\`u successo di uno peggiore o pi\`u costoso, ma al contrario segue regole
+dettate dalla facilit\`a di apprendimento o altri fattori.} del mercato. 
+Tuttavia l'Algol gener\`o altri linguaggi di tipo imperativo.
+\end{description}
+Il LISP \`e orientato all'elaborazione simbolica (pur essendo universale), i
+campi d'applicazione che vedremo danno un'idea di tale tipo di elaborazione;
+i problemi relativi a questi furono dapprima risolti con il LISP, ma in seguito
+questo fu sostituito da strumenti specifici nella maggior parte dei casi.
+Sostanzialmente il LISP \`e un liguaggio per problemi innovativi.
+
+\subsection{Campi d'applicazione LISP}
+\begin{itemize}
+\item[-]Verifica automatica di dimostrazioni (formalizzate).
+\item[-]Inferenza induttiva su sequenze. Ad esempio:
+Qual'\`e il numero successivo a $5\ 2\ 7\ 9\ 16\ $ ?
+
+\item[-]Calcoli in fisica delle particelle (gruppi).
+\item[-]Compilatori.
+\item[-]Compile-compiler. Generano almeno in parte i compilatori partendo da
+specifiche del linguaggio di programmazione.
+\item[-]Pattern matching. Trova somiglianze all'interno di due sequenze di 
+simboli.
+\item[-]Circuiti elettrici.
+\item[-]Programmazione per calcolo simbolico integro-differenziale. Fino alla
+fine degli anni '60 si faceva solo calcolo numerico puro, ora esistono
+pacchetti specifici ad esempio Maple.
+\item[-]Giochi. Sia deterministici (dama, scacchi, etc) che non (carte).
+\item[-]Generazione di simulatori.
+\item[-]Generazione di codici di compressione o di protezione.
+\item[-]Linguistica.
+\item[-]Information-retreval, Data-mining.
+\item[-]Generazione di equazioni diofantine\footnote{A variabili intere.} 
+(teorema di superincompletezza di Chaitin).
+\end{itemize}
+
+\subsection{Idee di base}
+\begin{itemize}
+\item[-]\lbt~ $\Longleftrightarrow$ S-espressione $+$ $\lambda$-astrazione.
+\item[-]Omogeneit\`a tra dati e procedure. Conseguenze: unicit\`a della
+struttura di memoria, generabilit\`a di programmi o procedure in esecuzione.
+\end{itemize}
+
+\subsection{Differenza dal \lbc}
+\begin{itemize}
+\item[-]Notazione.
+\item[-]Aumento delle primitive (utilizzo registri aritmetici, primitive di
+Ingresso/Uscita, primitive complesse tipo funzioni trigonometriche, etc.).
+\item[-]Meta-primitive (``define'' per richiamo procedure).
+\item[-]Restrizioni su $\lambda$-conversioni.
+\item[-]Istruzioni per governo sequenzialit\`a di esecuzione.
+\end{itemize}
+
+\subsection{Organizzazione memoria LISP}
+Almeno idealmente la memoria LISP (e la relativa notazione) \`e basata su 
+alberi binari. Essi possono essere implementati mediante \emph{celle} di 
+memoria liberamente sparse nella memoria ad accesso diretto. Ogni cella \`e 
+costituita almeno idealmente da due campi contenenti di regola indirizzi di 
+altre celle (o di tavole di ``atomi'').
+
+\begin{esempio}\label{AIT10E1}
+Indirizi hardware.
+
+\begin{tabular}{cc}
+indirizzo & contenuto \\
+\hline \\
+1 & \begin{tabular}{|r|l|} \hline xxx & xxx \\ \hline \end{tabular} \\
+2 & \begin{tabular}{|r|l|} \hline xxx & xxx \\ \hline \end{tabular}  \\
+\vdots & \vdots \\
+325 & \begin{tabular}{|r|l|} \hline 360 & 923 \\ \hline \end{tabular} \\
+\vdots & \vdots \\
+360 & \begin{tabular}{|r|l|} \hline 325 & 411 \\ \hline \end{tabular} \\
+\vdots & \vdots \\
+411 & \begin{tabular}{|r|l|} \hline 923 & 924 \\ \hline \end{tabular} \\
+\vdots & \vdots \\
+923 & \begin{tabular}{|r|l|} \hline At1 & Nil \\ \hline \end{tabular} \\
+924 & \begin{tabular}{|r|l|} \hline Nil & Nil \\ \hline \end{tabular} \\
+\end{tabular}
+\end{esempio}
+
+\begin{figure}
+\[\includegraphics{img/infteofig.33} \]
+\caption{Rappresentazione grafica della memoria nell'esempio \ref{AIT10E1}}
+\end{figure}
+
+Possiamo pensare agli atomi come ai campi di una tabella che inizi in $900$,
+la foglia $360$ invece non \`e un atomo e ci\'o pu\`o servire a (ri)-ciclare
+sulla cella $360$. Per gli atomi il contenuto non \`e un indirizzo, anzi si
+pu\`o allora semplificare l'interpretazione dicendo che la cella che
+indirizza un atomo contiene nel campo corrispondente l'atomo stesso. Cio\`e 
+nell'esempio \ref{AIT10E1} si deve vedere in $411$ la cella 
+\begin{tabular}{|r|l|} \hline At1 & Nil \\ \hline \end{tabular} trattandosi
+di una struttura a \emph{puntatori} gode dei vantaggi di tali strutture: facile
+aggiornabilit\`a, facile esecuzione di operazioni strutturali.
+\begin{notazione}
+Per indicare tali strutture si usano le \emph{S-espressioni}. Si ottengono
+abbinando col simbolo ``.'' (punto) altre S-espressioni o atomi (cos\`i
+come nella definizione dei termini combinatori ma con il punto che sostituisce
+l'accostamento).
+\begin{esempio}\label{AIT10E2}
+Nel caso di:
+% Inserire figura
+\[\includegraphics{img/infteofig.34} \]
+avremo $At1.(At2.Nil)$.
+\end{esempio}
+Col crescere dell'albero l'S-espressione si complica e aumentano le parentesi, 
+si introduce allora una notazione secondaria: quella di lista.
+Le liste sono sostanzialmente parole (non alberi), cio\`e  sono generate da
+una parola vuota (corrispondente all'atomo Nil) e dall'abbinamento di una 
+parola con una lettera dell'alfabeto di atomi diversi da Nil.
+\end{notazione}
+
+Nell'esempio precedente (\ref{AIT10E1}) l'alfabeto \`e 
+fissato per costruire delle parole, tuttavia in generale, si usa come 
+``alfabeto'' anche l'insieme delle liste. Per esempio si ha anche la ``parola''
+\[At1.(\underline{(At2.\underline{(At1.Nil)})}.Nil)\] ove le ``lettere'' 
+ sottolineate non sono atomi. Pertanto le liste non sono propriamente 
+parole, ma conviene considerarle tali per ricordarsi che necessitano dell'atomo
+$Nil$, che funziona come termine di lista e corrisponde al generatore $\empty$
+delle parole.
+
+Per le liste si usa omettere le parentesi associate a destra (non a sinistra
+come i termini combinatori), rappresentandole come le parole (con 
+l'accostamento sostituito da ``$\not b$'' o da ``.'') e quindi omettendo $Nil$.
+Nel primo esempio scriveremo $At1\ At2$ e nel secondo esempio scriveremo
+$At1\ (At2\ At1)$. Si noti che questa \`e una lista diversa da quella indicata 
+con $At1\ At2\ At1$ che corrisponderebbe all'S-espressione 
+$At1.(At2.(At1.Nil))$.
+
+\section{Rappresentazione grafica di S-termini}[Rap. grafica di S-term.]
+Per rappresentare graficamente gli S-termini si usano alberi binari con nodi
+costituiti da una doppia cella: \begin{tabular}{|r|l|} \hline ind-1 & ind-2 \\ 
+\hline \end{tabular}. Ove per\`o $ind-1$ e $ind-2$ sono graficamente sostituiti
+da un nome di atomo nel caso che siano indizizzi di un atomo diverso da $Nil$,
+da una barra nel caso dell'atomo $Nil$ o da una freccia che punta ad un'altro
+nodo altrimenti.
+
+\begin{esempio}Ecco la rappresentazione grafica dell'esempio \ref{AIT10E2}:
+\[\includegraphics{img/infteofig.35}\]
+\end{esempio}
+
+\begin{esempio}Di seguito vediamo la reppresentazione grafica della parola 
+vista sopra: $At1.((At2.(At1.Nil)).Nil)$
+\[\includegraphics{img/infteofig.36}\]
+\end{esempio}
+Tale ultima rappresentazione \`e evidentemente differente da quella per
+l'S-espres\-sione $At1\ At2\ At1$ per la quale l'albero binario \`e composto
+da una catena, ma con frecce che ora puntano sempre in basso a destra.
+
+\begin{osservazione} Alcune osservazioni rilevanti:
+\begin{enumerate}
+\item[-]Per come sono definite le liste, possono sempre essere indicate con 
+delle  S-espressioni (ne formano un sottoinsieme). Invece non tutto le 
+S-espressioni possono essere scritte come liste, per esempio $At1.At2$ 
+(senza $Nil$) in una lista possono occorrere come lettere.
+\item[-]L'atomo $Nil$ oltre che atomo \`e anche lista.
+\item[-]Sia con le S-espressioni che con le liste non possono essere indicati
+degli ``alberi'' in memoria che ``ricorrano su se stessi'', come nell'esempio
+iniziale di organizzazione di memoria. Questi ``alberi'' non sono ammessi nel
+LISP, ma non possono essere generati con le sole notazioni predette (ne con
+le istruzioni elementari per le S-espressioni). Per gestire tali alberi
+impropri esistono delle istruzioni speciali che non vedremo.
+\item[-]Tra gli atomi si considerano vari casi: 
+\begin{itemize}
+\item Sequenze alfanumeriche scelte dal programmatore (per indicare 
+variabili, nomi di procedure, etc.). Queste sono organizzate in una tabella.
+\item Costanti numeriche per vari numeri e diverse rappresentazioni.
+\item Costanti logiche, per il vero (T) e il falso (talvolta si usa il 
+$Nil$).
+\item Parole chiave del linguaggio (in particolare LAMBDA, identificatori 
+di funzioni elementari o primitive).
+\end{itemize}
+\end{enumerate}
+\end{osservazione}
+
+\section{Uso delle S-espressioni}
+Le S-espressioni hanno due principali utilizzi: rappresentano strutture 
+complesse di dati e l'organizzazione del programma sorgente sorgente.
+
+\begin{itemize}
+\item[a)]Rappresentazione di strutture complesse di dati. Oltre agli alberi 
+binari e alle parole si possono rappresentare alberi generali (per esempio gli 
+alberi delle strategie del gioco degli scacchi che hanno nodi i cui discendenti
+determinati dalle mosse possibili dell'avversario variano nel progredire del 
+gioco). Per fare ci\`o \`e possibile rappresentare i discendenti di un nodo con
+delle liste.
+
+% Inserire figura
+\[\includegraphics{img/infteofig.37}\]
+Ove $n1$ \`e la lista $n2,n3,n4$; $n2$ \`e la lista $n9$; $n3$ \`e la lista 
+$n6,n7$ ed $n4$ \`e la lista $()$ ovvero $Nil$.
+Si possono rappresentare con le liste (o con S-espressioni) matrici o tabelle 
+a pi\`u indici. Per esempio una tabella a $2$ indici $3 \times 2$ pu\`o essere
+rappresentata da:
+
+
+\[\includegraphics{img/infteofig.38}\]
+Si possono rappresentare facilmente le strutture dati corrispondenti a 
+dispositivi speciali di memorie (pile, code, etc.).
+\item[b)]Rappresentazione dell'organizzazione del programma sorgente.
+\begin{esempio}
+La lista LAMBDA (lista1) (lista2) rappresenta la procedura corrispondente al
+\lbt: $\lambda x_1 \cdots x_n.T$, ove (lista1) $= (x_1 \cdots x_n)$ e (lista2)
+$= T$. Cio\`e (lista1) individua i parametri di chiamata e (lista2) il corpo 
+della procedura.
+\end{esempio}
+Tali procedure sono sostanzialmente delle macro che vengono eseguite quando si 
+applicano dei dati ``corrispondenti a parametri di chiamata'', vedremo poi in 
+cosa consiste l'esecuzione.
+\begin{esempio}
+Mentre la lista precedente fornisce una macro parametrizzata (che conunque deve
+essere riscritta ogni volta che la si deve usare) la lista DEFINE (lista1) 
+permette di associare a uno o pi\`u di tali macro dei nomi richiamabili 
+(mediante lista1).
+\end{esempio}
+In generale tutto un programma sorgente scritto dal programmatore (o 
+autogeneratosi) \`e una lista (LISP = LISt Processor). 
+\end{itemize}
+
+\section{Funzioni elementari}
+Il primo gruppo di funzioni elementari \`e quello delle istruzioni per gestire
+S-espressioni.
+\begin{itemize}
+\item[-]CONS($A\ B$) crea l'albero che ha come due discendenti delle 
+S-espressioni $A$ e $B$. Cio\`e aggiunge in memoria una cella di tipo:
+
+\[\includegraphics{img/infteofig.39}\]
+Ove $a$ e $b$ sono gli indirizzi delle (persistenti) radici di $A$ e $B$.
+\item[-]CAR e CDR fanno l'opposto: CAR($A$) trova l'indirizzo del sottoalbero
+di sinistra di $A$, mentre CDR($A$) trova quello di destra. Queste due 
+istruzioni di etrazione ad un passo generano poi quelle a pi\`u passi, per 
+esempio, CAADR($A$) trova:
+% Inserire figura
+\[\includegraphics{img/infteofig.40}\]
+\end{itemize}
+
+\begin{osservazione}
+Le istruzioni elementari composte come le precedenti sono sostanzialmente 
+parole binarie (Caadr corrisponde a $0010$). Possiamo dire che le parole 
+binarie non sono altro che gli indirizzi verso i nodi di un albero binario 
+(abbastanza grande). La stessa cosa succede negli alberi unari (catene finite) 
+che possiamo identificare coi numeri naturali. Per precisare con un esempio, 
+tali alberi unari sono gli indirizzi per una (grande) memoria ad accesso 
+diretto tradizionale.
+Per passare da un indirizzo ad un altro (precedente), cio\`e per passare dal 
+vertice di un'albero unario ad un nodo precedente, usiamo numeri relativi 
+negativi. Quindi tali istruzioni composte sembrano i corrispondenti dei numeri 
+relativi tradizionali rispetto ad un ambiente binario (anzich\'e unario).
+\end{osservazione}
+
+Nasce allora il problema di verificare tale intuizione e pi\`u in generale di 
+vedere se esistano numeri ``duo-ari'' relativi in grado di trasformare alberi 
+binari e possibilmente con un embrione di aritmentica\footnote{Per quelli 
+negativi, cio\`e parole binarie, conosciamo la catenazione che corrisponde in 
+ambito unario alla somma. Ma ci sar\`a una somma per tutti gli ipotetici 
+numeri ``duari'' relativi?}.
+
+\subsection{Altre funzioni elementari}
+\begin{itemize}
+\item[-]Funzioni elementari aritmetiche: sommatoria, produttoria, esponenziali,
+etc.
+\item[-]Funzioni elementari logiche: connettivi logici, predicati, etc.
+\end{itemize}
+
+\section{Espressioni condizionali}
+LISP adotta, come nei linguaggi imperativi, espressioni condizionali, ma di
+tipo multiplo.
+\begin{esempio}
+COND($p1, \ e1$)($p2,\ e2$) significa che se il predicato $p1$ \`e vero si 
+calcola $e1$, se $p2$ \`e vero si calcola $e2$.
+\end{esempio}
+
+\section{Istruzioni di controllo esecuzione}
+Normalmente il LISP esegue sequenzialmente le istruzioni (come negli altri 
+linguaggi). Tuttavia vi sono situazioni in cui ``non sa cosa fare''. Per 
+esempio se una procedura ha lo scopo di genrare altre procedure, quando viene 
+eseguita la prima non si sa che fare della seconda. Si potrebbe, infatti, 
+volerla eseguire oppure si potrebbe usarla, senza eseguirla subito, per 
+costruire una terza procedura.
+
+Allora il LISP ha la convenzione che normalmente la seconda procedura non venga
+eseguita. Per comandargli invece l'esecuzione occorre inserire un'istruzione 
+apposita (EVAL). 
+
+In molti casi sussiste il problema inverso: si giunge ad una procedura (per 
+esempio seguendo l'ordine sequenziale di esecuzione) che tuttavia \emph{non} si
+deve eseguire al momento. A tale scopo esiste l'istruzione QUOTE che sospende 
+l'esecuzione nel senso che quanto ``quotato'' resta invariato.
+
+\begin{esempio}
+La procedura (LAMBDA($X$)(CAR $X$))($A.B$) diventa CAR ($A.B$) $= A$. Invece la
+procedura (LAMBDA($X$)(QUOTE $X$))($A.B$) diventa $X$ pich\'e l'esecuzione ora 
+consiste nel ``non eseguire''.
+\end{esempio}
+
+Esiste anche una funzione TRACE che (almeno nella prima versione LISP) ha solo 
+scopi diagnostici cio\`e serve a stampare l'andamento dell'esecuzione per 
+``sbacare'' il programma.
+
+\section{Ricorsione}
+Alcuni linguaggi di programmazione non consentono di programmare facilmente la 
+ricorsione (quando si diffuse il LISP tutti gli altri non la consentivano). Se 
+si vuole definire il fattoriale in un linguaggio non predisposto per la 
+ricorsione, occorre organizzare la memoria affinch\`e ci\`o sia possibile: 
+definire una pila con la quale realizzare i passi induttivi, etc. Invece con il
+LISP si pu\`o scrivere: 
+\begin{center}
+Factorial ($n$) $=$ (COND((ZEROP $n$)$1$))
+\end{center} 
+ZEROP $n$ controlla che $n$ sia $0$, se si ``restituisce'' $1$, altrimenti:
+\begin{center}
+Factorial ($n$) $=$ (TIMES n(Factorial(SUB $1 \ n$)))
+\end{center} 
+TIMES $n$ $m$ moltiplica $n$ per $m$, SUB $n$ $m$ sottrae $n$ ad $m$.
+
+Tali istruzioni possono quindi essere messe in una macro LAMBDA e con una 
+definizione rese riutilizzabili.
+
+Il motivo per cui il LISP non necessita di programmare la memoria \`e perch\`e
+esso valuta le funzioni (sia quelle predefinite che quelle create dal 
+programmatore) semplicemente legando gli indirizzi dei parametri formali a 
+quelli degli argomenti. Ci\`o \`e reso possibile dall'organizzazione della 
+memoria virtuale LISP che \`e basata su alberi fatti con puntatori (indirizzi).
+\end{document}

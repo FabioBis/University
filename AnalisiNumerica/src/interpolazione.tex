@@ -1,0 +1,2086 @@
+\hyphenation{
+Barrow
+Binet
+Chebyshev
+Cholesky
+Cramer
+Gauss
+Hausdorff
+Householder
+Laplace
+Lebesque
+Runghe
+tras-for-ma-zio-ne
+Torricelli
+}
+
+
+\chapter{Interpolazione.}
+\label{interpolazione}
+
+Dati alcuni valori numerici consideriamo i seguenti problemi:
+\begin{itemize}
+\item[-]vogliamo ricostruire una traiettoria (grafico), ad esempio lo
+spostamento di un braccio meccanico;
+\item[-]vogliamo ricostruire una funzione complessa mediante approssimazione
+numerica;
+\item[-]vogliamo calcolare l'integrale di una funzione la cui primitiva è
+ignota (ad esempio approssimandola con un polinomio).
+\end{itemize}
+
+Analogamente si possono estendere i citati problemi alla terza dimensione,
+ovvero ricostruire superfici, ad esempio per creare nuovi modelli di macchine.
+
+\begin{teo}\label{teo7.1}
+Dati $n+1$ valori $x_0, x_1, \ldots, x_n$ distinti ($x_i \neq x_j, i\neq
+j$) e $n+1$ numeri naturali $\alpha_0, \alpha_1, \ldots, \alpha_n$, sia
+$m = n + \sum_{i = 0}^{n}\alpha_i$. Presi comunque i numeri $y_i^{(l)}$:
+$i = 0, 1, \ldots, n$; $l = 0, \ldots, \alpha_i$, esiste al più un polinomio
+$p(x) \in \PP_m$ tale che:
+\[
+p^{(l)}(x_i) = y_i^{(l)}, \quad i = 0, \ldots, n; \ l = 0, \ldots, \alpha_i;
+\]
+\[p^{(l)}(x_i) := \left.\frac{d^{(l)}p(x)}{dx^{l}}\right\arrowvert_{x = x_i}.\]
+\end{teo}
+
+\begin{exe}
+Primo caso:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots & x_n \\
+y_0 & y_1 & \cdots & y_n
+\end{array}\]
+Qui, molto semplicemente, ad ogni punto del dominio abbiamo il punto
+dell'immagine, $p(x) \in \PP_n$ per cui $p(x_i) = y_i$.
+Per ogni $i$ si ha quindi $\alpha_i = 0$.
+Si traccia quindi la funzione per quei punti.
+\end{exe}
+\begin{exe}
+Secondo caso:
+\[\begin{array}{cccc}
+x_0  & x_1  & \cdots & x_n \\
+y_0  & y_1  & \cdots & y_n \\
+y'_0 & y'_1 &        &     \\
+     & y''_1&       &
+\end{array}\]
+Ora sono aumentate le informazioni sui punti, ovvero su $y_0$ e $y_1$ conosco
+la velocità e su $y_1$ anche la concavità.
+\end{exe}
+
+I numeri naturali $\alpha_i$ indicano il numero di vincoli sul punto $x_i$,
+ovvero:
+\[\begin{array}{cccc}
+\alpha_0  & =  & 0 &  \\
+\alpha_1  & =  & 0 & \\
+  & \vdots    &     &\textrm{un solo passaggio!}\\
+ \alpha_n    & = & 0      &
+\end{array}
+\]
+Lo schema di cui sopra modella la situazione del primo caso.
+\[\begin{array}{cccc}
+\alpha_0  & =  & 1 &  \\
+\alpha_1  & =  & 2 & \\
+\alpha_2  & =  & 0 & \\
+  & \vdots    &     & \\
+ \alpha_n    & = & 0      &
+\end{array}
+\]
+Questo è il secondo caso, nel primo punto abbiamo passaggio e derivata prima,
+nel secondo passaggio, derivata prima e derivata seconda, in tutti gli altri
+punti solo il passaggio.
+
+\begin{osse}
+Il teorema non dice nulla su una situazione del tipo:
+\[\begin{array}{cccc}
+x_0  & x_1   & x_2   & \cdots \\
+y_0  & y_1   & y_2   & \cdots  \\
+y'_0 &       & y'_2  & \cdots  \\
+     & y''_1 & y''_2 & \cdots
+\end{array}\]
+C'è un vuoto, ovvero manca la derivata prima di $y_1$, per poter applicare il
+teorema non ci devono essere buchi.
+
+In questo problema, inoltre, devo dimostrare anche l'esistenza della derivata
+prima, invece se sono verificate le ipotesi del teorema sappiamo già che
+esiste la soluzione del problema ed è unica, quindi ci possiamo preoccupare
+solo di trovare l'algoritmo più efficiente.
+\end{osse}
+
+\begin{dimo} (Teorema \ref{teo7.1})\\
+Interpretiamo i punti $x_0, \ldots, x_n$ ordinati rispetto agli indici.
+
+Siano $\varphi_0(x), \varphi_1(x), \ldots, \varphi_m(x)$ una base dello
+\emph{spazio vettoriale} $\PP_m$ dei polinomi di grado al più $m$
+(esempio: $\varphi_0(x) = c,\ \varphi_1(x) = x,\ \ldots,\ \varphi_m(x)= x^m$).
+
+\[
+p(x) = \sum_{i = 0}^{m}a_i\varphi_i(x), \qquad \textrm{(polinomio interpolatore)
+}
+\]
+Problema: determinare i coefficienti $a_i$ del polinomio.
+\[
+\left\{
+\begin{array}{ccccl}
+y_0         & = & p(x_0)        &= & a_0\varphi_0(x_0) + a_1\varphi_1(x_0)+
+\cdots + a_m\varphi_m(x_0)  \\
+y'_0        & = & p'(x_0)       &= &a_0\varphi'_0(x_0) + a_1\varphi'_1(x_0)+
+\cdots + a_m\varphi'_m(x_0)  \\
+\vdots      &   &             &= &  \\
+y_0^{\alpha_0}& = & p^{(\alpha_0)}(x_0)&= & a_0\varphi_0^{(\alpha_0)}(x_0) +
+a_1\varphi_1^{(\alpha_0)}(x_0)+ \cdots + a_m\varphi_m^{(\alpha_0)}(x_0).
+\end{array}\right.
+\]
+Abbiamo ottenuto $\alpha_0 +1$ equazioni relative al punto $x_0$, possiamo
+fare la costruzione di un pacchetto di equazioni analogo per ogni punto
+$x_i$ con $i = 0, \ldots, n$, fino ad ottenere:
+\[
+\left\{
+\begin{array}{ccccl}
+y_n         & = & p(x_n)        &= & a_0\varphi_0(x_n) + a_1\varphi_1(x_n)+
+\cdots + a_m\varphi_m(x_n)  \\
+\vdots      &   &             & &  \\
+y_n^{\alpha_n}& = & p^{(\alpha_n)}(x_n)&= & a_0\varphi_0^{(\alpha_n)}(x_n) +
+a_1\varphi_1^{(\alpha_n)}(x_n)+ \cdots + a_m\varphi_m^{(\alpha_n)}(x_n).
+\end{array}\right.
+\]
+
+Mettendo assieme tutti questi vincoli otteniamo la seguente matrice:
+
+\[
+G = \left[
+\begin{array}{cccccc}
+\varphi_0(x_0) & \varphi_1(x_0) & & \cdots & & \varphi_m(x_0) \\
+\varphi'_0(x_0) & \varphi'_1(x_0) & & \cdots & & \varphi'_m(x_0) \\
+\vdots \\
+\varphi_0^{(\alpha_0)}(x_0) & \varphi_1^{(\alpha_0)}(x_0) & & \cdots & &
+\varphi_m^{(\alpha_0)}(x_0) \\
+\varphi_0(x_1) & \varphi_1(x_1) & & \cdots & & \varphi_m(x_1) \\
+\vdots \\
+\varphi_0^{(\alpha_1)}(x_1) & \varphi_1^{(\alpha_1)}(x_1) & & \cdots & &
+\varphi_m^{(\alpha_1)}(x_1) \\
+\vdots \\
+\varphi_0(x_n) & \varphi_1(x_n) & & \cdots & & \varphi_m(x_n) \\
+\vdots \\
+\varphi_0^{(\alpha_n)}(x_n) & \varphi_1^{(\alpha_n)}(x_n) & & \cdots & &
+\varphi_m^{(\alpha_n)}(x_n) \\
+\end{array}\right].
+\]
+
+\begin{flushleft}
+Numero totale di colonne: $m+1$.
+
+Numero di righe totali:
+\[
+\sum_{i = 0}^{n}(\alpha_i+1) = \sum_{i = 0}^{n}\alpha_i + n +1 = m+1.
+\]
+\end{flushleft}
+
+\[ a =
+\left[\begin{array}{c}
+a_0 \\
+a_1 \\
+a_2 \\
+\vdots \\
+a_{m-1} \\
+a_m
+\end{array}\right], \quad b =
+\left[\begin{array}{c}
+y_0 \\
+\vdots \\
+y_0^{(\alpha_0)} \\
+\vdots \\
+y_n \\
+\vdots \\
+y_n^{(\alpha_n)}
+\end{array}\right].
+\]
+
+
+Ottengo il polinomio risolvendo il sistema lineare:
+\[Ga = b.\]
+(Un sistema lineare nasce sempre dalla traduzione di un problema di
+costruzione.)
+
+\begin{prop}
+Se $G$ è non singolare allora esiste un'unica soluzione del sistema lineare.
+\end{prop}
+
+\begin{dimo}$G$ è non singolare.\\
+Supponiamo per assurdo che $G$ sia una matrice singolare, allora esiste
+$\overline{a} \in \rr^{m+1}$ con $\overline{a} \neq 0$ tale che $Ga = 0$.
+\[\overline{a}=\left[
+\begin{array}{c}
+\overline{a_1} \\
+\vdots \\
+\overline{a_{m+1}}
+\end{array}
+\right].\]
+Prodotti riga per colonna:
+\[\sum_{i =0}^m\overline{a}_i\varphi_i(x_0) = 0\]
+\[\sum_{i =0}^m\overline{a}_i\varphi'_i(x_0) = 0\]
+\[\vdots\]
+\[\sum_{i =0}^m\overline{a}_i\varphi_i^{(\alpha_0)}(x_0) = 0\]
+\[\vdots\]
+\[\sum_{i =0}^m\overline{a}_i\varphi_i(x_n) = 0\]
+\[\vdots\]
+\[\sum_{i =0}^m\overline{a}_i\varphi_i^{(\alpha_n)}(x_n) = 0\]
+Costruiamo un polinomio $q(x)$ come combinazione lineare utilizzando come
+coefficienti le componenti di questo vettore:
+\[
+q(x) = \sum_{i =0}^m\overline{a}_i\varphi_i(x) \qquad q(x) \in \PP_m.
+\]
+$q(x)$ deve avere $m$ zeri. Ovvero:
+\[q(x_0) =
+G^{(1)}\footnote{\textrm{Prima riga di $G$.}} a = 0\ \longrightarrow \
+x_0  \textrm{ è radice del
+polinomio.}\]
+\[q'(x_0)  = 0\ \longrightarrow \ x_0 \textrm{ è radice della derivata.}\]
+$x_0$ è radice di molteplicità due.
+\begin{notabene}
+$\alpha$ radice di molteplicità $m$ per $q(x)$:
+\[\longrightarrow \ q(x) = (x - \alpha)^mS(x),\]
+\[\begin{array}{lcl}
+q'(x) & = & m(x - \alpha)^{m-1}S(x) + (x - \alpha)^mS'(x) \\
+      & = & (x - \alpha)^{m-1}[mS(x) + (x - \alpha)S(x)].
+\end{array}\]
+$\alpha$ è radice di $q'(x)$ di molteplicità $m-1$.
+
+\[q^{(m-1)}(x) = D^{m-1}[(x - \alpha)^mS(x)] = \sum_{k = 0}^{m-1}
+{m-1 \choose k}D^{m-1-k}(x - \alpha)^mD^kS(x).
+\]
+Quindi sappiamo che $\alpha$ è soluzione di molteplicità $m$, allora è
+soluzione fino alla derivata $m-1$-esima.
+\begin{flushleft}
+Problema contrario:\\
+so solo che $\alpha$ è radice di $q(x)$.
+\[q(x) = (x - \alpha)S(x),\]
+e so che $\alpha$ è anche radice della derivata prima:
+\[q'(x) = S(x) + (x - \alpha)S'(x) = 0 \Longleftrightarrow S(\alpha) = 0.\]
+\[\longrightarrow \ S(x) = (x - \alpha)R(x).\]
+\[q'(x) = (x - \alpha)R(x) + (x - \alpha)S'(x).\]
+\[\longrightarrow \ q(x) = (x - \alpha)^2R(x).\]
+Allora $\alpha$ è radice di molteplicità almeno $2$.
+\end{flushleft}
+\end{notabene}
+
+Nel punto $x_0$ ho $\alpha_0 + 1$ zeri dato che $q(x)$ annulla fino alla
+derivata $\alpha_0$. Analogamente fino a $x_n$ avremo:
+\[(\alpha_0 +1) + (\alpha_1 + 1) + \cdots + (\alpha_n + 1) = m +1 \textrm{
+zeri.}\]
+\[\longrightarrow \ q(x) = 0 \ \longrightarrow \overline{a} = 0.\]
+\begin{flushright}Assurdo.\end{flushright}
+Quindi $G$ risulta non singolare.
+\end{dimo}
+
+$G$ si dice matrice di Gram.
+\begin{flushright}(Teorema \ref{teo7.1})
+\end{flushright}
+\end{dimo}
+
+\begin{osse}
+(Unicità del polinomio interpolatore.)\\
+Siano $q(x), \, p(x) \in \PP_m$ tali che:
+\[
+\begin{array}{cc}
+p^{(l)}(x_i) = y_i^{(l)}, &  \\
+q^{(l)}(x_i) = y_i^{(l)}.& \\
+i = 0,\ldots, n;\ l = 0, \ldots, \alpha_i .
+\end{array}
+\]
+Definiamo $r(x) \in \PP_m$ tale che:
+\[r(x) = p(x) - q(x).\]
+Si ha dunque $r^{(l)}(x_i) = p^{(l)}(x_i) - q^{(l)}(x_i) = y_i^{(l)} - y_i^{(l)} =
+0$. Un polinomio di grado $m$ con $m+1$ zeri. Il polinomio $r$ è nullo, quindi
+i polinomi $p$ e $q$ sono uguali ($p=q$).
+\end{osse}
+
+\section{Algoritmi di costruzione del polinomio interpolatore.}
+Siano $x_0, x_1, \ldots, x_n$ punti distinti ($x_i \neq x_j, \ i\neq
+j$) e $y_0, y_1, \ldots, y_n$ [$\alpha_0 = \alpha_1 = \cdots
+ = \alpha_n = 0$]. Costruiamo il polinomio, che per il teorema \ref{teo7.1}
+sappiamo esistere ed essere unico.
+\[\exists!\ p(x) \in \PP_n \colon p(x_i) = y_i, \quad i = 0,1, \ldots, n.\]
+
+Supponiamo di prendere $\varphi_0(x), \ldots, \varphi_n(x)$ base di $\PP_n$.
+\[p(x) = \sum_{i = 0}^{n}a_i\varphi_i(x).\]
+\[p(x_j) = \sum_{i = 0}^{n}a_i\varphi_i(x_j), \quad j = 0, \ldots, n.\]
+Vediamo la corrispondente matrice di Gram:
+\[
+G = \left[
+\begin{array}{cccccc}
+\varphi_0(x_0) & \varphi_1(x_0) & & \cdots & & \varphi_m(x_0) \\
+\varphi_0(x_1) & \varphi_1(x_1) & & \cdots & & \varphi_m(x_1) \\
+\\
+& & & n+1 \textrm{ righe} & &\\
+\vdots & & & & & \vdots \\
+& & & n+1 \textrm{ colonne} & &\\
+\\
+\varphi_0(x_n) & \varphi_1(x_n) & & \cdots & & \varphi_m(x_n)
+\end{array}\right].
+\]
+\[ a =
+\left[\begin{array}{c}
+a_0 \\
+a_1 \\
+\vdots \\
+a_m
+\end{array}\right], \quad b =
+\left[\begin{array}{c}
+y_0 \\
+y_1 \\
+\vdots \\
+y_n
+\end{array}\right].
+\]
+$G$ è non singolare, possiamo quindi risolvere il problema $Ga = b$ ad esempio
+con l'algoritmo di Gauss.
+
+\begin{osse}
+Se le $x_i$ calcolate differiscono anche solo di quantità infinitesime dalle
+$x_i$ originali (ad esempio una linea retta), costruiamo proprio un modello
+diverso (nel nostro esempio una funzione ondulatoria, di grado maggiore
+quindi).
+Un braccio meccanico sbaglia traiettoria, con conseguenze non desiderabili.
+\end{osse}
+
+Con il metodo della risoluzione del sistema lineare abbiamo quindi un rischio
+di errore elevato ed un costo computazionale alto. Vediamo alcune
+semplificazioni.
+
+\subsection{Matrice di Vandermonde.}
+Segliamo una base più semplice della precedente:
+\[1,\, x, \, x^2, \, \ldots, \, x^n.\]
+\[p(x) = \sum_{i = 0}^{n}a_ix^i.\]
+
+\[
+V = \left[
+\begin{array}{cccccc}
+1 & x_0 & x_0^2 & \cdots & & x_0^n \\
+1 & x_1 & x_1^2 & \cdots & & x_1^n \\
+\\
+& & & n+1 \textrm{ righe} & &\\
+\vdots & & & & & \vdots \\
+& & & n+1 \textrm{ colonne} & &\\
+\\
+1 & x_n &x_n^2 & \cdots & & x_n^n
+\end{array}\right].
+\]
+\[ a =
+\left[\begin{array}{c}
+a_0 \\
+a_1 \\
+\vdots \\
+a_m
+\end{array}\right], \quad b =
+\left[\begin{array}{c}
+y_0 \\
+y_1 \\
+\vdots \\
+y_n
+\end{array}\right].
+\]
+La matrice $V$ si dice matrice di Vandermonde, ora il sistema lineare da
+risolvere è $Va = b$.
+\[
+\textrm{det}V = \prod_{j=0}^{n-1}\prod_{i=j+1}^{n}(\underbrace{x_i-x_j}_{\neq 0}).
+\]
+Segue che il determinante di $V$ è diverso da zero (dimostrazione per
+esercizio).
+
+Con il cambio di base abbiamo ottenuto un problema più semplice, ma occorre
+risolvere sempre un sistema lineare. Esiste una base che mi permette di
+non risolvere alcun sistema lineare? Ciò accade se troviamo una base tale che:
+\[G \equiv I.\]
+
+\begin{ese}
+Esercizio preliminare.
+
+Siano $x_0, x_1, x_2$ distinti, $l_0, l_1, l_2 \in \PP_2$.
+\[
+l_0(x_i) = \delta_{0,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = 0 \\
+0 & \textrm{se } i \neq 0
+\end{array}\right. \quad i = 0, 1, 2.
+\]
+\[
+l_1(x_i) = \delta_{1,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = 1 \\
+0 & \textrm{se } i \neq 1
+\end{array}\right. \quad i = 0, 1, 2.
+\]
+\[
+l_2(x_i) = \delta_{2,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = 2 \\
+0 & \textrm{se } i \neq 2
+\end{array}\right. \quad i = 0, 1, 2.
+\]
+\begin{flushleft}
+$l_0(x) = \alpha_0(x-x_1)(x-x_2)$,\\
+$l_0(x_0) = \alpha_0(x_0-x_1)(x_0-x_2) = 1\ \longrightarrow\ \alpha_0 =
+\frac{1}{(x_0-x_1)(x_0-x_2)}$,\\
+\[l_0(x) =\frac{(x-x_1)(x-x_2)}{(x_0-x_1)(x_0-x_2)}.\]
+\end{flushleft}
+\begin{flushleft}
+$l_1(x) = \alpha_1(x-x_0)(x-x_2)$,\\
+$l_1(x_1) = \alpha_1(x_1-x_0)(x_1-x_2) = 1\ \longrightarrow\ \alpha_1 =
+\frac{1}{(x_1-x_0)(x_1-x_2)}$,\\
+\[l_1(x) =\frac{(x-x_0)(x-x_2)}{(x_1-x_0)(x_1-x_2)}.\]
+\end{flushleft}
+\begin{flushleft}
+$l_2(x) = \alpha_2(x-x_1)(x-x_0)$,\\
+$l_2(x_2) = \alpha_2(x_2-x_1)(x_2-x_0) = 1\ \longrightarrow\ \alpha_2 =
+\frac{1}{(x_2-x_1)(x_2-x_0)}$,\\
+\[l_2(x) =\frac{(x-x_1)(x-x_0)}{(x_2-x_1)(x_2-x_0)}.\]
+\end{flushleft}
+\begin{prop}
+I polinomi $l_0$, $l_1$ e $l_2$ sono linearmente indipendenti.
+\end{prop}
+\begin{dimo}
+Consideriamo la seguente combinazione lineare:
+\[l(x) := \ c_0l_0(x) + c_1l_1(x) + c_2l_2(x) = 0.\]
+Tesi: $l(x) = 0 \Longleftrightarrow c_i = 0, \quad \forall i = 0,1,2$.
+\[c_0\underbrace{l_0(x_0)}_{1} = 0\ \longrightarrow\ c_0=0.\]
+\[c_1\underbrace{l_1(x_1)}_{1} = 0\ \longrightarrow\ c_1=0.\]
+\[c_2\underbrace{l_2(x_2)}_{1} = 0\ \longrightarrow\ c_2=0.\]
+\end{dimo}
+Vediamo la matrice di Gram.
+\[
+G = \left[\begin{array}{ccc}
+l_0(x_0) & l_1(x_0) & l_2(x_0) \\
+l_0(x_1) & l_1(x_1) & l_2(x_1) \\
+l_0(x_2) & l_1(x_2) & l_2(x_2)
+\end{array}\right] =
+\left[\begin{array}{ccc}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{array}\right] = I.
+\]
+Vuol dire che:
+\[\left[\begin{array}{c}
+ a_0 \\ a_1 \\ a_2
+\end{array}\right] =
+\left[\begin{array}{c}
+y_0 \\ y_1 \\ y_2
+\end{array}\right].\]
+$p(x) = a_0l_0(x)+a_1l_1(x)+a_2l_2(x) = y_0l_0(x)+ y_1l_1(x)+y_2l_2(x)$.
+Questa è la generica equazione della parabola.
+\begin{osse}Ciascun polinomio $l_i$ è di secondo grado.
+\end{osse}
+\end{ese}
+
+\subsection{Il polinomio interpolatore di Lagrange.}
+Osserviamo questa situazione: $p(x) \in \PP_5$
+\[\begin{array}{cccccc}
+x_0 & x_1 & x_2 & x_3 & x_4  & x_5 \\
+y_0 & y_1 & y_2 & y_3 & y_4  & y_5
+\end{array}\]
+Abbiamo sei vincoli di passaggio, allora il polinomio $p(x)$ è unico ed
+il polinomio inperpolatore coincide con $p(x)$.
+
+Se invece avessimo solo cinque vincoli di passaggio?
+\[\begin{array}{ccccc}
+x_0 & x_1 & x_2 & x_3 & x_4   \\
+y_0 & y_1 & y_2 & y_3 & y_4
+\end{array}\]
+Abbiamo troppi pochi vincoli, potremmo avere il polinomio preciso solo di
+quarto grado al massimo. Il polinomio di interpolazione rappresenterà quindi
+solo un'approssimazione di $p(x)$.
+
+\begin{notabene}
+Esiste una soluzione unica solamente quando il numero dei nodi coincide
+con il numero dei gradi di libertà del polinomio.
+\end{notabene}
+
+\begin{defi}
+Siano $x_0, x_1, \ldots, x_n$ distinti , $l_0, \ldots,l_j, \ldots, l_n \in
+\PP_n$ tali che:
+\[
+l_0(x_i) = \delta_{0,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = 0 \\
+0 & \textrm{se } i \neq 0
+\end{array}\right. \quad i = 0, \ldots n.
+\]
+\[\vdots\]
+\[
+l_j(x_i) = \delta_{j,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = j \\
+0 & \textrm{se } i \neq j
+\end{array}\right. \quad i = 0, \ldots n.
+\]
+\[\vdots\]
+\[
+l_n(x_i) = \delta_{n,i} = \left\{\begin{array}{lr}
+1 & \textrm{se } i = n \\
+0 & \textrm{se } i \neq n
+\end{array}\right. \quad i = 0, \ldots n.
+\]
+\begin{center}
+$l_0(x) = \alpha_0(x-x_1)(x-x_2)\cdots(x-x_n)$,\\
+$l_0(x_0) = \alpha_0(x_0-x_1)(x_0-x_2)\cdots(x_0-x_n) = 1$.
+\[ \longrightarrow\
+\alpha_0 = \frac{1}{(x_0-x_1)(x_0-x_2)\cdots(x_0-x_n)}.\]
+\[l_0(x) =\frac{(x-x_1)(x-x_2)\cdots(x-x_n)}{(x_0-x_1)(x_0-x_2)\cdots(x_0-x_n)}.
+\]
+\end{center}
+\[\vdots\]
+\begin{center}
+$l_j(x) = \alpha_j(x-x_0)\cdots(x-x_{j-1})(x-x_{j+1})\cdots(x-x_n)$,\\
+$l_j(x_j) = \alpha_j(x_j-x_0)\cdots(x_j-x_{j-1})(x_j-x_{j+1})\cdots(x_j-x_n) = 1.
+$
+\[\longrightarrow\
+\alpha_J = \frac{1}{(x_j-x_0)\cdots(x_j-x_{j-1})(x_j-x_{j+1})\cdots(x_j-x_n)}.\]
+\[l_j(x) =\frac{(x-x_0)\cdots(x-x_{j-1})(x-x_{j+1})\cdots(x-x_n)}{(x_j-
+x_0)
+\cdots(x_j-x_{j-1})(x_j-x_{j+1})\cdots(x_j-x_n)}.\]
+\end{center}
+\[\vdots\]
+\[l_n(x) = \prod_{\substack{k=0\\ k \neq n }}^n \frac{x-x_k}{x_n-x_k}.\]
+I polinomi $l_i$ sono detti \emph{polinomi lagrangiani}.
+\begin{flushleft}
+Partendo dalla base $l_0(x), l_1(x), \ldots, l_n(x)$ di $\PP_n$, con $l_i \in
+\PP_n$ per ogni $i$ si ha:
+\[G = I, \qquad \overline{a} = b,\]
+quindi il polinomio $p(x)$ che ne risulta:
+\[
+\begin{array}{lcl}\displaystyle
+p(x) & = & y_0l_0(x)+ y_1l_1(x)+\cdots +y_nl_n(x) \\
+     & = &\displaystyle \sum_{i=0}^ny_il_i(x)\\
+     & = &\displaystyle \sum_{i=0}^ny_i\prod_{\substack{k=0\\ k \neq i }}^n
+         \frac{x-x_k}{x_i-x_k}.
+\end{array}
+\]
+I coefficienti del polinomio sono le valutazioni $y_i$ del polinomio nelle
+ascisse $x_i$ assegnati come dati.
+
+Il polinomio $p(x)$ si dice \emph{polinomio interpolatore di Lagrange}.
+\[p(x) = \sum_{i=0}^ny_i\prod_{\substack{k=0\\ k \neq i }}^n \frac{x-x_k}{x_i-x_k}.\]
+\end{flushleft}
+\end{defi}
+
+\begin{osse}
+Se risolvessimo un sistema lineare per trovare il polinomio interpolatore
+dovremmo studiare il condizionamento, comunque avremmo una potenzialità
+d'errore.
+Quindi è inutile e sbagliato voler usare la base canonica ($1, x, x^2,
+\ldots$) perchè dipende dalla sensibilità della matrice.
+
+Invece con i polinomi di Lagrange la matrice non esiste, quindi non occorre
+studiare il condizionamento. Vedremo comunque che non si userà neanche
+questo sistema poiché abbiamo troppe valutazioni.
+\end{osse}
+
+Valutiamo ora il costo del polinomio lagrangiano. Consideriamo $l_0(x)$:
+\[ l_0(x) = \prod_{\substack{k=0\\ k \neq 0 }}^n \frac{x-x_k}{x_0-x_k}, \]
+abbiamo $n$ somme al numeratore ed altrettante al denominatore, 1 divisione (se
+cosideriamo un'unica linea di frazione) e $2(n-1)$ prodotti. Consideriamo ora $l_1(x)$:
+\[ l_1(x) = \prod_{\substack{k=0\\ k \neq 1 }}^n \frac{x-x_k}{x_1-x_k}, \]
+qui abbiamo sempre $1$ divisione e $2(n-1)$ prodotti, ma il numero di somme è
+$n$ poichè le altre $n$ le ho già calcolate al passo precedente!
+
+Iterando il discorso si evince che il costo preponderante (che non cambia) è
+quello dei prodotti, mentre le somme diminuiscono sempre più. Pertanto il costo
+totale del polinomio $p(x)$ in termini di prodotti è $2(n-1)(n+1)$ che equivale
+a circa O$(2n^2)$.
+
+\begin{osse}
+Siano $x_0, x_1, \ldots, x_n$ distinti , $l_0, \ldots,l_j, \ldots, l_n \in
+\PP_n$ tali che:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots & x_n \\
+y_0 & y_1 & \cdots & y_n
+\end{array}\]
+\[p(x) = \sum_{i=0}^ny_il_i(x).\]
+Vogliamo aggiungere un punto $x_{n+1}$ e un passaggio $y_{n+1}$, tipo se ci
+interessasse un istante potremmo prenderne uno vicino per fare uno zoom.
+
+Come cambia il fenomeno aggiungendo l'informazione?
+
+Vogliamo vedere se il modello è sensibile all'inserimento di questo nuovo dato
+o no. Costruiamo $\overline{p}(x)$;
+ \[\overline{p}(x) = \sum_{i=0}^{n+1}y_il_i(x).\]
+Possiamo costruire $\overline{p}$ a partire da $p$ o dobbiamo buttarlo via?
+Ovvero possiamo risparmiare conti?
+\[
+\overline{p}(x) = \sum_{i=0}^ny_il_i(x) + y_{n+1}l_{n+1}(x)
+\stackrel{?}{=} p(x) + y_{n+1}l_{n+1}(x).
+\]
+Vorrei, ma non è così, infatti:
+\[l_i = \prod_{\substack{k=0\\ k \neq i }}^{n+1} \neq
+\prod_{\substack{k=0\\ k \neq i }}^n,\]
+da cui segue che $\overline{p}(x^*) \neq p(x^*) + y_{n+1}l_{n+1}(x^*)$.
+\begin{flushleft}
+Vorrei comunque trovare un legame tra $p$ e  $\overline{p}$ per risparmiare
+i conti.
+\end{flushleft}
+\end{osse}
+
+\begin{osse}
+Il polinomio interpolatore di Lagrange ha notevoli vantaggi:
+\begin{itemize}
+\item La matrice $G$ di Gram associata alla base dei polinomi elementari
+coincide con la matrice identica $I$;
+\item i coefficienti del polinomio sono proprio i dati $y_i$;
+\item i polinomi $l_n(x)$ dipendono solo dalle $x$. Ovvero nel caso in cui si
+avesse:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots & x_n \\
+y_0' & y_1' & \cdots & y_n'
+\end{array}\]
+allora il polinomio $p_n(x)$ sarebbe semplicemente:
+\[p(x) = \sum_{i=0}^ny_i'l_i(x).\]
+\end{itemize}
+Abbiamo però visto che tale polinomio è sensibile all'inserimento di un
+punto. Ovvero dobbiamo rifare tutti i conti.
+\end{osse}
+
+\begin{ese}
+Che risposta diamo ad un problema del tipo:
+\[\begin{array}{ccc}
+x_0 & x_1 & x_2 \\
+y_0 & y_1 & y_2 \\
+y'_0
+\end{array}\]
+con quattro gradi di libertà?
+\begin{flushleft}
+Costruiamo ``a mano'' la matrice associata al polinomio di terzo grado e
+discutiamo su di esso.
+\end{flushleft}
+\end{ese}
+
+\section{Applicazioni dei polinomi interpolatori.}
+\subsection*{Calcolo integrale.}
+Sia $f(x) \in \cc([a,b])$ e
+\[I(f) := \int_a^bf(x)dx = F(b)-F(a),\]
+come si risolve non conoscendo $F$? Oppure
+\[(b-a)\cdot f(\lambda),\]
+come si calcola non conoscendo $\lambda$?
+\begin{flushleft}
+Se esistesse $g(x)$ facilmente integrabile tale che $f(x) \cong g(x)$ allora:
+\[\int_a^bf(x)dx\, \cong \int_a^bg(x)dx.\]
+Come $g$ prendiamo un polinomio che approssima $f$ (i polinomi sono
+facilmente integrabili):
+\[g(x) = \sum_{i = 0}^nf(x_i)l_i(x).\]
+\[
+\begin{array}{lcl}\displaystyle
+\int_a^bg(x)dx & = & \displaystyle\int_a^b\sum_{i = 0}^nf(x_i)l_i(x)dx \\
+& = & \displaystyle
+\sum_{i = 0}^nf(x_i)\underbrace{\int_a^bl_i(x)dx}_{\textrm{n° calcolabile}
+= A_i} \\
+& = & \displaystyle
+\underbrace{\sum_{i = 0}^nf(x_i)A_i.}_{\textrm{somma pesata degli }A_i}
+\end{array}
+\]
+La funzione $f$ è continua su $[a,b]$, dal teorema di Weierstrass si ha che:
+\[\forall \varepsilon > 0\ \exists n_{\varepsilon} \, \colon \|f(x) -
+g_{n_{\varepsilon}}(x)\|_{\infty} < \varepsilon, \quad \textrm{ovvero:}\]
+\[\max_{a \leq x \leq b}|f(x) -g_{n_{\varepsilon}}(x)| < \varepsilon.\]
+Quindi ogni funzione continua può essere approssimata da un polinomio.
+L'ambiente polinomiale è buono per approssimare una $f$ continua, ma non si
+parla di polinomi interpolatori. Il polinomio di Weierstrass \emph{non}
+richiede il passaggio per certi punti (per costruirlo si usano i polinomi di
+Bernulli).
+\end{flushleft}
+
+Che errore commettiamo nel calcolare l'integrale di $f$ approssimandolo con
+la sommatoria?
+\[\textrm{errore} = I(f) -\sum_{i = 0}^nf(x_i)A_i.\]
+Per trovarlo dobbiamo conoscere $f(\tilde{x}) - g(\tilde{x})$.
+\[\textrm{errore} := f(\tilde{x}) - g(\tilde{x}).\]
+
+Non si può conoscere il valore esatto dell'errore, per conoscerlo occorre
+conoscere anche $f$, ma a quel punto $g$ è inutile.
+
+\begin{teo}\label{teo7.11}
+Siano $f(x) \in \cc^{n+1}([a,b])$, $x_0, x_1, \ldots, x_n \in [a,b]$ valori
+distinti e $g(x) \in \PP_n$ il suo polinomio interpolatore ($g(x_i) = f(x_i),
+\ i = 0, \ldots, n$). Allora preso un arbitrario $x \in [a,b]$ con $x \neq
+x_i$ esiste almeno un punto $\xi_x \in I_x = [\min\{x_0, \ldots, x_n\},
+\max\{x_0, \ldots, x_n\}]$ tale che:
+\[e(x) := f(x)-g(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!} \cdot \omega(x).\]
+\[\omega(x) = \prod_{k = 0}^n(x-x_k).\]
+\end{teo}
+
+\begin{dimo}
+Sia $I_x$ l'intervallo che  contiene sia $x$ che $x_i$.
+
+Se $x \equiv x_i$, $i = 0, 1, \ldots, n$, $e(x_i) = f(x_i)-g(x_i) = 0$, quindi
+si può esprimere l'errore sotto questa espressione:
+\[e(x) := k_x^n \cdot \omega_n(x).\]
+Così, $\omega(x)$ è uguale a zero per $x = x_i$.
+\[f(x) = g(x) + e(x),\]
+\[f(x) = g(x) + k_x^n \cdot \omega_n(x).\]
+
+Definiamo una nuova funzione $G$ come segue:
+\[G(t) := f(t)- g(t) - k_x^n \cdot \omega_n(t).\]
+Con $f(t) \in\, \cc^{n+1}$, $ g(t) \in\, \cc^{\infty}$, $\omega_n(t)\in\,
+\cc^{\infty}$ e $k_x^n$ una costante rispetto a $t$.
+\[G(t) \in \cc^{n+1}([a,b]).\]
+\[G(x_i) = \cancelto{0}{f(x_i)- g(x_i)} -
+\cancelto{0}{k_x^n\cdot\omega_n(x_i)} = 0, \quad i= 0,\ldots,n.
+\]
+$G$ ha almeno $n+1$ zeri.
+\[G(x) = \underbrace{f(x)- g(x)}_{=\, e(x)} -
+\underbrace{k_x^n\cdot\omega_n(x)}_{=\, e(x)} = 0, \quad \forall x \in[a,b],
+x \neq x_i.\]
+$G$ ha almeno $n+2$ zeri. $G'$ si annulla in almeno un punto tra $x_2$ e
+$x_3$ (teorema di Rolle), il discorso è uguale per $x_0, x_1, \ldots, x_n$.\\
+\\$G'(t)$ ha almeno $n+1$ zeri.\\
+$G''(t)$ ha almeno $n$ zeri.\\
+$\vdots$\\
+$G^{(n+1)}(t)$ ha almeno uno zero.\\
+\[G^{(n+1)}(t) = f^{(n+1)}(t) - 0 - k_x^n(n+1)!\]
+\[G^{(n+1)}(\xi_x) = f^{(n+1)}(\xi_x)- k_x^n(n+1)! = 0 \quad \xi_x
+\textrm{ è lo zero.}\]
+\[\longrightarrow k_x^n = \frac{f^{(n+1)}(\xi_x)}{(n+1)!}.\]
+\[\longrightarrow e(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!} \cdot \omega(x).\]
+\end{dimo}
+
+\begin{exe}Vediamo un'applicazione:
+\[I(f) = \int_a^bf(x)dx = \int_a^b\left(g(x)+e(x)\right) dx.\]
+\[I(f) = \int_a^b\sum_{i=0}^nf(x_i)l_i(x)dx + \int_a^be(x)dx\]
+\[
+= \sum_{i=0}^nA_if(x_i) + \int_a^b\frac{f^{(n+1)}(\xi_x)}{(n+1)!}\omega_n(x)dx.\]
+E' necessario che $f$ sia almeno appartenente a $\cc^{n+1}([a,b])$ per
+dire questo.
+\end{exe}
+
+\subsection*{Quantifichiamo l'errore $e(x)$.}
+\[|e(x)| = \frac{|f^{(n+1)}(\xi_x)|}{(n+1)!}|\omega_n(x)|
+\leq \frac{M}{(n+1)!}|\omega_n(x)| \leq \frac{M}{(n+1)!}(b-a)^{n+1}.\]
+\[M := \max_{a \leq x \leq b}\left|f^{(n+1)}(\xi_x)\right|.\]
+\[
+\omega_n(x) = (x-x_0)(x-x_1)\cdots(x-x_n), \quad \forall i\
+(x-x_i) \leq b-a.
+\]
+La disuguaglianza è interessante se $(b-a)$ è una quantità piccola, ovvero
+$(b-a)^{n+1}$ è ancora più piccola al crescere di $n$. $M$ è sconosciuto
+perchè non conosciamo la $f$, ma a volte possiamo avere un maggiorante di
+$|f^{(n+1)}(\xi_x)|$ come dato del problema.
+
+\begin{exe}Dati tre punti $x_0 \neq x_1 \neq x_2$ e tre passaggi relativi
+$y_0, y_1, y_2$ otteniamo i seguenti polinomi:
+\[\begin{array}{cccc}
+x_0 & y_0 &  &  \\
+    &     & g_{01}(x) & \\
+x_1 & y_1 &  & g_{012}(x)  \\
+    &     &  g_{12}(x) & \\
+x_2 & y_2 &
+\end{array}\]
+
+\[g_{01}(x) = \frac{(x-x_0)y_1 + (x_1-x)y_0}{x_1 - x_0}, \quad \textrm{retta
+interpolatrice.}\]
+\[g_{12}(x) = \frac{(x-x_1)y_2 + (x_2-x)y_1}{x_2 - x_1}.\]
+\[g_{012}(x) = \frac{(x-x_0)g_{12}(x) + (x_2-x)g_{01}(x)}{x_2 - x_0}.\]
+
+Mediante $g_{01}(\tilde{x})$ e $g_{12}(\tilde{x})$ calcoliamo
+$g_{012}(\tilde{x})$.
+\[g_{012}(x_0) \stackrel{?}{=} y_0, \quad
+g_{012}(x_1) \stackrel{?}{=} y_1, \quad
+g_{012}(x_2) \stackrel{?}{=} y_2.\]
+
+\[g_{012}(x_0) = \frac{(x_2 - x_0)g_{01}(x_0)}{(x_2-x_0)} = g_{01}(x_0) = y_0.\]
+Analogamente per gli altri dati $x_1$ e $x_2$ i risultati sono quelli attesi,
+quindi $g_{012}$ è il polinomio interpolatore di grado due. E' unico ed è
+costruito da due polinomi di grado inferiore.
+
+Com'è fatto il coefficiente di grado massimo? Dati $A_{01}$ e $A_{12}$ i
+coefficienti di grado massimo dei rispettivi polinomi $g_{01}$ e $g_{12}$ si
+ha:
+\[\frac{A_{12}-A_{01}}{x_2 - x_0}.\]
+Cosa accade se introducessimo un quarto punto $x_3$ ed il relativo passaggio?
+\[\begin{array}{ccccc}
+x_0 & y_0 &  &  &\\
+    &     & g_{01}(x) & &\\
+x_1 & y_1 &  & g_{012}(x)  &\\
+    &     &  g_{12}(x) & &g_{0123}(x)\\
+x_2 & y_2 & & g_{123}(x)&\\
+    &     & g_{23}(x) & &\\
+x_3 & y_3 &
+\end{array}\]
+Come prima viene costruito il polinomio $g_{0123}(x)$ utilizzando i dati
+ottenuti in precedenza.
+\[g_{0123}(x) = \frac{(x-x_0)g_{123}(x) + (x_3-x)g_{012}(x)}{x_3-x_0}.\]
+Questo procedimento è utile quando vogliamo calcolare il valore di
+$g_{0123}(\tilde{x})$.
+\end{exe}
+
+Generalizziamo il discorso. Siano:
+
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_{n-1} & x_n   \\
+y_0 & y_1 & \cdots & x_{n-1} & y_n
+\end{array}\]
+il nostro insieme di dati (punti e passaggio relativo).
+\begin{flushleft}
+\textbf{Ipotesi}: \\
+$g_{01\ldots n-1}(x)$ polinomio interpolatore sui nodi $x_0, x_1 \ldots,
+x_{n-1}$.\\
+$g_{12\ldots n}(x)$ polinomio interpolatore sui nodi $x_1, x_2 \ldots,
+x_{n}$.\\
+\end{flushleft}
+\begin{flushleft}
+\textbf{Tesi}:
+\[
+g_{01\ldots n}(x) = \frac{(x-x_0)g_{12\ldots n}(x) + (x_n-x)g_{01\ldots n-1}(x)}{x_n
+- x_0},
+\]
+polinomio interpolatore sui nodi $x_0, x_1, \ldots, x_n$.
+\end{flushleft}
+\begin{flushleft}
+\textbf{Verifica}:
+\[
+g_{01\ldots n}(x_0) = \cancelto{1}{\frac{x_n - x_0}{x_n - x_0}}g_{01\ldots n-1}(x_0)
+=y_0.
+\]
+\[
+g_{01\ldots n}(x_n) = \cancelto{1}{\frac{x_n - x_0}{x_n - x_0}}g_{1\ldots n}(x_n)
+=y_n.
+\]
+
+$
+\begin{array}{lcl}
+ g_{01\ldots n}(x_i) & = &
+\frac{(x_i -x_0)y_i + (x_n - x_i)y_i}{x_n - x_0} \\
+& = & \frac{y_i(\cancel{x_i} - x_0 + x_n \cancel{-x_i})}{x_n - x_0}\\
+& = & y_i\cancel{\frac{x_n - x_0}{x_n - x_0}}\\
+& = & y_i.
+\end{array}$
+$(1 \leq i \leq n-1)$.
+\end{flushleft}
+
+Se abbiamo un numero elevato di punti (ad esempio $54$) è sbagliato
+calcolare il polinomio (di grado $53$) direttamente, bisogna usare la
+tecnica sopra descritta.
+
+\[
+g_{01\ldots n}(x) =
+\frac{(x-x_0)g_{12\ldots n} + (x_n-x)g_{01\ldots n-1}(x)}{x_n-x_0}.
+\]
+
+\section{Polinomio interpolatore con differenze divise.}
+Un'idea alternativa alla costruzione del polinomio interpolatore sfrutta
+le differenze divise.
+
+\begin{itemize}
+\item[-]$x_0,\, y_0,\, p_0(x) \in \PP_0$ tale che:
+\[p_0(x_0) = y_0, \quad p_0(x) = A_0.\]
+$p_0(x_0) = A_0 = y_0$ è la differenza divisa di ordine zero.
+
+\item[-]$x_0,\, y_0,\, x_1,\, y_1,\, p_1(x) \in \PP_1$ tale che:
+\[p_1(x_0) = y_0, \quad p_1(x_1) = y_1,\]
+\[p_1(x) = p_0(x) + \framebox[3.5\width]{\textrm{?}}\]
+$\framebox[3.5\width]{\textrm{?}}$ dovrà essere un termine lineare in $x$
+(nullo nel punto $x_0$). In altre parole costruiremo $p_1$ sulla base del
+polinomio $p_0(x)$ già calcolato.
+\[p_1(x) = p_0(x) + A_1(x-x_0) \rightarrow y_1 = p_1(x_1) = p_0(x_1) +
+A_1(x_1-x_0).\]
+$A_1 \in \PP_1$, $p_0(x_1) = y_0$ perchè $p_0$ è il polinomio costante, da cui:
+\[
+A_1 = \frac{y_1 - y_0}{x_1 - x_0}, \quad \textrm{è la differenza divisa del
+prim'ordine.}
+\]
+Un modo alternativo per scriverla è: $A_1 = f[x_0,x_1]$.
+\[p_1(x) = p_0(x) +\frac{y_1 - y_0}{x_1 - x_0}(x-x_0).\]
+\begin{center}(rapporto incrementale della funzione)\end{center}
+\[\Longrightarrow p_1(x) = f[x_0] + f[x_0,x_1](x-x_0).\]
+
+\item[-]$x_0,\, y_0,\, x_1,\, y_1,\, x_2,\, y_2,\, p_2(x) \in \PP_2$ tale che:
+\[p_2(x_0) = y_0, \quad p_2(x_1) = y_1, \quad p_2(x_2) = y_2,\]
+\[p_2(x) = p_1(x) + \framebox[3.5\width]{\textrm{?}}\]
+Analogamente $\framebox[3.5\width]{\textrm{?}}$ dovrà essere un termine
+lineare in $x$ (nullo nei punti $x_0$ e $x_1$), di secondo grado (poiché
+$\PP_1$ è di primo grado).
+\[p_2(x) = p_1(x) + A_2(x-x_0)(x-x_1).\]
+Occorre determinare $A_2$.
+\[p_2(x_2) = y_2 = p_1(x_2) + A_2(x_2-x_0)(x_2-x_1).\]
+\[
+y_2 = p_0(x_2) + \frac{y_1 - y_0}{x_1 - x_0}(x_2-x_0) + A_2(x_2-x_0)(x_2-x_1).
+\]
+\[
+A_2 = \frac{y_2 - p_1(x_2)}{(x_2 - x_0)(x_2 - x_1)},
+\quad \textrm{è la differenza divisa del
+second'ordine.}
+\]
+Un modo alternativo per scriverla è: $A_2 = f[x_0,x_1,x_2]$.
+$A_2$ si realizza se conosciamo i rapporti incrementali sui tre punti, sarà
+quindi sufficiente generarlo in modo più semplice con i rapporti incrementali
+opportuni.
+\[A_2  =  \frac{y_2 - p_1(x_2)}{(x_2 - x_0)(x_2 - x_1)} \]
+\[ =  \frac{y_2 - y_0 - \frac{y_1-y_0}{x_1-x_0}(x_2-x_0)}{(x_2-x_0)(x_2-x_1)}\]
+\[ =  \frac{\frac{y_2-y_1+y_1-y_0}{x_2-x_1}-\frac{y_1-y_0}{(x_1-x_0)(x_2-x_1)}
+(x_2-x_1+x_1-x_0)}{x_2-x_0}\]
+
+\[=
+\frac{\frac{y_2 - y_1}{x_2 - x_1} + \cancel{\frac{y_1 - y_0}{x_2 - x_1}} -
+\frac{y_1 - y_0}{x_1 - x_0} -\cancel{\frac{y_1 - y_0}{x_2 - x_1}}}{x_2-x_0}
+\]
+
+\[=
+\frac{\frac{y_2 - y_1}{x_2 - x_1}- \frac{y_1 - y_0}{x_1 - x_0}}{x_2-x_0}
+=
+\frac{f[x_1,x_2]-f[x_0,x_1]}{x_2-x_0} = f[x_0,x_1,x_2].
+\]
+
+Infatti:
+\[\begin{array}{cc}
+x_0 & x_1  \\
+y_0 & y_1
+\end{array}\]
+\[
+p_{12}(x) = y_1 + \frac{y_2-y_1}{x_2-x_1}(x-x_1) = y_1 + f[x_1,x_2](x-x_1).
+\]
+\end{itemize}
+
+Possiamo costruire le differenze divise così:
+\[\begin{array}{ccccc}
+x_0 & y_0 &  &  \\
+    &     & f[x_0,x_1] & \\
+x_1 & y_1 &  & f[x_0,x_1,x_2]  \\
+    &     &  f[x_1,x_2] &  \\
+x_2 & y_2
+\end{array}\]
+\[
+p_0(x)=y_0=f[x_0]; \quad p_1(x)=f[x_0]+f[x_0,x_1](x-x_0).
+\]
+\[
+p_2(x) = f[x_0] + f[x_0,x_1](x-x_0) + f[x_0,x_1,x_2](x-x_0)(x-x_1).
+\]
+
+I polinomi successivi verranno costruiti ricavando opportunamente le
+differenze divise. Il polinomio così ottenuto si chiama
+\emph{polinomio interpolatore alle differenze divise} o
+\textbf{\emph{polinomio di Newton}}.
+
+\subsection{Generalizzazione del polinomio di Newton.}
+Siano $x_0, x_1, \ldots, x_n$ e $y_0, y_1, \ldots, y_n$, $n+1$ punti
+distinti con i relativi passaggi:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots  & x_n\\
+y_0 & y_1 & \cdots  & y_n
+\end{array}\]
+tali che: $p_n \in \PP_n$, $p_i(x_i) = y_i, \ i = 0,\ldots,n$, allora:
+\[
+p_n(x) = p_{n-1}(x) + A_n
+(x-x_0)(x-x_1)\cdots(x-x_{n-1})\footnote{\textrm{Il vettore $A_n$ è fatto
+come in precedenza,  è il coefficiente del grado massimo.}}.
+\]
+
+$p_{n-1}(x)$ interpola i seguenti punti:
+$\begin{array}{cccc}
+x_0 & x_1 & \cdots  & x_{n-1}\\
+y_0 & y_1 & \cdots  & y_{n-1}
+\end{array}$
+
+\[
+p_n(x_n) = y_n = p_{n-1}(x_n) + A_n(x-x_0)(x-x_1)\cdots(x-x_{n-1}).
+\]
+
+\[
+A_n = \frac{y_n - p_{n-1}(x_n)}{(x-x_0)(x-x_1)\cdots(x-x_{n-1})} =
+f[x_0,x_1,\ldots,x_n].
+\]
+
+$A_n$ si può costruire anche con la tabella dei coefficienti come visto
+prima:
+\[\begin{array}{ccccccc}
+x_0  & y_0  &              &  & &\\
+     &      & f[x_0,x_1]   &  & &\\
+x_1  & y_1  &              & f[x_0,x_1,x_2]  & &\\
+     &      &  f[x_1,x_2]  &  &\ddots &\\
+x_2  & y_2  &              &  & & f[x_0,x_1,\ldots,x_n]\\
+     &      &              &  & &\\
+\vdots&     &              &  f[x_{n-2},x_{n-1},x_n] & &\\
+     &      & f[x_{n-1},x_n]&  & &\\
+x_n  & y_n  &
+\end{array}\]
+
+Si può dimostrare che $A_n = f[x_0,x_1,\ldots,x_n]$ per induzione.
+
+\begin{dimo}
+\begin{itemize}
+\item[]Base: $A_0 = f[x_0].$
+\item[]Caso induttivo su $n$ punti.
+\begin{flushleft}
+Ipotesi induttiva:
+\[
+\begin{array}{cccc}
+x_0 & x_1 & \cdots  & x_{n-1}\\
+y_0 & y_1 & \cdots  & y_{n-1}
+\end{array} \qquad f[x_0,x_1,\ldots,x_{n-1}].
+\]
+\[
+\begin{array}{cccc}
+x_1 & x_2 & \cdots  & x_n\\
+y_1 & y_2 & \cdots  & y_n
+\end{array} \qquad f[x_1,x_2,\ldots,x_n].
+\]
+$A_n$ è il coefficiente del termine di grado massimo del polinomio $p_n$:
+\[
+\frac{f[x_1,x_2,\ldots,x_n]-f[x_0,x_1,\ldots,x_{n-1}]}{x_n-x_0} = A_n.
+\]
+
+\[
+\begin{array}{lcl}
+p_n(x) = &   & f[x_0] \\
+         & + & f[x_0,x_1](x-x_0) \\
+         & + & f[x_0,x_1,x_2](x-x_0)(x-x_1) \\
+         & \vdots & \\
+         & + & f[x_0,x_1,\ldots,x_n](x-x_0)(x-x_1)\cdots(x-x_{n-1}).
+\end{array}\]
+
+\[
+A_n = f[x_0,x_1,\ldots,x_n].
+\]
+\end{flushleft}
+\end{itemize}
+$p_n(x)$ è un polinomio di grado al più $n$ ($\leq n$) che interpola tutti i
+punti a partire da polinomi di ordine inferiore.
+\end{dimo}
+
+Se volessimo costruire un polinomio ``vicino'' a $\overline{x}$ dovremmo
+costruire i polinomi interpolatori usando la costruzione delle differnze
+divise, vicino a $\overline{x}$.
+\[\begin{array}{cccc}
+ & & x_0 & y_0 \\
+ & & \vdots & \\
+ & & x_k & y_k \\
+\overline{x}& \rightarrow & \vdots & \\
+ & & x_n & y_n
+\end{array}\]
+
+Se abbiamo un fenomeno oscillante nella parte iniziale è inutile prendere un
+valore in cui il fenomeno è diventato piatto. Quindi è utile prendere dei
+dati vicini a questo punto $\overline{x}$. (Aggiungere un punto non cambia
+nulla, anzi significa aggiungere un termine alla tabella e ricavarne il
+valore).
+
+\subsection{Costo computazionale.}
+Per analizzare il costo computazionale delle differenze divise vediamo le
+operazioni che servono per la costruzione delle colonne:
+\begin{itemize}
+\item[-]Differenza divisa di primo grado:
+  \begin{itemize}
+  \item[]Somme: $2(n)$;
+  \item[]Divisioni: $n$.
+  \end{itemize}
+\item[-]Differenza divisa di secondo grado:
+  \begin{itemize}
+  \item[]Somme: $2(n-1)$;
+  \item[]Divisioni: $n-1$.
+  \end{itemize}
+\item[-]Differenza divisa di terzo grado:
+  \begin{itemize}
+  \item[]Somme: $2(n-2)$;
+  \item[]Divisioni: $n-2$.
+  \end{itemize}
+\item[]$\vdots$
+\item[-]Differenza divisa di grado $n-2$:
+  \begin{itemize}
+  \item[]Somme: $2 \cdot 2$;
+  \item[]Divisioni: $2$.
+  \end{itemize}
+\item[-]Differenza divisa di grado $n-1$:
+  \begin{itemize}
+  \item[]Somme: $2$;
+  \item[]Divisioni: $1$.
+  \end{itemize}
+\end{itemize}
+
+Somme totali:\\
+$2[n+(n-1)+(n-2)+ \cdots + 2 + 1] = \frac{2(n)(n+1)}{2}$.\\
+
+Divisioni totali:\\
+$n+(n-1)+(n-2)+ \cdots + 2 + 1 =  \frac{(n)(n+1)}{2}$.\\
+
+\[\simeq \textrm{O}\left(\frac{n^2}{2}\right).\]
+
+$\begin{array}{lcl}
+p_0(x) & = & y_0 = f[x_0] \\
+p_1(x) & = & p_0(x) + f[x_0,x_1](x-x_0) \\
+p_2(x) & = & p_1(x) + f[x_0,x_1,x_2](x-x_0)(x-x_1) \\
+\vdots \\
+p_n(x) & = & p_{n-1}(x) + f[x_0,x_1,\ldots,x_n](x-x_0)(x-x_1)\cdots(x-x_{n-1}).
+\end{array}$
+
+\begin{flushleft}
+Per conoscere il valore del modello in un punto $\overline{x}$ assegnato
+\emph{non nodale} è sufficiente usare lo schema di cui sopra. Usando sempre
+il valore del polinomio precedente.
+\end{flushleft}
+Partendo invece direttamente dal polinomio nella seguente forma:
+\[
+p_n(x) = f[x_0] +  f[x_0,x_1](x-x_0)  +
+         \cdots + f[x_0,x_1,\ldots,x_n](x-x_0)(x-x_1)\cdots(x-x_{n-1}).
+\]
+quanto costa valutare il polinomio in un punto $\overline{x}$?
+
+Prima di rispondere mettiamoci in una situazione più familiare:
+\[
+p(x) = a_0 + a_1x + a_2x^2+ \cdots + a_{n-1}x^{n-1} + a_nx^n, \quad a_n \neq 0.
+\]
+\[
+p(\overline{x}) = a_0 + a_1\overline{x} + a_2\overline{x}^2+ \cdots +
+a_{n-1}\overline{x}^{n-1} + a_n\overline{x}^n, \quad a_n \neq 0.
+\]
+
+Somme totali: $n$.\\
+
+Prodotti totali:\\
+$1 + 2 + 3 + \cdots + \overbrace{\underbrace{(n-1)}_{\textrm{potenza di } n}
++ \underbrace{1}_{a_n\cdot x^n}}^{n}
+\ \simeq  \textrm{O}\left(
+\frac{n^2}{2}\right)$.\\
+
+Un altro modo per valutare i prodotti è mantenendo in memoria le potenze
+precedenti, ovvero si hanno sempre due prodotti, uno per il coefficiente ed
+uno per la nuova potenza:\\
+$1 + 2 + 2 + \cdots + 2 = 2n-1 \ \simeq \textrm{O}\left(2n\right)$.
+
+\begin{flushleft}
+Un'altra possibilità per ridurre il numero dei prodotti è la seguente:
+\begin{exe}$n = 3$
+\[\begin{array}{lcl}
+p(\overline{x}) & = & a_0 + a_1\overline{x} + a_2\overline{x}^2 + a_3
+\overline{x}^3 \\
+& = & ((a_3\overline{x} + a_2)\overline{x} + a_1)\overline{x} +a_0.
+\end{array}\]
+\end{exe}
+Somme totali: $n$.\\
+
+Prodotti totali: $n$.\\
+\[
+p(x) = \left(\cdots\left(\left(\left(a_nx + a_{n-1}\right)x + a_{n-2}\right)x +
+ a_{n-3}\right)\cdots \right)x + a_0.
+\]
+\end{flushleft}
+
+
+\begin{itemize}
+\item[]Sia $d_n := a_n$, (coeffciente di grado massimo).
+\begin{itemize}
+\item[$\circ$] $k = n-1, \ldots, 0$:
+\item[]
+$d_k = d_{k+1}x + a_{k}$;
+\end{itemize}
+\item[]$d_0 = p(x)$.
+\end{itemize}
+
+Consideriamo $\overline{x}$.
+\begin{itemize}
+\item[]Sia $d_n := a_n$, (coeffciente di grado massimo).
+\begin{itemize}
+\item[$\circ$] $k = n-1, \ldots, 0$:
+\item[]
+$d_k = d_{k+1}\overline{x} + a_{k}$;
+\end{itemize}
+\item[]
+$d_0 = p(\overline{x})$.
+\end{itemize}
+
+Questo algoritmo (ottimale) si chiama \emph{Algoritmo di H\"ormer}.
+\begin{osse}
+Con i moderni calcolatori non si coglie la differenza tra i tre algoritmi
+su pochi dati ($n = 10$), aumentando sensibilmente questo numero però
+le differenze si notano.
+\end{osse}
+
+Tornando al seguente polinomio:
+
+\[
+p_n(x) = f[x_0] +  f[x_0,x_1](x-x_0)  +
+         \cdots + f[x_0,x_1,\ldots,x_n](x-x_0)(x-x_1)\cdots(x-x_{n-1})
+\]
+possiamo sfruttare  H\"ormer?
+\[
+\begin{array}{clc}
+p_n(x) & = & (\cdots(((f[x_0,\ldots,x_n](x-x_{n-1})
+ +  f[x_0,\ldots,x_{n-1}])(x-x_{n-2}) \\
+& + & f[x_0,\ldots,x_{n-2}])(x-x_{n-3}) + \cdots )\cdots )(x-x_0) + f[x_0].
+\end{array}\]
+
+$d_n := f[x_0, \ldots, x_{n}]$, (coeffciente di grado massimo).
+\begin{itemize}
+\item[$\square$] $k = n-1, \ldots, 0$:
+\[
+d_k = d_{k+1}(x-x_k) + f[x_0,\ldots, x_k];
+\]
+$d_0 = p_n(x)$.
+\end{itemize}
+
+Questo algoritmo nella tecnica lagrangiana non è utilizzabile.
+
+\subsection{Calcolo dell'errore.}
+Presi $n+1$ punti distinti e $n+1$ passaggi:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots  & x_n\\
+y_0 & y_1 & \cdots  & y_n
+\end{array}\]
+tali che: $p_n \in \PP_n$, $p_i(x_1) = y_i, \, i = 0,\ldots,n$; $f(x) \in
+\cc^{n+1}([a,b])$ e $x_i \in (a,b)$. Per il teorema \ref{teo7.11}:
+
+$\forall x \in [a,b], x \neq x_i,\ (i = 0, \ldots n)$
+\[
+e(x) = f(x)-p(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!}\omega_n(x),
+\]
+\[\textrm{con }\ \omega_n(x) = (x-x_0)\cdots(x-x_n) = \prod_{k=0}^n(x-x_k).\]
+
+Vogliamo una forma alternativa dell'errore.
+\begin{exe} Dati due punti e due passaggi:
+\begin{flushleft}$\begin{array}{cc}
+x_0 & x_1 \\
+f(x_0) & f(x_1)
+\end{array}$\end{flushleft}
+$p_1(x) \in \PP_1 \colon p_i(x_i) = f(x_i), \quad i = 0,1.$\\
+$p_1(x) = f[x_0] + f[x_0,x_1](x-x_0)$.\\
+
+Sia $x \neq x_0, x_1$,\\
+$p_2(x) \in \PP_2$ interpolante in $x_0,\, x_1,\, x$, cioè tale che:
+\[p_2(x) = f(x), \ p_2(x_i) = f(x_i) \quad i = 0,1.\]
+
+\[p_2(t) = p_1(t) + f[x_0,x_1,x](t-x_0)(t-x_1).\]
+\[p_2(x) = p_1(x) + f[x_0,x_1,x](x-x_0)(x-x_1) = f(x).\]
+
+\begin{equation}\label{eq7.1}
+\longrightarrow \ f(x) - p_1(x) = f[x_0,x_1,x](x-x_0)(x-x_1) =: e(x).
+\end{equation}
+
+\begin{equation}\label{eq7.2}
+f(x) - p_1(x) = \frac{f''(\xi_x)}{2!}(x-x_0)(x-x_1) \quad \textrm{(errore
+formale)}
+\end{equation}
+
+In \ref{eq7.1} abbiamo $f[x_0,x_1,x]$ al posto di $\frac{f''(\xi_x)}{2!}$,
+però se risolvessimo $f[x_0,x_1,x]$ otterremmo un $f(x)$ non conosciuto,
+quindi non abbiamo ancora un risultato computazionale. Abbiamo ottenuto il
+seguente risultato:
+\[f[x_0,x_1,x] = \frac{f''(\xi_x)}{2!}\]
+in quanto $e(x) = (\ref{eq7.1}) = (\ref{eq7.2})$, ovvero l'errore è lo stesso.
+\end{exe}
+
+Il collegamento tra differenza divisa e derivata è possibile quando la
+funzione
+è sufficientemente regolare. Il vantaggio è che in $f[x_0, \ldots, x_n]$
+serve solo $f$ e non devo calcolarne la derivata. \emph{Questo sarà
+importantissimo quando parleremo di equazioni differenziali}.
+
+\begin{exe}Supponiamo di prendere due punti molto vicini:
+\begin{flushleft}$\begin{array}{cc}
+x_0 & x_1 \\
+f(x_0) & f(x_1)
+\end{array}$\end{flushleft}
+tali che $x_1 = x_0 + \varepsilon$.
+\[
+f[x_0,x_1] = f[x_0,x_0+\varepsilon] = \frac{f(x_0+\varepsilon) -
+f(x_0)}{\cancel{x_0} + \varepsilon \cancel{- x_0}}.
+\]
+
+\[
+\underbrace{\lim_{\varepsilon \to 0}f[x_0,x_0+\varepsilon]}_{= f[x_0,x_0]} =
+\lim_{\varepsilon \to 0}\frac{f(x_0+\varepsilon) - f(x_0)}{\varepsilon} =
+f'(x_0).
+\]
+Se consideriamo $f'(x_0)$, lo possiamo associare a $f[x_0,x_0] \neq
+\frac{y_0 -y_0}{x_0-x_0}$, che è la differenza divisa su due nodi coincidenti.
+
+\end{exe}
+
+Consideriamo ora la seguente situazione:
+\begin{flushleft}$\begin{array}{cccc}
+x_0 & y_0 &  &  \\
+    &     & f[x_0,x_0] = f'(x_0) & \\
+x_0 & y_0 &  &  \\
+    &     &  f[x_0,x_1] & \\
+x_1 & y_1 &
+\end{array}$\end{flushleft}
+
+$\xi_x \in [x_0, x_1], \quad x_0 = x + \varepsilon_0, \quad x_1 = x +
+\varepsilon_1$.
+\[
+\underbrace{\lim_{\varepsilon_0,\varepsilon_1 \to 0}f[x_0,x_1,x]}_{= f[x,x,x]} =
+\lim_{\substack{\varepsilon_0 \to 0 \\\varepsilon_1 \to 0}} \frac{f''(\xi_x)}{2!}
+= \frac{f''(\xi_x)}{2!}.
+\]
+
+\[f[x_0,x_1,x] = \frac{f''(\xi_x)}{2!}.\]
+
+Anche una differenza divisa del secondo ordine con tre punti coincidenti è
+interpolabile formalmente in funzione della derivata seconda, coincidono
+a meno di una costante.
+
+\begin{flushleft}$\begin{array}{ccccc}
+x_0 & y_0 &  &  \\
+    &     & f[x_0,x_0] = f'(x_0) & \\
+x_0 & y_0 &  &  f[x_0,x_0,x_0] = \frac{f''(x)}{2!}\\
+    &     & f[x_0,x_0] = f'(x_0) & & f[x_0,x_0,x_0,x_1]\\
+x_0 & y_0 &  &  f[x_0,x_0,x_1] = \frac{f[x_0,x_1]- f'(x_0)}{x_1-x_0}\\
+    &     &  f[x_0,x_1] & \\
+x_1 & y_1 &
+\end{array}$\end{flushleft}
+
+Tornando all'errore, generalizzando il discorso precedente, dati $n+1$ punti
+distinti e $n+1$ passaggi:
+\[\begin{array}{cccc}
+x_0 & x_1 & \cdots & x_n \\
+f(x_0) & f(x_1) & \cdots & f(x_n)
+\end{array}\]
+\[f(x) \in \cc^{(n+1)}([a,b]), \quad e(x) = f(x) - p(x) =
+\frac{f^{(n+1)}(\xi_x)}{(n+1)!}\omega_n(x).\]
+$p(x_i) = f(x_i), \quad i=0,\ldots, n$.\\
+
+Sia $x \neq x_i \quad i = 0,\ldots,n$ e $p_{n+1}$ interpolante in $x_0, \ldots
+x_n, x$ tale che:
+\[
+p_{n+1}(x) = f(x), \quad p_{n+1}(x_i) = f(x_i) \quad i=0,\ldots,n.
+\]
+
+\[
+p_{n+1}(t) = p_n(t) + f[x_0,x_1,\ldots,x_n,x](t-x_0)(t-x_1)\cdots(t-x_n).
+\]
+\[
+p_{n+1}(x) = p_n(x) + f[x_0,x_1,\ldots,x_n,x](x-x_0)(x-x_1)\cdots(x-x_n) = f(x).
+\]
+
+\[
+f(x) - p_n(x) = f[x_0,x_1,\ldots,x_n,x]
+\underbrace{(x-x_0)(x-x_1)\cdots(x-x_n)}_{\omega_n(x)}.
+\]
+\[f(x)- p(x) = \frac{f^{(n+1)}(\xi_x)}{(n+1)!}\omega_n(x).\]
+\[\longrightarrow \ f[x_0,x_1,\ldots,x_n,x]= \frac{f^{(n+1)}(\xi_x)}{(n+1)!}.\]
+
+$f[x_0,x_1,\ldots,x_n,x]$ è la differenza divisa di ordine $n+1$ (poiché
+abbiamo $n+2$ punti). Formalmente abbiamo l'uguaglianza di cui sopra, poi
+buttando via qualcosa avremo l'errore; l'incertezza deriva dal fatto che
+non si conosce il valore di $f(x)$ fuori dai nodi.
+Si noti che il fattoriale al denominatore ha l'ordine della derivata.
+
+\section{Nodi di Chebyshev.}
+
+\subsection*{Riprendiamo dai polinomi di Lagrange.}
+Siano:
+
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n
+\end{array}\]
+il nostro insieme di dati (punti distinti e passaggio relativo),
+\[p(x) \in \PP_n, \quad p(x_i) = y_i, \quad i = 0,\ldots, n.\]
+\[p(x) = \sum_{i = 0}^{n}y_il_i(x).\]
+Assegnamo anche $\overline{y}_0, \overline{y}_1, \ldots, \overline{y}_n$, con
+$\overline{y}_i = y_i + \varepsilon_i$, con $\varepsilon_i$ perturbazioni.
+\[\longrightarrow\ \varepsilon_i = \overline{y}_i -y_i.\]
+Costruiamo ora il polinomio perturbato $\overline{p}(x) \in \PP_n$:
+\[\overline{p}(x) = \sum_{i = 0}^n\overline{y}_il_i(x).\]
+\[l_i(x) = \prod_{\substack{k=0\\ k \neq i }}^n\frac{x-x_k}{x_i-x_k}.\]
+
+\[p(x) - \overline{p}(x) = \sum_{i = 0}^{n}y_il_i(x) -
+\sum_{i = 0}^{n}\overline{y}_il_i(x) = \sum_{i=0}^n(y_i - \overline{y}_i)l_i(x).\]
+\[
+\begin{array}{lcl}
+\left| p(x) - \overline{p}(x)\right| & = & \displaystyle
+\left| \sum_{i=0}^n(y_i -
+\overline{y}_i)l_i(x)\right| \\
+& \leq &\displaystyle  \sum_{i=0}^n\left|y_i - \overline{y}_i\right|
+\left|l_i(x)
+\right| \\
+& = &\displaystyle  \sum_{i=0}^n\left|\varepsilon_i\right|\left|l_i(x)\right|
+\\
+& \leq &\displaystyle  \sum_{i=0}^n\left\|\varepsilon_i\right\|_{\infty}
+\left|l_i(x)\right| \\
+& = &\displaystyle  \left\|\varepsilon\right\|_{\infty}\sum_{i=0}^n\left|l_i(x)
+\right|.
+\end{array}
+\]
+
+\begin{center}
+Considerando il vettore
+$\varepsilon = \left[
+\begin{array}{c}
+\varepsilon_0 \\
+\varepsilon_1 \\
+\vdots \\
+\varepsilon_n
+\end{array}
+\right].
+$
+\end{center}
+
+\[\max_{x_0 \leq x \leq x_n}|p(x) - \overline{p}(x)| \leq \max_{x_0 \leq x \leq x_n}
+\left\|\varepsilon\right\|_{\infty}\sum_{i=0}^n\left|l_i(x)\right|
+= \left\|\varepsilon\right\|_{\infty}
+\underbrace{\max_{x_0 \leq x \leq x_n}\sum_{i=0}^n\left|l_i(x)\right|}_{\Lambda_n \
+\textrm{costante di Lebesque}}.
+\]
+
+\[\longrightarrow\ \|p(x) - \overline{p}(x) \|_{\infty} \leq  \left\|
+\varepsilon\right\|_{\infty}\Lambda_n.\]
+
+\begin{osse}
+$\Lambda_n$ dipende solo dai nodi.
+\[
+\|p(x) -\overline{p}(x)\|_{\infty} \leq \|\varepsilon\|_{\infty}\Lambda_n.
+\]
+Questo è interpretabile come la stima dell'errore sul polinomio
+$\overline{p}(x)$ rispetto a $p(x)$. Più $\Lambda_n$ è piccolo e più è
+piccolo l'errore relativo al calcolo di $p(x)$. E' importante minimizzare
+l'errore di propagazione.
+\end{osse}
+
+Sia $f(x) \in C^0([a,b])$ tale che:
+\begin{flushleft}$\begin{array}{cccl}
+x_0 & x_1 & \cdots & x_n  \quad \in [a,b] \\
+y_0 & y_1 & \cdots & y_n
+\end{array}$\end{flushleft}
+$y_i = f(x_i), \quad i=0,\ldots,n.$\\
+
+In realtà non avremo valori $y_i$ esatti, ma approssimazioni dovuti
+all'\emph{approssimazione di macchina}.
+
+\subsection{Minimizzazione di $\Lambda_n$.}
+Qual'è la scelta dei punti nodali che rende la costante di Lebesque
+($\Lambda_n$) minima? A questa domanda risponde \emph{Chebyshev}:
+\begin{itemize}
+\item[-] si prenda come intervallo $[-1,1] = [a,b]$;
+\item[-] si costruisca una sequenza di polinomi, il minimo $\Lambda_n$ si
+ottiene prendendo come nodi gli $n+1$ zeri del polinomio ortogonale di
+Chebishev.
+\item[] (Quindi se possiamo, utilizziamo i nodi di Chebishev).
+\end{itemize}
+
+\begin{defi}Sia $x \in [a,b]$, $c(x)$ il polinomio di Chebyshev di grado
+$n+1$, gli $n+1$
+zeri di $c(x)$ sono gli $x_i$ tali che:
+\[
+x_i = \frac{b -a}{2}\cos \left( \frac{2i-1}{n}  \cdot \frac{\pi}{2}\right) +
+\frac{a+b}{2}, \qquad i = 0, \ldots, n.
+\]
+$x_i \in [a,b]$.
+\end{defi}
+
+Sia $x_i \in [-1,1]$ un nodo di Chebyshev:
+\[t = \alpha x_i + \beta, \quad t_i = \frac{b-a}{2}x_i + \frac{b-a}{2}.\]
+
+$t, t_i$ sono nodi nell'intervallo $[a,b]$.
+
+\[
+a = \alpha(-1) + \beta \ \longrightarrow \ 2\beta = a+b;
+\]
+\[
+b = \alpha(1) + \beta \ \longrightarrow \ 2\alpha = b-a.
+\]
+
+Il procedimento è un po' lungo, quindi utilizziamo punti simili (che vengono
+sempre chiamati in gergo ``punti di Chebyshev'').
+\begin{enumerate}
+\item $x_i = \cos \frac{2i - 1}{2n} \pi, \quad i = 0,\ldots, n.$
+\item $x_i = \cos \frac{i}{n} \pi, \quad i = 0,\ldots, n.$
+\end{enumerate}
+\[
+\longrightarrow \ \Lambda_n \simeq e^{\frac{n}{2}}, \quad x_i \ \textrm{punti
+equispaziati.}
+\]
+
+\[h = \frac{b-a}{n}, \quad x_i = a +ih, \quad i = 0,\ldots,n.\]
+
+\[
+\Lambda_n \simeq e^{\frac{n}{2}}, \colon\quad \textrm{comportamento esplosivo.}
+\]
+
+In conclusione il polinomio che costruiamo può discostarsi molto da quello
+teorico senza errori nei dati. Se invece utilizziamo i nodi di Chebyshev:
+\[\longrightarrow \ \Lambda_n \simeq \frac{2}{\pi}\log n,\]
+ovvero la divergenza è \emph{molto} più lenta.
+\[\lim_{n \to \infty}\frac{\Lambda_n}{\log n}  =
+\frac{2}{\pi}.\]
+Abbiamo una riduzione di $\Lambda_n$, questo garantisce una maggiore
+precisione del polinomio approssimante $\overline{p}$. In sostanza la costante
+di Lebesque è l'\emph{indice di stabilità} del polinomio interpolatore.
+
+\subsection{Relazione tra errori relativi.}
+$\|p(x)\|_{\infty} = \displaystyle
+\max_{x_0 \leq x \leq x_n}|p(x)| \geq \|p(x_i)\|_{\infty} =
+\max_{0 \leq i \leq n}|p(x_i)| = \|y\|_{\infty}$.
+\[y = \left[
+\begin{array}{c}
+y_0 \\
+y_1 \\
+\vdots \\
+y_n
+\end{array}\right].
+\]
+
+\begin{osse}
+
+\[
+\underbrace{\frac{\|p(x) - \overline{p}(x)\|_{\infty}}{\|p(x)\|_{\infty}}
+}_{\textrm{errore relativo sul polinomio}} \leq \left.\frac{\|\varepsilon\|_\infty}{\|y
+\|_{\infty}}\Lambda_n\,\right\}\textrm{errore relativo ai dati iniziali.}
+\]
+\end{osse}
+
+\begin{teo}\label{teo7.15}
+Sia $f(x) \in \cc^0([a,b])$, siano $x_0, x_1, \ldots, x_n$ punti distinti in
+$[a,b]$ e $p(x)$ il polinomio interpolatore di $f$:
+\[p(x) \in \PP_n \colon p(x_i) = f(x_i), \quad i=0,\ldots, n.\]
+Allora:
+\[
+\max_{a \leq x \leq b}|f(x)-\overline{p}(x)| = \|f(x) - p(x) \|_{\infty}
+\leq \left(1+ \Lambda_n\right) E_n(t).
+\]
+
+\[
+E_n(t) := \inf_{q(x) \in \PP_n} \|f(x)-q(x)\|_\infty.
+\]
+$E_n(t)$ è il grado di approssimazione della funzione $f$ in norma infinito.
+\end{teo}
+\begin{osse}
+$q$ è un polinomio qualsiasi che varia nella classe dei polinomi di grado
+minore o uguale ad $n$.
+\end{osse}
+
+Un'idea è quella di costruire una successione di polinomi interpolanti che
+tenda ad $f$.
+\[
+\begin{array}{ccccccccc}
+x_0 & &p_0(x) \\
+x_0 & x_1 & & p_1(x) \\
+x_0 & x_1 & x_2 & &p_2(x) \\
+x_0 & x_1 & x_2 & x_3 & &p_3(x) \\
+\vdots \\
+x_0 &     &    & \cdots & x_n & &p_n(x) \\
+\vdots \\
+x_0 &     &    &\cdots & x_n & \cdots & x_m & &p_m(x)
+\end{array}
+\]
+
+Otteniamo così una matrice infinita costituita da elementi riga diversi.
+
+Il risultato che vogliamo é:
+\[
+\lim_{n \to + \infty}p_n(x) \stackrel{?}{=} f(x).
+\]
+
+Questo risultato \emph{non c'è}! Ovvero aggiungere dei punti non sempre
+migliora il modello.
+
+\begin{exe} Funzione di Runge.
+\[f(x) = \frac{1}{1+ x^2}, \quad [a,b] = [-5,5]. \]
+\[x_i = -5 +ih, \quad h = \frac{10}{n}, \quad i = 0, \ldots, n.\]
+Costruiamo i polinomi interpolatori (con la tecnica che vogliamo),
+disegnandoli al variare di $n$, vediamo come migliora o peggiora
+l'approssimazione del polinomio. Nell'avvicinarsi ai bordi dell'intervallo
+($-5$ e $5$) abbiamo errori grandi.
+\end{exe}
+\begin{notabene}
+Il problema è nei nodi scelti. Se avessimo altre famiglie di nodi potremmo
+avere \emph{convergenza}. In sostanza occorre scegliere opportunamente
+i nodi.
+\end{notabene}
+
+\begin{dimo} (Teorema \ref{teo7.15})
+\[
+\begin{array}{lcl}
+f(x) - p(x) & = & f(x) - q(x) + q(x) - p(x) \\
+& = & f(x) - q(x) - (p(x) - q(x)).
+\end{array}
+\]
+\[
+\begin{array}{lcl}
+|f(x) - p(x)| & = & |f(x) - q(x) -(p(x) - q(x))| \\
+& \leq & |f(x) - q(x)| - |p(x) - q(x)| \\
+& = & |f(x) - q(x)| + \left| \sum_{i = 0}^nf(x_i) l_i(x)
+-\sum_{i=0}^nq(x_i)l_i(x)\right| \\
+& = & | f(x) -q(x)| + \left| \sum_{i=0}^n (f(x_i)-q(x_i))l_i(x)\right|.
+\end{array}
+\]
+Abbiamo potuto esprimere $q(x)$ in questa forma:
+\[q(x) = \sum_{i=0}^nq(x_i)l_i(x)\]
+poiché $q$ è un polinomio equivalente al suo polinomio
+interpolatore.
+
+\[
+\begin{array}{lcl}
+\longrightarrow \
+\|f(x) - p(x)\|_{\infty} & \leq & \|f(x) - q(x)\|_\infty + \|f(x)- q(x)\|_{\infty}
+\|\underbrace{\sum_{i=0}^n l_i(x)}_{\Lambda_n}\|_{\infty}\\
+& = & \|f(x) + q(x)\|_\infty(1 + \Lambda_n).
+\end{array}
+\]
+\end{dimo}
+
+
+Perchè concentrarsi sull'interpolazione se non porta a convergenza? Ovviamente
+perchè ci sono condizioni che la permettono. Cerchiamo uno spazio
+di polinomi denso nello spazio di funzioni.
+
+Al posto di utilizzare il $\lim_{n \to + \infty}$ fissiamo $n$ e facciamo tendere
+l'ampiezza dell'intervallo $[a,b]$ a zero. In pratica ``tagliuzziamo'' il
+dominio in tanti sottointervalli, così otteniamo una buona approssimazione
+di $f$ per ogni intervallino.
+
+\[\omega_n(x) = (x-x_0)(x-x_1)\cdots (x-x_n) \leq (b-a)^n.\]
+\[b-a \longrightarrow 0 \ \Longrightarrow \ \omega_n(x) \longrightarrow 0.\]
+
+Consideriamo una nuova quantità di dati, introducendo il dato ``pendenza''.
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n  \\
+y'_0 & y'_1 & \cdots & y'_n
+\end{array}\]
+$p(x) \in \PP_{2n +1}$ tale che $p(x_i) = y_i,\, p'(x_i) = y'_i$, per ogni $i =
+0, \ldots, n$.
+
+Il polinomio ha $2n +2$ gradi di libertà, quindi esiste un unico polinomio
+$p(x) \in \PP_{2n+1}$ in cui imponiamo $2n+2$ vincoli.
+
+Una prima formula possibile di soluzione è la seguente:
+\begin{equation}\label{eq7.3}
+p(x) = \sum_{i=0}^n\left(A_i(x)y_i + B_i(x)y'_i\right).
+\end{equation}
+Dove, per ogni $i = 0, \ldots, n$:
+\[A_i = [1-2(x-x_i)l'_i(x_i)]\cdot l_i^2(x),\]
+\[B_i = (x-x_i)l_i^2(x),\]
+\[l_i(x) = \prod_{\substack{k=0 \\ k\neq i}}\frac{x-x_k}{x_i-x_k}.\]
+
+\begin{defi}
+Un polinomio $p \in \PP_{2n+1}$ della forma di \ref{eq7.3} si dice
+\emph{polinomio interpolatore secondo Hermite}.
+\end{defi}
+
+\begin{prop}
+Il polinomio $p \in \PP_{2n+1}$ costruito con \ref{eq7.3} interpola i punti
+dati:
+\[\begin{array}{ccccc}
+x_0 & x_1 & \cdots & x_n   \\
+y_0 & y_1 & \cdots & y_n  \\
+y'_0 & y'_1 & \cdots & y'_n
+\end{array}\]
+Ovvero $p(x) \in \PP_{2n +1}$, $p(x_i) = y_i,\, p'(x_i) = y'_i$, per ogni $i =
+0, \ldots, n$.
+\end{prop}
+\begin{dimo}
+\begin{itemize}
+\item[--] $p(x) \in \PP_{2n+1}$:\\
+
+$A_i$ ha grado $2n+1$, $B_i$ ha grado $2n+1$, ne segue che $p$ è combinazione
+lineare di due polinomi di grado $2n+1$.
+\item[--]$p(x_i) = y_i,\qquad \forall i = 0, \ldots , n$:
+\[p(x_k) = \sum_{i=0}^n \left(A_i(x_k)y_i + B_i(x_k)y'_i \right)
+\stackrel{?}{=} y_k,\]
+\[
+B_i(x_k) = (x_k-x_i)l_i^2(x_k) = \left\{\begin{array}{lcr}0 & & i = k, \\ \\
+0 & &i \neq k.\end{array}\right.\]
+\[
+A_i(x_k) = \left[1-2(x_k-x_i)\cdot l'_i(x_k)\right]\cdot l_i^2(x_k) =
+\left\{\begin{array}{lcr}
+1 \cdot l_i^2(x_i) = 1 & & i = k, \\
+\\
+0 & & i \neq k.
+\end{array}\right.
+\]
+\[
+\longrightarrow \ p(x_k) = A_k(x_k) y_k = y_k.
+\]
+\item[--]$p'(x_k) = y'_k$:
+\[p'(x) = \sum_{i=0}^nA'_i(x)y_i + B'_i(x)y'_i.\]
+\[A'_i(x) = -2 l'_i (x_i)l_i^2(x_i)+[1-2(x-x_i)l'_i(x_i)]\cdot 2l_i(x)l'_i(x).\]
+\[B'_i(x) = l_i^2(x) + (x-x_i)2l_i(x)l_i'(x).\]
+
+$p'(x) = \ $?
+
+\begin{itemize}
+\item[$\circ$]
+$A'_i(x_k) = -2 l'_i(x_i)l^2_i(x_k) +
+[1-2(x_k-x_i)l'_i(x_i)]\cdot 2l_i(x_k)l'_i(x_k)$.
+\[
+A'_i(x_k) = \left\{\begin{array}{lcr}0 & & \textrm{se } i = k, \\
+\\
+0 & & \textrm{se } i \neq k.
+\end{array}\right.
+\]
+\item[$\circ$]$B'_i(x_k) = l_i^2(x_k) + (x_k-x_i)2l_i(x_k)l_i'(x_k)$.
+\[
+B'_i(x_k) = \left\{\begin{array}{lcr}1 & & \textrm{se } i = k, \\
+\\
+0 & & \textrm{se } i \neq k.
+\end{array}\right.
+\]
+\end{itemize}
+$\longrightarrow \ p'(x_k) = y'_k$.
+\end{itemize}
+\end{dimo}
+
+\section{Polinomio di Hermite e differenze divise.}
+Ricordiamo come si definiscono le derivate mediante differenze divise:
+\[
+f[x_i, x_i] = f'(x_i), \qquad f[\underbrace{x_i, \ldots, x_i}_{n}] =
+\frac{f^{(n)}(x_i)}{n!}.
+\]
+
+\begin{itemize}
+\item[$\circ$]
+Partiamo da $x_0, y_0$ e costruiamo $p_0(x) \in \PP_0$ tale che $p_0(x_0)=y_0$:
+\[\longrightarrow \ p_0(x) = A_0 = y_0 = f[x_0]. \]
+
+Vogliamo costruire un polinomio $p_1(x) \in \PP_1$ tale che $p_1(x_0) = y_0$
+e $p'_1(x_0) = y'_0$ della forma:
+\[
+p_1(x) = p_0(x) + \framebox[3.5\width]{\textrm{?}} = p_0(x) + A_1(x-x_0).
+\]
+
+$\framebox[3.5\width]{\textrm{?}}$ si deve annullare in $x_0$ da cui
+$A_1(x-x_0)$.
+
+\[
+p'_1(x) = A_1, \quad y'_0 = p'_1(x_0) = A_1 = f[x_0,x_0].
+\]
+
+Vediamo cosa abbiamo fatto:\\
+
+$\begin{array}{llcc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] = y'_0 \\
+x_0 & y_0
+\end{array}$
+\[p_1(x) = f[x_0] + f[x_0,x_0](x-x_0).\]
+
+\item[$\circ$]
+Dati il primo punto ($x_0$) ed il relativo passaggio abbiamo quindi ottenuto
+la pendenza, ora aggiungiamo il dato successivo $x_1$ ed il relativo passaggio
+$y_1$, abbiamo la seguente situazione:
+
+$\begin{array}{lllc}
+x_0 & y_0  & y'_0  \\
+x_1 & y_1     \\
+\end{array}$\\
+e costruiamo quindi $p_2$ (avendo tre vincoli sarà di grado $\leq 2$),
+$p_2(x) \in \PP_2$ tale che $p_2(x_0) = y_0$, $p'_2(x_0) = y'_0$ e $p_2(x_1) =
+y_1$ della seguente forma:
+\[
+p_2(x) = p_1(x) + \framebox[3.5\width]{\textrm{?}} = p_1(x) + A_2(x-x_0)^2.
+\]
+
+$\framebox[3.5\width]{\textrm{?}}$ deve annullarsi in $x_0$ e in $p'(x_0)$
+da cui otteniamo $A_2(x-x_0)^2$.
+
+\[
+y_1 = p_2(x_1) = p_1(x_1) + A_2(x-x_0)^2.
+\]
+
+\[
+\begin{array}{lcl}
+A_2 & = & \frac{y_1 - y_0 - f[x_0,x_0](x_1-x_0)}{(x_1-x_0)^2} \\
+& = &\frac{\frac{y_1 - y_0}{(x_1 - x_0)}
+- \frac{f[x_0,x_0](x_1-x_0)}{(x_1 -x_0)}}{x_1-x_0} \\
+& =  & \frac{f[x_0,x_1] - f[x_0,x_0]}{(x_1-x_0)} = f[x_0,x_0,x_1].
+\end{array}
+\]
+
+Abbiamo raggiunto la seguente situazione:\\
+
+$\begin{array}{llcc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] & \\
+x_1 & y_1 &
+\end{array}$
+
+\[
+p_2(x) = f[x_0] + f[x_0,x_0](x-x_0) + f[x_0,x_0,x_1](x-x_0)^2.
+\]
+
+\item[$\circ$] A questo punto cerchiamo la pendenza nel punto $y_1$ e
+calcoliamo il polinomio $p_3$ con quattro vincoli.
+
+$\begin{array}{lllc}
+x_0 & y_0  & y'_0  \\
+x_1 & y_1 & y'_1
+\end{array}$\\
+
+Vogliamo ottenere $p_3 \in \PP_3$ tale che:
+\[
+p_3(x_i) = y_i, \ p'_3(x_i) = y'_i, \qquad i = 0,1.
+\]
+
+\[p_3(x) = p_2(x) + A_3(x-x_0)^2(x-x_1).\]
+\[p'_3(x) = p'_2(x) + 2\cdot A_3(x-x_0)(x-x_1) + A_3(x-x_0)^2.\]
+\[y'_1 = p'_3(x_1) = p'_2(x) + A_3(x_1-x_0)^2.\]
+
+\[p'_2(x)=  f[x_0,x_0] + 2 \cdot f[x_0,x_0,x_1](x-x_0).\]
+
+\[
+\begin{array}{lcl}
+A_3 & = & \frac{f[x_1,x_1]-f[x_0,x_0]-2f[x_0,x_0,x_1](x_1-x_0)}{(x_1-x_0)^2} \\
+& = &\frac{\frac{f[x_1,x_1] - f[x_0,x_1]}{(x_1 - x_0)}
++ \frac{f[x_0,x_1]-f[x_0,x_0]}{(x_1 -x_0)}
+- \frac{2 \cdot f[x_0,x_0 x_1](x_1-x_0)}{(x_1 -x_0)}}{x_1-x_0} \\
+& =  & \frac{f[x_0,x_1,x_1] + f[x_0,x_0,x_1] -2 f[x_0,x_0,x_1]}{(x_1-x_0)} \\
+& = & f[x_0,x_0,x_1,x_1].
+\end{array}
+\]
+
+Abbiamo raggiunto la seguente situazione:\\
+
+$\begin{array}{llllc}
+x_0 & y_0 \equiv f[x_0]  &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] &               & f[x_0,x_0,x_1,x_1]\\
+x_1 & y_1 &            & f[x_0,x_1,x_1]\\
+    &     & f[x_1,x_1]\\
+x_1 & y_1
+\end{array}$
+
+\[
+\begin{array}{lcl}
+p_3(x) & = & p_2(x) + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1) \\
+       & = & f[x_0] + f[x_0,x_0](x-x_0) + f[x_0,x_0,x_1](x-x_0)^2 +\\
+       &   & + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1).
+\end{array}
+\]
+
+\begin{osse}
+Nella tabellina si ripetono $x_i$ e $y_i$ tante volte quanti sono i vincoli
+assegnati a quei punti, nel nostro esempio abbiamo due vincoli, il passaggio
+e la pendenza.
+\end{osse}
+\end{itemize}
+
+$\begin{array}{llllll}
+x_0 & y_0   &   \\
+    &     & f[x_0,x_0] \\
+x_0 & y_0  &            & f[x_0,x_0,x_1]  \\
+    &     & f[x_0,x_1] &               & f[x_0,x_0,x_1,x_1]\\
+x_1 & y_1 &            & f[x_0,x_1,x_1] &                  & \ddots \\
+    &     & f[x_1,x_1]\\
+x_1 & y_1 &            & & & f[x_0,x_0,x_1,x_1,x_2, \ldots, x_n,x_n]\\
+    &     & \\
+x_2 & y_2 & \\
+    &     &          &                    & \\
+\vdots & &           & f[x_{n-1}, x_n, x_n]\\
+    &    & f[x_n,x_n]\\
+x_n & y_n
+\end{array}$
+\begin{flushleft}
+Il termine finale ottenuto $f[x_0,x_0,x_1,x_1,x_2, \ldots, x_n,x_n]$ ha
+$2n$ numeri ed è quindi un polinomio di ordine $2n-1$.
+\end{flushleft}
+\[
+\begin{array}{lcl}
+p(x) & = & f[x_0] + f[x_0,x_0] + f[x_0,x_0,x_1](x-x_0)^2 +\\
+     &   & + f[x_0,x_0,x_1,x_1](x-x_0)^2(x-x_1) + \\
+     &  & \vdots\\
+     &   &+ f[x_0,x_0, \ldots, x_n,x_n](x-x_0)^2(x-x_1)^2\cdots
+(x-x_{n-1})^2 (x-x_n).
+\end{array}
+\]
+\begin{notabene}
+L'ultimo termine $(x-x_n)$ non è elevato al quadrato.
+\end{notabene}
+
+\begin{osse}
+Non è necessario sviluppare sempre la tabella completa, solitamente lo
+faremo con i dati vicino al punto che ci interesserà.
+\end{osse}
+
+\begin{prop}
+Siano $x_0, x_1, \ldots, x_n$ punti distinti in $[a,b]$, siano $\alpha_0,
+\alpha_1, \ldots, \alpha_n$ numeri naturali, e sia:
+\[m = n + \sum_{i=0}^n\alpha_i.\]
+Allora, assegnati i numeri reali $y^{(j)}_i$ con $i = 0, \ldots, n$ e $j = 0,
+\ldots, \alpha_i$; esiste un unico polinomio $p(x) \in \PP_m$ tale che:
+\[
+p^{(j)}(x_i) = y^{(j)}_i, \quad i = 0, \ldots, n; \ j= 0, \ldots, \alpha_i.
+\]
+\end{prop}
+
+\begin{exe}
+Se per $x_0$ abbiamo tre vincoli: $y_0, \, y'_0, \, y''_0$, dobbiamo ripetere
+tre volte la coppia $x_0 \ y_0$ nella tabella:
+
+\[\begin{array}{llllll}
+x_0 & y_0   &   \\
+    &     & f[x_0,x_0]= y'_0 \\
+x_0 & y_0  &            & f[x_0,x_0,x_0]  = \frac{f''(x_0)}{2!} = y''_0\\
+    &     & f[x_0,x_0]= y'_0 &           \\
+x_0 & y_0 &
+\end{array}\]
+
+\[p(x) = f[x_0] + \underbrace{f[x_0,x_0]}_{= f'(x_0)}(x-x_0) +
+\underbrace{f[x_0,x_0,x_0]}_{= \frac{f''(x)}{2}}(x-x_0)^2.\]
+$p$ è il polinomio di Taylor.
+\end{exe}
+
+\begin{flushleft}
+$\alpha_0 + 1 \left\{
+\begin{array}{lllll}
+x_0 & y_0  \\
+    &     & f[x_0,x_0] = y'_0 \\
+x_0 & y_0 &  & f[x_0,x_0,x_0] = \frac{y''_0}{2} \\
+    &     &  &         & f[x_0,x_0,x_0,x_0] = \frac{y'''_0}{3!}\\
+\vdots \\
+x_0 & y_0
+\end{array}
+\right.$
+\end{flushleft}
+\begin{flushleft}
+$\alpha_1 + 1 \left\{
+\begin{array}{ll}
+x_1 & y_1  \\
+x_1 & y_1 \\
+
+\vdots \\
+x_1 & y_1
+\end{array}
+\right.$
+\end{flushleft}
+\begin{flushleft}
+$\alpha_2 + 1 \left\{
+\begin{array}{ll}
+x_2 & y_2  \\
+x_2 & y_2 \\
+
+\vdots \\
+x_2 & y_2
+\end{array}
+\right.$
+\end{flushleft}
+
+\[\longrightarrow \ \sum_{i=0}^n\alpha_i + 1 = t \textrm{: il polinomio
+interpolatore ha grado } t-1.\]
+
+\begin{exe}
+Consideriamo il caso in cui non si abbiano dei dati completi:
+
+\[\begin{array}{lllc}
+x_0 & x_1  & x_2  \\
+y_0 & y_1 & y_2 \\
+y'_0 &   & y'_2 \\
+y''_0 & & y''_2 \\
+ & & y'''_2
+\end{array}\]
+\begin{flushleft}
+$
+\begin{array}{llllllll}
+x_0 & y_0  \\
+    &     & f[x_0,x_0]  \\
+x_0 & y_0 &  & f[x_0,x_0,x_0] \\
+    &     & f[x_0,x_0] &   & f[x_0,x_0,x_0,x_1] \\
+x_0 & y_0 &  & f[x_0,x_0,x_1] & & \ddots \\
+    &     & f[x_0,x_1] &   & f[x_0,x_0,x_1,x_2]  & & \ddots\\
+x_1 & y_1 &  & f[x_0,x_1,x_2]  & & & & (*)\\
+    &    & f[x_1,x_2] &   & f[x_0,x_1,x_2,x_2] \\
+x_2 & x_2 & & f[x_1,x_2,x_2]\\
+   &    & f[x_2,x_2] & & f[x_1,x_2,x_2,x_2]\\
+x_2 & x_2 & & f[x_2,x_2,x_2] & & \\
+   &    & f[x_2,x_2] & & f[x_2,x_2,x_2,x_2]\\
+x_2 & x_2 & & f[x_2,x_2,x_2]\\
+   &    & f[x_2,x_2] \\
+x_2 & x_2
+\end{array}
+$
+\[(*) = f[x_0,x_0,x_0,x_1,x_2,x_2,x_2,x_2].\]
+\end{flushleft}
+\end{exe}
+
+\begin{teo}
+Siano $x_0, x_1, \ldots, x_n$ punti distinti in $[a,b]$, siano $\alpha_0,
+\alpha_1, \ldots, \alpha_n$ numeri naturali, e sia:
+\[m = n + \sum_{i=0}^n\alpha_i.\]
+Sia $f(x) \in \cc^{m+1}([a,b])$ e $p(x) \in \PP_m$ il polinomio interpolatore
+generalizzante la funzione tale che:
+\[
+p^{(j)}(x_i) = f^{(j)}(x_i), \quad i = 0, \ldots, n; \ j= 0, \ldots, \alpha_i.
+\]
+Allora per ogni $x \in [a,b]$ esiste un punto $\xi_x \in I_x$ tale che:
+\[e(x) := f(x)-p(x) = \frac{f^{(m+1)}(\xi_x)}{(m+1)!}
+\underbrace{(x-x_0)^{\alpha_0+1}
+\cdot (x-x_1)^{\alpha_1+1} \cdots (x-x_n)^{\alpha_n+1}}_{\omega_m(x)}.\]
+\[I_x := [\min(x,x_0,x_1, \ldots, x_n), \max(x,x_0,x_1, \ldots, x_n)].\]
+\end{teo}
+\begin{osse}
+Se per ogni $i = 0,\ldots, n, \ \alpha_i = 0,\, $ allora vuol dire che per
+ogni punto abbiamo solo il passaggio.
+\end{osse}
+
+\begin{dimo}Sia $q \in \PP_m$ così definito:
+\[
+q(t) = p(t) + \underbrace{\frac{f(x)-p(x)}{\omega_m(x)}
+\omega_m(t)}_{\textrm{costante rispetto a }t}.
+\]
+
+\[
+q(x) = \cancel{p(x)} +\frac{f(x) \cancel{- p(x)}}{\bcancel{\omega_m(x)}}\cdot
+\bcancel{\omega_m(x)} = f(x)\ \longrightarrow \ q(t) \ \textrm{interpola}\ f
+\ \textrm{in}\ x.
+\]
+
+\[
+q(x_i) = p(x_i) +\cancelto{0}{\frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\omega_m(x_i)} = f(x_i),\]\[ \longrightarrow \ q(t) \ \textrm{interpola}\ f
+\ \textrm{nei punti}\ x_i \ \forall i = 0, \ldots, n.
+\]
+
+\[
+q^{(j)}(x_i) = p^{(j)}(x_i) + \cancelto{0}{\frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\omega^{(j)}_m(x_i)} = p^{(j)}(x_i) = f^{(j)}(x_i),\]
+\[\forall i = 0, \ldots, n;\ \forall j = 0, \ldots, \alpha_i.
+\]
+$q(t)$ interpola la $f$ nel punto $x$ e nei punti $x_i$ con relative
+condizioni.
+
+\begin{flushleft}
+$p(t) \in \PP_m$,
+\[\textrm{il grado di}\ \omega_m = \sum_{i = 0}^n \left(\alpha_i +1 \right) =
+\sum_{i=0}^n\alpha_i+n+1 = m+1.\]
+\end{flushleft}
+Definiamo ora una funzione $G$ tale che:
+\[G(t) = f(t)-q(t),\]
+quanti zeri ha la funzione $G$? Intanto sappiamo che $G \in \cc^{m+1}$ poiché
+$f \in \cc^{m+1}$ e $q \in \cc^{\infty}$.
+
+\[t = x \ \longrightarrow \ G(x) = f(x) - q(x) = 0.\]
+\[t = x_i \ \longrightarrow \ G(x_i) = f(x_i) - q(x_i) = 0,
+\quad \forall i = 0, \ldots, n.\]
+
+Inoltre fissato $i$:
+\[G^j(x_i) = f^j(x_i) - q^j(x_i) = 0, \quad \forall j=0,\ldots, n.\]
+$i = 0 \ \longrightarrow \ x_0$ è radice di molteplicità $\alpha_0 \neq 1$
+almeno.\\
+$\forall i, \  x_i$ è radice di molteplicità $\alpha_i \neq 1$
+almeno.\\
+\begin{flushleft}
+$G$ ha almeno $\left( \sum_{i=0}^n\alpha_i + 1\right) +1$ zeri, cioé ha almeno
+$m+2$ zeri.
+\end{flushleft}
+$G'$ ha almeno $m+1$ zeri per il teorema di Rolle: presi due zeri consecutivi
+la derivata prima si annulla in un punto in mezzo.\\
+$\vdots$\\
+$G^{(m+1)}$ ha almeno uno uno zero.
+\[
+\Longrightarrow\ \exists\, \xi_x \colon \ G(\xi_x) =0.
+\]
+
+\[
+\begin{array}{lcl}
+G^{(m+1)}(t) & = & f^{(m+1)}(t) - q^{(m+1)}(t) =  f^{(m+1)}(t) - \\
+& & - \cancelto{0}{p^{(m+1)}(t)} + \frac{f(x)-p(x)}{\omega_m(x)}\cdot
+\underbrace{\omega^{(m+1)}_m(t)}_{(n+1)!} \\
+& = & f^{(m+1)}(t) -  \frac{f(x)-p(x)}{\omega_m(x)}\cdot(n+1)!
+\end{array}\]
+
+\[
+\longrightarrow \ 0 = G^{(m+1)}(\xi_x) = f^{(m+1)}(\xi_x) +
+\frac{f(x)-p(x)}{\omega_m(x)}\cdot(n+1)!
+\]
+\[
+\longrightarrow \ e(x) = f(x) - p(x) =
+\frac{f^{(m+1)}(\xi_x)\omega_m(x)}{(n+1)!}.
+\]
+
+Caso: $x_i\ y_i\ y'_i \quad i = 0,\ldots,n$.\\
+$p(x)$ polinomio interpolatore.
+\[e(x) = f(x) -p(x) = \frac{f^{(2n +2)}(\xi_x)}{(2n+2)!}(x-x_0)^2\cdots
+(x-x_n)^2.\]
+\end{dimo}
+

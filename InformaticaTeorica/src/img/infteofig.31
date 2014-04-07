@@ -1,0 +1,18 @@
+%!PS
+%%BoundingBox: -3 -19 3 8 
+%%Creator: MetaPost
+%%CreationDate: 2006.06.27:1236
+%%Pages: 1
+%*Font: cmmi10 9.96265 9.96265 75:c
+%%EndProlog
+%%Page: 1 1
+ 0.5 0 dtransform exch truncate exch idtransform pop setlinewidth [] 0 setdash
+ 1 setlinecap 1 setlinejoin 10 setmiterlimit
+newpath 0 0 moveto
+0 -11.33841 lineto stroke
+-2.85161 3 moveto
+(u) cmmi10 9.96265 fshow
+-2.5933 -18.62791 moveto
+(v) cmmi10 9.96265 fshow
+showpage
+%%EOF
