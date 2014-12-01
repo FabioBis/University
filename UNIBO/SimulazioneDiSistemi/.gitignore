@@ -1,6 +1,11 @@
+
+# Temporary files.
 *~
+
+# Auto-generated files.
 *.o
 *.tkenvrc
 
+# Auto-generated directories.
 .metadata/
 out/
