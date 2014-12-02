@@ -15,8 +15,11 @@
 
 package tictoc2;
 
-simple Txc1
+simple Txc2
 { 
+    parameters:
+        // Add a default icon.
+        @display("i=block/routing");
  	gates:
  	    input in;
  	    output out;   
@@ -24,11 +27,17 @@ simple Txc1
 
 
 // The network.
-network Tictoc1
+network Tictoc2
 {
     submodules:
-        tic: Txc1;
-        toc: Txc1;
+        tic: Txc2 {
+            parameters:
+                @display("i=,cyan");
+        }
+        toc: Txc2{
+            parameters:
+                @display("i=,gold");
+        }
     connections:
         tic.out --> { delay = 100ms; } --> toc.in;
         tic.in <-- { delay = 100ms; } <-- toc.out;
