@@ -5,6 +5,11 @@
 # Auto-generated files.
 *.o
 *.tkenvrc
+*.cproject
+*.project
+*.oppbuildspec
+Makefile
+*.exe
 
 # Auto-generated directories.
 .metadata/
