@@ -15,7 +15,7 @@
 
 package tictoc2;
 
-simple Txc2
+simple Txc3
 { 
     parameters:
         // Add a default icon.
@@ -27,14 +27,14 @@ simple Txc2
 
 
 // The network.
-network Tictoc2
+network Tictoc3
 {
     submodules:
-        tic: Txc2 {
+        tic: Txc3 {
             parameters:
                 @display("i=,cyan");
         }
-        toc: Txc2 {
+        toc: Txc3 {
             parameters:
                 @display("i=,gold");
         }
