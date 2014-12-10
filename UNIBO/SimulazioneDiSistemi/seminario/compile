@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#latex SimulationToGames
+#dvips -o SimulationToGames.ps SimulationToGames.dvi
+#ps2pdf SimulationToGames.ps
+
+pdflatex SimulationToGames.tex
