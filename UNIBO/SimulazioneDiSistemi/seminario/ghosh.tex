@@ -5,16 +5,17 @@
 Highly interactive virtual reality systems such as massively multiplayer
 online games (MMOGs) necessitates highly robust and efficient architectures.
 \item
-Distributed implementations must deal with challenges such as: supporting very
-large numbers of users, the need to maintain robustness, balancing the
+Distributed implementations must deal with challenges such as: supporting
+\alert{very
+large numbers of users}, the need to maintain robustness, balancing the
 processing load, reducing user latency, and minimizing thrashing effects.
 There are no unified methods that attack these problems cohesively.
-\item
-The next paper presents a software design intended for distributed high
-performance computing facilities in
-which the world is divided into a regular lattice of overlapping
-cells (providing redundancy), which are dynamically assigned to
-servers within the High Performance Computing.
+%\item
+%The next paper presents a software design intended for distributed high
+%performance computing facilities in
+%which the world is divided into a regular lattice of overlapping
+%cells (providing redundancy), which are dynamically assigned to
+%servers within the High Performance Computing.
 \end{itemize}
 \end{frame}
 
@@ -26,24 +27,24 @@ servers within the High Performance Computing.
 \framesubtitle{}
 \begin{block}{Robustness to Hardware Failure}
 Distributed systems
-should avoid single-point-of-failure problems where part of the
+should \alert{avoid single-point-of-failure} problems where part of the
 world state is lost with a server failure.
 \end{block}
 \pause
 \begin{block}{Balancing of Processing Load}
 Dynamic entity behaviors
 demand responsive methods for shifting processor load to
-conserve computational resources.
+\alert{conserve computational resources}.
 \end{block}
 \pause
 \begin{block}{Mitigation of Thrashing}
-Distributed systems should avoid
-repeated inefficient transitions of objects between resources.
+Distributed systems should \alert{avoid
+repeated inefficient transitions} of objects between resources.
 \end{block}
 \pause
 \begin{block}{Reduction of User Latency}
-Game systems must avoid
-unacceptable latencies between the user clients and the servers.
+Game systems must \alert{avoid
+unacceptable latencies} between the user clients and the servers.
 \end{block}
 \end{frame}
 
@@ -51,17 +52,19 @@ unacceptable latencies between the user clients and the servers.
 \begin{frame}
 \frametitle{Related Work}
 \framesubtitle{}
+\begin{block}{Other Architectures}
 Distributed MMOGs and other multi-server, large-scale VR
 systems use a variety of methods to address the four desired
 capabilities mentioned above.
 \begin{itemize}
-\item<2->
+\item
 Sharding method.
-\item<3->
+\item
 Zoning methods.
-\item<4->
+\item
 Peer-to-Peer (P2P) paradigm.
 \end{itemize}
+\end{block}
 \end{frame}
 
 \subsection{An Overlapping Zone-Based Architecture}
@@ -146,11 +149,11 @@ intersects the boundary, management of the entity is shifted.
 \end{columns}
 \end{frame}
 
-\subsection{Analysis}
+%\subsection{Analysis}
 
 %% Slide 23.
 \begin{frame}[fragile]
-\frametitle{Analysis}
+\frametitle{An Overlapping Zone-Based Architecture}
 \framesubtitle{Entity Motion}
 \begin{center}
 \includegraphics[scale=.80]{motion.png}
@@ -159,7 +162,7 @@ intersects the boundary, management of the entity is shifted.
 
 %% Slide 24.
 \begin{frame}[fragile]
-\frametitle{Analysis}
+\frametitle{An Overlapping Zone-Based Architecture}
 \framesubtitle{Entity Motion}
 \begin{center}
 \begin{table}
@@ -185,22 +188,23 @@ $\longleftarrow\quad$ $\uparrow\quad$ $\nwarrow\quad$ & (2,2) \\
 
 %% Slide 25.
 \begin{frame}[fragile]
-\frametitle{Analysis}
+\frametitle{An Overlapping Zone-Based Architecture}
 \framesubtitle{Server Crash \& Dynamic Allocation}
 \begin{block}{Server Crash}
 \begin{itemize}
-\item <2->
+\item %<2->
 A natural fault tolerance is accomplished in this design because
 of the redundancy provided by overlapping cells.
-\item <3->
+\item %<3->
 When a server crashes, any entities over which it had master control are
 already replicated on at least one other server.
-\item <4->
-The system must merely transfer master control and needn't seekk data from a
+\item %<4->
+The system must merely transfer master control and needn't seek data from a
 crashed machine.
 \end{itemize}
 \end{block}
-\begin{block}{Dynamic Cell Allocation}<5->
+\pause
+\begin{block}{Dynamic Cell Allocation}%<5->
 Dynamic cell allocation methods between servers must
 accomplish a multitude of things with reasonable efficiency.
 \end{block}
