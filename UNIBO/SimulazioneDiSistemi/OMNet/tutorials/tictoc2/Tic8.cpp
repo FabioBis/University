@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 #include <Tic8.h>
 
@@ -23,22 +23,23 @@ Tic8::Tic8()
     // Set the pointer to NULL, so that the destructor won't crash
     // even if initialize() doesn't get called because of a runtime
     // error or user cancellation during the startup process.
-    event = tictocMsg = NULL;
+    timeoutEvent = event = tictocMsg = NULL;
 }
 
 Tic8::~Tic8()
 {
     // Dispose of dynamically allocated the objects.
     cancelAndDelete(event);
+    cancelAndDelete(timeoutEvent);
     delete tictocMsg;
 }
 
 void
 Tic8::initialize()
 {
-    // Initialize the counter to 10.
+    // Initialize the counter to 'limit' defined in omnetpp.ini.
     counter = par("limit");
-    // Create the event object we'll use for timing -- just any ordinary message.
+    // Create the event object we'll use for timing - just any ordinary message.
     event = new cMessage("event");
     timeoutEvent = new cMessage("timeoutEvent");
     // Initialize timeout.
@@ -103,13 +104,13 @@ Tic8::handleMessage(cMessage *msg)
             // find that the simulation will stop at this point with the message
             // "no more events".
             EV << "Message arrived, starting to wait 1 sec...\n" << getName()
-                    << "'s counter reached zero, deleting message\n";
+               << "'s counter reached zero, deleting message\n";
             delete msg;
         }
         else
         {
             EV << "Message arrived, starting to wait 1 sec...\n" << getName()
-                    << "'s counter is " << counter << ", sending back message\n";
+               << "'s counter is " << counter << ", sending back message\n";
             tictocMsg = msg;
             scheduleAt(simTime() + 1.0, event);
         }
