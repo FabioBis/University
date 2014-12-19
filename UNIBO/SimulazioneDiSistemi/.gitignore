@@ -14,3 +14,7 @@ Makefile
 # Auto-generated directories.
 .metadata/
 out/
+
+
+# DIA files.
+*.dia
