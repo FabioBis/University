@@ -5,7 +5,7 @@
  *      Author: Fabio
  */
 
-#include <Tictoc2.h>
+#include <Txc2.h>
 
 // The module class need to be registered with OMNet++.
 Define_Module(Txc2);
