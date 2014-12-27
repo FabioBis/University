@@ -13,38 +13,49 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <Txc13.h>
+#include <Txc14.h>
 
-Define_Module(Txc13);
+Define_Module(Txc14);
 
 void
-Txc13::initialize()
+Txc14::initialize()
 {
+    // Initialize variables.
+    sentPkgs = 0;
+    receivedPkgs = 0;
+    // Make them observable.
+    WATCH(sentPkgs);
+    WATCH(receivedPkgs);
+
     if (getIndex() == 0)
     {
         // Boot the process scheduling the initial message as self message.
-        TicTocMsg13 *msg = generateMessage();
+        TicTocMsg14 *msg = generateMessage();
         scheduleAt(0.0, msg);
     }
 }
 
 void
-Txc13::handleMessage(cMessage *msg)
+Txc14::handleMessage(cMessage *msg)
 {
     // check_and_cast from omnetpp.h perform a dynamic cast or raise an error
     // during the simulation instead of crash.
-    TicTocMsg13 *ttmsg = check_and_cast<TicTocMsg13 *>(msg);
+    TicTocMsg14 *ttmsg = check_and_cast<TicTocMsg14 *>(msg);
     if (ttmsg->getDestination() == getIndex())
     {
         // Message arrived.
-        EV << "Message " << msg <<" arrived.\n";
-        bubble("ARRIVED, starting a new one.");
+        int hopcount = ttmsg->getHopCount();
+        EV << "Message " << ttmsg <<" arrived after " << hopcount
+                << " messages.\n";
+        receivedPkgs++;
         delete ttmsg;
+        bubble("ARRIVED, starting a new one.");
 
         // Generate another message.
-        TicTocMsg13 *newmsg = generateMessage();
+        TicTocMsg14 *newmsg = generateMessage();
         EV <<newmsg << endl;
         forwardMessage(newmsg);
+        sentPkgs++;
     }
     else
     {
@@ -54,11 +65,11 @@ Txc13::handleMessage(cMessage *msg)
 }
 
 void
-Txc13::forwardMessage(cMessage *msg)
+Txc14::forwardMessage(cMessage *msg)
 {
     // check_and_cast from omnetpp.h perform a dynamic cast or raise an error
     // during the simulation instead of crash.
-    TicTocMsg13 *ttmsg = check_and_cast<TicTocMsg13 *>(msg);
+    TicTocMsg14 *ttmsg = check_and_cast<TicTocMsg14 *>(msg);
 
     // Incrementing the hop count.
     ttmsg->setHopCount(ttmsg->getHopCount() + 1);
@@ -71,10 +82,15 @@ Txc13::forwardMessage(cMessage *msg)
     EV << ".." <<msg <<" on gate[" <<k <<"].\n";
     // $o and $i suffix is used to identify the input/output part of a two way gate.
     send(ttmsg, "gate$o", k);
+
+    if (ev.isGUI())
+    {
+        updateDisplay();
+    }
 }
 
-TicTocMsg13*
-Txc13::generateMessage()
+TicTocMsg14*
+Txc14::generateMessage()
 {
     // The "current" module index.
     int src = getIndex();
@@ -86,9 +102,16 @@ Txc13::generateMessage()
     sprintf(msgname, "tic-%d-to-%d", src, dest);
 
     // Create message object and set source and destination field.
-    TicTocMsg13 *msg = new TicTocMsg13(msgname);
+    TicTocMsg14 *msg = new TicTocMsg14(msgname);
     msg->setSource(src);
     msg->setDestination(dest);
     return msg;
 }
 
+void
+Txc14::updateDisplay()
+{
+    char buf[40];
+    sprintf(buf, "rcvd: %ld sent: %ld", receivedPkgs, sentPkgs);
+    getDisplayString().setTagArg("t",0,buf);
+}
