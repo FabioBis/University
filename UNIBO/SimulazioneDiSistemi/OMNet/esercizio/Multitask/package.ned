@@ -1,0 +1,3 @@
+package multitask;
+
+@license(LGPL);

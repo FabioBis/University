@@ -1,4 +1,4 @@
-L'esercizio consiste nel realizzare una simulazione del modello a p. 5
+﻿L'esercizio consiste nel realizzare una simulazione del modello a p. 5
 del documento: http://www.cs.unibo.it/~donat/Analisi1.pdf.
 
 Le probabilità sono 0.2, 0.2, 0.2, 0.16, 0.24; bisogna realizzare una variante
@@ -8,3 +8,6 @@ caso una stringa che viene convertita nelle probabilità di ciascuna uscita) e
 compiere esperimenti in modo che terminino dopo 500 utenti che escono dalla
 coda 2. Quest'ultima è preferibilmente implementata come un sistema di
 allocazione e deallocazione di "ticket" (5 in totale).
+
+30 runs.
+Calcolare i tempi di attesa in coda 2.
