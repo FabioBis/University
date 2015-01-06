@@ -1,0 +1,193 @@
+version 2
+run Multitask30-16-20150106-11:37:59-4748
+attr configname Multitask30
+attr datetime 20150106-11:37:59
+attr experiment Multitask30
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=16
+attr measurement ""
+attr network Multitask
+attr processid 4748
+attr repetition 16
+attr replication #16
+attr resultdir results
+attr runnumber 16
+attr seedset 16
+
+scalar Multitask.user 	created:last 	25
+attr interpolationmode  none
+attr title  "the number of jobs created, last"
+scalar Multitask.sink 	generation:mean 	0
+attr interpolationmode  none
+attr title  "the generation of the arrived jobs, mean"
+scalar Multitask.sink 	generation:max 	0
+attr interpolationmode  none
+attr title  "the generation of the arrived jobs, max"
+scalar Multitask.sink 	delaysVisited:mean 	0
+attr interpolationmode  none
+attr title  "the total number of delays visited by arrived jobs, mean"
+scalar Multitask.sink 	delaysVisited:max 	0
+attr interpolationmode  none
+attr title  "the total number of delays visited by arrived jobs, max"
+scalar Multitask.sink 	queuesVisited:mean 	48.76
+attr interpolationmode  none
+attr title  "the total number of queues visited by arrived jobs, mean"
+scalar Multitask.sink 	queuesVisited:max 	71
+attr interpolationmode  none
+attr title  "the total number of queues visited by arrived jobs, max"
+scalar Multitask.sink 	totalServiceTime:mean 	126.66260864334
+attr interpolationmode  none
+attr title  "the total time spent  by arrived jobs, mean"
+attr unit  s
+scalar Multitask.sink 	totalServiceTime:max 	232.91167215128
+attr interpolationmode  none
+attr title  "the total time spent  by arrived jobs, max"
+attr unit  s
+scalar Multitask.sink 	totalDelayTime:mean 	0
+attr interpolationmode  none
+attr title  "the total time spent in delay nodes by arrived jobs, mean"
+attr unit  s
+scalar Multitask.sink 	totalDelayTime:max 	0
+attr interpolationmode  none
+attr title  "the total time spent in delay nodes by arrived jobs, max"
+attr unit  s
+scalar Multitask.sink 	totalQueueingTime:mean 	1250.2386938797
+attr interpolationmode  none
+attr title  "the total time spent in queues by arrived jobs, mean"
+attr unit  s
+scalar Multitask.sink 	totalQueueingTime:max 	1345.3909141108
+attr interpolationmode  none
+attr title  "the total time spent in queues by arrived jobs, max"
+attr unit  s
+scalar Multitask.sink 	lifeTime:mean 	1569.7856069834
+attr interpolationmode  none
+attr title  "lifetime of arrived jobs, mean"
+attr unit  s
+scalar Multitask.sink 	lifeTime:max 	1615.8637263833
+attr interpolationmode  none
+attr title  "lifetime of arrived jobs, max"
+attr unit  s
+scalar Multitask.allocateQ2 	queueingTime:mean 	54.145561037495
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.allocateQ2 	queueingTime:max 	120.3809817218
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.allocateQ2 	queueLength:timeavg 	16.352266193535
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.allocateQ2 	queueLength:max 	20
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.allocateQ2 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.queue3 	busy:timeavg 	0.16253978972532
+attr interpolationmode  sample-hold
+attr title  "server busy state, timeavg"
+scalar Multitask.queue3 	queueingTime:mean 	0.017523589001943
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.queue3 	queueingTime:max 	0.646259299666
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.queue3 	queueLength:timeavg 	0.027697413822844
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.queue3 	queueLength:max 	3
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.queue3 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.queue4 	busy:timeavg 	0.089130261431636
+attr interpolationmode  sample-hold
+attr title  "server busy state, timeavg"
+scalar Multitask.queue4 	queueingTime:mean 	0.023303501215205
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.queue4 	queueingTime:max 	0.84035326425
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.queue4 	queueLength:timeavg 	0.0074704403795821
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.queue4 	queueLength:max 	2
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.queue4 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.queue5 	busy:timeavg 	0.093152184577674
+attr interpolationmode  sample-hold
+attr title  "server busy state, timeavg"
+scalar Multitask.queue5 	queueingTime:mean 	0.022100516063402
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.queue5 	queueingTime:max 	1.135367764335
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.queue5 	queueLength:timeavg 	0.0075224684089402
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.queue5 	queueLength:max 	2
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.queue5 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.queue6 	busy:timeavg 	0.70049000688422
+attr interpolationmode  sample-hold
+attr title  "server busy state, timeavg"
+scalar Multitask.queue6 	queueingTime:mean 	3.6088631071801
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.queue6 	queueingTime:max 	29.526553730301
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.queue6 	queueLength:timeavg 	0.9223924263721
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.queue6 	queueLength:max 	4
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.queue6 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.queue7 	busy:timeavg 	0.91436119046891
+attr interpolationmode  sample-hold
+attr title  "server busy state, timeavg"
+scalar Multitask.queue7 	queueingTime:mean 	5.7128993955552
+attr interpolationmode  none
+attr title  "queueing time at dequeue, mean"
+attr unit  s
+scalar Multitask.queue7 	queueingTime:max 	27.402369950398
+attr interpolationmode  none
+attr title  "queueing time at dequeue, max"
+attr unit  s
+scalar Multitask.queue7 	queueLength:timeavg 	2.0258461776229
+attr interpolationmode  sample-hold
+attr title  "queue length, timeavg"
+scalar Multitask.queue7 	queueLength:max 	4
+attr interpolationmode  sample-hold
+attr title  "queue length, max"
+scalar Multitask.queue7 	dropped:count 	0
+attr interpolationmode  none
+attr title  "drop event, count"
+scalar Multitask.resourceCPU 	amount:timeavg 	0.049397640305872
+attr interpolationmode  sample-hold
+attr title  "available resource, timeavg"
+scalar Multitask.resourceCPU 	amount:min 	0
+attr interpolationmode  sample-hold
+attr title  "available resource, min"

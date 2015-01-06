@@ -12,11 +12,6 @@
 Makefile
 *.exe
 
-# Auto-generated OMNet result files.
-*.elog
-*.sca
-*.vci
-*.vec
 
 # Auto-generated directories.
 .metadata/

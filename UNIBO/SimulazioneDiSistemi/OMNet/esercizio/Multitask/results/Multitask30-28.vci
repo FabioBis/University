@@ -1,0 +1,128 @@
+file 447671 1420540680                                          
+version 2
+run Multitask30-28-20150106-11:38:00-1216
+attr configname Multitask30
+attr datetime 20150106-11:38:00
+attr experiment Multitask30
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=28
+attr measurement ""
+attr network Multitask
+attr processid 1216
+attr repetition 28
+attr replication #28
+attr resultdir results
+attr runnumber 28
+attr seedset 28
+
+vector 8  Multitask.allocateQ2  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 11  Multitask.queue3  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 13  Multitask.queue3  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "server busy state, vector"
+vector 15  Multitask.queue4  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 17  Multitask.queue4  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "server busy state, vector"
+vector 19  Multitask.queue5  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 21  Multitask.queue5  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "server busy state, vector"
+vector 23  Multitask.queue6  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 25  Multitask.queue6  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "server busy state, vector"
+vector 27  Multitask.queue7  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 29  Multitask.queue7  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "server busy state, vector"
+vector 30  Multitask.resourceCPU  amount:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "available resource, vector"
+vector 12  Multitask.queue3  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 28  Multitask.queue7  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 16  Multitask.queue4  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 20  Multitask.queue5  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 24  Multitask.queue6  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 9  Multitask.allocateQ2  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time at dequeue, vector"
+attr unit  s
+vector 0  Multitask.sink  lifeTime:vector  ETV
+attr interpolationmode  none
+attr title  "lifetime of arrived jobs, vector"
+attr unit  s
+vector 1  Multitask.sink  totalQueueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "the total time spent in queues by arrived jobs, vector"
+attr unit  s
+vector 4  Multitask.sink  queuesVisited:vector  ETV
+attr interpolationmode  none
+attr title  "the total number of queues visited by arrived jobs, vector"
+vector 3  Multitask.sink  totalServiceTime:vector  ETV
+attr interpolationmode  none
+attr title  "the total time spent  by arrived jobs, vector"
+attr unit  s
+vector 2  Multitask.sink  totalDelayTime:vector  ETV
+attr interpolationmode  none
+attr title  "the total time spent in delay nodes by arrived jobs, vector"
+attr unit  s
+vector 5  Multitask.sink  delaysVisited:vector  ETV
+attr interpolationmode  none
+attr title  "the total number of delays visited by arrived jobs, vector"
+vector 6  Multitask.sink  generation:vector  ETV
+attr interpolationmode  none
+attr title  "the generation of the arrived jobs, vector"
+0	3905 1072 12372 12896 1357.607680621617 1414.624979564315 25 1357.6076806216 1414.6249795643 34799.773298186 48447844.023979
+1	4977 1073 12372 12896 1357.607680621617 1414.624979564315 25 977.17480186546 1151.9828814423 27100.947278572 29428798.405386
+2	6050 723 12372 12896 1357.607680621617 1414.624979564315 25 0 0 0 0
+3	6773 1071 12372 12896 1357.607680621617 1414.624979564315 25 66.043926430138 161.27053378438 2733.0907337537 318011.8535852
+4	7844 748 12372 12896 1357.607680621617 1414.624979564315 25 30 84 1241 65413
+5	8592 723 12372 12896 1357.607680621617 1414.624979564315 25 0 0 0 0
+6	9315 723 12372 12896 1357.607680621617 1414.624979564315 25 0 0 0 0
+8	10038 27909 0 12812 0 1405.406878377811 989 0 20 15002 235554
+9	37947 20364 179 12812 18.181741161944 1405.406878377811 494 12.035940819197 114.10907117457 22794.770193423 1212704.1266325
+11	58311 23344 0 12855 0 1410.442471092219 825 0 3 558 748
+12	81655 72182 54 12891 0.216594147879 1414.38293806854 2364 0 0.670522912608 48.898587233738 11.324393596512
+13	153837 110441 0 12892 0 1414.624979564315 3905 0 1 1952 1952
+15	264278 2455 0 12386 0 1358.489452638999 87 0 1 43 43
+16	266733 13756 70 12889 1.859499979321 1413.961708003335 465 0 0.777157326806 8.497154480001 2.912189255517
+17	280489 23968 0 12890 0 1414.38293806854 845 0 1 422 422
+19	304457 2849 0 12709 0 1393.860859937762 101 0 2 60 70
+20	307306 14366 76 12872 1.891402527523 1410.807559859334 485 0 1.122296396032 13.721827727968 7.8254346374
+21	321672 24600 0 12873 0 1410.921879424265 871 0 1 435 435
+23	346272 11441 0 12851 0 1410.278300244166 405 0 4 516 1098
+24	357713 12199 127 12851 8.036172887917 1410.278300244166 339 0 27.697260893514 946.33709902647 8182.9577723084
+25	369912 7734 0 12880 0 1412.860237451111 275 0 1 137 137
+27	377646 30179 0 12797 0 1404.660992469548 1069 0 4 2288 6314
+28	407825 23216 64 12884 1.626926803219 1412.901187915899 575 0 25.857734487502 3288.7224166805 30094.075091083
+29	431041 2304 0 12885 0 1413.883684294885 83 0 1 41 41
+30	433345 14326 0 12894 0 1414.624979564315 507 0 5 39 151

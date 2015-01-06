@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/Multitask/results/Multitask30-9.vec"/>
+    <inputs name="/Multitask/results/Multitask30-0.sca"/>
+    <inputs name="/Multitask/results/Multitask30-0.vec"/>
+    <inputs name="/Multitask/results/Multitask30-1.sca"/>
+    <inputs name="/Multitask/results/Multitask30-1.vec"/>
+    <inputs name="/Multitask/results/Multitask30-10.sca"/>
+    <inputs name="/Multitask/results/Multitask30-10.vec"/>
+    <inputs name="/Multitask/results/Multitask30-11.sca"/>
+    <inputs name="/Multitask/results/Multitask30-11.vec"/>
+    <inputs name="/Multitask/results/Multitask30-12.sca"/>
+    <inputs name="/Multitask/results/Multitask30-12.vec"/>
+    <inputs name="/Multitask/results/Multitask30-13.sca"/>
+    <inputs name="/Multitask/results/Multitask30-13.vec"/>
+    <inputs name="/Multitask/results/Multitask30-14.sca"/>
+    <inputs name="/Multitask/results/Multitask30-14.vec"/>
+    <inputs name="/Multitask/results/Multitask30-15.sca"/>
+    <inputs name="/Multitask/results/Multitask30-15.vec"/>
+    <inputs name="/Multitask/results/Multitask30-16.sca"/>
+    <inputs name="/Multitask/results/Multitask30-16.vec"/>
+    <inputs name="/Multitask/results/Multitask30-17.sca"/>
+    <inputs name="/Multitask/results/Multitask30-17.vec"/>
+    <inputs name="/Multitask/results/Multitask30-18.sca"/>
+    <inputs name="/Multitask/results/Multitask30-18.vec"/>
+    <inputs name="/Multitask/results/Multitask30-19.sca"/>
+    <inputs name="/Multitask/results/Multitask30-19.vec"/>
+    <inputs name="/Multitask/results/Multitask30-2.sca"/>
+    <inputs name="/Multitask/results/Multitask30-2.vec"/>
+    <inputs name="/Multitask/results/Multitask30-20.sca"/>
+    <inputs name="/Multitask/results/Multitask30-20.vec"/>
+    <inputs name="/Multitask/results/Multitask30-21.sca"/>
+    <inputs name="/Multitask/results/Multitask30-21.vec"/>
+    <inputs name="/Multitask/results/Multitask30-22.sca"/>
+    <inputs name="/Multitask/results/Multitask30-22.vec"/>
+    <inputs name="/Multitask/results/Multitask30-23.sca"/>
+    <inputs name="/Multitask/results/Multitask30-23.vec"/>
+    <inputs name="/Multitask/results/Multitask30-24.sca"/>
+    <inputs name="/Multitask/results/Multitask30-24.vec"/>
+    <inputs name="/Multitask/results/Multitask30-25.sca"/>
+    <inputs name="/Multitask/results/Multitask30-25.vec"/>
+    <inputs name="/Multitask/results/Multitask30-26.sca"/>
+    <inputs name="/Multitask/results/Multitask30-26.vec"/>
+    <inputs name="/Multitask/results/Multitask30-27.sca"/>
+    <inputs name="/Multitask/results/Multitask30-27.vec"/>
+    <inputs name="/Multitask/results/Multitask30-28.sca"/>
+    <inputs name="/Multitask/results/Multitask30-28.vec"/>
+    <inputs name="/Multitask/results/Multitask30-29.sca"/>
+    <inputs name="/Multitask/results/Multitask30-29.vec"/>
+    <inputs name="/Multitask/results/Multitask30-3.sca"/>
+    <inputs name="/Multitask/results/Multitask30-3.vec"/>
+    <inputs name="/Multitask/results/Multitask30-4.sca"/>
+    <inputs name="/Multitask/results/Multitask30-4.vec"/>
+    <inputs name="/Multitask/results/Multitask30-5.sca"/>
+    <inputs name="/Multitask/results/Multitask30-5.vec"/>
+    <inputs name="/Multitask/results/Multitask30-6.sca"/>
+    <inputs name="/Multitask/results/Multitask30-6.vec"/>
+    <inputs name="/Multitask/results/Multitask30-7.sca"/>
+    <inputs name="/Multitask/results/Multitask30-7.vec"/>
+    <inputs name="/Multitask/results/Multitask30-8.sca"/>
+    <inputs name="/Multitask/results/Multitask30-8.vec"/>
+    <inputs name="/Multitask/results/Multitask30-9.sca"/>
+  </inputs>
+  <datasets>
+    <datasets name="Multitask30_Q2AvgTime">
+      <items xsi:type="scave:Add" filterPattern="run(*) AND module(Multitask.allocateQ2) AND name(queueingTime:vector)"/>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default"/>
+  </chartSheets>
+</scave:Analysis>
