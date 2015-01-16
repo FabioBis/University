@@ -74,11 +74,6 @@ network Multitask
             @display("p=81,117");
         }
     connections:
-        //for i=0..sizeof(terminal)-1 {
-        //    user.out --> terminal[i].in++;
-        //    terminal[i].out --> routerQ2.in++;
-        //    dispatcher.out++ --> terminal[i].in++;
-        //}
         user.out --> terminal.in++;
         queue3.out --> routerCPU.in++;
         routerCPU.out_p4 --> queue4.in++;
