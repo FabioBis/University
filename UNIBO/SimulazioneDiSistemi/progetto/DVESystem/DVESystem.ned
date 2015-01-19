@@ -18,13 +18,27 @@ package dvesystem;
 network DVESystem
 {
     parameters:
-        int numServer;
+        int numOfServer;
+        int numOfClient;
     submodules:
-            server[numServer]: DVEServer;
-    connections:
-        for i = 0 .. sizeof(server) - 2
-        {
-         	server[i].out++ --> server[i + 1].in++;
+        mainServer: MainServer {
+            @display("p=65,45");
         }
-        server[sizeof(server) - 1].out++ --> server[0].in++;
+        server[numOfServer]: DVEServer;
+        client[numOfClient]: DVEClient {
+            @display("p=,,x");
+        }
+    connections:
+        // Server Connections.
+        mainServer.out++ --> server[0].in++;
+        for i=0..sizeof(server) - 2 {
+            server[i].out++ --> server[i + 1].in++;
+        }
+        server[sizeof(server) - 1].out++ --> mainServer.in++;
+        // Client Connections.
+        for i=0..sizeof(client) - 1 {
+            client[i].main <--> mainServer.wan++;
+        }
+        // TODO: servers/clients connections.
+        // TODO: channels Wan and Lan.
 }
