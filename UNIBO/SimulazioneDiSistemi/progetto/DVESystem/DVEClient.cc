@@ -42,7 +42,8 @@ DVEClient::initialize()
     // Wait a variable amount of time, than login to the Main Server.
     login = new ServerUpdateMsg("login");
     simtime_t delay = uniform(0, 1);
-    sendDelayed(login, delay, "main");
+    // $o and $i suffix is used to identify the input/output part of a two way gate.
+    sendDelayed(login, delay, "wanIO$o");
 }
 
 

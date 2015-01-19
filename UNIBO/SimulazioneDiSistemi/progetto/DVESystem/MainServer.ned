@@ -19,7 +19,7 @@ simple MainServer
 {
     @display("i=device/server2");
     gates:
-        input in[];
-        output out[];
-        inout wan[];
+        input lanIn[];
+        output lanOut[];
+        inout wanIO;
 }

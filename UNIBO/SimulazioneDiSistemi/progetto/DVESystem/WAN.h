@@ -13,11 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package dvesystem;
+#ifndef WAN_H_
+#define WAN_H_
 
-simple DVEClient
-{
-    @display("i=device/pc");
-    gates:
-        inout wanIO;
-}
+#include <omnetpp.h>
+
+class WAN : public cSimpleModule {
+protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+#endif /* WAN_H_ */

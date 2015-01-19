@@ -15,9 +15,10 @@
 
 package dvesystem;
 
-simple DVEClient
+simple WAN
 {
-    @display("i=device/pc");
+    @display("i=block/network2");
     gates:
-        inout wanIO;
+        inout toClient[];
+        inout toServer[];
 }

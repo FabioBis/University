@@ -13,11 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package dvesystem;
+#include <WAN.h>
 
-simple DVEClient
+Define_Module(WAN);
+
+void
+WAN::initialize()
 {
-    @display("i=device/pc");
-    gates:
-        inout wanIO;
+    ;
+}
+
+
+void
+WAN::handleMessage(cMessage *msg)
+{
+    ;
 }

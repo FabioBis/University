@@ -15,6 +15,9 @@
 
 package dvesystem;
 
+import org.omnetpp.queueing.SourceOnce;
+
+
 network DVESystem
 {
     parameters:
@@ -22,23 +25,30 @@ network DVESystem
         int numOfClient;
     submodules:
         mainServer: MainServer {
-            @display("p=65,45");
+            @display("p=240,35");
         }
-        server[numOfServer]: DVEServer;
+        server[numOfServer]: DVEServer {
+            @display("p=52,44,ri");
+        }
         client[numOfClient]: DVEClient {
-            @display("p=,,x");
+            @display("p=240,217,x");
+        }
+        wan: WAN {
+            @display("p=240,128");
         }
     connections:
         // Server Connections.
-        mainServer.out++ --> server[0].in++;
+        mainServer.lanOut++ --> server[0].lanIn++;
+        mainServer.wanIO <--> wan.toServer++;
         for i=0..sizeof(server) - 2 {
-            server[i].out++ --> server[i + 1].in++;
+            server[i].lanOut++ --> server[i + 1].lanIn++;
         }
-        server[sizeof(server) - 1].out++ --> mainServer.in++;
-        // Client Connections.
-        for i=0..sizeof(client) - 1 {
-            client[i].main <--> mainServer.wan++;
+        server[sizeof(server) - 1].lanOut++ --> mainServer.lanIn++;
+        for i=0..sizeof(server) - 1 {
+            server[i].wanIO <--> wan.toServer++;
         }
-        // TODO: servers/clients connections.
-        // TODO: channels Wan and Lan.
+        // Client connections.
+        for j=0..sizeof(client) - 1 {
+            client[j].wanIO <--> wan.toClient++;
+        }
 }
