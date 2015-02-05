@@ -10,7 +10,7 @@
 
 Avatar::Avatar(int id, int x, int y)
 : ID_(id), x_(x), y_(y) {
-    ;
+    ; // Nothing else to do.
 }
 
 int

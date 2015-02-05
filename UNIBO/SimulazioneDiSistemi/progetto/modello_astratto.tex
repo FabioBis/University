@@ -12,7 +12,7 @@
 
 \maketitle
 
-\section{Il sistema in sintesi}
+\section{Sintesi del sistema originale}
 Il sistema introdotto nell'articolo ed illustrato in figura \ref{fig1}
 è così composto:
 \begin{itemize}
@@ -54,36 +54,75 @@ risposta del sistema.
 \caption{Schema proposto nell'articolo di riferimento.}
 \end{figure}
 
-\section{Alcune idee per l'implementazione}
 
-Per quanto riguarda l'implementazione del modello di cui sopra seguono le
-principali caratteristiche da implementare.
+\section{Implementazione di un nuovo modello}
+
+In questa sezione sono descritte le principali caratteristiche per 
+l'implementazione del nuovo modello proposto. Possiamo schematizzare il
+sistema descritto in figura \ref{fig2} nel seguente modo:
+\begin{itemize}
+\item
+$1$ Main Server che si occupa del login dei client e della gestione
+dell'ambiente simulato;
+\item
+$k \in {1, \ldots, 9}$ server di partizione che si occupano di gestire i messaggi
+tra client ed aggiornare il Main Server;
+\item
+$n$ client che controllano un distinto avatar nel mondo virtuale;
+\item
+una rete WAN simulata che connette i client ai server;
+\item
+una rete LAN simulata che connette i server con una struttura ad anello 
+unidirezionale;
+\item
+un'area di gioco (\texttt{VirtualEnvironment});
+\item
+un metodo di partizionamento statico, dipendente dal numero di server di
+partizione, che il Main Server utilizza per suddividere il carico.
+\end{itemize}
 
 \subsection{Impostazioni iniziali}
 Nell'articolo vengono descritte due diverse simulazioni con numeri di server
 e client fissi. L'implementazione di questa simulazione, basata su OMNet++,
-prevede un numero parametrico di server e client in modo tale che l'utente
-possa specificarne il numero. 
+prevede un parametro per i server ed uno per i client in modo tale che l'utente
+possa specificarne il numero (file \texttt{.ini}). 
 
-Si suppone che inizialmente gli avatar siano distribuiti nel mondo con una
-data distribuzione.
+Si suppone che inizialmente gli avatar siano distribuiti nell'area di gioco
+con una data distribuzione casuale e che non siano già presenti nella suddetta
+ma debbano effettuare il login sul server principale dopo un tempo casuale
+dall'inizio della simulazione. 
 
 \subsection{Area di gioco}
 L'area di gioco è una semplicissima struttura: un array
-bidimensionale di puntatori ad una lista di Avatar (AvatarList). Questa
+bidimensionale di mappe di Avatar (\texttt{$\langle$ id, VirtualAvatar$\rangle$}).
+Questa
 "simula" un'area di gioco in cui gli avatar possono muoversi liberamente e
-senza collisioni.
+senza collisioni. Per l'implementazione si utilizzano due classi distinte
+per gli avatar: \texttt{Avatar} utilizzata dai client e 
+\texttt{VirtualAvatar} utilizzata dal Main Server.
 
 \subsection{Avatar}
-Avatar è una semplice classe che rappresenta un client. Ha due campi:
-un indice che si riferisce al client (getIndex() in simpleModule di OMNet) ed
-una lista di indici che rappresentano gli altri avatar nella propria AoI.
+\texttt{Avatar} è una semplice classe che rappresenta un client. Ha quattro campi:
+un ID che si riferisce al client (\texttt{getIndex()} in
+\texttt{simpleModule} di OMNet),
+due interi che rappresentano le coordinate all'interno dell'ambiente virtuale e
+un vettore di indici che rappresentano gli altri avatar nella propria Area di 
+Interesse.
+
+\subsection{VirtualAvatar}
+\texttt{VirtualAvatar} è la classe che rappresenta l'avatar all'interno
+dell'ambiente
+virtuale gestito dal Main Server. Ha quattro campi: oltre agli interi che
+rappresentano id e coordinate utilizza un puntatore all'ambiente virtuale.
 
 \subsection{Gestione area di gioco e movimenti}
-L'area di gioco viene modificata dai server che, grazie alle notifiche dei
-movimenti da parte dei client, rimuovono l'avatar dal vecchio puntatore
-(o lista) e lo assegnano a quello di destinazione. Quindi vengono aggiornati
-gli avatar coinvolti, ovvero quando un avatar si sposta il server:
+L'area di gioco viene modificata dal Main Server tramite messaggi da parte
+dei server di partizione che, grazie alle notifiche dei
+movimenti da parte dei client, rimuovono l'avatar dalla vecchia cella
+e lo assegnano a quella di destinazione.
+ 
+A questo punto vengono aggiornati i client coinvolti, ovvero nel momento
+in cui un avatar si sposta, il server di partizione:
 \begin{enumerate}
 \item
 notifica ai vicini che l'avatar lascia la casella;
@@ -91,7 +130,7 @@ notifica ai vicini che l'avatar lascia la casella;
 calcola una nuova AoI con i nuovi vicini;
 \item
 notifica ai nuovi vicini l'ingresso dell'avatar nella casella di
-destinazione.
+destinazione ed al Main Server lo spostamento.
 \end{enumerate}
 
 I movimenti degli avatar, che avverranno ogni due secondi, avranno come
