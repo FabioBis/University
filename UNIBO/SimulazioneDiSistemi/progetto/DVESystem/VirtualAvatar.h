@@ -13,28 +13,27 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef VIRTUALENVIRONMENT_H_
-#define VIRTUALENVIRONMENT_H_
+#ifndef VIRTUALAVATAR_H_
+#define VIRTUALAVATAR_H_
 
 #include <map>
-#include <VirtualAvatar.h>
+#include <VirtualEnvironment.h>
 
-class VirtualAvatar;
+class VirtualEnvironment;
 
-class VirtualEnvironment {
+class VirtualAvatar {
+    friend class VirtualEnvironment;
 private:
-    // The side size of the grid (square).
-    static const int NUM_CELLS = 10;
-    // The virtual environment is essentially a grid of virtual avatars.
-    std::map<int, VirtualAvatar*> cells_[NUM_CELLS][NUM_CELLS];
+    int x_, y_, ID_;
+    VirtualEnvironment* ve_;
 public:
-    VirtualEnvironment();
-    virtual ~VirtualEnvironment();
-    int GetIndexMax();
-    void add(VirtualAvatar* avatar);
-    void remove(VirtualAvatar* avatar);
-    void move(VirtualAvatar* avatar, int x, int y);
-    void erase(VirtualAvatar* avatar);
+    VirtualAvatar(VirtualEnvironment* ve, int id, int x, int y);
+    void move(int x, int y);
+    int GetID();
+    int GetX();
+    int GetY();
+    void SetX(int x);
+    void SetY(int y);
 };
 
-#endif /* VIRTUALENVIRONMENT_H_ */
+#endif /* VIRTUALAVATAR_H_ */

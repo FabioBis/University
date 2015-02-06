@@ -7,6 +7,8 @@
 
 #include <VirtualEnvironment.h>
 
+// VirtualEnvironment.
+
 VirtualEnvironment::VirtualEnvironment() {
     ;
 }
@@ -22,16 +24,45 @@ VirtualEnvironment::GetIndexMax() {
 
 
 void
-VirtualEnvironment::add(int avatarID, int x, int y) {
-    // In a real server implementation we should check the uniqueness of ids.
-    VirtualAvatar* newAvatar = new VirtualAvatar(this, avatarID, x, y);
-    cells_[x][y].insert(std::pair<avatarID, newAvatar>);
+VirtualEnvironment::add(VirtualAvatar* avatar) {
+    int avatarID = avatar->GetID();
+    int x = avatar->GetX();
+    int y = avatar->GetY();
+    cells_[x][y].insert(std::pair<int, VirtualAvatar*>(avatarID, avatar));
 }
 
 
 void
-VirtualEnvironment::remove(int avatarID);
+VirtualEnvironment::remove(VirtualAvatar* avatar)
+{
+    std::map<int, VirtualAvatar*> cell = cells_[avatar->GetX()][avatar->GetY()];
+    std::map<int, VirtualAvatar*>::iterator it;
+    it = cell.find(avatar->GetID());
+    cell.erase(it);
+}
 
 
 void
-VirtualEnvironment::move(int avatarID, int x, int y);
+VirtualEnvironment::move(VirtualAvatar* avatar, int x, int y)
+{
+    // See which cell it was in.
+    int oldCellX = avatar->GetX();
+    int oldCellY = avatar->GetY();
+    // If it didn't change cells, we're done.
+    if (oldCellX == x && oldCellY == y) return;
+    // Else we remove the avatar from that cell.
+    remove(avatar);
+    // Update the avatar.
+    avatar->SetX(x);
+    avatar->SetY(y);
+    add(avatar);
+}
+
+
+void
+VirtualEnvironment::erase(VirtualAvatar* avatar)
+{
+    remove(avatar);
+    delete avatar;
+}
+

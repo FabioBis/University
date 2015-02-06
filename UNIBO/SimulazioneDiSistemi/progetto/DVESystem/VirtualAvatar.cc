@@ -13,28 +13,59 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef VIRTUALENVIRONMENT_H_
-#define VIRTUALENVIRONMENT_H_
-
-#include <map>
 #include <VirtualAvatar.h>
 
-class VirtualAvatar;
+// VirtualAvatar.
 
-class VirtualEnvironment {
-private:
-    // The side size of the grid (square).
-    static const int NUM_CELLS = 10;
-    // The virtual environment is essentially a grid of virtual avatars.
-    std::map<int, VirtualAvatar*> cells_[NUM_CELLS][NUM_CELLS];
-public:
-    VirtualEnvironment();
-    virtual ~VirtualEnvironment();
-    int GetIndexMax();
-    void add(VirtualAvatar* avatar);
-    void remove(VirtualAvatar* avatar);
-    void move(VirtualAvatar* avatar, int x, int y);
-    void erase(VirtualAvatar* avatar);
-};
+VirtualAvatar::VirtualAvatar(VirtualEnvironment* ve, int id, int x, int y)
+{
+    this->ve_ = ve;
+    this->ID_ = id;
+    this->x_ = x;
+    this->y_ = y;
+}
 
-#endif /* VIRTUALENVIRONMENT_H_ */
+
+void
+VirtualAvatar::move(int x, int y)
+{
+    this->ve_->move(this, x, y);
+}
+
+
+int
+VirtualAvatar::GetID()
+{
+    return ID_;
+}
+
+
+int
+VirtualAvatar::GetX()
+{
+    return x_;
+}
+
+
+int
+VirtualAvatar::GetY()
+{
+    return y_;
+}
+
+
+void
+VirtualAvatar::SetX(int x)
+{
+    this->x_ = x;
+}
+
+
+void
+VirtualAvatar::SetY(int y)
+{
+    this->y_ = y;
+}
+
+
+
