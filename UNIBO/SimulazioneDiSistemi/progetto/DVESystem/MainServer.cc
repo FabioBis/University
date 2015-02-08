@@ -17,10 +17,17 @@
 
 Define_Module(MainServer);
 
+MainServer::~MainServer()
+{
+    delete partition_;
+}
+
 void
 MainServer::initialize()
 {
-    ;
+    PARTSERVERS = par("numOfServer");
+    partition_ = new part_indexes[PARTSERVERS];
+    partitioner();
 }
 
 
@@ -28,4 +35,251 @@ void
 MainServer::handleMessage(cMessage *msg)
 {
     ;
+}
+
+
+
+void
+MainServer::partitioner()
+{
+    switch(PARTSERVERS)
+    {
+    case 1:
+        partition_[0].bl = 0;
+        partition_[0].el = 8;
+        partition_[0].bc = 0;
+        partition_[0].ec = 8;
+        break;
+    case 2:
+        partition_[0].bl = 0;
+        partition_[0].el = 5;
+        partition_[0].bc = 0;
+        partition_[0].ec = 5;
+
+        partition_[1].bl = 6;
+        partition_[1].el = 8;
+        partition_[1].bc = 6;
+        partition_[1].ec = 8;
+        break;
+    case 3:
+        partition_[0].bl = 0;
+        partition_[0].el = 2;
+        partition_[0].bc = 0;
+        partition_[0].ec = 8;
+
+        partition_[1].bl = 3;
+        partition_[1].el = 5;
+        partition_[1].bc = 0;
+        partition_[1].ec = 8;
+
+        partition_[2].bl = 6;
+        partition_[2].el = 8;
+        partition_[2].bc = 0;
+        partition_[2].ec = 8;
+        break;
+    case 4:
+        partition_[0].bl = 0;
+        partition_[0].el = 4;
+        partition_[0].bc = 0;
+        partition_[0].ec = 4;
+
+        partition_[1].bl = 0;
+        partition_[1].el = 4;
+        partition_[1].bc = 5;
+        partition_[1].ec = 8;
+
+        partition_[2].bl = 5;
+        partition_[2].el = 8;
+        partition_[2].bc = 0;
+        partition_[2].ec = 4;
+
+        partition_[3].bl = 5;
+        partition_[3].el = 8;
+        partition_[3].bc = 5;
+        partition_[3].ec = 8;
+        break;
+    case 5:
+        partition_[0].bl = 0;
+        partition_[0].el = 4;
+        partition_[0].bc = 0;
+        partition_[0].ec = 4;
+
+        partition_[1].bl = 5;
+        partition_[1].el = 8;
+        partition_[1].bc = 0;
+        partition_[1].ec = 4;
+
+        partition_[2].bl = 0;
+        partition_[2].el = 2;
+        partition_[2].bc = 5;
+        partition_[2].ec = 8;
+
+        partition_[3].bl = 3;
+        partition_[3].el = 5;
+        partition_[3].bc = 5;
+        partition_[3].ec = 8;
+
+        partition_[4].bl = 6;
+        partition_[4].el = 8;
+        partition_[4].bc = 5;
+        partition_[4].ec = 8;
+        break;
+    case 6:
+        partition_[0].bl = 0;
+        partition_[0].el = 2;
+        partition_[0].bc = 0;
+        partition_[0].ec = 4;
+
+        partition_[1].bl = 0;
+        partition_[1].el = 2;
+        partition_[1].bc = 5;
+        partition_[1].ec = 8;
+
+        partition_[2].bl = 3;
+        partition_[2].el = 5;
+        partition_[2].bc = 0;
+        partition_[2].ec = 4;
+
+        partition_[3].bl = 3;
+        partition_[3].el = 5;
+        partition_[3].bc = 5;
+        partition_[3].ec = 8;
+
+        partition_[4].bl = 6;
+        partition_[4].el = 8;
+        partition_[4].bc = 0;
+        partition_[4].ec = 4;
+
+        partition_[5].bl = 6;
+        partition_[5].el = 8;
+        partition_[5].bc = 5;
+        partition_[5].ec = 8;
+        break;
+    case 7:
+        partition_[0].bl = 0;
+        partition_[0].el = 2;
+        partition_[0].bc = 0;
+        partition_[0].ec = 5;
+
+        partition_[1].bl = 0;
+        partition_[1].el = 2;
+        partition_[1].bc = 6;
+        partition_[1].ec = 8;
+
+        partition_[2].bl = 3;
+        partition_[2].el = 5;
+        partition_[2].bc = 0;
+        partition_[2].ec = 2;
+
+        partition_[3].bl = 3;
+        partition_[3].el = 5;
+        partition_[3].bc = 3;
+        partition_[3].ec = 5;
+
+        partition_[4].bl = 3;
+        partition_[4].el = 8;
+        partition_[4].bc = 6;
+        partition_[4].ec = 8;
+
+        partition_[5].bl = 6;
+        partition_[5].el = 8;
+        partition_[5].bc = 0;
+        partition_[5].ec = 2;
+
+        partition_[6].bl = 6;
+        partition_[6].el = 8;
+        partition_[6].bc = 3;
+        partition_[6].ec = 5;
+        break;
+    case 8:
+        partition_[0].bl = 0;
+        partition_[0].el = 2;
+        partition_[0].bc = 0;
+        partition_[0].ec = 5;
+
+        partition_[1].bl = 0;
+        partition_[1].el = 2;
+        partition_[1].bc = 6;
+        partition_[1].ec = 8;
+
+        partition_[2].bl = 3;
+        partition_[2].el = 5;
+        partition_[2].bc = 0;
+        partition_[2].ec = 2;
+
+        partition_[3].bl = 3;
+        partition_[3].el = 5;
+        partition_[3].bc = 3;
+        partition_[3].ec = 5;
+
+        partition_[4].bl = 3;
+        partition_[4].el = 5;
+        partition_[4].bc = 6;
+        partition_[4].ec = 8;
+
+        partition_[5].bl = 6;
+        partition_[5].el = 8;
+        partition_[5].bc = 0;
+        partition_[5].ec = 2;
+
+        partition_[6].bl = 6;
+        partition_[6].el = 8;
+        partition_[6].bc = 3;
+        partition_[6].ec = 5;
+
+        partition_[7].bl = 6;
+        partition_[7].el = 8;
+        partition_[7].bc = 6;
+        partition_[7].ec = 6;
+        break;
+    case 9:
+        partition_[0].bl = 0;
+        partition_[0].el = 2;
+        partition_[0].bc = 0;
+        partition_[0].ec = 2;
+
+        partition_[1].bl = 0;
+        partition_[1].el = 2;
+        partition_[1].bc = 3;
+        partition_[1].ec = 5;
+
+        partition_[2].bl = 0;
+        partition_[2].el = 2;
+        partition_[2].bc = 6;
+        partition_[2].ec = 8;
+
+        partition_[3].bl = 3;
+        partition_[3].el = 5;
+        partition_[3].bc = 0;
+        partition_[3].ec = 2;
+
+        partition_[4].bl = 3;
+        partition_[4].el = 5;
+        partition_[4].bc = 3;
+        partition_[4].ec = 5;
+
+        partition_[5].bl = 3;
+        partition_[5].el = 5;
+        partition_[5].bc = 6;
+        partition_[5].ec = 8;
+
+        partition_[6].bl = 6;
+        partition_[6].el = 8;
+        partition_[6].bc = 0;
+        partition_[6].ec = 2;
+
+        partition_[7].bl = 6;
+        partition_[7].el = 8;
+        partition_[7].bc = 3;
+        partition_[7].ec = 5;
+
+        partition_[8].bl = 6;
+        partition_[8].el = 8;
+        partition_[8].bc = 6;
+        partition_[8].ec = 6;
+        break;
+    default:
+        throw 401;
+        break;
+    }
 }

@@ -17,9 +17,35 @@
 #define MAINSERVER_H_
 
 #include <omnetpp.h>
+#include <VirtualEnvironment.h>
+
+
+struct part_indexes {
+    // Beginning line index.
+    int bl;
+    // Ending line index.
+    int el;
+    // Beginning column index.
+    int bc;
+    // Ending column index.
+    int ec;
+};
 
 class MainServer : public cSimpleModule {
+private:
+    // The collection of clients logged in.
+    std::map<int, VirtualAvatar*> connectedAvatars_;
+    // The virtual environment.
+    VirtualEnvironment* ve_;
+    // The number of partition servers.
+    int PARTSERVERS;
+    // An array of indexes representing the ve partition among servers.
+    part_indexes* partition_;
+
+    // partitioner auxiliary function.
+    void partitioner();
 protected:
+    ~MainServer();
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 };

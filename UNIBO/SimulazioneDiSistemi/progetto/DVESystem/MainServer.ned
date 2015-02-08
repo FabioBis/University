@@ -17,7 +17,9 @@ package dvesystem;
 
 simple MainServer
 {
-    @display("i=device/server2");
+     parameters:
+         int numOfServer;
+         @display("i=device/server2");
     gates:
         input lanIn[];
         output lanOut[];

@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 
+// Partition Server.
 class DVEServer : public cSimpleModule {
 protected:
     virtual void initialize();

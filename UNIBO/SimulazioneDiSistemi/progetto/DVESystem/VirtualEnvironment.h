@@ -24,7 +24,7 @@ class VirtualAvatar;
 class VirtualEnvironment {
 private:
     // The side size of the grid (square).
-    static const int NUM_CELLS = 10;
+    static const int NUM_CELLS = 9;
     // The virtual environment is essentially a grid of virtual avatars.
     std::map<int, VirtualAvatar*> cells_[NUM_CELLS][NUM_CELLS];
 public:
