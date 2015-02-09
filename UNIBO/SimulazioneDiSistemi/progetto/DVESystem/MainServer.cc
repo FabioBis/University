@@ -28,8 +28,38 @@ MainServer::initialize()
     PARTSERVERS = par("numOfServer");
     partition_ = new part_indexes[PARTSERVERS];
     partitioner();
+    WATCH(ve_);
+    WATCH(partition_);
 }
 
+
+void
+MainServer::handleLoginMessage(LoginMsg *msg)
+{
+    // Insert Virtual Avatar inside the Virtual Environment.
+    VirtualAvatar* va = new VirtualAvatar(
+            ve_,
+            msg->getID(),
+            msg->getX(),
+            msg->getY());
+    ve_->add(va);
+    // Insert Virtual Avatar into the map of connected clients.
+    connectedAvatars_.insert(std::pair<int, VirtualAvatar*>(msg->getID(), va));
+}
+
+
+void
+MainServer::handleUpdateMessage(ServerUpdateMsg * msg)
+{
+    // TODO
+}
+
+
+void
+MainServer::handleMoveMessage(MoveMsg *msg)
+{
+    // TODO
+}
 
 void
 MainServer::handleMessage(cMessage *msg)
