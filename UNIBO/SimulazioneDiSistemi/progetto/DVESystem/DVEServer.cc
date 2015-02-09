@@ -29,3 +29,22 @@ DVEServer::handleMessage(cMessage *msg)
 {
     ;
 }
+
+
+void
+DVEServer::updateClients(int* clients, int length)
+{
+    if (!servedClients_.empty())
+    {
+        servedClients_.erase(servedClients_.begin(), servedClients_.end());
+    }
+    for (int i = 0; i < length; i++)
+    {
+        addClient(clients[i]);
+    }
+}
+
+void
+DVEServer::addClient(int clientID) {
+    servedClients_.push_back(clientID);
+}

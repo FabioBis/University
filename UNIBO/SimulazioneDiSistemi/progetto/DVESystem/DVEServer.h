@@ -20,6 +20,10 @@
 
 // Partition Server.
 class DVEServer : public cSimpleModule {
+private:
+    std::vector<int> servedClients_;
+    void updateClients(int* clients, int length);
+    void addClient(int clientID);
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
