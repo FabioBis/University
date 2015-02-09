@@ -27,5 +27,21 @@ WAN::initialize()
 void
 WAN::handleMessage(cMessage *msg)
 {
-    ;
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        bubble("Login MSG!");
+        send(l_msg, "toMainServer$o");
+    }
+    MoveMsg* mvmsg = dynamic_cast<MoveMsg*>(msg);
+    if (mvmsg != 0)
+    {
+        bubble("Move MSG!");
+    }
+    ServerUpdateMsg* sumsg = dynamic_cast<ServerUpdateMsg*>(msg);
+    if (sumsg != 0)
+    {
+        bubble("Server Update MSG!");
+
+    }
 }

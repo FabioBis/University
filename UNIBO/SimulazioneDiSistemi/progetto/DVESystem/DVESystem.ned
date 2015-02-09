@@ -39,7 +39,8 @@ network DVESystem
     connections:
         // Server Connections.
         mainServer.lanOut++ --> server[0].lanIn++;
-        mainServer.wanIO <--> wan.toServer++;
+        //mainServer.wanIO <--> wan.toServer++;
+        wan.toMainServer <--> mainServer.wanIO;
         for i=0..sizeof(server) - 2 {
             server[i].lanOut++ --> server[i + 1].lanIn++;
         }

@@ -17,6 +17,9 @@
 #define WAN_H_
 
 #include <omnetpp.h>
+#include <ServerUpdateMsg_m.h>
+#include <MoveMsg_m.h>
+#include <LoginMsg_m.h>
 
 class WAN : public cSimpleModule {
 protected:

@@ -19,6 +19,18 @@ Avatar::GetID()
     return ID_;
 }
 
+int
+Avatar::GetX()
+{
+    return x_;
+}
+
+int
+Avatar::GetY()
+{
+    return y_;
+}
+
 void
 Avatar::move(int x, int y)
 {

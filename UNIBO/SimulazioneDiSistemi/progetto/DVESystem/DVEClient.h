@@ -19,6 +19,7 @@
 #include <omnetpp.h>
 #include <Avatar.h>
 #include <MoveMsg_m.h>
+#include <LoginMsg_m.h>
 #include <ServerUpdateMsg_m.h>
 
 class DVEClient : public cSimpleModule {
@@ -29,7 +30,7 @@ private:
     int serverID;
     // Messages.
     MoveMsg* move;
-    ServerUpdateMsg* login;
+    LoginMsg* login;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

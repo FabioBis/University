@@ -21,4 +21,5 @@ simple WAN
     gates:
         inout toClient[];
         inout toServer[];
+        inout toMainServer;
 }

@@ -28,8 +28,8 @@ DVEClient::DVEClient()
 
 DVEClient::~DVEClient()
 {
-    cancelAndDelete(login);
-    cancelAndDelete(move);
+    //cancelAndDelete(login);
+    //cancelAndDelete(move);
 }
 
 void
@@ -40,7 +40,10 @@ DVEClient::initialize()
     avatar = new Avatar(getIndex(), intuniform(0, 8), intuniform(0, 8));
 
     // Wait a variable amount of time, than login to the Main Server.
-    login = new ServerUpdateMsg("login");
+    login = new LoginMsg("login");
+    login->setX(avatar->GetX());
+    login->setY(avatar->GetY());
+    login->setID(avatar->GetID());
     simtime_t delay = uniform(0, 1);
     // $o and $i suffix is used to identify the input/output part of a two way gate.
     sendDelayed(login, delay, "wanIO$o");

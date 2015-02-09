@@ -23,6 +23,8 @@ private:
 public:
     Avatar(int id, int x, int y);
     int GetID();
+    int GetX();
+    int GetY();
     void move(int x, int y);
     void updateAOI(int* newAoI, int aoiSize);
 };
