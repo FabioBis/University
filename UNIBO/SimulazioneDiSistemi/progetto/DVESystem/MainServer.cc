@@ -34,9 +34,22 @@ MainServer::initialize()
 void
 MainServer::handleMessage(cMessage *msg)
 {
-    ;
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        bubble("Login MSG!");
+    }
+    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
+    if (m_msg != 0)
+    {
+        bubble("Move MSG!");
+    }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+    }
 }
-
 
 
 void

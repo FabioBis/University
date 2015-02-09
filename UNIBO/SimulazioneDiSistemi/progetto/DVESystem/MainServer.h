@@ -18,6 +18,9 @@
 
 #include <omnetpp.h>
 #include <VirtualEnvironment.h>
+#include <ServerUpdateMsg_m.h>
+#include <MoveMsg_m.h>
+#include <LoginMsg_m.h>
 
 
 struct part_indexes {
@@ -42,8 +45,13 @@ private:
     // An array of indexes representing the ve partition among servers.
     part_indexes* partition_;
 
-    // partitioner auxiliary function.
+    // Partitioner auxiliary function.
     void partitioner();
+    // handleMessage() helpers.
+    void handleLoginMessage(LoginMsg *msg);
+    void handleUpdateMessage(ServerUpdateMsg * msg);
+    void handleMoveMessage(MoveMsg *msg);
+
 protected:
     ~MainServer();
     virtual void initialize();

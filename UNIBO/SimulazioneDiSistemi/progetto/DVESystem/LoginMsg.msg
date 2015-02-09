@@ -13,10 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-message ServerUpdateMsg
+message LoginMsg
 {
-    // The server id that the clients refer to: -1 = MainServer, 1..9 = DVEServer(s). 
-	int server;
-	// The clients id that the server serves.
-	int clients[];
+    // The server client id. 
+	int ID;
+	// The client x starting position.
+	int x;
+	// The client y starting position.
+	int y;
 }
