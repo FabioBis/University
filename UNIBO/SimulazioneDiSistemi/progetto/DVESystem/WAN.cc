@@ -31,7 +31,7 @@ WAN::handleMessage(cMessage *msg)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
-        send(l_msg, "toMainServer$o");
+        send(msg, "toMainServer$o");
     }
     MoveMsg* mvmsg = dynamic_cast<MoveMsg*>(msg);
     if (mvmsg != 0)

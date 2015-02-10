@@ -25,6 +25,7 @@ MainServer::~MainServer()
 void
 MainServer::initialize()
 {
+    ve_ = new VirtualEnvironment();
     PARTSERVERS = par("numOfServer");
     partition_ = new part_indexes[PARTSERVERS];
     partitioner();
@@ -34,29 +35,32 @@ MainServer::initialize()
 
 
 void
-MainServer::handleLoginMessage(LoginMsg *msg)
+MainServer::handleLoginMessage(cMessage *msg)
 {
+    // check_and_cast from omnetpp.h perform a dynamic cast or raise an error
+    // during the simulation instead of crash.
+    LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
     // Insert Virtual Avatar inside the Virtual Environment.
     VirtualAvatar* va = new VirtualAvatar(
             ve_,
-            msg->getID(),
-            msg->getX(),
-            msg->getY());
+            l_msg->getID(),
+            l_msg->getX(),
+            l_msg->getY());
     ve_->add(va);
     // Insert Virtual Avatar into the map of connected clients.
-    connectedAvatars_.insert(std::pair<int, VirtualAvatar*>(msg->getID(), va));
+    connectedAvatars_.insert(std::pair<int, VirtualAvatar*>(l_msg->getID(), va));
 }
 
 
 void
-MainServer::handleUpdateMessage(ServerUpdateMsg * msg)
+MainServer::handleUpdateMessage(cMessage * msg)
 {
     // TODO
 }
 
 
 void
-MainServer::handleMoveMessage(MoveMsg *msg)
+MainServer::handleMoveMessage(cMessage *msg)
 {
     // TODO
 }
@@ -68,6 +72,8 @@ MainServer::handleMessage(cMessage *msg)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
+        EV << "Received Message: " << msg <<".\n";
+        handleLoginMessage(msg);
     }
     MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
     if (m_msg != 0)

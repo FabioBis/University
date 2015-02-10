@@ -48,9 +48,9 @@ private:
     // Partitioner auxiliary function.
     void partitioner();
     // handleMessage() helpers.
-    void handleLoginMessage(LoginMsg *msg);
-    void handleUpdateMessage(ServerUpdateMsg * msg);
-    void handleMoveMessage(MoveMsg *msg);
+    void handleLoginMessage(cMessage *msg);
+    void handleUpdateMessage(cMessage * msg);
+    void handleMoveMessage(cMessage *msg);
 
 protected:
     ~MainServer();
