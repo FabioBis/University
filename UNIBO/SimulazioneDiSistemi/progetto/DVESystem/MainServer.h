@@ -17,6 +17,7 @@
 #define MAINSERVER_H_
 
 #include <omnetpp.h>
+#include <algorithm>
 #include <VirtualEnvironment.h>
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
@@ -32,6 +33,8 @@ struct part_indexes {
     int bc;
     // Ending column index.
     int ec;
+    // Length.
+    int length;
 };
 
 class MainServer : public cSimpleModule {
@@ -47,6 +50,7 @@ private:
 
     // Partitioner auxiliary function.
     void partitioner();
+    int getPartitionServerID(int x, int y);
     // handleMessage() helpers.
     void handleLoginMessage(cMessage *msg);
     void handleUpdateMessage(cMessage * msg);

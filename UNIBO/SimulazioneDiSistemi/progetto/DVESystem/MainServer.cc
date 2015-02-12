@@ -29,8 +29,6 @@ MainServer::initialize()
     PARTSERVERS = par("numOfServer");
     partition_ = new part_indexes[PARTSERVERS];
     partitioner();
-    WATCH(ve_);
-    WATCH(partition_);
 }
 
 
@@ -49,6 +47,14 @@ MainServer::handleLoginMessage(cMessage *msg)
     ve_->add(va);
     // Insert Virtual Avatar into the map of connected clients.
     connectedAvatars_.insert(std::pair<int, VirtualAvatar*>(l_msg->getID(), va));
+
+    // Identify the partition server for the client.
+    int partitionServer = getPartitionServerID(l_msg->getX(), l_msg->getY());
+    if (partitionServer < 0)
+    {
+        bubble("Exception!");
+    }
+    EV << partitionServer;
 }
 
 
@@ -81,6 +87,7 @@ MainServer::handleMessage(cMessage *msg)
         bubble("Move MSG!");
     }
     ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    /*DBG*/
     if (u_msg != 0)
     {
         bubble("Server Update MSG!");
@@ -88,9 +95,29 @@ MainServer::handleMessage(cMessage *msg)
 }
 
 
+int
+MainServer::getPartitionServerID(int x, int y)
+{
+    for (int i = 0; i < partition_->length; i++)
+    {
+        if (partition_[i].bl <= x && partition_[i].el >= x)
+        {
+            for (int j = 0; j < partition_->length; j++)
+            {
+                if (partition_[j].bc <= y && partition_[i].ec >= y)
+                {
+                    return std::max(j, i);
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 void
 MainServer::partitioner()
 {
+    partition_->length = PARTSERVERS;
     switch(PARTSERVERS)
     {
     case 1:
