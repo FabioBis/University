@@ -17,6 +17,7 @@
 #define VIRTUALENVIRONMENT_H_
 
 #include <map>
+#include <vector>
 #include <VirtualAvatar.h>
 
 class VirtualAvatar;
@@ -35,6 +36,7 @@ public:
     void remove(VirtualAvatar* avatar);
     void move(VirtualAvatar* avatar, int x, int y);
     void erase(VirtualAvatar* avatar);
+    void GetAvatarAndSizeAt(int x, int y, int* avatars, unsigned int& size);
 };
 
 #endif /* VIRTUALENVIRONMENT_H_ */

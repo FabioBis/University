@@ -23,7 +23,8 @@
  *     
  * 	int client;
  * 	
- * 	int server;
+ * 	int x;
+ * 	int y;
  * 	
  * 	
  * 	int aoi[];    
@@ -34,7 +35,8 @@ class MoveMsg : public ::cMessage
 {
   protected:
     int client_var;
-    int server_var;
+    int x_var;
+    int y_var;
     int *aoi_var; // array ptr
     unsigned int aoi_arraysize;
 
@@ -57,8 +59,10 @@ class MoveMsg : public ::cMessage
     // field getter/setter methods
     virtual int getClient() const;
     virtual void setClient(int client);
-    virtual int getServer() const;
-    virtual void setServer(int server);
+    virtual int getX() const;
+    virtual void setX(int x);
+    virtual int getY() const;
+    virtual void setY(int y);
     virtual void setAoiArraySize(unsigned int size);
     virtual unsigned int getAoiArraySize() const;
     virtual int getAoi(unsigned int k) const;

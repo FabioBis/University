@@ -39,22 +39,31 @@ struct part_indexes {
 
 class MainServer : public cSimpleModule {
 private:
+    // The number of partition servers.
+    int PARTSERVERS;
+    // The maximum movements until apply a new server partition.
+    int MOVESMAX;
     // The collection of clients logged in.
     std::map<int, VirtualAvatar*> connectedAvatars_;
     // The virtual environment.
     VirtualEnvironment* ve_;
-    // The number of partition servers.
-    int PARTSERVERS;
     // An array of indexes representing the ve partition among servers.
     part_indexes* partition_;
+    // Number of avatar movements since last server partition.
+    int moves_n;
 
     // Partitioner auxiliary function.
     void partitioner();
     int getPartitionServerID(int x, int y);
+    void updatePartition();
+
     // handleMessage() helpers.
     void handleLoginMessage(cMessage *msg);
     void handleUpdateMessage(cMessage * msg);
     void handleMoveMessage(cMessage *msg);
+
+    // Virtual environment helpers.
+    void handleMove(int clientID, int x, int y);
 
 protected:
     ~MainServer();

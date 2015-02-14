@@ -68,19 +68,20 @@ DVEServer::handleMessage(cMessage *msg)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
-        EV << "Received Message: " << msg <<".\n";
         handleLoginMessage(msg);
     }
     MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
     if (m_msg != 0)
     {
         bubble("Move MSG!");
+        handleMoveMessage(msg);
     }
     ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
     /*DBG*/
     if (u_msg != 0)
     {
         bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
     }
 }
 

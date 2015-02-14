@@ -15,10 +15,11 @@
 
 message MoveMsg
 {
-    // The source of the movement (index inside server connections).
+    // The source of the movement (client index).
 	int client;
-	// The destination server that handle the client messages.
-	int server;
+	// The new coordinates.
+	int x;
+	int y;
 	// Destination clients. It refers to an int pointer with an array size
 	// aoi_arraysize with getter/setter methods: getAoiArraySize()...
 	int aoi[];    

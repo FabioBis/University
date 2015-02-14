@@ -27,8 +27,11 @@ MainServer::initialize()
 {
     ve_ = new VirtualEnvironment();
     PARTSERVERS = par("numOfServer");
+    int clients = par("numOfClient");
+    MOVESMAX =  clients * 30; // Approximately 1 simulated minute.
     partition_ = new part_indexes[PARTSERVERS];
     partitioner();
+    moves_n = 0;
 }
 
 
@@ -73,7 +76,15 @@ MainServer::handleUpdateMessage(cMessage * msg)
 void
 MainServer::handleMoveMessage(cMessage *msg)
 {
-    // TODO
+    moves_n++;
+    MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
+    handleMove(m_msg->getClient(), m_msg->getX(), m_msg->getY());
+    // When clinet's moves reach a given threshold the partition need to be updated.
+    if (moves_n >= MOVESMAX)
+    {
+        bubble("Update Partition Servers.");
+        updatePartition();
+    }
 }
 
 void
@@ -90,12 +101,14 @@ MainServer::handleMessage(cMessage *msg)
     if (m_msg != 0)
     {
         bubble("Move MSG!");
+        handleMoveMessage(msg);
     }
     ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
     /*DBG*/
     if (u_msg != 0)
     {
         bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
     }
 }
 
@@ -118,6 +131,41 @@ MainServer::getPartitionServerID(int x, int y)
     }
     return -1;
 }
+
+
+void
+MainServer::handleMove(int clientID, int x, int y) {
+    VirtualAvatar* avatar = connectedAvatars_[clientID];
+    avatar->move(x, y);
+}
+
+
+void
+MainServer::updatePartition()
+{
+    for (int k = 0; k < PARTSERVERS; k++)
+    {
+        ServerUpdateMsg* update = new ServerUpdateMsg("update");
+        update->setServer(k);
+        for (int i = partition_[k].bl; i <= partition_[k].el; i++)
+        {
+            for (int j = partition_[k].bc; i <= partition_[k].ec; i++)
+            {
+                int* avatars = NULL;
+                unsigned int size;
+                ve_->GetAvatarAndSizeAt(i, j, avatars, size);
+                update->setClientsArraySize(update->getClientsArraySize() + size);
+                for (unsigned int index = 0; index < size; index++)
+                {
+                    update->setClients(index, avatars[index]);
+                }
+            }
+        }
+        // Sending update message through LAN to partition server k.
+        send(update, "lanOut");
+    }
+}
+
 
 void
 MainServer::partitioner()

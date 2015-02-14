@@ -19,6 +19,7 @@ simple MainServer
 {
      parameters:
          int numOfServer;
+         int numOfClient;
          @display("i=device/server2");
     gates:
         input lanIn;
