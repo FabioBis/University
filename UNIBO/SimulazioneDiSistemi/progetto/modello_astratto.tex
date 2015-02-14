@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 
 \author{Fabio Biselli}
-\title{Progetto: modello astratto}
+\title{Relazione di Progetto (bozza)}
 \date{}
 
 \begin{document}
@@ -17,9 +17,9 @@ Il sistema introdotto nell'articolo ed illustrato in figura \ref{fig1}
 è così composto:
 \begin{itemize}
 \item
-3 server, di cui uno contrassegnato come principale;
+$3$ server, di cui uno contrassegnato come principale;
 \item
-180 client che controllano un avatar nel mondo virtuale;
+$180$ client che controllano un avatar nel mondo virtuale;
 \item
 Una rete che connette i client ai server (che sono tra loro interconnessi);
 \item
@@ -37,8 +37,8 @@ server.
 All'inizio della simulazione gli avatar (client) sono distribuiti nel'area
 di gioco in modo uniforme.  
 
-La simulazione consiste nel far compiere ad ogni avatar 100 movimenti, uno
-ogni 2 secondi. Quando l'avatar compie un movimento invia un messaggio di
+La simulazione consiste nel far compiere ad ogni avatar $100$ movimenti, uno
+ogni $2$ secondi. Quando l'avatar compie un movimento invia un messaggio di
 ACK al server associato che lo propaga ai client nella relativa AoI.
 I client che ricevono l'ACK rispediscono il messaggio al server che notifica
 l'ACK ricevuto al client che ha effettuato lo spostamento. In questo modo è
@@ -65,8 +65,8 @@ sistema descritto in figura \ref{fig2} nel seguente modo:
 $1$ Main Server che si occupa del login dei client e della gestione
 dell'ambiente simulato;
 \item
-$k \in {1, \ldots, 9}$ server di partizione che si occupano di gestire i messaggi
-tra client ed aggiornare il Main Server;
+$k \in \{1, \ldots, 9\}$ server di partizione che si occupano di gestire i
+messaggi tra client ed aggiornare il Main Server;
 \item
 $n$ client che controllano un distinto avatar nel mondo virtuale;
 \item
@@ -147,16 +147,16 @@ simulare una WAN.
 
 \subsection{Metodo di partizionamento}
 Il metodo di partizionamento, poiché non è oggetto dello studio, sarà
-implementato in modo semplificato. Ad ogni Server sarà assegnata una porzione
+implementato in modo semplificato. Ad ogni Server verrà assegnata una porzione
 del mondo in modo lineare. Questo introdurrà un numero massimo di server che
 l'utente potrà specificare all'avvio.
 
 \begin{figure}
-\label{fig2}
 \begin{center}
 \includegraphics[scale=0.50]{schemaRing.jpeg}
 \end{center}
 \caption{Schema proposto per l'implementazione.}
+\label{fig2}
 \end{figure}
 
 \end{document}
