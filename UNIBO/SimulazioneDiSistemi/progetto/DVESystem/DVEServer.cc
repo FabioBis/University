@@ -20,14 +20,68 @@ Define_Module(DVEServer);
 void
 DVEServer::initialize()
 {
-    ;
+    clients_ = 0;
+    WATCH(clients_);
+}
+
+
+void
+DVEServer::handleLoginMessage(cMessage *msg)
+{
+    LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
+    int clientID = l_msg->getID();
+    int partitionID = l_msg->getServerID();
+    if (partitionID == getIndex())
+    {
+        // Save the client id into the server clients vector.
+        addClient(clientID);
+        //DBG//
+        EV << "DVEServer[" << partitionID << "]::" << clientID;
+        //DBG//
+    }
+    else
+    {
+        // Forward the message to the LAN ring.
+        send(l_msg, "lanOut");
+    }
+}
+
+
+void
+DVEServer::handleUpdateMessage(cMessage * msg)
+{
+    // TODO
+}
+
+
+void
+DVEServer::handleMoveMessage(cMessage *msg)
+{
+    // TODO
 }
 
 
 void
 DVEServer::handleMessage(cMessage *msg)
 {
-    ;
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        bubble("Login MSG!");
+        EV << "Received Message: " << msg <<".\n";
+        handleLoginMessage(msg);
+    }
+    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
+    if (m_msg != 0)
+    {
+        bubble("Move MSG!");
+    }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    /*DBG*/
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+    }
 }
 
 
@@ -46,5 +100,6 @@ DVEServer::updateClients(int* clients, int length)
 
 void
 DVEServer::addClient(int clientID) {
+    clients_++;
     servedClients_.push_back(clientID);
 }

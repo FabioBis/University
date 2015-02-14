@@ -55,7 +55,7 @@ MainServer::handleLoginMessage(cMessage *msg)
     {
         bubble("Exception!");
     }
-    EV << partitionServer;
+    EV << "MainServer:: " << l_msg;
     //DBG//
     // Adding partition server id and send through LAN.
     l_msg->setServerID(partitionServer);

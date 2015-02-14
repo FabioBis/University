@@ -17,16 +17,24 @@
 #define DVESERVER_H_
 
 #include <omnetpp.h>
+#include <ServerUpdateMsg_m.h>
+#include <MoveMsg_m.h>
+#include <LoginMsg_m.h>
 
 // Partition Server.
 class DVEServer : public cSimpleModule {
 private:
+    int clients_;
     std::vector<int> servedClients_;
     void updateClients(int* clients, int length);
     void addClient(int clientID);
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    // handleMessage() helpers.
+    void handleLoginMessage(cMessage *msg);
+    void handleUpdateMessage(cMessage * msg);
+    void handleMoveMessage(cMessage *msg);
 };
 
 #endif /* DVESERVER_H_ */
