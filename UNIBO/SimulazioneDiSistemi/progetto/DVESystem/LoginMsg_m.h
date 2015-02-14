@@ -26,6 +26,8 @@
  * 	int x;
  * 	
  * 	int y;
+ * 	
+ * 	int serverID;
  * }
  * </pre>
  */
@@ -35,6 +37,7 @@ class LoginMsg : public ::cMessage
     int ID_var;
     int x_var;
     int y_var;
+    int serverID_var;
 
   private:
     void copy(const LoginMsg& other);
@@ -59,6 +62,8 @@ class LoginMsg : public ::cMessage
     virtual void setX(int x);
     virtual int getY() const;
     virtual void setY(int y);
+    virtual int getServerID() const;
+    virtual void setServerID(int serverID);
 };
 
 inline void doPacking(cCommBuffer *b, LoginMsg& obj) {obj.parsimPack(b);}

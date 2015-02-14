@@ -19,7 +19,7 @@ simple DVEServer
 {
     @display("i=device/server");
     gates:
-        input lanIn[];
-        output lanOut[];
+        input lanIn;
+        output lanOut;
         inout wanIO;
 }

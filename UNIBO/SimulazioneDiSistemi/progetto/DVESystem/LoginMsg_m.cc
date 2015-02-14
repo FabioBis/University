@@ -60,6 +60,7 @@ LoginMsg::LoginMsg(const char *name, int kind) : ::cMessage(name,kind)
     this->ID_var = 0;
     this->x_var = 0;
     this->y_var = 0;
+    this->serverID_var = 0;
 }
 
 LoginMsg::LoginMsg(const LoginMsg& other) : ::cMessage(other)
@@ -84,6 +85,7 @@ void LoginMsg::copy(const LoginMsg& other)
     this->ID_var = other.ID_var;
     this->x_var = other.x_var;
     this->y_var = other.y_var;
+    this->serverID_var = other.serverID_var;
 }
 
 void LoginMsg::parsimPack(cCommBuffer *b)
@@ -92,6 +94,7 @@ void LoginMsg::parsimPack(cCommBuffer *b)
     doPacking(b,this->ID_var);
     doPacking(b,this->x_var);
     doPacking(b,this->y_var);
+    doPacking(b,this->serverID_var);
 }
 
 void LoginMsg::parsimUnpack(cCommBuffer *b)
@@ -100,6 +103,7 @@ void LoginMsg::parsimUnpack(cCommBuffer *b)
     doUnpacking(b,this->ID_var);
     doUnpacking(b,this->x_var);
     doUnpacking(b,this->y_var);
+    doUnpacking(b,this->serverID_var);
 }
 
 int LoginMsg::getID() const
@@ -130,6 +134,16 @@ int LoginMsg::getY() const
 void LoginMsg::setY(int y)
 {
     this->y_var = y;
+}
+
+int LoginMsg::getServerID() const
+{
+    return serverID_var;
+}
+
+void LoginMsg::setServerID(int serverID)
+{
+    this->serverID_var = serverID;
 }
 
 class LoginMsgDescriptor : public cClassDescriptor
@@ -179,7 +193,7 @@ const char *LoginMsgDescriptor::getProperty(const char *propertyname) const
 int LoginMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount(object) : 3;
+    return basedesc ? 4+basedesc->getFieldCount(object) : 4;
 }
 
 unsigned int LoginMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -194,8 +208,9 @@ unsigned int LoginMsgDescriptor::getFieldTypeFlags(void *object, int field) cons
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *LoginMsgDescriptor::getFieldName(void *object, int field) const
@@ -210,8 +225,9 @@ const char *LoginMsgDescriptor::getFieldName(void *object, int field) const
         "ID",
         "x",
         "y",
+        "serverID",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : NULL;
+    return (field>=0 && field<4) ? fieldNames[field] : NULL;
 }
 
 int LoginMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -221,6 +237,7 @@ int LoginMsgDescriptor::findField(void *object, const char *fieldName) const
     if (fieldName[0]=='I' && strcmp(fieldName, "ID")==0) return base+0;
     if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
     if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
+    if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+3;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -236,8 +253,9 @@ const char *LoginMsgDescriptor::getFieldTypeString(void *object, int field) cons
         "int",
         "int",
         "int",
+        "int",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *LoginMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -280,6 +298,7 @@ std::string LoginMsgDescriptor::getFieldAsString(void *object, int field, int i)
         case 0: return long2string(pp->getID());
         case 1: return long2string(pp->getX());
         case 2: return long2string(pp->getY());
+        case 3: return long2string(pp->getServerID());
         default: return "";
     }
 }
@@ -297,6 +316,7 @@ bool LoginMsgDescriptor::setFieldAsString(void *object, int field, int i, const 
         case 0: pp->setID(string2long(value)); return true;
         case 1: pp->setX(string2long(value)); return true;
         case 2: pp->setY(string2long(value)); return true;
+        case 3: pp->setServerID(string2long(value)); return true;
         default: return false;
     }
 }

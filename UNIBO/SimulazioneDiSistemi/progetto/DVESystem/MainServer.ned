@@ -21,7 +21,7 @@ simple MainServer
          int numOfServer;
          @display("i=device/server2");
     gates:
-        input lanIn[];
-        output lanOut[];
+        input lanIn;
+        output lanOut;
         inout wanIO;
 }

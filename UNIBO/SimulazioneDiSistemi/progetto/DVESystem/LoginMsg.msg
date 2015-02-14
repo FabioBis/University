@@ -15,10 +15,12 @@
 
 message LoginMsg
 {
-    // The server client id. 
+    // The client id. 
 	int ID;
 	// The client x starting position.
 	int x;
 	// The client y starting position.
 	int y;
+	// The partition server ID.
+	int serverID;
 }

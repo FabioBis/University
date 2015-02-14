@@ -50,11 +50,16 @@ MainServer::handleLoginMessage(cMessage *msg)
 
     // Identify the partition server for the client.
     int partitionServer = getPartitionServerID(l_msg->getX(), l_msg->getY());
+    //DBG//
     if (partitionServer < 0)
     {
         bubble("Exception!");
     }
     EV << partitionServer;
+    //DBG//
+    // Adding partition server id and send through LAN.
+    l_msg->setServerID(partitionServer);
+    send(l_msg, "lanOut");
 }
 
 
