@@ -15,9 +15,12 @@
 
 package dvesystem;
 
+
 simple DVEClient
 {
-    @display("i=device/pc");
+    parameters:
+    	@display("i=device/pc");
     gates:
         inout wanIO;
+        input fromSource;
 }

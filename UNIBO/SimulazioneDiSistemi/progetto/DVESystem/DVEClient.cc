@@ -22,7 +22,6 @@ DVEClient::DVEClient()
     // Set the pointer to NULL, so that the destructor won't crash
     // even if initialize() doesn't get called because of a runtime
     // error or user cancellation during the startup process.
-    move = NULL;
     login = NULL;
 }
 
@@ -38,20 +37,51 @@ DVEClient::initialize()
     // Assuming the Avatar lives in a 9x9 world, and the staring distribution
     // among world cells is uniform.
     avatar = new Avatar(getIndex(), intuniform(0, 8), intuniform(0, 8));
-
-    // Wait a variable amount of time, than login to the Main Server.
-    login = new LoginMsg("login");
-    login->setX(avatar->GetX());
-    login->setY(avatar->GetY());
-    login->setID(avatar->GetID());
-    delay = uniform(0, 10);
-    // $o and $i suffix is used to identify the input/output part of a two way gate.
-    sendDelayed(login, delay, "wanIO$o");
+    logged = false;
 }
 
 
 void
 DVEClient::handleMessage(cMessage *msg)
 {
-    ;
+    // The message is a Job from Source.
+    if(logged)
+    {
+        // Let's move!
+        makeMove();
+    }
+    else
+    {
+        logged = true;
+        login = new LoginMsg("login");
+        login->setX(avatar->GetX());
+        login->setY(avatar->GetY());
+        login->setID(avatar->GetID());
+        // $o and $i suffix is used to identify the input/output part of a two way gate.
+        send(login, "wanIO$o");
+    }
+}
+
+
+void
+DVEClient::makeMove()
+{
+    int x;
+    int y;
+    double probability = uniform(0.0, 1.0);
+    if (probability > 0.95) // 1.0 - 0.05
+    {
+        x = intuniform(0, 8);
+        y = intuniform(0, 8);
+    }
+    else
+    {
+        ;
+    }
+    MoveMsg* move = new MoveMsg();
+    move->setX(x);
+    move->setY(y);
+    move->setClientID(getIndex());
+    move->setServerID(serverID);
+    send(move, "wanIO");
 }

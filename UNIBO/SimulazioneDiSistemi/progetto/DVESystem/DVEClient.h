@@ -28,11 +28,12 @@ private:
     Avatar* avatar;
     // The current game server id that the client refers to.
     int serverID;
-    // The starting delay time.
-    simtime_t delay;
+    // flag to login the client.
+    bool logged;
     // Messages.
-    MoveMsg* move;
     LoginMsg* login;
+
+    void makeMove();
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

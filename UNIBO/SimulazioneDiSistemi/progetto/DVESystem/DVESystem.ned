@@ -15,16 +15,17 @@
 
 package dvesystem;
 
-import org.omnetpp.queueing.SourceOnce;
+import org.omnetpp.queueing.Source;
 
 
 network DVESystem
 {
     parameters:
         int numOfServer;
-        int numOfClient; 
+        int numOfClient;
     types:
-        channel LAN extends ned.DelayChannel {
+        channel LAN extends ned.DelayChannel
+        {
             delay = 1ms;
         }
     submodules:
@@ -33,6 +34,9 @@ network DVESystem
         }
         server[numOfServer]: DVEServer {
             @display("p=52,44,ri");
+        }
+        source[numOfClient]: Source {
+            @display("p=240,286");
         }
         client[numOfClient]: DVEClient {
             @display("p=240,217,x");
@@ -54,5 +58,6 @@ network DVESystem
         // Client connections.
         for j=0..sizeof(client) - 1 {
             client[j].wanIO <--> wan.toClient++;
+            source[j].out --> client[j].fromSource;
         }
 }
