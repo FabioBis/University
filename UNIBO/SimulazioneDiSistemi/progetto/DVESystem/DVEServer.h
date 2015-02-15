@@ -33,7 +33,7 @@ protected:
     virtual void handleMessage(cMessage *msg);
     // handleMessage() helpers.
     void handleLoginMessage(cMessage *msg);
-    void handleUpdateMessage(cMessage * msg);
+    void handleUpdateMessage(cMessage *msg);
     void handleMoveMessage(cMessage *msg);
 };
 

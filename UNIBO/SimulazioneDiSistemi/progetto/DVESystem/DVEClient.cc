@@ -44,10 +44,25 @@ DVEClient::initialize()
 void
 DVEClient::handleMessage(cMessage *msg)
 {
+    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
+    if (m_msg != 0)
+    {
+        bubble("Move MSG!");
+        handleMoveMessage(msg);
+        return;
+    }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
+        return;
+    }
     // The message is a Job from Source.
     if(logged)
     {
         // Let's move!
+        bubble("Let's move!");
         makeMove();
     }
     else
@@ -64,6 +79,19 @@ DVEClient::handleMessage(cMessage *msg)
 
 
 void
+DVEClient::handleMoveMessage(cMessage *msg)
+{
+    // TODO
+}
+
+
+void
+DVEClient::handleUpdateMessage(cMessage * msg)
+{
+    // TODO
+}
+
+void
 DVEClient::makeMove()
 {
     int x;
@@ -76,12 +104,39 @@ DVEClient::makeMove()
     }
     else
     {
-        ;
+        computeCoordinate(avatar->GetX(), x);
+        computeCoordinate(avatar->GetY(), y);
     }
     MoveMsg* move = new MoveMsg();
     move->setX(x);
     move->setY(y);
     move->setClientID(getIndex());
     move->setServerID(serverID);
-    send(move, "wanIO");
+    if (avatar->GetX() == x && avatar->GetY() == y)
+    {
+        // No moves.
+        return;
+    }
+    else
+    {
+        avatar->move(x, y);
+        send(move, "wanIO");
+    }
+}
+
+void
+DVEClient::computeCoordinate(int src, int &dest)
+{
+    switch (src)
+    {
+    case 0:
+        dest = intuniform(0, 1);
+        break;
+    case 8:
+        dest = intuniform(7, 8);
+        break;
+    default:
+        dest = intuniform(src - 1, src + 1);
+        break;
+    }
 }

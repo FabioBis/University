@@ -26,6 +26,33 @@ DVEServer::initialize()
 
 
 void
+DVEServer::handleMessage(cMessage *msg)
+{
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        handleLoginMessage(msg);
+        return;
+    }
+    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
+    if (m_msg != 0)
+    {
+        bubble("Move MSG!");
+        handleMoveMessage(msg);
+        return;
+    }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    /*DBG*/
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
+        return;
+    }
+}
+
+
+void
 DVEServer::handleLoginMessage(cMessage *msg)
 {
     LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
@@ -88,30 +115,6 @@ DVEServer::handleMoveMessage(cMessage *msg)
 
 
 void
-DVEServer::handleMessage(cMessage *msg)
-{
-    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
-    if (l_msg != 0)
-    {
-        handleLoginMessage(msg);
-    }
-    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
-    if (m_msg != 0)
-    {
-        bubble("Move MSG!");
-        handleMoveMessage(msg);
-    }
-    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
-    /*DBG*/
-    if (u_msg != 0)
-    {
-        bubble("Server Update MSG!");
-        handleUpdateMessage(msg);
-    }
-}
-
-
-void
 DVEServer::updateClients(int* clients, int length)
 {
     if (!servedClients_.empty())
@@ -123,6 +126,7 @@ DVEServer::updateClients(int* clients, int length)
         addClient(clients[i]);
     }
 }
+
 
 void
 DVEServer::addClient(int clientID) {

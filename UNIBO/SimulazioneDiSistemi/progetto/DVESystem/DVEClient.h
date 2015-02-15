@@ -34,6 +34,9 @@ private:
     LoginMsg* login;
 
     void makeMove();
+    void handleMoveMessage(cMessage *msg);
+    void handleUpdateMessage(cMessage *msg);
+    void computeCoordinate(int src, int &dest);
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
