@@ -44,7 +44,7 @@ DVEClient::initialize()
     login->setX(avatar->GetX());
     login->setY(avatar->GetY());
     login->setID(avatar->GetID());
-    simtime_t delay = uniform(0, 1);
+    delay = uniform(0, 10);
     // $o and $i suffix is used to identify the input/output part of a two way gate.
     sendDelayed(login, delay, "wanIO$o");
 }
