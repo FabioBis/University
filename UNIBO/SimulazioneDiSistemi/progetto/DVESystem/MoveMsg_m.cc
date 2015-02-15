@@ -57,7 +57,8 @@ Register_Class(MoveMsg);
 
 MoveMsg::MoveMsg(const char *name, int kind) : ::cMessage(name,kind)
 {
-    this->client_var = 0;
+    this->clientID_var = 0;
+    this->serverID_var = 0;
     this->x_var = 0;
     this->y_var = 0;
     aoi_arraysize = 0;
@@ -86,7 +87,8 @@ MoveMsg& MoveMsg::operator=(const MoveMsg& other)
 
 void MoveMsg::copy(const MoveMsg& other)
 {
-    this->client_var = other.client_var;
+    this->clientID_var = other.clientID_var;
+    this->serverID_var = other.serverID_var;
     this->x_var = other.x_var;
     this->y_var = other.y_var;
     delete [] this->aoi_var;
@@ -99,7 +101,8 @@ void MoveMsg::copy(const MoveMsg& other)
 void MoveMsg::parsimPack(cCommBuffer *b)
 {
     ::cMessage::parsimPack(b);
-    doPacking(b,this->client_var);
+    doPacking(b,this->clientID_var);
+    doPacking(b,this->serverID_var);
     doPacking(b,this->x_var);
     doPacking(b,this->y_var);
     b->pack(aoi_arraysize);
@@ -109,7 +112,8 @@ void MoveMsg::parsimPack(cCommBuffer *b)
 void MoveMsg::parsimUnpack(cCommBuffer *b)
 {
     ::cMessage::parsimUnpack(b);
-    doUnpacking(b,this->client_var);
+    doUnpacking(b,this->clientID_var);
+    doUnpacking(b,this->serverID_var);
     doUnpacking(b,this->x_var);
     doUnpacking(b,this->y_var);
     delete [] this->aoi_var;
@@ -122,14 +126,24 @@ void MoveMsg::parsimUnpack(cCommBuffer *b)
     }
 }
 
-int MoveMsg::getClient() const
+int MoveMsg::getClientID() const
 {
-    return client_var;
+    return clientID_var;
 }
 
-void MoveMsg::setClient(int client)
+void MoveMsg::setClientID(int clientID)
 {
-    this->client_var = client;
+    this->clientID_var = clientID;
+}
+
+int MoveMsg::getServerID() const
+{
+    return serverID_var;
+}
+
+void MoveMsg::setServerID(int serverID)
+{
+    this->serverID_var = serverID;
 }
 
 int MoveMsg::getX() const
@@ -229,7 +243,7 @@ const char *MoveMsgDescriptor::getProperty(const char *propertyname) const
 int MoveMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount(object) : 4;
+    return basedesc ? 5+basedesc->getFieldCount(object) : 5;
 }
 
 unsigned int MoveMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -244,9 +258,10 @@ unsigned int MoveMsgDescriptor::getFieldTypeFlags(void *object, int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
 const char *MoveMsgDescriptor::getFieldName(void *object, int field) const
@@ -258,22 +273,24 @@ const char *MoveMsgDescriptor::getFieldName(void *object, int field) const
         field -= basedesc->getFieldCount(object);
     }
     static const char *fieldNames[] = {
-        "client",
+        "clientID",
+        "serverID",
         "x",
         "y",
         "aoi",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : NULL;
+    return (field>=0 && field<5) ? fieldNames[field] : NULL;
 }
 
 int MoveMsgDescriptor::findField(void *object, const char *fieldName) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount(object) : 0;
-    if (fieldName[0]=='c' && strcmp(fieldName, "client")==0) return base+0;
-    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
-    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
-    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+3;
+    if (fieldName[0]=='c' && strcmp(fieldName, "clientID")==0) return base+0;
+    if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+1;
+    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+2;
+    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+3;
+    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+4;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -290,8 +307,9 @@ const char *MoveMsgDescriptor::getFieldTypeString(void *object, int field) const
         "int",
         "int",
         "int",
+        "int",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<5) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *MoveMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -317,7 +335,7 @@ int MoveMsgDescriptor::getArraySize(void *object, int field) const
     }
     MoveMsg *pp = (MoveMsg *)object; (void)pp;
     switch (field) {
-        case 3: return pp->getAoiArraySize();
+        case 4: return pp->getAoiArraySize();
         default: return 0;
     }
 }
@@ -332,10 +350,11 @@ std::string MoveMsgDescriptor::getFieldAsString(void *object, int field, int i) 
     }
     MoveMsg *pp = (MoveMsg *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getClient());
-        case 1: return long2string(pp->getX());
-        case 2: return long2string(pp->getY());
-        case 3: return long2string(pp->getAoi(i));
+        case 0: return long2string(pp->getClientID());
+        case 1: return long2string(pp->getServerID());
+        case 2: return long2string(pp->getX());
+        case 3: return long2string(pp->getY());
+        case 4: return long2string(pp->getAoi(i));
         default: return "";
     }
 }
@@ -350,10 +369,11 @@ bool MoveMsgDescriptor::setFieldAsString(void *object, int field, int i, const c
     }
     MoveMsg *pp = (MoveMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setClient(string2long(value)); return true;
-        case 1: pp->setX(string2long(value)); return true;
-        case 2: pp->setY(string2long(value)); return true;
-        case 3: pp->setAoi(i,string2long(value)); return true;
+        case 0: pp->setClientID(string2long(value)); return true;
+        case 1: pp->setServerID(string2long(value)); return true;
+        case 2: pp->setX(string2long(value)); return true;
+        case 3: pp->setY(string2long(value)); return true;
+        case 4: pp->setAoi(i,string2long(value)); return true;
         default: return false;
     }
 }

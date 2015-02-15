@@ -21,7 +21,7 @@
  * message ServerUpdateMsg
  * {
  *     
- * 	int server;
+ * 	int serverID;
  * 	
  * 	int clients[];
  * }
@@ -30,7 +30,7 @@
 class ServerUpdateMsg : public ::cMessage
 {
   protected:
-    int server_var;
+    int serverID_var;
     int *clients_var; // array ptr
     unsigned int clients_arraysize;
 
@@ -51,8 +51,8 @@ class ServerUpdateMsg : public ::cMessage
     virtual void parsimUnpack(cCommBuffer *b);
 
     // field getter/setter methods
-    virtual int getServer() const;
-    virtual void setServer(int server);
+    virtual int getServerID() const;
+    virtual void setServerID(int serverID);
     virtual void setClientsArraySize(unsigned int size);
     virtual unsigned int getClientsArraySize() const;
     virtual int getClients(unsigned int k) const;

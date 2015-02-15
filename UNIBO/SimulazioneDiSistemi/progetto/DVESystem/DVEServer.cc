@@ -50,7 +50,22 @@ DVEServer::handleLoginMessage(cMessage *msg)
 void
 DVEServer::handleUpdateMessage(cMessage * msg)
 {
-    // TODO
+    ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+    int partitionID = su_msg->getServerID();
+    if (partitionID == getIndex())
+    {
+        servedClients_.clear();
+        unsigned int size = su_msg->getClientsArraySize();
+        for (unsigned int i = 0; i < size; i++)
+        {
+            servedClients_.push_back(su_msg->getClients(i));
+        }
+    }
+    else
+    {
+        // Forward the message to the LAN ring.
+        send(su_msg, "lanOut");
+    }
 }
 
 
@@ -58,6 +73,17 @@ void
 DVEServer::handleMoveMessage(cMessage *msg)
 {
     // TODO
+    MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
+    int partitionID = m_msg->getServerID();
+    if (partitionID == getIndex())
+    {
+
+    }
+    else
+    {
+        // Forward the message to the LAN ring.
+        send(m_msg, "lanOut");
+    }
 }
 
 
@@ -67,7 +93,6 @@ DVEServer::handleMessage(cMessage *msg)
     LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
     if (l_msg != 0)
     {
-        bubble("Login MSG!");
         handleLoginMessage(msg);
     }
     MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);

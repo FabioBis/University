@@ -78,14 +78,15 @@ MainServer::handleMoveMessage(cMessage *msg)
 {
     moves_n++;
     MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
-    handleMove(m_msg->getClient(), m_msg->getX(), m_msg->getY());
-    // When clinet's moves reach a given threshold the partition need to be updated.
+    handleMove(m_msg->getClientID(), m_msg->getX(), m_msg->getY());
+    // When client's moves reach a given threshold the partition need to be updated.
     if (moves_n >= MOVESMAX)
     {
         bubble("Update Partition Servers.");
         updatePartition();
     }
 }
+
 
 void
 MainServer::handleMessage(cMessage *msg)
@@ -102,13 +103,6 @@ MainServer::handleMessage(cMessage *msg)
     {
         bubble("Move MSG!");
         handleMoveMessage(msg);
-    }
-    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
-    /*DBG*/
-    if (u_msg != 0)
-    {
-        bubble("Server Update MSG!");
-        handleUpdateMessage(msg);
     }
 }
 
@@ -146,7 +140,7 @@ MainServer::updatePartition()
     for (int k = 0; k < PARTSERVERS; k++)
     {
         ServerUpdateMsg* update = new ServerUpdateMsg("update");
-        update->setServer(k);
+        update->setServerID(k);
         for (int i = partition_[k].bl; i <= partition_[k].el; i++)
         {
             for (int j = partition_[k].bc; i <= partition_[k].ec; i++)

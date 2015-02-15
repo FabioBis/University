@@ -21,7 +21,9 @@
  * message MoveMsg
  * {
  *     
- * 	int client;
+ * 	int clientID;
+ * 	
+ * 	int serverID;
  * 	
  * 	int x;
  * 	int y;
@@ -34,7 +36,8 @@
 class MoveMsg : public ::cMessage
 {
   protected:
-    int client_var;
+    int clientID_var;
+    int serverID_var;
     int x_var;
     int y_var;
     int *aoi_var; // array ptr
@@ -57,8 +60,10 @@ class MoveMsg : public ::cMessage
     virtual void parsimUnpack(cCommBuffer *b);
 
     // field getter/setter methods
-    virtual int getClient() const;
-    virtual void setClient(int client);
+    virtual int getClientID() const;
+    virtual void setClientID(int clientID);
+    virtual int getServerID() const;
+    virtual void setServerID(int serverID);
     virtual int getX() const;
     virtual void setX(int x);
     virtual int getY() const;
