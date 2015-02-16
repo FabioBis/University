@@ -66,12 +66,25 @@ MainServer::handleMessage(cMessage *msg)
 void
 MainServer::handleUpdateAoIMessage(cMessage * msg)
 {
-    // TODO
+    // Simply forward the message.
+    UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
+    send(aoi_msg, "lanOut");
 }
 
 
 void
 MainServer::handleMove(int clientID, int x, int y) {
+    int* newAoi = NULL;
+    unsigned int newAoiSize;
+    ve_->GetAvatarAndSizeAt(x, y, newAoi, newAoiSize);
+    UpdateAoIMsg* update = new UpdateAoIMsg();
+    update->setClientMoved(clientID);
+    update->setAoiArraySize(newAoiSize);
+    for (unsigned int index = 0; index < newAoiSize; index++)
+    {
+        update->setAoi(index, newAoi[index]);
+    }
+    send(update, "lanOut");
     VirtualAvatar* avatar = connectedAvatars_[clientID];
     avatar->move(x, y);
 }
@@ -111,7 +124,9 @@ MainServer::handleLoginMessage(cMessage *msg)
 void
 MainServer::handleUpdateMessage(cMessage * msg)
 {
-    // TODO
+    // Simply forward the message.
+    ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+    send(su_msg, "lanOut");
 }
 
 
