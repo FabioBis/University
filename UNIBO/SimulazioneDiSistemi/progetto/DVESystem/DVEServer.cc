@@ -113,17 +113,57 @@ DVEServer::handleUpdateMessage(cMessage * msg)
 void
 DVEServer::handleMoveMessage(cMessage *msg)
 {
-    // TODO
     MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
-    int partitionID = m_msg->getServerID();
-    if (partitionID == getIndex())
+    unsigned int aoiSize = m_msg->getAoiArraySize();
+    if (aoiSize == 0)
     {
-
+        return;
     }
-    else
+    unsigned int servedAvatar = 0;
+    std::vector<int> nonServedAvatar;
+    for (unsigned int i = 0; i < aoiSize; i++)
     {
-        // Forward the message to the LAN ring.
+        int avatarID = m_msg->getAoi(i);
+        std::vector<int>::iterator it;
+        it = std::find(servedClients_.begin(), servedClients_.end(), avatarID);
+        if (it != servedClients_.end())
+        {
+            servedAvatar++;
+            MoveMsg *new_msg = m_msg->dup();
+            new_msg->setClientDest(avatarID);
+            send(new_msg, "wanIO$o");
+        }
+        else
+        {
+            nonServedAvatar->push_back(avatarID);
+        }
+    }
+    if (servedAvatar == (aoiSize - 1))
+    {
+        // All client are notified.
+        return;
+    }
+    else if (servedAvatar == 0)
+    {
+        // No client served, forward the message.
         send(m_msg, "lanOut");
+        return;
+    }
+    else if (servedAvatar > 0)
+
+    {
+        // Partition server has served some clients, update the list of clients
+        // to be notified.
+        unsigned int newSize = aoiSize - servedAvatar;
+        MoveMsg *new_msg = new MoveMsg();
+        new_msg->setClientID(m_msg->getClientID());
+        new_msg->setAoiArraySize(newSize);
+        for (unsigned int i = 0; i < newSize; i++)
+        {
+            new_msg->setAoi(i, nonServedAvatar->pop_back());
+        }
+        // Forward the move message until no more clients must be notified.
+        send(new_msg, "lanOut");
     }
 }
 

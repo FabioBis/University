@@ -17,6 +17,7 @@
 #define DVESERVER_H_
 
 #include <omnetpp.h>
+#include <algorithm>
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>

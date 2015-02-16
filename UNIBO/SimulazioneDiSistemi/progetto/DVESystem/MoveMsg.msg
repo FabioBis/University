@@ -17,6 +17,7 @@ message MoveMsg
 {
     // The source of the movement (client index).
 	int clientID;
+	int clientDest;
 	// The server ID that handle client's requests.
 	int serverID;
 	// The new coordinates.

@@ -22,6 +22,7 @@
  * {
  *     
  * 	int clientID;
+ * 	int clientDest;
  * 	
  * 	int serverID;
  * 	
@@ -37,6 +38,7 @@ class MoveMsg : public ::cMessage
 {
   protected:
     int clientID_var;
+    int clientDest_var;
     int serverID_var;
     int x_var;
     int y_var;
@@ -62,6 +64,8 @@ class MoveMsg : public ::cMessage
     // field getter/setter methods
     virtual int getClientID() const;
     virtual void setClientID(int clientID);
+    virtual int getClientDest() const;
+    virtual void setClientDest(int clientDest);
     virtual int getServerID() const;
     virtual void setServerID(int serverID);
     virtual int getX() const;
