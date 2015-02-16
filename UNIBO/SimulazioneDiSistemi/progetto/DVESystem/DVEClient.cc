@@ -44,6 +44,14 @@ DVEClient::initialize()
 void
 DVEClient::handleMessage(cMessage *msg)
 {
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        bubble("Login MSG!");
+        EV << "Received Message: " << msg <<".\n";
+        handleLoginMessage(msg);
+        return;
+    }
     MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
     if (m_msg != 0)
     {
@@ -84,6 +92,12 @@ DVEClient::handleMessage(cMessage *msg)
     }
 }
 
+void
+DVEClient::handleLoginMessage(cMessage *msg)
+{
+    LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
+    serverID = l_msg->getServerID();
+}
 
 void
 DVEClient::handleMoveMessage(cMessage *msg)
@@ -159,7 +173,7 @@ DVEClient::makeMove()
     else
     {
         avatar->move(x, y);
-        send(move, "wanIO");
+        send(move, "wanIO$o");
     }
 }
 

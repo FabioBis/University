@@ -35,6 +35,7 @@ private:
     LoginMsg* login;
 
     void makeMove();
+    void handleLoginMessage(cMessage *msg);
     void handleMoveMessage(cMessage *msg);
     void handleUpdateMessage(cMessage *msg);
     void handleUpdateAoIMessage(cMessage *msg);

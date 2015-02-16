@@ -124,7 +124,9 @@ MainServer::handleLoginMessage(cMessage *msg)
     //DBG//
     // Adding partition server id and send through LAN.
     l_msg->setServerID(partitionServer);
+    LoginMsg* ack = l_msg->dup();
     send(l_msg, "lanOut");
+    send(ack, "wanIO$o");
 }
 
 

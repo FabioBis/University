@@ -28,6 +28,7 @@ void
 WAN::handleMessage(cMessage *msg)
 {
     LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    //if (l_msg != 0)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
@@ -68,7 +69,31 @@ void
 WAN::handleLoginMessage(cMessage *msg)
 {
     LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
-    send(l_msg, "toMainServer$o");
+    cGate* gate = msg->getArrivalGate();
+    if (gate != NULL)
+    {
+        const char* gateName = gate->getName();
+        EV <<endl <<gateName <<endl;
+        if (strcmp(gateName, "toClient$i") == 0)
+        {
+            EV << "Sending request to Main Server.";
+            send(l_msg, "toMainServer$o");
+        }
+        else if (strcmp(gateName,"toMainServer$i") == 0)
+        {
+            EV << "ACK: " << gateName;
+            send(l_msg, "toClient$o", l_msg->getID());
+        }
+        else {
+            // DBG
+            bubble(gateName);
+        }
+
+    }
+    else {
+        // DBG
+        bubble("Null Gate!");
+    }
 }
 
 
@@ -89,12 +114,12 @@ WAN::handleMoveMessage(cMessage *msg)
         // Move message from a client: forward to servers.
         MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
         const char* gateName = gate->getName();
-        if (strcmp(gateName, "toClient"))
+        if (strcmp(gateName, "toClient$i") == 0)
         {
 
-            send(m_msg, "toServer$o");
+            send(m_msg, "toServer$o", m_msg->getServerID());
         }
-        else if (strcmp(gateName,"toServer"))
+        else if (strcmp(gateName,"toServer$i") == 0)
         {
             // Move message from a server: notify all client within AoI.
             unsigned int size = m_msg->getAoiArraySize();
@@ -102,7 +127,7 @@ WAN::handleMoveMessage(cMessage *msg)
             {
                 MoveMsg* notify = new MoveMsg();
                 notify->setClientID(m_msg->getClientID());
-                send(notify, "toClient", m_msg->getAoi(i));
+                send(notify, "toClient$o", m_msg->getAoi(i));
             }
         }
         else
