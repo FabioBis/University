@@ -141,6 +141,7 @@ MainServer::handleMoveMessage(cMessage *msg)
     {
         bubble("Update Partition Servers.");
         updatePartition();
+        moves_n = 0;
     }
 }
 
