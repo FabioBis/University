@@ -22,6 +22,7 @@
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
+#include <UpdateAoIMsg_m.h>
 
 
 struct part_indexes {
@@ -61,6 +62,7 @@ private:
     void handleLoginMessage(cMessage *msg);
     void handleUpdateMessage(cMessage * msg);
     void handleMoveMessage(cMessage *msg);
+    void handleUpdateAoIMessage(cMessage *msg);
 
     // Virtual environment helpers.
     void handleMove(int clientID, int x, int y);

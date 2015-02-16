@@ -58,6 +58,13 @@ DVEClient::handleMessage(cMessage *msg)
         handleUpdateMessage(msg);
         return;
     }
+    UpdateAoIMsg* aoi_msg = dynamic_cast<UpdateAoIMsg*>(msg);
+    if (aoi_msg != 0)
+    {
+        bubble("Update AoI!");
+        handleUpdateAoIMessage(msg);
+        return;
+    }
     // The message is a Job from Source.
     if(logged)
     {
@@ -90,6 +97,14 @@ DVEClient::handleUpdateMessage(cMessage * msg)
 {
     // TODO
 }
+
+
+void
+DVEClient::handleUpdateAoIMessage(cMessage * msg)
+{
+    // TODO
+}
+
 
 void
 DVEClient::makeMove()

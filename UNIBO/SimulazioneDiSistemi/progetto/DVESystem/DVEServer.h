@@ -20,6 +20,7 @@
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
+#include <UpdateAoIMsg_m.h>
 
 // Partition Server.
 class DVEServer : public cSimpleModule {
@@ -35,6 +36,7 @@ protected:
     void handleLoginMessage(cMessage *msg);
     void handleUpdateMessage(cMessage *msg);
     void handleMoveMessage(cMessage *msg);
+    void handleUpdateAoIMessage(cMessage *msg);
 };
 
 #endif /* DVESERVER_H_ */

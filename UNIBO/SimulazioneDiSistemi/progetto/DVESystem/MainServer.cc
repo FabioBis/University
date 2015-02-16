@@ -36,6 +36,48 @@ MainServer::initialize()
 
 
 void
+MainServer::handleMessage(cMessage *msg)
+{
+    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
+    if (l_msg != 0)
+    {
+        bubble("Login MSG!");
+        EV << "Received Message: " << msg <<".\n";
+        handleLoginMessage(msg);
+        return;
+    }
+    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
+    if (m_msg != 0)
+    {
+        bubble("Move MSG!");
+        handleMoveMessage(msg);
+        return;
+    }
+    UpdateAoIMsg* aoi_msg = dynamic_cast<UpdateAoIMsg*>(msg);
+    if (aoi_msg != 0)
+    {
+        bubble("Update AoI!");
+        handleUpdateAoIMessage(msg);
+        return;
+    }
+}
+
+
+void
+MainServer::handleUpdateAoIMessage(cMessage * msg)
+{
+    // TODO
+}
+
+
+void
+MainServer::handleMove(int clientID, int x, int y) {
+    VirtualAvatar* avatar = connectedAvatars_[clientID];
+    avatar->move(x, y);
+}
+
+
+void
 MainServer::handleLoginMessage(cMessage *msg)
 {
     // check_and_cast from omnetpp.h perform a dynamic cast or raise an error
@@ -88,25 +130,6 @@ MainServer::handleMoveMessage(cMessage *msg)
 }
 
 
-void
-MainServer::handleMessage(cMessage *msg)
-{
-    LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
-    if (l_msg != 0)
-    {
-        bubble("Login MSG!");
-        EV << "Received Message: " << msg <<".\n";
-        handleLoginMessage(msg);
-    }
-    MoveMsg* m_msg = dynamic_cast<MoveMsg*>(msg);
-    if (m_msg != 0)
-    {
-        bubble("Move MSG!");
-        handleMoveMessage(msg);
-    }
-}
-
-
 int
 MainServer::getPartitionServerID(int x, int y)
 {
@@ -124,13 +147,6 @@ MainServer::getPartitionServerID(int x, int y)
         }
     }
     return -1;
-}
-
-
-void
-MainServer::handleMove(int clientID, int x, int y) {
-    VirtualAvatar* avatar = connectedAvatars_[clientID];
-    avatar->move(x, y);
 }
 
 

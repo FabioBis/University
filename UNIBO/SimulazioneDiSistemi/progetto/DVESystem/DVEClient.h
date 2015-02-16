@@ -21,6 +21,7 @@
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
 #include <ServerUpdateMsg_m.h>
+#include <UpdateAoIMsg_m.h>
 
 class DVEClient : public cSimpleModule {
 private:
@@ -36,6 +37,7 @@ private:
     void makeMove();
     void handleMoveMessage(cMessage *msg);
     void handleUpdateMessage(cMessage *msg);
+    void handleUpdateAoIMessage(cMessage *msg);
     void computeCoordinate(int src, int &dest);
 protected:
     virtual void initialize();

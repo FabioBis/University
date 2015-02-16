@@ -49,6 +49,20 @@ DVEServer::handleMessage(cMessage *msg)
         handleUpdateMessage(msg);
         return;
     }
+    UpdateAoIMsg* aoi_msg = dynamic_cast<UpdateAoIMsg*>(msg);
+    if (aoi_msg != 0)
+    {
+        bubble("Update AoI!");
+        handleUpdateAoIMessage(msg);
+        return;
+    }
+}
+
+
+void
+DVEServer::handleUpdateAoIMessage(cMessage * msg)
+{
+    // TODO
 }
 
 
