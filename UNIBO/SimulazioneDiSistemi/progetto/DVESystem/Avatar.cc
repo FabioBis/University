@@ -47,3 +47,20 @@ Avatar::updateAOI(int* newAoI, int aoiSize)
         aoi_.push_back(newAoI[i]);
     }
 }
+
+void
+Avatar::removeFromAOI(int avatarID)
+{
+    std::vector<int>::iterator it;
+    it = std::find(aoi_.begin(), aoi_.end(), avatarID);
+    if (it != aoi_.end())
+    {
+        aoi_.erase(it);
+    }
+}
+
+void
+Avatar::addToAOI(int avatarID)
+{
+    aoi_.push_back(avatarID);
+}

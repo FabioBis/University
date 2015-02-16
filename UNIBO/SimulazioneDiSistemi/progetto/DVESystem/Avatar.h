@@ -9,6 +9,7 @@
 #define AVATAR_H_
 
 #include <vector>
+#include <algorithm>
 
 class Avatar {
 private:
@@ -27,6 +28,8 @@ public:
     int GetY();
     void move(int x, int y);
     void updateAOI(int* newAoI, int aoiSize);
+    void removeFromAOI(int avatarID);
+    void addToAOI(int avatarID);
 };
 
 #endif /* AVATAR_H_ */

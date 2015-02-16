@@ -102,7 +102,24 @@ DVEClient::handleUpdateMessage(cMessage * msg)
 void
 DVEClient::handleUpdateAoIMessage(cMessage * msg)
 {
-    // TODO
+    UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
+    int sourceID = aoi_msg->getClientMoved();
+    if (sourceID == getIndex())
+    {
+        // Message from the server: fully update the AoI.
+        unsigned int size = aoi_msg->getAoiArraySize();
+        int* aoi = new int[size];
+        for (unsigned int i = 0; i < size; i++)
+        {
+            aoi[i] = aoi_msg->getAoi(i);
+        }
+        avatar->updateAOI(aoi, size);
+    }
+    else
+    {
+        // Message from a client: add to the current AoI.
+        avatar->addToAOI(sourceID);
+    }
 }
 
 
