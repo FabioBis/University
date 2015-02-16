@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include <algorithm>
+#include <vector>
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
@@ -28,7 +29,7 @@ class DVEServer : public cSimpleModule {
 private:
     int clients_;
     std::vector<int> servedClients_;
-    void updateClients(int* clients, int length);
+    // Helper functions.
     void addClient(int clientID);
 protected:
     virtual void initialize();
