@@ -17,11 +17,19 @@
 #define WAN_H_
 
 #include <omnetpp.h>
+#include <string.h>
 #include <ServerUpdateMsg_m.h>
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
+#include <UpdateAoIMsg_m.h>
 
 class WAN : public cSimpleModule {
+private:
+    // handleMessage() helpers.
+    void handleLoginMessage(cMessage *msg);
+    void handleUpdateMessage(cMessage * msg);
+    void handleMoveMessage(cMessage *msg);
+    void handleUpdateAoIMessage(cMessage *msg);
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -163,6 +163,7 @@ DVEClient::makeMove()
     }
 }
 
+
 void
 DVEClient::computeCoordinate(int src, int &dest)
 {

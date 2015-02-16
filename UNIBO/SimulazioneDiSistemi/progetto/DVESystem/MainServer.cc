@@ -53,6 +53,13 @@ MainServer::handleMessage(cMessage *msg)
         handleMoveMessage(msg);
         return;
     }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
+        return;
+    }
     UpdateAoIMsg* aoi_msg = dynamic_cast<UpdateAoIMsg*>(msg);
     if (aoi_msg != 0)
     {

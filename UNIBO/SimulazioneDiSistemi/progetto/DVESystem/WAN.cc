@@ -31,17 +31,96 @@ WAN::handleMessage(cMessage *msg)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
-        send(msg, "toMainServer$o");
+        handleLoginMessage(msg);
+        return;
     }
     MoveMsg* mvmsg = dynamic_cast<MoveMsg*>(msg);
     if (mvmsg != 0)
     {
         bubble("Move MSG!");
+        handleMoveMessage(msg);
+        return;
     }
     ServerUpdateMsg* sumsg = dynamic_cast<ServerUpdateMsg*>(msg);
     if (sumsg != 0)
     {
         bubble("Server Update MSG!");
-
+        handleUpdateMessage(msg);
     }
+    ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
+    if (u_msg != 0)
+    {
+        bubble("Server Update MSG!");
+        handleUpdateMessage(msg);
+        return;
+    }
+    UpdateAoIMsg* aoi_msg = dynamic_cast<UpdateAoIMsg*>(msg);
+    if (aoi_msg != 0)
+    {
+        bubble("Update AoI!");
+        handleUpdateAoIMessage(msg);
+        return;
+    }
+}
+
+
+void
+WAN::handleLoginMessage(cMessage *msg)
+{
+    LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
+    send(l_msg, "toMainServer$o");
+}
+
+
+void
+WAN::handleUpdateMessage(cMessage * msg)
+{
+    ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+    // TODO
+}
+
+
+void
+WAN::handleMoveMessage(cMessage *msg)
+{
+    cGate* gate = msg->getArrivalGate();
+    if (gate != NULL)
+    {
+        // Move message from a client: forward to servers.
+        MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
+        const char* gateName = gate->getName();
+        if (strcmp(gateName, "toClient"))
+        {
+
+            send(m_msg, "toServer$o");
+        }
+        else if (strcmp(gateName,"toServer"))
+        {
+            // Move message from a server: notify all client within AoI.
+            unsigned int size = m_msg->getAoiArraySize();
+            for (unsigned int i = 0; i < size; i++)
+            {
+                MoveMsg* notify = new MoveMsg();
+                notify->setClientID(m_msg->getClientID());
+                send(notify, "toClient", m_msg->getAoi(i));
+            }
+        }
+        else
+        {
+            // DBG
+            bubble(gateName);
+        }
+    }
+    else
+    {
+        // DBG
+        bubble("ArrivalGate Error!");
+    }
+}
+
+void
+WAN::handleUpdateAoIMessage(cMessage *msg)
+{
+    UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
+    // TODO
 }
