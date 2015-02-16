@@ -88,14 +88,21 @@ DVEClient::handleMessage(cMessage *msg)
 void
 DVEClient::handleMoveMessage(cMessage *msg)
 {
-    // TODO
+    MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
+    int avatarID = m_msg->getClientID();
+    if (avatarID != getIndex())
+    {
+        // Message from a client: remove from the current AoI.
+        avatar->removeFromAOI(avatarID);
+    }
 }
 
 
 void
 DVEClient::handleUpdateMessage(cMessage * msg)
 {
-    // TODO
+    ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+    serverID = su_msg->getServerID();
 }
 
 
