@@ -6,6 +6,9 @@
 *.o
 *.tkenvrc
 .tkenvlog
+*.cproject
+*.project
+*.oppbuildspec
 Makefile
 *.exe
 
