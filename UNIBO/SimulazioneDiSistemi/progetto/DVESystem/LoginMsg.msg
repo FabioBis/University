@@ -23,4 +23,5 @@ message LoginMsg
 	int y;
 	// The partition server ID.
 	int serverID;
+	int aoi[];
 }

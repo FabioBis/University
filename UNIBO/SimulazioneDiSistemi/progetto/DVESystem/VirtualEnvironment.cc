@@ -72,7 +72,7 @@ VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int* avatars, unsigned int&
 {
     std::vector<int> clients;
     std::map<int, VirtualAvatar*>::iterator it;
-    for (it = cells_[x][y].begin(); it != cells_[x][y].end(); ++it)
+    for (it = cells_[x][y].begin(); it != cells_[x][y].end(); it++)
     {
         clients.push_back(it->first);
     }

@@ -61,15 +61,20 @@ LoginMsg::LoginMsg(const char *name, int kind) : ::cMessage(name,kind)
     this->x_var = 0;
     this->y_var = 0;
     this->serverID_var = 0;
+    aoi_arraysize = 0;
+    this->aoi_var = 0;
 }
 
 LoginMsg::LoginMsg(const LoginMsg& other) : ::cMessage(other)
 {
+    aoi_arraysize = 0;
+    this->aoi_var = 0;
     copy(other);
 }
 
 LoginMsg::~LoginMsg()
 {
+    delete [] aoi_var;
 }
 
 LoginMsg& LoginMsg::operator=(const LoginMsg& other)
@@ -86,6 +91,11 @@ void LoginMsg::copy(const LoginMsg& other)
     this->x_var = other.x_var;
     this->y_var = other.y_var;
     this->serverID_var = other.serverID_var;
+    delete [] this->aoi_var;
+    this->aoi_var = (other.aoi_arraysize==0) ? NULL : new int[other.aoi_arraysize];
+    aoi_arraysize = other.aoi_arraysize;
+    for (unsigned int i=0; i<aoi_arraysize; i++)
+        this->aoi_var[i] = other.aoi_var[i];
 }
 
 void LoginMsg::parsimPack(cCommBuffer *b)
@@ -95,6 +105,8 @@ void LoginMsg::parsimPack(cCommBuffer *b)
     doPacking(b,this->x_var);
     doPacking(b,this->y_var);
     doPacking(b,this->serverID_var);
+    b->pack(aoi_arraysize);
+    doPacking(b,this->aoi_var,aoi_arraysize);
 }
 
 void LoginMsg::parsimUnpack(cCommBuffer *b)
@@ -104,6 +116,14 @@ void LoginMsg::parsimUnpack(cCommBuffer *b)
     doUnpacking(b,this->x_var);
     doUnpacking(b,this->y_var);
     doUnpacking(b,this->serverID_var);
+    delete [] this->aoi_var;
+    b->unpack(aoi_arraysize);
+    if (aoi_arraysize==0) {
+        this->aoi_var = 0;
+    } else {
+        this->aoi_var = new int[aoi_arraysize];
+        doUnpacking(b,this->aoi_var,aoi_arraysize);
+    }
 }
 
 int LoginMsg::getID() const
@@ -144,6 +164,36 @@ int LoginMsg::getServerID() const
 void LoginMsg::setServerID(int serverID)
 {
     this->serverID_var = serverID;
+}
+
+void LoginMsg::setAoiArraySize(unsigned int size)
+{
+    int *aoi_var2 = (size==0) ? NULL : new int[size];
+    unsigned int sz = aoi_arraysize < size ? aoi_arraysize : size;
+    for (unsigned int i=0; i<sz; i++)
+        aoi_var2[i] = this->aoi_var[i];
+    for (unsigned int i=sz; i<size; i++)
+        aoi_var2[i] = 0;
+    aoi_arraysize = size;
+    delete [] this->aoi_var;
+    this->aoi_var = aoi_var2;
+}
+
+unsigned int LoginMsg::getAoiArraySize() const
+{
+    return aoi_arraysize;
+}
+
+int LoginMsg::getAoi(unsigned int k) const
+{
+    if (k>=aoi_arraysize) throw cRuntimeError("Array of size %d indexed by %d", aoi_arraysize, k);
+    return aoi_var[k];
+}
+
+void LoginMsg::setAoi(unsigned int k, int aoi)
+{
+    if (k>=aoi_arraysize) throw cRuntimeError("Array of size %d indexed by %d", aoi_arraysize, k);
+    this->aoi_var[k] = aoi;
 }
 
 class LoginMsgDescriptor : public cClassDescriptor
@@ -193,7 +243,7 @@ const char *LoginMsgDescriptor::getProperty(const char *propertyname) const
 int LoginMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount(object) : 4;
+    return basedesc ? 5+basedesc->getFieldCount(object) : 5;
 }
 
 unsigned int LoginMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -209,8 +259,9 @@ unsigned int LoginMsgDescriptor::getFieldTypeFlags(void *object, int field) cons
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
 const char *LoginMsgDescriptor::getFieldName(void *object, int field) const
@@ -226,8 +277,9 @@ const char *LoginMsgDescriptor::getFieldName(void *object, int field) const
         "x",
         "y",
         "serverID",
+        "aoi",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : NULL;
+    return (field>=0 && field<5) ? fieldNames[field] : NULL;
 }
 
 int LoginMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -238,6 +290,7 @@ int LoginMsgDescriptor::findField(void *object, const char *fieldName) const
     if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
     if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
     if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+3;
+    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+4;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -254,8 +307,9 @@ const char *LoginMsgDescriptor::getFieldTypeString(void *object, int field) cons
         "int",
         "int",
         "int",
+        "int",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<5) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *LoginMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -281,6 +335,7 @@ int LoginMsgDescriptor::getArraySize(void *object, int field) const
     }
     LoginMsg *pp = (LoginMsg *)object; (void)pp;
     switch (field) {
+        case 4: return pp->getAoiArraySize();
         default: return 0;
     }
 }
@@ -299,6 +354,7 @@ std::string LoginMsgDescriptor::getFieldAsString(void *object, int field, int i)
         case 1: return long2string(pp->getX());
         case 2: return long2string(pp->getY());
         case 3: return long2string(pp->getServerID());
+        case 4: return long2string(pp->getAoi(i));
         default: return "";
     }
 }
@@ -317,6 +373,7 @@ bool LoginMsgDescriptor::setFieldAsString(void *object, int field, int i, const 
         case 1: pp->setX(string2long(value)); return true;
         case 2: pp->setY(string2long(value)); return true;
         case 3: pp->setServerID(string2long(value)); return true;
+        case 4: pp->setAoi(i,string2long(value)); return true;
         default: return false;
     }
 }

@@ -28,6 +28,7 @@
  * 	int y;
  * 	
  * 	int serverID;
+ * 	int aoi[];
  * }
  * </pre>
  */
@@ -38,6 +39,8 @@ class LoginMsg : public ::cMessage
     int x_var;
     int y_var;
     int serverID_var;
+    int *aoi_var; // array ptr
+    unsigned int aoi_arraysize;
 
   private:
     void copy(const LoginMsg& other);
@@ -64,6 +67,10 @@ class LoginMsg : public ::cMessage
     virtual void setY(int y);
     virtual int getServerID() const;
     virtual void setServerID(int serverID);
+    virtual void setAoiArraySize(unsigned int size);
+    virtual unsigned int getAoiArraySize() const;
+    virtual int getAoi(unsigned int k) const;
+    virtual void setAoi(unsigned int k, int aoi);
 };
 
 inline void doPacking(cCommBuffer *b, LoginMsg& obj) {obj.parsimPack(b);}
