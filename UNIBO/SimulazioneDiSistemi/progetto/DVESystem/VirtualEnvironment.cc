@@ -43,7 +43,7 @@ VirtualEnvironment::remove(VirtualAvatar* avatar)
 
 
 void
-VirtualEnvironment::move(VirtualAvatar* avatar, int x, int y)
+VirtualEnvironment::move(VirtualAvatar *avatar, int x, int y)
 {
     // See which cell it was in.
     int oldCellX = avatar->GetX();
@@ -68,14 +68,19 @@ VirtualEnvironment::erase(VirtualAvatar* avatar)
 
 
 void
-VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int* avatars, unsigned int& size)
+VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int *avatars[], unsigned int& size)
 {
-    std::vector<int> clients;
+    unsigned int aoiSize = cells_[x][y].size();
+    *avatars = new int[aoiSize];
     std::map<int, VirtualAvatar*>::iterator it;
+    unsigned int i = 0;
     for (it = cells_[x][y].begin(); it != cells_[x][y].end(); it++)
     {
-        clients.push_back(it->first);
+        //clients.push_back(it->first);
+        (*avatars)[i] = it->first;
+        i++;
     }
-    size = clients.size();
-    avatars = &clients[0];
+    //size = clients.size();
+    size = aoiSize;
+    //avatars = &clients[0];
 }

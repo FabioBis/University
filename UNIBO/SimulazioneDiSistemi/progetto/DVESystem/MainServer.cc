@@ -85,7 +85,7 @@ MainServer::handleMove(int clientID, int x, int y) {
     int* newAoi = NULL;
     unsigned int newAoiSize;
     EV << "\n\ntest1\n";
-    ve_->GetAvatarAndSizeAt(x, y, newAoi, newAoiSize);
+    ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
     EV << "\n\ntest2\n";
     UpdateAoIMsg* update = new UpdateAoIMsg();
     update->setClientMoved(clientID);
@@ -134,9 +134,8 @@ MainServer::handleLoginMessage(cMessage *msg)
     ack->setID(l_msg->getID());
     int* aoi = NULL;
     unsigned int size;
-    ve_->GetAvatarAndSizeAt(l_msg->getX(), l_msg->getY(), aoi, size);
+    ve_->GetAvatarAndSizeAt(l_msg->getX(), l_msg->getY(), &aoi, size);
     ack->setAoiArraySize(size);
-    EV <<endl << size;
     for (unsigned int index = 0; index < size; index++)
     {
         //if()
@@ -204,7 +203,7 @@ MainServer::updatePartition()
             {
                 int* avatars = NULL;
                 unsigned int size;
-                ve_->GetAvatarAndSizeAt(i, j, avatars, size);
+                ve_->GetAvatarAndSizeAt(i, j, &avatars, size);
                 update->setClientsArraySize(update->getClientsArraySize() + size);
                 for (unsigned int index = 0; index < size; index++)
                 {
