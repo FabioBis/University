@@ -42,7 +42,6 @@ DVEServer::handleMessage(cMessage *msg)
         return;
     }
     ServerUpdateMsg* u_msg = dynamic_cast<ServerUpdateMsg*>(msg);
-    /*DBG*/
     if (u_msg != 0)
     {
         bubble("Server Update MSG!");
@@ -142,9 +141,6 @@ DVEServer::handleLoginMessage(cMessage *msg)
     {
         // Save the client id into the server clients vector.
         addClient(clientID);
-        //DBG//
-        EV << "DVEServer[" << partitionID << "]::" << clientID;
-        //DBG//
     }
     else
     {

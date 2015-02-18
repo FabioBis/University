@@ -126,11 +126,12 @@ MainServer::handleLoginMessage(cMessage *msg)
     }
     // Adding partition server id and send through LAN.
     l_msg->setServerID(partitionServer);
+    send(l_msg, "lanOut");
+
+
     LoginMsg* ack = new LoginMsg(); //l_msg->dup();
     ack->setServerID(partitionServer);
     ack->setID(l_msg->getID());
-    send(l_msg, "lanOut");
-
     int* aoi = NULL;
     unsigned int size;
     ve_->GetAvatarAndSizeAt(l_msg->getX(), l_msg->getY(), aoi, size);
