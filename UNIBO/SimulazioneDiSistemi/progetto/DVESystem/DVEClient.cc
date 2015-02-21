@@ -114,6 +114,7 @@ DVEClient::handleMoveMessage(cMessage *msg)
         // Message from a client: remove from the current AoI.
         avatar->removeFromAOI(avatarID);
     }
+    // TODO: add client id to the message array.
 }
 
 

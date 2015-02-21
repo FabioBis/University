@@ -80,7 +80,10 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         {
             int neighborID = aoi_msg->getAoi(i);
             std::vector<int>::iterator it;
-            it = std::find(servedClients_.begin(), servedClients_.end(), neighborID);
+            it = std::find(
+                    servedClients_.begin(),
+                    servedClients_.end(),
+                    neighborID);
             if (it != servedClients_.end())
             {
                 servedNeighbors++;
@@ -95,8 +98,8 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         }
         if (servedNeighbors > 0)
         {
-            // Partition server has served some clients, update the list of clients
-            // to be notified and forward the message.
+            // Partition server has served some clients, update the list of
+            // clients to be notified and forward the message.
             unsigned int newSize = aoiSize - servedNeighbors;
             aoi_msg->setAoiArraySize(newSize);
             for (unsigned int i = 0; i < newSize; i++)
@@ -116,7 +119,10 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         // Phase 2: notify the moving avatar.
         int movingAvatar = aoi_msg->getClientMoved();
         std::vector<int>::iterator it;
-        it = std::find(servedClients_.begin(), servedClients_.end(), movingAvatar);
+        it = std::find(
+                servedClients_.begin(),
+                servedClients_.end(),
+                movingAvatar);
         if (it != servedClients_.end())
         {
             // This server serves the moving avatar.
@@ -189,6 +195,8 @@ DVEServer::handleMoveMessage(cMessage *msg)
     std::vector<int> nonServedAvatar;
     for (unsigned int i = 0; i < aoiSize; i++)
     {
+        // TODO: if clientID == getAoi(i) do nothing and remove it
+        // from message's AoI.
         int avatarID = m_msg->getAoi(i);
         std::vector<int>::iterator it;
         it = std::find(servedClients_.begin(), servedClients_.end(), avatarID);
@@ -218,8 +226,8 @@ DVEServer::handleMoveMessage(cMessage *msg)
     else if (servedAvatar > 0)
 
     {
-        // Partition server has served some clients, update the list of clients
-        // to be notified.
+        // Partition server has served some clients, update the list of
+        // clients to be notified.
         unsigned int newSize = aoiSize - servedAvatar;
         MoveMsg *new_msg = new MoveMsg();
         new_msg->setClientID(m_msg->getClientID());
