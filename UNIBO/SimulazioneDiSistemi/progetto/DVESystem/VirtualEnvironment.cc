@@ -76,11 +76,8 @@ VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int *avatars[], unsigned in
     unsigned int i = 0;
     for (it = cells_[x][y].begin(); it != cells_[x][y].end(); it++)
     {
-        //clients.push_back(it->first);
         (*avatars)[i] = it->first;
         i++;
     }
-    //size = clients.size();
     size = aoiSize;
-    //avatars = &clients[0];
 }

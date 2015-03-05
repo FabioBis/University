@@ -28,7 +28,6 @@ void
 WAN::handleMessage(cMessage *msg)
 {
     LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
-    //if (l_msg != 0)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
@@ -73,15 +72,12 @@ WAN::handleLoginMessage(cMessage *msg)
     if (gate != NULL)
     {
         const char* gateName = gate->getName();
-        EV <<endl <<gateName <<endl;
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            EV << "Sending request to Main Server.";
             send(l_msg, "toMainServer$o");
         }
         else if (strcmp(gateName,"toMainServer$i") == 0)
         {
-            EV << "ACK: " << gateName;
             send(l_msg, "toClient$o", l_msg->getID());
         }
         else {

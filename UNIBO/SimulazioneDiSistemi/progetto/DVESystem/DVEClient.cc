@@ -114,7 +114,6 @@ DVEClient::handleMoveMessage(cMessage *msg)
         // Message from a client: remove from the current AoI.
         avatar->removeFromAOI(avatarID);
     }
-    // TODO: add client id to the message array.
 }
 
 
@@ -188,7 +187,6 @@ DVEClient::makeMove()
         }
         // Add the avatar id inside the AoI to ensure the move propagation.
         move->setAoi(i, avatar->GetID());
-        EV << "test 1\n";
         avatar->move(x, y);
         send(move, "wanIO$o");
     }

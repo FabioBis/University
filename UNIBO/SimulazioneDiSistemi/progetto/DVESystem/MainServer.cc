@@ -81,12 +81,9 @@ MainServer::handleUpdateAoIMessage(cMessage * msg)
 
 void
 MainServer::handleMove(int clientID, int x, int y) {
-    EV << "\n\ntest0\n";
     int* newAoi = NULL;
     unsigned int newAoiSize;
-    EV << "\n\ntest1\n";
     ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
-    EV << "\n\ntest2\n";
     UpdateAoIMsg* update = new UpdateAoIMsg();
     update->setClientMoved(clientID);
     update->setAoiArraySize(newAoiSize);
@@ -94,7 +91,6 @@ MainServer::handleMove(int clientID, int x, int y) {
     {
         update->setAoi(index, newAoi[index]);
     }
-    EV << "\n\ntest3\n";
     send(update, "lanOut");
     VirtualAvatar* avatar = connectedAvatars_[clientID];
     avatar->move(x, y);
@@ -119,17 +115,12 @@ MainServer::handleLoginMessage(cMessage *msg)
 
     // Identify the partition server for the client.
     int partitionServer = getPartitionServerID(l_msg->getX(), l_msg->getY());
-    //DBG//
-    if (partitionServer < 0)
-    {
-        bubble("Exception!");
-    }
     // Adding partition server id and send through LAN.
     l_msg->setServerID(partitionServer);
     send(l_msg, "lanOut");
 
 
-    LoginMsg* ack = new LoginMsg(); //l_msg->dup();
+    LoginMsg* ack = new LoginMsg();
     ack->setServerID(partitionServer);
     ack->setID(l_msg->getID());
     int* aoi = NULL;
@@ -138,7 +129,6 @@ MainServer::handleLoginMessage(cMessage *msg)
     ack->setAoiArraySize(size);
     for (unsigned int index = 0; index < size; index++)
     {
-        //if()
         ack->setAoi(index, aoi[index]);
     }
     send(ack, "wanIO$o");

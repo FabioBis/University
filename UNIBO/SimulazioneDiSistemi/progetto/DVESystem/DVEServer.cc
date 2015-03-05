@@ -195,21 +195,26 @@ DVEServer::handleMoveMessage(cMessage *msg)
     std::vector<int> nonServedAvatar;
     for (unsigned int i = 0; i < aoiSize; i++)
     {
-        // TODO: if clientID == getAoi(i) do nothing and remove it
-        // from message's AoI.
         int avatarID = m_msg->getAoi(i);
-        std::vector<int>::iterator it;
-        it = std::find(servedClients_.begin(), servedClients_.end(), avatarID);
-        if (it != servedClients_.end())
+        if (avatarID == m_msg->getClientID())
         {
-            servedAvatar++;
-            MoveMsg *new_msg = m_msg->dup();
-            new_msg->setClientDest(avatarID);
-            send(new_msg, "wanIO$o");
+            ; // Do nothing.
         }
         else
         {
-            nonServedAvatar.push_back(avatarID);
+            std::vector<int>::iterator it;
+            it = std::find(servedClients_.begin(), servedClients_.end(), avatarID);
+            if (it != servedClients_.end())
+            {
+                servedAvatar++;
+                MoveMsg *new_msg = m_msg->dup();
+                new_msg->setClientDest(avatarID);
+                send(new_msg, "wanIO$o");
+            }
+            else
+            {
+                nonServedAvatar.push_back(avatarID);
+            }
         }
     }
     if (servedAvatar == (aoiSize - 1))
@@ -224,7 +229,6 @@ DVEServer::handleMoveMessage(cMessage *msg)
         return;
     }
     else if (servedAvatar > 0)
-
     {
         // Partition server has served some clients, update the list of
         // clients to be notified.
