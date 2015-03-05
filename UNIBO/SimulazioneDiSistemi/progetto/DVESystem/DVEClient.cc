@@ -153,6 +153,7 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
 void
 DVEClient::makeMove()
 {
+    EV << "make move!\n";
     int x;
     int y;
     double probability = uniform(0.0, 1.0);
@@ -166,11 +167,6 @@ DVEClient::makeMove()
         computeCoordinate(avatar->GetX(), x);
         computeCoordinate(avatar->GetY(), y);
     }
-    MoveMsg* move = new MoveMsg();
-    move->setX(x);
-    move->setY(y);
-    move->setClientID(getIndex());
-    move->setServerID(serverID);
     if (avatar->GetX() == x && avatar->GetY() == y)
     {
         // No moves.
@@ -178,6 +174,21 @@ DVEClient::makeMove()
     }
     else
     {
+        MoveMsg* move = new MoveMsg();
+        move->setX(x);
+        move->setY(y);
+        move->setClientID(getIndex());
+        move->setServerID(serverID);
+        unsigned int i = 0;
+        move->setAoiArraySize(avatar->GetAoISize() + 1);
+        for ( ; i < avatar->GetAoISize(); )
+        {
+            move->setAoi(i, avatar->GetAtAoi(i));
+            i++;
+        }
+        // Add the avatar id inside the AoI to ensure the move propagation.
+        move->setAoi(i, avatar->GetID());
+        EV << "test 1\n";
         avatar->move(x, y);
         send(move, "wanIO$o");
     }

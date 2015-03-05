@@ -127,7 +127,7 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         {
             // This server serves the moving avatar.
             aoi_msg->setClientDest(*it);
-            send(aoi_msg, "toWan$o");
+            send(aoi_msg, "wanIO$o");
         }
         else
         {

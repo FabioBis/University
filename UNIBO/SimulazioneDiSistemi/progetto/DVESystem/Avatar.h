@@ -26,6 +26,8 @@ public:
     int GetID();
     int GetX();
     int GetY();
+    unsigned int GetAoISize();
+    int GetAtAoi(unsigned int index);
     void move(int x, int y);
     void updateAOI(int* newAoI, int aoiSize);
     void removeFromAOI(int avatarID);

@@ -31,6 +31,18 @@ Avatar::GetY()
     return y_;
 }
 
+unsigned int
+Avatar::GetAoISize()
+{
+    return aoi_.size();
+}
+
+int
+Avatar::GetAtAoi(unsigned int index)
+{
+    return aoi_[index];
+}
+
 void
 Avatar::move(int x, int y)
 {
