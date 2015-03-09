@@ -60,8 +60,8 @@ DVEServer::handleMessage(cMessage *msg)
 
 /*
  * Notify the moving avatar the new AoI and forward the message to all new
- * neighbors that will to their AoI.
- * The update AoI process is divided into two phases: the first notify all
+ * neighbors that will add to their AoI.
+ * The update AoI process is divided into two phases: first notify all
  * neighbors about the incoming new avatar. Then, when there are no more
  * neighbors to notify, the moving avatar is notified. This way we can
  * compute the System Response.

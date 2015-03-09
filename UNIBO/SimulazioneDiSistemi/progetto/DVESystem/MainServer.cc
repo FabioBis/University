@@ -92,6 +92,7 @@ MainServer::handleMove(int clientID, int x, int y) {
         update->setAoi(index, newAoi[index]);
     }
     send(update, "lanOut");
+    // Updates VA and VE.
     VirtualAvatar* avatar = connectedAvatars_[clientID];
     avatar->move(x, y);
 }
@@ -451,4 +452,14 @@ MainServer::partitioner()
         throw 401;
         break;
     }
+}
+
+void
+acknowledgment::Ack() {
+    this->current++;
+}
+
+bool
+acknowledgment::IsComplete() {
+    return this->current >= this->total;
 }

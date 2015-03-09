@@ -38,6 +38,17 @@ struct part_indexes {
     int length;
 };
 
+struct acknowledgment {
+    // Current acks.
+    int current;
+    // Total acks.
+    const int total;
+
+    public:
+    void Ack();
+    bool IsComplete();
+};
+
 class MainServer : public cSimpleModule {
 private:
     // The number of partition servers.
@@ -46,6 +57,8 @@ private:
     int MOVESMAX;
     // The collection of clients logged in.
     std::map<int, VirtualAvatar*> connectedAvatars_;
+    // The set of acknowledgments the server is waiting for.
+    std::map<int, acknowledgment*> ack_registry_;
     // The virtual environment.
     VirtualEnvironment* ve_;
     // An array of indexes representing the ve partition among servers.

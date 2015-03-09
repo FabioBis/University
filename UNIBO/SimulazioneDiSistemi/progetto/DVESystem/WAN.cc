@@ -83,12 +83,14 @@ WAN::handleLoginMessage(cMessage *msg)
         else {
             // DBG
             bubble(gateName);
+            EV << "Gate name error.";
         }
 
     }
     else {
         // DBG
         bubble("Null Gate!");
+        EV << "Null Gate!";
     }
 }
 
@@ -130,12 +132,14 @@ WAN::handleMoveMessage(cMessage *msg)
         {
             // DBG
             bubble(gateName);
+            EV << "WAN: Name Gate Error!";
         }
     }
     else
     {
         // DBG
         bubble("ArrivalGate Error!");
+        EV << "WAN: Arrival Gate Error!";
     }
 }
 
