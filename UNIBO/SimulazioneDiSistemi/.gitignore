@@ -11,6 +11,10 @@
 *.oppbuildspec
 Makefile
 *.exe
+*.out
+*.aux
+*.toc
+*.syntex.gz
 
 
 # Auto-generated directories.
