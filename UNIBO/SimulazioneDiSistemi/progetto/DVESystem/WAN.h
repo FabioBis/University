@@ -22,6 +22,7 @@
 #include <MoveMsg_m.h>
 #include <LoginMsg_m.h>
 #include <UpdateAoIMsg_m.h>
+#include <ACKMsg_m.h>
 
 class WAN : public cSimpleModule {
 private:
@@ -30,6 +31,7 @@ private:
     void handleUpdateMessage(cMessage * msg);
     void handleMoveMessage(cMessage *msg);
     void handleUpdateAoIMessage(cMessage *msg);
+    void handleACKMessage(cMessage *msg);
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -73,6 +73,13 @@ DVEClient::handleMessage(cMessage *msg)
         handleUpdateAoIMessage(msg);
         return;
     }
+    ACKMsg* ack_msg = dynamic_cast<ACKMsg*>(msg);
+    if (ack_msg != 0)
+    {
+        bubble("ACK!");
+        handleACKMessage(msg);
+        return;
+    }
     // The message is a Job from Source.
     if(logged)
     {
@@ -146,6 +153,13 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
         // Message from a client: add to the current AoI.
         avatar->addToAOI(sourceID);
     }
+}
+
+void
+DVEClient::handleACKMessage(cMessage *msg)
+{
+    ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
+    // TODO
 }
 
 

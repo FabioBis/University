@@ -55,6 +55,13 @@ DVEServer::handleMessage(cMessage *msg)
         handleUpdateAoIMessage(msg);
         return;
     }
+    ACKMsg* ack_msg = dynamic_cast<ACKMsg*>(msg);
+    if (ack_msg != 0)
+    {
+        bubble("ACK!");
+        handleACKMessage(msg);
+        return;
+    }
 }
 
 
@@ -243,6 +250,13 @@ DVEServer::handleMoveMessage(cMessage *msg)
         // Forward the move message until no more clients must be notified.
         send(new_msg, "lanOut");
     }
+}
+
+void
+DVEServer::handleACKMessage(cMessage *msg)
+{
+    ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
+    // TODO
 }
 
 

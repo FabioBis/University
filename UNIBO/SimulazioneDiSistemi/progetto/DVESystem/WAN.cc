@@ -61,6 +61,13 @@ WAN::handleMessage(cMessage *msg)
         handleUpdateAoIMessage(msg);
         return;
     }
+    ACKMsg* ack_msg = dynamic_cast<ACKMsg*>(msg);
+    if (ack_msg != 0)
+    {
+        bubble("ACK!");
+        handleACKMessage(msg);
+        return;
+    }
 }
 
 
@@ -147,5 +154,12 @@ void
 WAN::handleUpdateAoIMessage(cMessage *msg)
 {
     UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
+    // TODO
+}
+
+void
+WAN::handleACKMessage(cMessage *msg)
+{
+    ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
     // TODO
 }

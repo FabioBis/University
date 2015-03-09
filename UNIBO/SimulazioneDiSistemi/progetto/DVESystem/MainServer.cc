@@ -67,6 +67,13 @@ MainServer::handleMessage(cMessage *msg)
         handleUpdateAoIMessage(msg);
         return;
     }
+    ACKMsg* ack_msg = dynamic_cast<ACKMsg*>(msg);
+    if (ack_msg != 0)
+    {
+        bubble("ACK!");
+        handleACKMessage(msg);
+        return;
+    }
 }
 
 
@@ -160,6 +167,12 @@ MainServer::handleMoveMessage(cMessage *msg)
     }
 }
 
+void
+MainServer::handleACKMessage(cMessage *msg)
+{
+    ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
+    // TODO
+}
 
 int
 MainServer::getPartitionServerID(int x, int y)
