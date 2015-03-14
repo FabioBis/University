@@ -43,7 +43,7 @@ struct acknowledgment {
     // Current acks.
     int current;
     // Total acks.
-    const int total;
+    int total;
 
     public:
     void Ack();

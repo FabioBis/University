@@ -161,5 +161,5 @@ void
 WAN::handleACKMessage(cMessage *msg)
 {
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
-    // TODO
+    send(msg, "toClient$o", ack_msg->getMovedID());
 }

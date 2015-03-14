@@ -37,6 +37,7 @@ public:
     void move(VirtualAvatar* avatar, int x, int y);
     void erase(VirtualAvatar* avatar);
     void GetAvatarAndSizeAt(int x, int y, int* avatars[], unsigned int& size);
+    unsigned int GetSizeAt(int x, int y);
 };
 
 #endif /* VIRTUALENVIRONMENT_H_ */

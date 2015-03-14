@@ -256,7 +256,23 @@ void
 DVEServer::handleACKMessage(cMessage *msg)
 {
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
-    // TODO
+    if (!ack_msg->getIsMoveComplete())
+    {
+        send(ack_msg, "lanOut");
+    }
+    else
+    {
+        std::vector<int>::iterator it;
+        it = std::find(
+                servedClients_.begin(),
+                servedClients_.end(),
+                ack_msg->getMovedID()
+                );
+        if (it != servedClients_.end())
+        {
+            send(msg, "wanIO$o");
+        }
+    }
 }
 
 

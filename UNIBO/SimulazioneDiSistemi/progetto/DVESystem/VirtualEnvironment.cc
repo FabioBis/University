@@ -81,3 +81,8 @@ VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int *avatars[], unsigned in
     }
     size = aoiSize;
 }
+
+unsigned int
+VirtualEnvironment::GetSizeAt(int x, int y) {
+    return cells_[x][y].size();
+}

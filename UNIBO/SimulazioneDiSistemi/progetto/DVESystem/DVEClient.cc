@@ -104,7 +104,6 @@ DVEClient::handleLoginMessage(cMessage *msg)
 {
     LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
     serverID = l_msg->getServerID();
-    int newAoI[l_msg->getAoiArraySize()];
     for (unsigned int i = 0; i < l_msg->getAoiArraySize(); i++)
     {
         avatar->addToAOI(l_msg->getAoi(i));

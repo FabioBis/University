@@ -102,6 +102,24 @@ MainServer::handleMove(int clientID, int x, int y) {
     // Updates VA and VE.
     VirtualAvatar* avatar = connectedAvatars_[clientID];
     avatar->move(x, y);
+    // Handle acknowledges.
+    unsigned int oldAoiSize = ve_->GetSizeAt(avatar->GetX(), avatar->GetY()) - 1;
+    if (newAoiSize + oldAoiSize == 0)
+    {
+        // No client to be notified, send the ack to client moved.
+        ACKMsg* ack_msg = new ACKMsg();
+        ack_msg->setMovedID(clientID);
+        ack_msg->setIsMoveComplete(true);
+        send(ack_msg, "lanOut");
+    }
+    else
+    {
+        // Insert the new ack into the registry.
+        acknowledgment* ack = new acknowledgment();
+        ack->current = 0;
+        ack->total = newAoiSize + oldAoiSize;
+        ack_registry_.insert(std::pair<int, acknowledgment*>(clientID, ack));
+    }
 }
 
 
@@ -171,7 +189,22 @@ void
 MainServer::handleACKMessage(cMessage *msg)
 {
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
-    // TODO
+    if (!ack_msg->getIsMoveComplete())
+    {
+        acknowledgment* ack = ack_registry_[ack_msg->getMovedID()];
+        ack->Ack();
+        if (ack->IsComplete())
+        {
+            ack_msg->setIsMoveComplete(true);
+            send(ack_msg, "lanOut");
+        }
+    }
+    else
+    {
+        // DBG
+        EV << "ACK message error";
+        bubble("ACK message error");
+    }
 }
 
 int
