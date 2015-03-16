@@ -26,6 +26,8 @@
  * 	
  * 	int serverID;
  * 	
+ * 	int arrivalServer;
+ * 	
  * 	int x;
  * 	int y;
  * 	
@@ -40,6 +42,7 @@ class MoveMsg : public ::cMessage
     int clientID_var;
     int clientDest_var;
     int serverID_var;
+    int arrivalServer_var;
     int x_var;
     int y_var;
     int *aoi_var; // array ptr
@@ -68,6 +71,8 @@ class MoveMsg : public ::cMessage
     virtual void setClientDest(int clientDest);
     virtual int getServerID() const;
     virtual void setServerID(int serverID);
+    virtual int getArrivalServer() const;
+    virtual void setArrivalServer(int arrivalServer);
     virtual int getX() const;
     virtual void setX(int x);
     virtual int getY() const;

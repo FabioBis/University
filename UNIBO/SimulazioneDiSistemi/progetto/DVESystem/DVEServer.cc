@@ -28,6 +28,7 @@ DVEServer::initialize()
 void
 DVEServer::handleMessage(cMessage *msg)
 {
+    EV << "DVEServer::handling message.\n" <<msg <<endl;
     LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
     if (l_msg != 0)
     {
@@ -62,6 +63,7 @@ DVEServer::handleMessage(cMessage *msg)
         handleACKMessage(msg);
         return;
     }
+    delete msg;
 }
 
 
@@ -154,6 +156,7 @@ DVEServer::handleLoginMessage(cMessage *msg)
     {
         // Save the client id into the server clients vector.
         addClient(clientID);
+        delete msg;
     }
     else
     {
@@ -180,6 +183,7 @@ DVEServer::handleUpdateMessage(cMessage * msg)
             send(new_msg, "wanIO$o");
             clients_++;
         }
+        delete msg;
     }
     else
     {
@@ -193,13 +197,20 @@ void
 DVEServer::handleMoveMessage(cMessage *msg)
 {
     MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
-    unsigned int aoiSize = m_msg->getAoiArraySize();
-    if (aoiSize == 0)
+
+    if (m_msg->getArrivalServer() == getIndex())
     {
+        // Message propagation completed.
+        delete msg;
         return;
     }
-    unsigned int servedAvatar = 0;
-    std::vector<int> nonServedAvatar;
+    else if (m_msg->getArrivalServer() == -1)
+    {
+        m_msg->setArrivalServer(getIndex());
+    }
+
+    unsigned int aoiSize = m_msg->getAoiArraySize();
+    EV << "DVEServer::handleMove: AoI size is " <<m_msg->getAoiArraySize() <<endl; // DBG
     for (unsigned int i = 0; i < aoiSize; i++)
     {
         int avatarID = m_msg->getAoi(i);
@@ -209,47 +220,18 @@ DVEServer::handleMoveMessage(cMessage *msg)
         }
         else
         {
+            EV << "Sending a move message to Client..." <<endl; // DBG
             std::vector<int>::iterator it;
             it = std::find(servedClients_.begin(), servedClients_.end(), avatarID);
             if (it != servedClients_.end())
             {
-                servedAvatar++;
                 MoveMsg *new_msg = m_msg->dup();
                 new_msg->setClientDest(avatarID);
                 send(new_msg, "wanIO$o");
             }
-            else
-            {
-                nonServedAvatar.push_back(avatarID);
-            }
         }
     }
-    if (servedAvatar == (aoiSize - 1))
-    {
-        // All client are notified.
-        return;
-    }
-    else if (servedAvatar == 0)
-    {
-        // No client served, forward the message.
-        send(m_msg, "lanOut");
-        return;
-    }
-    else if (servedAvatar > 0)
-    {
-        // Partition server has served some clients, update the list of
-        // clients to be notified.
-        unsigned int newSize = aoiSize - servedAvatar;
-        MoveMsg *new_msg = new MoveMsg();
-        new_msg->setClientID(m_msg->getClientID());
-        new_msg->setAoiArraySize(newSize);
-        for (unsigned int i = 0; i < newSize; i++)
-        {
-            new_msg->setAoi(i, nonServedAvatar.back());
-        }
-        // Forward the move message until no more clients must be notified.
-        send(new_msg, "lanOut");
-    }
+    send(m_msg, "lanOut");
 }
 
 void
@@ -270,7 +252,11 @@ DVEServer::handleACKMessage(cMessage *msg)
                 );
         if (it != servedClients_.end())
         {
-            send(msg, "wanIO$o");
+            send(ack_msg, "wanIO$o");
+        }
+        else
+        {
+            send(ack_msg, "lanOut");
         }
     }
 }

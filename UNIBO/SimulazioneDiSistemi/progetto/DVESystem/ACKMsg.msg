@@ -17,6 +17,7 @@ message ACKMsg
 {
     // The moved client id. 
 	int movedID;
+	int serverID;
 	// True if all involved client acknowledged.
 	bool isMoveComplete;
 }

@@ -60,6 +60,7 @@ MoveMsg::MoveMsg(const char *name, int kind) : ::cMessage(name,kind)
     this->clientID_var = 0;
     this->clientDest_var = 0;
     this->serverID_var = 0;
+    this->arrivalServer_var = 0;
     this->x_var = 0;
     this->y_var = 0;
     aoi_arraysize = 0;
@@ -91,6 +92,7 @@ void MoveMsg::copy(const MoveMsg& other)
     this->clientID_var = other.clientID_var;
     this->clientDest_var = other.clientDest_var;
     this->serverID_var = other.serverID_var;
+    this->arrivalServer_var = other.arrivalServer_var;
     this->x_var = other.x_var;
     this->y_var = other.y_var;
     delete [] this->aoi_var;
@@ -106,6 +108,7 @@ void MoveMsg::parsimPack(cCommBuffer *b)
     doPacking(b,this->clientID_var);
     doPacking(b,this->clientDest_var);
     doPacking(b,this->serverID_var);
+    doPacking(b,this->arrivalServer_var);
     doPacking(b,this->x_var);
     doPacking(b,this->y_var);
     b->pack(aoi_arraysize);
@@ -118,6 +121,7 @@ void MoveMsg::parsimUnpack(cCommBuffer *b)
     doUnpacking(b,this->clientID_var);
     doUnpacking(b,this->clientDest_var);
     doUnpacking(b,this->serverID_var);
+    doUnpacking(b,this->arrivalServer_var);
     doUnpacking(b,this->x_var);
     doUnpacking(b,this->y_var);
     delete [] this->aoi_var;
@@ -158,6 +162,16 @@ int MoveMsg::getServerID() const
 void MoveMsg::setServerID(int serverID)
 {
     this->serverID_var = serverID;
+}
+
+int MoveMsg::getArrivalServer() const
+{
+    return arrivalServer_var;
+}
+
+void MoveMsg::setArrivalServer(int arrivalServer)
+{
+    this->arrivalServer_var = arrivalServer;
 }
 
 int MoveMsg::getX() const
@@ -257,7 +271,7 @@ const char *MoveMsgDescriptor::getProperty(const char *propertyname) const
 int MoveMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 6+basedesc->getFieldCount(object) : 6;
+    return basedesc ? 7+basedesc->getFieldCount(object) : 7;
 }
 
 unsigned int MoveMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -274,9 +288,10 @@ unsigned int MoveMsgDescriptor::getFieldTypeFlags(void *object, int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<6) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<7) ? fieldTypeFlags[field] : 0;
 }
 
 const char *MoveMsgDescriptor::getFieldName(void *object, int field) const
@@ -291,11 +306,12 @@ const char *MoveMsgDescriptor::getFieldName(void *object, int field) const
         "clientID",
         "clientDest",
         "serverID",
+        "arrivalServer",
         "x",
         "y",
         "aoi",
     };
-    return (field>=0 && field<6) ? fieldNames[field] : NULL;
+    return (field>=0 && field<7) ? fieldNames[field] : NULL;
 }
 
 int MoveMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -305,9 +321,10 @@ int MoveMsgDescriptor::findField(void *object, const char *fieldName) const
     if (fieldName[0]=='c' && strcmp(fieldName, "clientID")==0) return base+0;
     if (fieldName[0]=='c' && strcmp(fieldName, "clientDest")==0) return base+1;
     if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+2;
-    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+3;
-    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+4;
-    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+5;
+    if (fieldName[0]=='a' && strcmp(fieldName, "arrivalServer")==0) return base+3;
+    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+4;
+    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+5;
+    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+6;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -326,8 +343,9 @@ const char *MoveMsgDescriptor::getFieldTypeString(void *object, int field) const
         "int",
         "int",
         "int",
+        "int",
     };
-    return (field>=0 && field<6) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<7) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *MoveMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -353,7 +371,7 @@ int MoveMsgDescriptor::getArraySize(void *object, int field) const
     }
     MoveMsg *pp = (MoveMsg *)object; (void)pp;
     switch (field) {
-        case 5: return pp->getAoiArraySize();
+        case 6: return pp->getAoiArraySize();
         default: return 0;
     }
 }
@@ -371,9 +389,10 @@ std::string MoveMsgDescriptor::getFieldAsString(void *object, int field, int i) 
         case 0: return long2string(pp->getClientID());
         case 1: return long2string(pp->getClientDest());
         case 2: return long2string(pp->getServerID());
-        case 3: return long2string(pp->getX());
-        case 4: return long2string(pp->getY());
-        case 5: return long2string(pp->getAoi(i));
+        case 3: return long2string(pp->getArrivalServer());
+        case 4: return long2string(pp->getX());
+        case 5: return long2string(pp->getY());
+        case 6: return long2string(pp->getAoi(i));
         default: return "";
     }
 }
@@ -391,9 +410,10 @@ bool MoveMsgDescriptor::setFieldAsString(void *object, int field, int i, const c
         case 0: pp->setClientID(string2long(value)); return true;
         case 1: pp->setClientDest(string2long(value)); return true;
         case 2: pp->setServerID(string2long(value)); return true;
-        case 3: pp->setX(string2long(value)); return true;
-        case 4: pp->setY(string2long(value)); return true;
-        case 5: pp->setAoi(i,string2long(value)); return true;
+        case 3: pp->setArrivalServer(string2long(value)); return true;
+        case 4: pp->setX(string2long(value)); return true;
+        case 5: pp->setY(string2long(value)); return true;
+        case 6: pp->setAoi(i,string2long(value)); return true;
         default: return false;
     }
 }

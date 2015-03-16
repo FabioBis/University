@@ -68,6 +68,7 @@ WAN::handleMessage(cMessage *msg)
         handleACKMessage(msg);
         return;
     }
+    delete msg;
 }
 
 
@@ -92,7 +93,6 @@ WAN::handleLoginMessage(cMessage *msg)
             bubble(gateName);
             EV << "Gate name error.";
         }
-
     }
     else {
         // DBG
@@ -116,12 +116,11 @@ WAN::handleMoveMessage(cMessage *msg)
     cGate* gate = msg->getArrivalGate();
     if (gate != NULL)
     {
-        // Move message from a client: forward to servers.
         MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-
+            // Move message from a client: forward to servers.
             send(m_msg, "toServer$o", m_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
@@ -134,19 +133,22 @@ WAN::handleMoveMessage(cMessage *msg)
                 notify->setClientID(m_msg->getClientID());
                 send(notify, "toClient$o", m_msg->getAoi(i));
             }
+            delete msg;
         }
         else
         {
             // DBG
             bubble(gateName);
             EV << "WAN: Name Gate Error!";
+            delete msg;
         }
     }
     else
     {
         // DBG
-        bubble("ArrivalGate Error!");
+        bubble("Arrival Gate Error!");
         EV << "WAN: Arrival Gate Error!";
+        delete msg;
     }
 }
 
@@ -155,11 +157,41 @@ WAN::handleUpdateAoIMessage(cMessage *msg)
 {
     UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
     // TODO
+    delete msg;
 }
 
 void
 WAN::handleACKMessage(cMessage *msg)
 {
-    ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
-    send(msg, "toClient$o", ack_msg->getMovedID());
+    cGate* gate = msg->getArrivalGate();
+    if (gate != NULL)
+    {
+        // ACK message from a client: forward to servers.
+        ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
+        const char* gateName = gate->getName();
+        if (strcmp(gateName, "toClient$i") == 0)
+        {
+            send(ack_msg, "toServer$o", ack_msg->getServerID());
+        }
+        else if (strcmp(gateName,"toServer$i") == 0)
+        {
+            // ACK message from a server: notify the client.
+            send(ack_msg, "toClient$o", ack_msg->getMovedID());
+        }
+        else
+        {
+            // DBG
+            bubble(gateName);
+            EV << "WAN: Name Gate Error!";
+            delete msg;
+        }
+    }
+    else
+    {
+        // DBG
+        bubble("Arrival Gate Error!");
+        EV << "WAN: Arrival Gate Error!";
+        delete msg;
+    }
+
 }

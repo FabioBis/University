@@ -17,6 +17,7 @@
 #define DVESERVER_H_
 
 #include <omnetpp.h>
+#include <exception>
 #include <algorithm>
 #include <vector>
 #include <ServerUpdateMsg_m.h>
@@ -24,6 +25,8 @@
 #include <LoginMsg_m.h>
 #include <UpdateAoIMsg_m.h>
 #include <ACKMsg_m.h>
+
+using namespace std;
 
 // Partition Server.
 class DVEServer : public cSimpleModule {

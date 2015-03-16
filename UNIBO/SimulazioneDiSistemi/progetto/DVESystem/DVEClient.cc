@@ -19,16 +19,12 @@ Define_Module(DVEClient);
 
 DVEClient::DVEClient()
 {
-    // Set the pointer to NULL, so that the destructor won't crash
-    // even if initialize() doesn't get called because of a runtime
-    // error or user cancellation during the startup process.
-    login = NULL;
+
 }
 
 DVEClient::~DVEClient()
 {
-    //cancelAndDelete(login);
-    //cancelAndDelete(move);
+    delete avatar;
 }
 
 void
@@ -48,7 +44,6 @@ DVEClient::handleMessage(cMessage *msg)
     if (l_msg != 0)
     {
         bubble("Login MSG!");
-        EV << "Received Message: " << msg <<".\n";
         handleLoginMessage(msg);
         return;
     }
@@ -80,6 +75,7 @@ DVEClient::handleMessage(cMessage *msg)
         handleACKMessage(msg);
         return;
     }
+    delete msg;
     // The message is a Job from Source.
     if(logged)
     {
@@ -89,8 +85,8 @@ DVEClient::handleMessage(cMessage *msg)
     }
     else
     {
+        LoginMsg* login = new LoginMsg("login");
         logged = true;
-        login = new LoginMsg("login");
         login->setX(avatar->GetX());
         login->setY(avatar->GetY());
         login->setID(avatar->GetID());
@@ -104,10 +100,12 @@ DVEClient::handleLoginMessage(cMessage *msg)
 {
     LoginMsg* l_msg = check_and_cast<LoginMsg*>(msg);
     serverID = l_msg->getServerID();
+    EV << "Client " << avatar->GetID() <<" bound to server: " << serverID <<endl; // DBG
     for (unsigned int i = 0; i < l_msg->getAoiArraySize(); i++)
     {
         avatar->addToAOI(l_msg->getAoi(i));
     }
+    delete msg;
 }
 
 void
@@ -119,7 +117,13 @@ DVEClient::handleMoveMessage(cMessage *msg)
     {
         // Message from a client: remove from the current AoI.
         avatar->removeFromAOI(avatarID);
+        ACKMsg* ack_msg = new ACKMsg();
+        ack_msg->setMovedID(avatarID);
+        ack_msg->setServerID(serverID);
+        ack_msg->setIsMoveComplete(false);
+        send(ack_msg, "wanIO$o");
     }
+    delete msg;
 }
 
 
@@ -128,6 +132,7 @@ DVEClient::handleUpdateMessage(cMessage * msg)
 {
     ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
     serverID = su_msg->getServerID();
+    delete msg;
 }
 
 
@@ -146,26 +151,38 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
             aoi[i] = aoi_msg->getAoi(i);
         }
         avatar->updateAOI(aoi, size);
+        delete [] aoi;
     }
     else
     {
         // Message from a client: add to the current AoI.
         avatar->addToAOI(sourceID);
     }
+    delete msg;
 }
 
 void
 DVEClient::handleACKMessage(cMessage *msg)
 {
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
-    // TODO
+    if (ack_msg->getIsMoveComplete())
+    {
+        ; // TODO: compute response time.
+    }
+    else
+    {
+        // DBG
+        EV << "ACK message error";
+        bubble("ACK message error");
+    }
+    delete msg;
 }
 
 
 void
 DVEClient::makeMove()
 {
-    EV << "make move!\n";
+    EV << "make move!\n"; // DBG
     int x;
     int y;
     double probability = uniform(0.0, 1.0);
@@ -182,6 +199,7 @@ DVEClient::makeMove()
     if (avatar->GetX() == x && avatar->GetY() == y)
     {
         // No moves.
+        EV << "Location unchanged.\n"; // DBG
         return;
     }
     else
@@ -191,15 +209,14 @@ DVEClient::makeMove()
         move->setY(y);
         move->setClientID(getIndex());
         move->setServerID(serverID);
+        move->setArrivalServer(-1);
         unsigned int i = 0;
-        move->setAoiArraySize(avatar->GetAoISize() + 1);
+        move->setAoiArraySize(avatar->GetAoISize());
         for ( ; i < avatar->GetAoISize(); )
         {
             move->setAoi(i, avatar->GetAtAoi(i));
             i++;
         }
-        // Add the avatar id inside the AoI to ensure the move propagation.
-        move->setAoi(i, avatar->GetID());
         avatar->move(x, y);
         send(move, "wanIO$o");
     }

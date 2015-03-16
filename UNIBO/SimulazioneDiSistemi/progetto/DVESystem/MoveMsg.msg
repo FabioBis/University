@@ -20,6 +20,8 @@ message MoveMsg
 	int clientDest;
 	// The server ID that handle client's requests.
 	int serverID;
+	// Auxilliary ID to ensure a complete message propagation among servers. 
+	int arrivalServer;
 	// The new coordinates.
 	int x;
 	int y;

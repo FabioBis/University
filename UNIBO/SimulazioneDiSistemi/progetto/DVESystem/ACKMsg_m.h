@@ -22,6 +22,7 @@
  * {
  *     
  * 	int movedID;
+ * 	int serverID;
  * 	
  * 	bool isMoveComplete;
  * }
@@ -31,6 +32,7 @@ class ACKMsg : public ::cMessage
 {
   protected:
     int movedID_var;
+    int serverID_var;
     bool isMoveComplete_var;
 
   private:
@@ -52,6 +54,8 @@ class ACKMsg : public ::cMessage
     // field getter/setter methods
     virtual int getMovedID() const;
     virtual void setMovedID(int movedID);
+    virtual int getServerID() const;
+    virtual void setServerID(int serverID);
     virtual bool getIsMoveComplete() const;
     virtual void setIsMoveComplete(bool isMoveComplete);
 };

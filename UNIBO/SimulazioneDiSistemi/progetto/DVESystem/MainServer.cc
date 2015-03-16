@@ -20,6 +20,7 @@ Define_Module(MainServer);
 MainServer::~MainServer()
 {
     delete partition_;
+    delete ve_;
 }
 
 void
@@ -74,6 +75,7 @@ MainServer::handleMessage(cMessage *msg)
         handleACKMessage(msg);
         return;
     }
+    delete msg;
 }
 
 
@@ -91,6 +93,7 @@ MainServer::handleMove(int clientID, int x, int y) {
     int* newAoi = NULL;
     unsigned int newAoiSize;
     ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
+    EV << "New AoI size: " << newAoiSize << endl;
     UpdateAoIMsg* update = new UpdateAoIMsg();
     update->setClientMoved(clientID);
     update->setAoiArraySize(newAoiSize);
@@ -101,9 +104,10 @@ MainServer::handleMove(int clientID, int x, int y) {
     send(update, "lanOut");
     // Updates VA and VE.
     VirtualAvatar* avatar = connectedAvatars_[clientID];
+    unsigned int oldAoiSize = ve_->GetSizeAt(avatar->GetX(), avatar->GetY()) - 1;
     avatar->move(x, y);
     // Handle acknowledges.
-    unsigned int oldAoiSize = ve_->GetSizeAt(avatar->GetX(), avatar->GetY()) - 1;
+    EV << "Old AoI size: " << oldAoiSize << endl;
     if (newAoiSize + oldAoiSize == 0)
     {
         // No client to be notified, send the ack to client moved.
@@ -141,6 +145,7 @@ MainServer::handleLoginMessage(cMessage *msg)
 
     // Identify the partition server for the client.
     int partitionServer = getPartitionServerID(l_msg->getX(), l_msg->getY());
+    EV << "Partition Server: " << partitionServer <<endl;
     // Adding partition server id and send through LAN.
     l_msg->setServerID(partitionServer);
     send(l_msg, "lanOut");
@@ -183,6 +188,7 @@ MainServer::handleMoveMessage(cMessage *msg)
         updatePartition();
         moves_n = 0;
     }
+    send(m_msg, "lanOut");
 }
 
 void
@@ -191,6 +197,7 @@ MainServer::handleACKMessage(cMessage *msg)
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
     if (!ack_msg->getIsMoveComplete())
     {
+        EV << "ACK msg to main server. (if)\n";
         acknowledgment* ack = ack_registry_[ack_msg->getMovedID()];
         ack->Ack();
         if (ack->IsComplete())
@@ -201,6 +208,7 @@ MainServer::handleACKMessage(cMessage *msg)
     }
     else
     {
+        EV << "ACK msg to main server. (else)\n";
         // DBG
         EV << "ACK message error";
         bubble("ACK message error");

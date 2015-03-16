@@ -32,8 +32,6 @@ private:
     int serverID;
     // flag to login the client.
     bool logged;
-    // Messages.
-    LoginMsg* login;
 
     void makeMove();
     void handleLoginMessage(cMessage *msg);

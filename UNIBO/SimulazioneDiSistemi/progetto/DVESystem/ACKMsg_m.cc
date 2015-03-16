@@ -58,6 +58,7 @@ Register_Class(ACKMsg);
 ACKMsg::ACKMsg(const char *name, int kind) : ::cMessage(name,kind)
 {
     this->movedID_var = 0;
+    this->serverID_var = 0;
     this->isMoveComplete_var = 0;
 }
 
@@ -81,6 +82,7 @@ ACKMsg& ACKMsg::operator=(const ACKMsg& other)
 void ACKMsg::copy(const ACKMsg& other)
 {
     this->movedID_var = other.movedID_var;
+    this->serverID_var = other.serverID_var;
     this->isMoveComplete_var = other.isMoveComplete_var;
 }
 
@@ -88,6 +90,7 @@ void ACKMsg::parsimPack(cCommBuffer *b)
 {
     ::cMessage::parsimPack(b);
     doPacking(b,this->movedID_var);
+    doPacking(b,this->serverID_var);
     doPacking(b,this->isMoveComplete_var);
 }
 
@@ -95,6 +98,7 @@ void ACKMsg::parsimUnpack(cCommBuffer *b)
 {
     ::cMessage::parsimUnpack(b);
     doUnpacking(b,this->movedID_var);
+    doUnpacking(b,this->serverID_var);
     doUnpacking(b,this->isMoveComplete_var);
 }
 
@@ -106,6 +110,16 @@ int ACKMsg::getMovedID() const
 void ACKMsg::setMovedID(int movedID)
 {
     this->movedID_var = movedID;
+}
+
+int ACKMsg::getServerID() const
+{
+    return serverID_var;
+}
+
+void ACKMsg::setServerID(int serverID)
+{
+    this->serverID_var = serverID;
 }
 
 bool ACKMsg::getIsMoveComplete() const
@@ -165,7 +179,7 @@ const char *ACKMsgDescriptor::getProperty(const char *propertyname) const
 int ACKMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount(object) : 2;
+    return basedesc ? 3+basedesc->getFieldCount(object) : 3;
 }
 
 unsigned int ACKMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -179,8 +193,9 @@ unsigned int ACKMsgDescriptor::getFieldTypeFlags(void *object, int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ACKMsgDescriptor::getFieldName(void *object, int field) const
@@ -193,9 +208,10 @@ const char *ACKMsgDescriptor::getFieldName(void *object, int field) const
     }
     static const char *fieldNames[] = {
         "movedID",
+        "serverID",
         "isMoveComplete",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : NULL;
+    return (field>=0 && field<3) ? fieldNames[field] : NULL;
 }
 
 int ACKMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -203,7 +219,8 @@ int ACKMsgDescriptor::findField(void *object, const char *fieldName) const
     cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount(object) : 0;
     if (fieldName[0]=='m' && strcmp(fieldName, "movedID")==0) return base+0;
-    if (fieldName[0]=='i' && strcmp(fieldName, "isMoveComplete")==0) return base+1;
+    if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+1;
+    if (fieldName[0]=='i' && strcmp(fieldName, "isMoveComplete")==0) return base+2;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -217,9 +234,10 @@ const char *ACKMsgDescriptor::getFieldTypeString(void *object, int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "int",
         "bool",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *ACKMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -260,7 +278,8 @@ std::string ACKMsgDescriptor::getFieldAsString(void *object, int field, int i) c
     ACKMsg *pp = (ACKMsg *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getMovedID());
-        case 1: return bool2string(pp->getIsMoveComplete());
+        case 1: return long2string(pp->getServerID());
+        case 2: return bool2string(pp->getIsMoveComplete());
         default: return "";
     }
 }
@@ -276,7 +295,8 @@ bool ACKMsgDescriptor::setFieldAsString(void *object, int field, int i, const ch
     ACKMsg *pp = (ACKMsg *)object; (void)pp;
     switch (field) {
         case 0: pp->setMovedID(string2long(value)); return true;
-        case 1: pp->setIsMoveComplete(string2bool(value)); return true;
+        case 1: pp->setServerID(string2long(value)); return true;
+        case 2: pp->setIsMoveComplete(string2bool(value)); return true;
         default: return false;
     }
 }
