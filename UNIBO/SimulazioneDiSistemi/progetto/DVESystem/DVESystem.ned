@@ -28,6 +28,10 @@ network DVESystem
         {
             delay = 1ms;
         }
+        channel Internet extends ned.DelayChannel
+        {
+         	delay = exponential(0.46s);   
+        }
     submodules:
         mainServer: MainServer {
             @display("p=240,35");
@@ -47,17 +51,17 @@ network DVESystem
     connections:
         // Server Connections.
         mainServer.lanOut --> LAN --> server[0].lanIn;
-        wan.toMainServer <--> mainServer.wanIO;
+        wan.toMainServer <--> Internet <--> mainServer.wanIO;
         for i=0..sizeof(server) - 2 {
             server[i].lanOut --> LAN --> server[i + 1].lanIn;
         }
         server[sizeof(server) - 1].lanOut --> LAN --> mainServer.lanIn;
         for i=0..sizeof(server) - 1 {
-            server[i].wanIO <--> wan.toServer++;
+            server[i].wanIO <--> Internet <--> wan.toServer++;
         }
         // Client connections.
         for j=0..sizeof(client) - 1 {
-            client[j].wanIO <--> wan.toClient++;
+            client[j].wanIO <--> Internet <--> wan.toClient++;
             source[j].out --> client[j].fromSource;
         }
 }

@@ -17,6 +17,8 @@ package dvesystem;
 
 simple WAN
 {
+    parameters:
+        double delay @unit(s);
     @display("i=block/network2");
     gates:
         inout toClient[];

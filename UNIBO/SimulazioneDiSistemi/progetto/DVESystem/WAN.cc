@@ -82,11 +82,11 @@ WAN::handleLoginMessage(cMessage *msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            send(l_msg, "toMainServer$o");
+            sendDelayed(l_msg, par("delay"), "toMainServer$o");
         }
         else if (strcmp(gateName,"toMainServer$i") == 0)
         {
-            send(l_msg, "toClient$o", l_msg->getID());
+            sendDelayed(l_msg, par("delay"), "toClient$o", l_msg->getID());
         }
         else {
             // DBG
@@ -113,12 +113,12 @@ WAN::handleUpdateMessage(cMessage * msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            send(su_msg, "toServer$o", su_msg->getServerID());
+            sendDelayed(su_msg, par("delay"), "toServer$o", su_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             // ACK message from a server: notify the client.
-            send(su_msg, "toClient$o", su_msg->getClientDest());
+            sendDelayed(su_msg, par("delay"), "toClient$o", su_msg->getClientDest());
         }
         else
         {
@@ -149,7 +149,7 @@ WAN::handleMoveMessage(cMessage *msg)
         if (strcmp(gateName, "toClient$i") == 0)
         {
             // Move message from a client: forward to servers.
-            send(m_msg, "toServer$o", m_msg->getServerID());
+            sendDelayed(m_msg, par("delay"), "toServer$o", m_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
@@ -159,7 +159,7 @@ WAN::handleMoveMessage(cMessage *msg)
             {
                 MoveMsg* notify = new MoveMsg();
                 notify->setClientID(m_msg->getClientID());
-                send(notify, "toClient$o", m_msg->getAoi(i));
+                sendDelayed(notify, par("delay"), "toClient$o", m_msg->getAoi(i));
             }
             delete msg;
         }
@@ -191,12 +191,12 @@ WAN::handleUpdateAoIMessage(cMessage *msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            send(aoi_msg, "toServer$o", aoi_msg->getServerID());
+            sendDelayed(aoi_msg, par("delay"), "toServer$o", aoi_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             // ACK message from a server: notify the client.
-            send(aoi_msg, "toClient$o", aoi_msg->getClientDest());
+            sendDelayed(aoi_msg, par("delay"), "toClient$o", aoi_msg->getClientDest());
         }
         else
         {
@@ -226,12 +226,12 @@ WAN::handleACKMessage(cMessage *msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            send(ack_msg, "toServer$o", ack_msg->getServerID());
+            sendDelayed(ack_msg, par("delay"), "toServer$o", ack_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             // ACK message from a server: notify the client.
-            send(ack_msg, "toClient$o", ack_msg->getMovedID());
+            sendDelayed(ack_msg, par("delay"), "toClient$o", ack_msg->getMovedID());
         }
         else
         {
