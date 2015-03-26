@@ -178,8 +178,10 @@ DVEServer::handleUpdateMessage(cMessage * msg)
         unsigned int size = su_msg->getClientsArraySize();
         for (unsigned int i = 0; i < size; i++)
         {
-            servedClients_.push_back(su_msg->getClients(i));
+            int clientID = su_msg->getClients(i);
+            servedClients_.push_back(clientID);
             ServerUpdateMsg* new_msg = su_msg->dup();
+            new_msg->setClientDest(clientID);
             send(new_msg, "wanIO$o");
             clients_++;
         }

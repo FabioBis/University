@@ -23,6 +23,8 @@
  *     
  * 	int serverID;
  * 	
+ * 	int clientDest;
+ * 	
  * 	int clients[];
  * }
  * </pre>
@@ -31,6 +33,7 @@ class ServerUpdateMsg : public ::cMessage
 {
   protected:
     int serverID_var;
+    int clientDest_var;
     int *clients_var; // array ptr
     unsigned int clients_arraysize;
 
@@ -53,6 +56,8 @@ class ServerUpdateMsg : public ::cMessage
     // field getter/setter methods
     virtual int getServerID() const;
     virtual void setServerID(int serverID);
+    virtual int getClientDest() const;
+    virtual void setClientDest(int clientDest);
     virtual void setClientsArraySize(unsigned int size);
     virtual unsigned int getClientsArraySize() const;
     virtual int getClients(unsigned int k) const;

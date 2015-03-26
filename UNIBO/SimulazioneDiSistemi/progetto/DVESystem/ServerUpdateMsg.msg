@@ -17,6 +17,8 @@ message ServerUpdateMsg
 {
     // The server id that the clients refer to: -1 = MainServer, 1..9 = DVEServer(s). 
 	int serverID;
+	// The client OD to be notified.
+	int clientDest;
 	// The clients id that the server serves.
 	int clients[];
 }

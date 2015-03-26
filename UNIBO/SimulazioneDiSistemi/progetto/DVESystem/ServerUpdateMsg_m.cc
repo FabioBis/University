@@ -58,6 +58,7 @@ Register_Class(ServerUpdateMsg);
 ServerUpdateMsg::ServerUpdateMsg(const char *name, int kind) : ::cMessage(name,kind)
 {
     this->serverID_var = 0;
+    this->clientDest_var = 0;
     clients_arraysize = 0;
     this->clients_var = 0;
 }
@@ -85,6 +86,7 @@ ServerUpdateMsg& ServerUpdateMsg::operator=(const ServerUpdateMsg& other)
 void ServerUpdateMsg::copy(const ServerUpdateMsg& other)
 {
     this->serverID_var = other.serverID_var;
+    this->clientDest_var = other.clientDest_var;
     delete [] this->clients_var;
     this->clients_var = (other.clients_arraysize==0) ? NULL : new int[other.clients_arraysize];
     clients_arraysize = other.clients_arraysize;
@@ -96,6 +98,7 @@ void ServerUpdateMsg::parsimPack(cCommBuffer *b)
 {
     ::cMessage::parsimPack(b);
     doPacking(b,this->serverID_var);
+    doPacking(b,this->clientDest_var);
     b->pack(clients_arraysize);
     doPacking(b,this->clients_var,clients_arraysize);
 }
@@ -104,6 +107,7 @@ void ServerUpdateMsg::parsimUnpack(cCommBuffer *b)
 {
     ::cMessage::parsimUnpack(b);
     doUnpacking(b,this->serverID_var);
+    doUnpacking(b,this->clientDest_var);
     delete [] this->clients_var;
     b->unpack(clients_arraysize);
     if (clients_arraysize==0) {
@@ -122,6 +126,16 @@ int ServerUpdateMsg::getServerID() const
 void ServerUpdateMsg::setServerID(int serverID)
 {
     this->serverID_var = serverID;
+}
+
+int ServerUpdateMsg::getClientDest() const
+{
+    return clientDest_var;
+}
+
+void ServerUpdateMsg::setClientDest(int clientDest)
+{
+    this->clientDest_var = clientDest;
 }
 
 void ServerUpdateMsg::setClientsArraySize(unsigned int size)
@@ -201,7 +215,7 @@ const char *ServerUpdateMsgDescriptor::getProperty(const char *propertyname) con
 int ServerUpdateMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount(object) : 2;
+    return basedesc ? 3+basedesc->getFieldCount(object) : 3;
 }
 
 unsigned int ServerUpdateMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -214,9 +228,10 @@ unsigned int ServerUpdateMsgDescriptor::getFieldTypeFlags(void *object, int fiel
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ServerUpdateMsgDescriptor::getFieldName(void *object, int field) const
@@ -229,9 +244,10 @@ const char *ServerUpdateMsgDescriptor::getFieldName(void *object, int field) con
     }
     static const char *fieldNames[] = {
         "serverID",
+        "clientDest",
         "clients",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : NULL;
+    return (field>=0 && field<3) ? fieldNames[field] : NULL;
 }
 
 int ServerUpdateMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -239,7 +255,8 @@ int ServerUpdateMsgDescriptor::findField(void *object, const char *fieldName) co
     cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount(object) : 0;
     if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+0;
-    if (fieldName[0]=='c' && strcmp(fieldName, "clients")==0) return base+1;
+    if (fieldName[0]=='c' && strcmp(fieldName, "clientDest")==0) return base+1;
+    if (fieldName[0]=='c' && strcmp(fieldName, "clients")==0) return base+2;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -254,8 +271,9 @@ const char *ServerUpdateMsgDescriptor::getFieldTypeString(void *object, int fiel
     static const char *fieldTypeStrings[] = {
         "int",
         "int",
+        "int",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *ServerUpdateMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -281,7 +299,7 @@ int ServerUpdateMsgDescriptor::getArraySize(void *object, int field) const
     }
     ServerUpdateMsg *pp = (ServerUpdateMsg *)object; (void)pp;
     switch (field) {
-        case 1: return pp->getClientsArraySize();
+        case 2: return pp->getClientsArraySize();
         default: return 0;
     }
 }
@@ -297,7 +315,8 @@ std::string ServerUpdateMsgDescriptor::getFieldAsString(void *object, int field,
     ServerUpdateMsg *pp = (ServerUpdateMsg *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getServerID());
-        case 1: return long2string(pp->getClients(i));
+        case 1: return long2string(pp->getClientDest());
+        case 2: return long2string(pp->getClients(i));
         default: return "";
     }
 }
@@ -313,7 +332,8 @@ bool ServerUpdateMsgDescriptor::setFieldAsString(void *object, int field, int i,
     ServerUpdateMsg *pp = (ServerUpdateMsg *)object; (void)pp;
     switch (field) {
         case 0: pp->setServerID(string2long(value)); return true;
-        case 1: pp->setClients(i,string2long(value)); return true;
+        case 1: pp->setClientDest(string2long(value)); return true;
+        case 2: pp->setClients(i,string2long(value)); return true;
         default: return false;
     }
 }

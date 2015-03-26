@@ -105,8 +105,36 @@ WAN::handleLoginMessage(cMessage *msg)
 void
 WAN::handleUpdateMessage(cMessage * msg)
 {
-    ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
-    // TODO
+    cGate* gate = msg->getArrivalGate();
+    if (gate != NULL)
+    {
+        // Update message from a client: forward to servers.
+        ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+        const char* gateName = gate->getName();
+        if (strcmp(gateName, "toClient$i") == 0)
+        {
+            send(su_msg, "toServer$o", su_msg->getServerID());
+        }
+        else if (strcmp(gateName,"toServer$i") == 0)
+        {
+            // ACK message from a server: notify the client.
+            send(su_msg, "toClient$o", su_msg->getClientDest());
+        }
+        else
+        {
+            // DBG
+            bubble(gateName);
+            EV << "WAN: Name Gate Error!";
+            delete msg;
+        }
+    }
+    else
+    {
+        // DBG
+        bubble("Arrival Gate Error!");
+        EV << "WAN: Arrival Gate Error!";
+        delete msg;
+    }
 }
 
 
@@ -155,9 +183,36 @@ WAN::handleMoveMessage(cMessage *msg)
 void
 WAN::handleUpdateAoIMessage(cMessage *msg)
 {
-    UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
-    // TODO
-    delete msg;
+    cGate* gate = msg->getArrivalGate();
+    if (gate != NULL)
+    {
+        // ACK message from a client: forward to servers.
+        UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
+        const char* gateName = gate->getName();
+        if (strcmp(gateName, "toClient$i") == 0)
+        {
+            send(aoi_msg, "toServer$o", aoi_msg->getServerID());
+        }
+        else if (strcmp(gateName,"toServer$i") == 0)
+        {
+            // ACK message from a server: notify the client.
+            send(aoi_msg, "toClient$o", aoi_msg->getClientDest());
+        }
+        else
+        {
+            // DBG
+            bubble(gateName);
+            EV << "WAN: Name Gate Error!";
+            delete msg;
+        }
+    }
+    else
+    {
+        // DBG
+        bubble("Arrival Gate Error!");
+        EV << "WAN: Arrival Gate Error!";
+        delete msg;
+    }
 }
 
 void
@@ -193,5 +248,4 @@ WAN::handleACKMessage(cMessage *msg)
         EV << "WAN: Arrival Gate Error!";
         delete msg;
     }
-
 }
