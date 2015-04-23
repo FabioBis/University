@@ -34,6 +34,12 @@ DVEClient::initialize()
     // among world cells is uniform.
     avatar = new Avatar(getIndex(), intuniform(0, 8), intuniform(0, 8));
     logged = false;
+    ready = true;
+    WATCH(ready);
+    serverID = 0;
+    WATCH(serverID);
+    movesLoss = 0;
+    WATCH(movesLoss);
 }
 
 
@@ -79,9 +85,20 @@ DVEClient::handleMessage(cMessage *msg)
     // The message is a Job from Source.
     if(logged)
     {
-        // Let's move!
-        bubble("Let's move!");
-        makeMove();
+        if (ready)
+        {
+            // Let's move!
+            bubble("Let's move!");
+            makeMove();
+            ready = false;
+        }
+        else
+        {
+            // Can't move!
+            bubble("Can't move!");
+            EV << "Can't move!\n";
+            movesLoss++;
+        }
     }
     else
     {
@@ -157,6 +174,11 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
     {
         // Message from a client: add to the current AoI.
         avatar->addToAOI(sourceID);
+        // Send ACK message to the server.
+        ACKMsg* ack_msg = new ACKMsg();
+        ack_msg->setMovedID(sourceID);
+        ack_msg->setIsMoveComplete(false);
+        ack_msg->setServerID(serverID);
     }
     delete msg;
 }
@@ -167,6 +189,7 @@ DVEClient::handleACKMessage(cMessage *msg)
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
     if (ack_msg->getIsMoveComplete())
     {
+        ready = true;
         ; // TODO: compute response time.
     }
     else

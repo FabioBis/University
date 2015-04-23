@@ -153,14 +153,17 @@ WAN::handleMoveMessage(cMessage *msg)
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
-            // Move message from a server: notify all client within AoI.
-            unsigned int size = m_msg->getAoiArraySize();
-            for (unsigned int i = 0; i < size; i++)
-            {
-                MoveMsg* notify = new MoveMsg();
-                notify->setClientID(m_msg->getClientID());
-                sendDelayed(notify, par("delay"), "toClient$o", m_msg->getAoi(i));
-            }
+//            // Move message from a server: notify all client within AoI.
+//            unsigned int size = m_msg->getAoiArraySize();
+//            for (unsigned int i = 0; i < size; i++)
+//            {
+//                MoveMsg* notify = new MoveMsg();
+//                notify->setClientID(m_msg->getClientID());
+//                sendDelayed(notify, par("delay"), "toClient$o", m_msg->getAoi(i));
+//            }
+            MoveMsg* notify = new MoveMsg();
+            notify->setClientID(m_msg->getClientID());
+            sendDelayed(notify, par("delay"), "toClient$o", m_msg->getClientDest());
             delete msg;
         }
         else

@@ -30,8 +30,13 @@ private:
     Avatar* avatar;
     // The current game server id that the client refers to.
     int serverID;
-    // flag to login the client.
+    // Flag to login the client.
     bool logged;
+    // Flag: is the AoI updated?
+    bool ready;
+
+    // Statistics.
+    int movesLoss;
 
     void makeMove();
     void handleLoginMessage(cMessage *msg);

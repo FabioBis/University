@@ -208,10 +208,8 @@ MainServer::handleACKMessage(cMessage *msg)
     }
     else
     {
-        EV << "ACK msg to main server. (else)\n";
-        // DBG
-        EV << "ACK message error";
-        bubble("ACK message error");
+        EV << "ACK msg to main server. (else) Possible error?\n";
+        send(ack_msg, "lanOut");
     }
 }
 
