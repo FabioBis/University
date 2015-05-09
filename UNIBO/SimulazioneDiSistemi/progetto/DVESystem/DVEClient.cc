@@ -39,6 +39,7 @@ DVEClient::initialize()
     serverID = 0;
     WATCH(serverID);
     movesLoss = 0;
+    systemResponseSignal = registerSignal("sysResponse");
     WATCH(movesLoss);
 }
 
@@ -191,6 +192,8 @@ DVEClient::handleACKMessage(cMessage *msg)
     {
         ready = true;
         ; // TODO: compute response time.
+        simtime_t response = 0;
+        emit(systemResponseSignal, response);
     }
     else
     {

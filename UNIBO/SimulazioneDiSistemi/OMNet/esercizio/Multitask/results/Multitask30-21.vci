@@ -1,4 +1,4 @@
-file 464880 1420540679                                          
+file 464880 1420544279                                          
 version 2
 run Multitask30-21-20150106-11:37:59-5636
 attr configname Multitask30
@@ -15,114 +15,113 @@ attr replication #21
 attr resultdir results
 attr runnumber 21
 attr seedset 21
-
 vector 8  Multitask.allocateQ2  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 11  Multitask.queue3  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 13  Multitask.queue3  busy:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "server busy state, vector"
-vector 15  Multitask.queue4  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 17  Multitask.queue4  busy:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "server busy state, vector"
-vector 19  Multitask.queue5  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 21  Multitask.queue5  busy:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "server busy state, vector"
-vector 23  Multitask.queue6  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 25  Multitask.queue6  busy:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "server busy state, vector"
-vector 27  Multitask.queue7  queueLength:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "queue length, vector"
-vector 29  Multitask.queue7  busy:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "server busy state, vector"
-vector 30  Multitask.resourceCPU  amount:vector  ETV
-attr interpolationmode  sample-hold
-attr title  "available resource, vector"
-vector 12  Multitask.queue3  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 20  Multitask.queue5  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 16  Multitask.queue4  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 24  Multitask.queue6  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 28  Multitask.queue7  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 9  Multitask.allocateQ2  queueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "queueing time at dequeue, vector"
-attr unit  s
-vector 0  Multitask.sink  lifeTime:vector  ETV
-attr interpolationmode  none
-attr title  "lifetime of arrived jobs, vector"
-attr unit  s
-vector 1  Multitask.sink  totalQueueingTime:vector  ETV
-attr interpolationmode  none
-attr title  "the total time spent in queues by arrived jobs, vector"
-attr unit  s
-vector 4  Multitask.sink  queuesVisited:vector  ETV
-attr interpolationmode  none
-attr title  "the total number of queues visited by arrived jobs, vector"
-vector 3  Multitask.sink  totalServiceTime:vector  ETV
-attr interpolationmode  none
-attr title  "the total time spent  by arrived jobs, vector"
-attr unit  s
-vector 2  Multitask.sink  totalDelayTime:vector  ETV
-attr interpolationmode  none
-attr title  "the total time spent in delay nodes by arrived jobs, vector"
-attr unit  s
-vector 5  Multitask.sink  delaysVisited:vector  ETV
-attr interpolationmode  none
-attr title  "the total number of delays visited by arrived jobs, vector"
-vector 6  Multitask.sink  generation:vector  ETV
-attr interpolationmode  none
-attr title  "the generation of the arrived jobs, vector"
-0	3905 1065 12688 13386 1516.181006227802 1589.799174663183 25 1516.1810062278 1589.7991746632 38696.751706403 59905120.841013
-1	4970 1069 12688 13386 1516.181006227802 1589.799174663183 25 1152.4837357378 1303.7852702436 30882.379907714 38201580.511546
-2	6039 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0
-3	6760 1067 12688 13386 1516.181006227802 1589.799174663183 25 88.53233247473 174.43183355859 3001.7236878386 373463.45416818
-4	7827 746 12688 13386 1516.181006227802 1589.799174663183 25 31 67 1208 60192
-5	8573 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0
-6	9294 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 8	10015 27927 0 13210 0 1556.539649182444 989 0 20 15282 245142
-9	37942 20376 121 13210 2.311381474079 1556.539649182444 494 0.881443940754 143.07277437421 26021.892962425 1617430.803185
+vector 11  Multitask.queue3  queueLength:vector  ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 11	58318 19554 0 13347 0 1578.028134144079 693 0 4 444 586
-12	77872 74278 54 13381 0.218533018749 1589.517702373 2462 0 0.891543972847 39.697669371952 9.0946970917959
+vector 13  Multitask.queue3  busy:vector  ETV
+attr interpolationmode sample-hold
+attr title "server busy state, vector"
 13	152150 120109 0 13382 0 1589.799174663183 4233 0 1 2116 2116
+vector 15  Multitask.queue4  queueLength:vector  ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 15	272259 2216 0 12937 0 1538.488597637152 79 0 2 43 47
-16	274475 13531 76 13342 0.84068174943 1577.858667272303 460 0 0.823566148166 9.722468920484 4.789313573841
+vector 17  Multitask.queue4  busy:vector  ETV
+attr interpolationmode sample-hold
+attr title "server busy state, vector"
 17	288006 23866 0 13343 0 1577.871205478783 843 0 1 421 421
+vector 19  Multitask.queue5  queueLength:vector  ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 19	311872 2107 0 13190 0 1555.407739704993 75 0 2 41 45
-20	313979 14306 64 13352 0.43667583714 1578.079745459015 489 0 1.427346068365 11.517126463892 6.1285836755952
+vector 21  Multitask.queue5  busy:vector  ETV
+attr interpolationmode sample-hold
+attr title "server busy state, vector"
 21	328285 25557 0 13353 0 1578.248624563746 905 0 1 452 452
+vector 23  Multitask.queue6  queueLength:vector  ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 23	353842 13593 0 13373 0 1584.410338181216 477 0 4 586 1186
-24	367435 14685 79 13373 0.982954283373 1584.410338181216 408 0 19.007779262465 994.53394234629 7403.5326450839
+vector 25  Multitask.queue6  busy:vector  ETV
+attr interpolationmode sample-hold
+attr title "server busy state, vector"
 25	382120 9627 0 13380 0 1589.517702373 341 0 1 170 170
+vector 27  Multitask.queue7  queueLength:vector  ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
 27	391747 31129 0 13358 0 1580.12656873599 1097 0 4 2510 7228
-28	422876 24381 93 13367 1.17125745778 1580.478807243342 605 0 28.05019399626 3805.015738186 40345.126164042
+vector 29  Multitask.queue7  busy:vector  ETV
+attr interpolationmode sample-hold
+attr title "server busy state, vector"
 29	447257 3279 0 13368 0 1584.29692973364 115 0 1 57 57
+vector 30  Multitask.resourceCPU  amount:vector  ETV
+attr interpolationmode sample-hold
+attr title "available resource, vector"
 30	450536 14344 0 13384 0 1589.799174663183 507 0 5 39 151
+vector 12  Multitask.queue3  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+12	77872 74278 54 13381 0.218533018749 1589.517702373 2462 0 0.891543972847 39.697669371952 9.0946970917959
+vector 20  Multitask.queue5  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+20	313979 14306 64 13352 0.43667583714 1578.079745459015 489 0 1.427346068365 11.517126463892 6.1285836755952
+vector 16  Multitask.queue4  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+16	274475 13531 76 13342 0.84068174943 1577.858667272303 460 0 0.823566148166 9.722468920484 4.789313573841
+vector 24  Multitask.queue6  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+24	367435 14685 79 13373 0.982954283373 1584.410338181216 408 0 19.007779262465 994.53394234629 7403.5326450839
+vector 28  Multitask.queue7  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+28	422876 24381 93 13367 1.17125745778 1580.478807243342 605 0 28.05019399626 3805.015738186 40345.126164042
+vector 9  Multitask.allocateQ2  queueingTime:vector  ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+9	37942 20376 121 13210 2.311381474079 1556.539649182444 494 0.881443940754 143.07277437421 26021.892962425 1617430.803185
+vector 0  Multitask.sink  lifeTime:vector  ETV
+attr interpolationmode none
+attr title "lifetime of arrived jobs, vector"
+attr unit s
+0	3905 1065 12688 13386 1516.181006227802 1589.799174663183 25 1516.1810062278 1589.7991746632 38696.751706403 59905120.841014
+vector 1  Multitask.sink  totalQueueingTime:vector  ETV
+attr interpolationmode none
+attr title "the total time spent in queues by arrived jobs, vector"
+attr unit s
+1	4970 1069 12688 13386 1516.181006227802 1589.799174663183 25 1152.4837357378 1303.7852702436 30882.379907714 38201580.511546
+vector 4  Multitask.sink  queuesVisited:vector  ETV
+attr interpolationmode none
+attr title "the total number of queues visited by arrived jobs, vector"
+4	7827 746 12688 13386 1516.181006227802 1589.799174663183 25 31 67 1208 60192
+vector 3  Multitask.sink  totalServiceTime:vector  ETV
+attr interpolationmode none
+attr title "the total time spent  by arrived jobs, vector"
+attr unit s
+3	6760 1067 12688 13386 1516.181006227802 1589.799174663183 25 88.53233247473 174.43183355859 3001.7236878386 373463.45416818
+vector 2  Multitask.sink  totalDelayTime:vector  ETV
+attr interpolationmode none
+attr title "the total time spent in delay nodes by arrived jobs, vector"
+attr unit s
+2	6039 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0
+vector 5  Multitask.sink  delaysVisited:vector  ETV
+attr interpolationmode none
+attr title "the total number of delays visited by arrived jobs, vector"
+5	8573 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0
+vector 6  Multitask.sink  generation:vector  ETV
+attr interpolationmode none
+attr title "the generation of the arrived jobs, vector"
+6	9294 721 12688 13386 1516.181006227802 1589.799174663183 25 0 0 0 0

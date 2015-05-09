@@ -36,6 +36,7 @@ private:
     bool ready;
 
     // Statistics.
+    simsignal_t systemResponseSignal;
     int movesLoss;
 
     void makeMove();
