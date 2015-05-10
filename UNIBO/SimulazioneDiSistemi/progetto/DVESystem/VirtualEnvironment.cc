@@ -28,17 +28,25 @@ VirtualEnvironment::add(VirtualAvatar* avatar) {
     int avatarID = avatar->GetID();
     int x = avatar->GetX();
     int y = avatar->GetY();
-    cells_[x][y].insert(std::pair<int, VirtualAvatar*>(avatarID, avatar));
+    EV << "Add:: cell size before: "
+            <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
+    if(cells_[x][y].insert(std::pair<int, VirtualAvatar*>(avatarID, avatar)).second == false)
+    {
+        EV <<"Insertion failed. Key was present" <<endl; // DBG.
+    }
+    EV << "Add:: cell size after: "
+            <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
 }
 
 
 void
 VirtualEnvironment::remove(VirtualAvatar* avatar)
 {
-    std::map<int, VirtualAvatar*> cell = cells_[avatar->GetX()][avatar->GetY()];
-    std::map<int, VirtualAvatar*>::iterator it;
-    it = cell.find(avatar->GetID());
-    cell.erase(it);
+    EV << "Erase:: cell size before: "
+            <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
+    cells_[avatar->GetX()][avatar->GetY()].erase(avatar->GetID());
+    EV << "Erase:: cell size after: "
+            <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
 }
 
 

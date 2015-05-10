@@ -16,6 +16,7 @@
 #ifndef VIRTUALENVIRONMENT_H_
 #define VIRTUALENVIRONMENT_H_
 
+#include <omnetpp.h>
 #include <map>
 #include <vector>
 #include <VirtualAvatar.h>
