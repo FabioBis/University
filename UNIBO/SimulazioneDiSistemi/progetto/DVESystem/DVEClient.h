@@ -28,16 +28,24 @@ class DVEClient : public cSimpleModule {
 private:
     // The game avatar.
     Avatar* avatar;
+    //DBG
+    int _x, _y;
     // The current game server id that the client refers to.
     int serverID;
     // Flag to login the client.
     bool logged;
     // Flag: is the AoI updated?
     bool ready;
+    // Flag: has the client lost a move?
+    bool frozen;
 
     // Statistics.
     simsignal_t systemResponseSignal;
+    simsignal_t moveLostSignal;
+    simtime_t timeRequest;
     int movesLoss;
+    int moves;
+    int ackReceived;
 
     void makeMove();
     void handleLoginMessage(cMessage *msg);

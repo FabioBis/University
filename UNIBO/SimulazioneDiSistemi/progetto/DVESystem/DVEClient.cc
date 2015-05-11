@@ -34,13 +34,24 @@ DVEClient::initialize()
     // among world cells is uniform.
     avatar = new Avatar(getIndex(), intuniform(0, 8), intuniform(0, 8));
     logged = false;
-    ready = true;
+    ready = false;
+    frozen = false;
     WATCH(ready);
     serverID = 0;
     WATCH(serverID);
     movesLoss = 0;
-    systemResponseSignal = registerSignal("sysResponse");
     WATCH(movesLoss);
+    moves = 0;
+    WATCH(moves);
+    ackReceived = 0;
+    WATCH(ackReceived);
+    systemResponseSignal = registerSignal("sysResponse");
+    moveLostSignal = registerSignal("moveLost");
+    // DBG
+    _x = avatar->GetX();
+    _y = avatar->GetY();
+    WATCH(_x);
+    WATCH(_y);
 }
 
 
@@ -82,7 +93,6 @@ DVEClient::handleMessage(cMessage *msg)
         handleACKMessage(msg);
         return;
     }
-    delete msg;
     // The message is a Job from Source.
     if(logged)
     {
@@ -91,14 +101,16 @@ DVEClient::handleMessage(cMessage *msg)
             // Let's move!
             bubble("Let's move!");
             makeMove();
-            ready = false;
+            moves++;
         }
         else
         {
             // Can't move!
             bubble("Can't move!");
             EV << "Can't move!\n";
+            frozen = true;
             movesLoss++;
+            emit(moveLostSignal, movesLoss);
         }
     }
     else
@@ -111,6 +123,7 @@ DVEClient::handleMessage(cMessage *msg)
         // $o and $i suffix is used to identify the input/output part of a two way gate.
         send(login, "wanIO$o");
     }
+    delete msg;
 }
 
 void
@@ -123,6 +136,7 @@ DVEClient::handleLoginMessage(cMessage *msg)
     {
         avatar->addToAOI(l_msg->getAoi(i));
     }
+    ready = true;
     delete msg;
 }
 
@@ -191,8 +205,17 @@ DVEClient::handleACKMessage(cMessage *msg)
     if (ack_msg->getIsMoveComplete())
     {
         ready = true;
-        ; // TODO: compute response time.
-        simtime_t response = 0;
+        ackReceived++;
+        if (frozen)
+        {
+            frozen = false;
+            EV << "Move lost!"; // DBG
+            simtime_t response = simTime() - timeRequest;
+            EV << "\t response time: " <<response <<endl; // DBG
+            emit(systemResponseSignal, response);
+        }
+        simtime_t response = simTime() - timeRequest;
+        EV << "\t response time: " <<response <<endl; // DBG
         emit(systemResponseSignal, response);
     }
     else
@@ -204,11 +227,11 @@ DVEClient::handleACKMessage(cMessage *msg)
     delete msg;
 }
 
-
 void
 DVEClient::makeMove()
 {
     EV << "make move!\n"; // DBG
+    ready = false;
     int x;
     int y;
     double probability = uniform(0.0, 1.0);
@@ -216,6 +239,7 @@ DVEClient::makeMove()
     {
         x = intuniform(0, 8);
         y = intuniform(0, 8);
+        EV << "Jump!.\n"; // DBG
     }
     else
     {
@@ -226,10 +250,16 @@ DVEClient::makeMove()
     {
         // No moves.
         EV << "Location unchanged.\n"; // DBG
+        EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
+        EV << "To: <" <<x <<", " <<y <<">";
+        ready = true;
         return;
     }
     else
     {
+        // DBG
+        EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
+        EV << "To: <" <<x <<", " <<y <<">";
         MoveMsg* move = new MoveMsg();
         move->setX(x);
         move->setY(y);
@@ -245,6 +275,10 @@ DVEClient::makeMove()
         }
         avatar->move(x, y);
         send(move, "wanIO$o");
+        timeRequest = simTime();
+        // DBG
+        _x = avatar->GetX();
+        _y = avatar->GetY();
     }
 }
 

@@ -19,6 +19,13 @@ package dvesystem;
 simple DVEClient
 {
     parameters:
+        
+        @signal[sysResponse](type="simtime_t");
+        @statistic[dveResponse](title="DVE response time"; source="sysResponse"; record=vector,stats; interpolationmode=none);
+    	
+    	@signal[moveLost](type="int");
+    	@statistic[clientMovesLost](title="Moves lost"; source="moveLost"; record=vector,stats; interpolationmode=none);
+    	
     	@display("i=device/pc");
     gates:
         inout wanIO;

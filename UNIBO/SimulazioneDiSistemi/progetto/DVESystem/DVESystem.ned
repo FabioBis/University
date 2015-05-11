@@ -30,7 +30,7 @@ network DVESystem
         }
         channel Internet extends ned.DelayChannel
         {
-         	delay = exponential(0.46s);   
+         	delay = 0ms;   
         }
     submodules:
         mainServer: MainServer {
