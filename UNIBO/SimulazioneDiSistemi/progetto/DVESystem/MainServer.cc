@@ -89,45 +89,6 @@ MainServer::handleUpdateAoIMessage(cMessage * msg)
 
 
 void
-MainServer::handleMove(int clientID, int x, int y) {
-    int* newAoi = NULL;
-    unsigned int newAoiSize;
-    ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
-    EV << "New AoI size: " << newAoiSize << endl;
-    UpdateAoIMsg* update = new UpdateAoIMsg();
-    update->setClientMoved(clientID);
-    update->setAoiArraySize(newAoiSize);
-    for (unsigned int index = 0; index < newAoiSize; index++)
-    {
-        update->setAoi(index, newAoi[index]);
-    }
-    send(update, "lanOut");
-    // Updates VA and VE.
-    VirtualAvatar* avatar = connectedAvatars_[clientID];
-    unsigned int oldAoiSize = ve_->GetSizeAt(avatar->GetX(), avatar->GetY()) - 1;
-    avatar->move(x, y);
-    // Handle acknowledges.
-    EV << "Old AoI size: " << oldAoiSize << endl;
-    if (newAoiSize + oldAoiSize == 0)
-    {
-        // No client to be notified, send the ack to client moved.
-        ACKMsg* ack_msg = new ACKMsg();
-        ack_msg->setMovedID(clientID);
-        ack_msg->setIsMoveComplete(true);
-        send(ack_msg, "lanOut");
-    }
-    else
-    {
-        // Insert the new ack into the registry.
-        acknowledgment* ack = new acknowledgment();
-        ack->current = 0;
-        ack->total = newAoiSize + oldAoiSize;
-        ack_registry_.insert(std::pair<int, acknowledgment*>(clientID, ack));
-    }
-}
-
-
-void
 MainServer::handleLoginMessage(cMessage *msg)
 {
     // check_and_cast from omnetpp.h perform a dynamic cast or raise an error
@@ -192,6 +153,45 @@ MainServer::handleMoveMessage(cMessage *msg)
 }
 
 void
+MainServer::handleMove(int clientID, int x, int y) {
+    int* newAoi = NULL;
+    unsigned int newAoiSize;
+    ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
+    EV << "New AoI size: " << newAoiSize << endl;
+    UpdateAoIMsg* update = new UpdateAoIMsg();
+    update->setClientMoved(clientID);
+    update->setAoiArraySize(newAoiSize);
+    for (unsigned int index = 0; index < newAoiSize; index++)
+    {
+        update->setAoi(index, newAoi[index]);
+    }
+    send(update, "lanOut");
+    // Updates VA and VE.
+    VirtualAvatar* avatar = connectedAvatars_[clientID];
+    unsigned int oldAoiSize = ve_->GetSizeAt(avatar->GetX(), avatar->GetY()) - 1;
+    avatar->move(x, y);
+    // Handle acknowledges.
+    EV << "Old AoI size: " << oldAoiSize << endl;
+    if (newAoiSize + oldAoiSize == 0)
+    {
+        // No client to be notified, send the ack to client moved.
+        ACKMsg* ack_msg = new ACKMsg();
+        ack_msg->setMovedID(clientID);
+        ack_msg->setIsMoveComplete(true);
+        send(ack_msg, "lanOut");
+    }
+    else
+    {
+        // Insert the new ack into the registry.
+        acknowledgment* ack = new acknowledgment();
+        ack->current = 0;
+        ack->total = newAoiSize + oldAoiSize;
+        ack_registry_.insert(std::pair<int, acknowledgment*>(clientID, ack));
+    }
+}
+
+
+void
 MainServer::handleACKMessage(cMessage *msg)
 {
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
@@ -238,15 +238,18 @@ MainServer::updatePartition()
 {
     for (int k = 0; k < PARTSERVERS; k++)
     {
+        EV<<"Partition: " <<partition_[k].bl <<" " <<partition_[k].el <<" " <<partition_[k].bc
+                <<" " <<partition_[k].ec <<endl;
         ServerUpdateMsg* update = new ServerUpdateMsg("update");
         update->setServerID(k);
         for (int i = partition_[k].bl; i <= partition_[k].el; i++)
         {
-            for (int j = partition_[k].bc; i <= partition_[k].ec; i++)
+            for (int j = partition_[k].bc; j <= partition_[k].ec; j++)
             {
                 int* avatars = NULL;
                 unsigned int size;
                 ve_->GetAvatarAndSizeAt(i, j, &avatars, size);
+                EV <<"Server " << k <<" cell [" <<i <<", " <<j <<"], size: " <<size <<endl; // DBG
                 update->setClientsArraySize(update->getClientsArraySize() + size);
                 for (unsigned int index = 0; index < size; index++)
                 {
