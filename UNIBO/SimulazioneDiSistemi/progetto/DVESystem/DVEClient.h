@@ -42,9 +42,11 @@ private:
     // Statistics.
     simsignal_t systemResponseSignal;
     simsignal_t moveLostSignal;
+    simsignal_t noMoveSignal;
     simtime_t timeRequest;
     int movesLoss;
     int moves;
+    int nomoves;
     int ackReceived;
 
     void makeMove();

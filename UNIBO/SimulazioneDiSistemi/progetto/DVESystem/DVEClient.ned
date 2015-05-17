@@ -26,6 +26,9 @@ simple DVEClient
     	@signal[moveLost](type="int");
     	@statistic[clientMovesLost](title="Moves lost"; source="moveLost"; record=vector,stats; interpolationmode=none);
     	
+    	@signal[noMove](type="int");
+    	@statistic[clientNoMoves](title="No moves"; source="noMove"; record=vector,stats; interpolationmode=none);
+    	
     	@display("i=device/pc");
     gates:
         inout wanIO;

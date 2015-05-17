@@ -28,7 +28,7 @@ DVEServer::initialize()
 void
 DVEServer::handleMessage(cMessage *msg)
 {
-    EV << "DVEServer::handling message.\n" <<msg <<endl;
+    EV << "DVEServer[" <<getIndex() <<"]::handling message.\n" <<msg <<endl;
     LoginMsg* l_msg = dynamic_cast<LoginMsg*>(msg);
     if (l_msg != 0)
     {

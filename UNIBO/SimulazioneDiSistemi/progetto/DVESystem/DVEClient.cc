@@ -43,10 +43,13 @@ DVEClient::initialize()
     WATCH(movesLoss);
     moves = 0;
     WATCH(moves);
+    nomoves = 0;
+    WATCH(nomoves);
     ackReceived = 0;
     WATCH(ackReceived);
     systemResponseSignal = registerSignal("sysResponse");
     moveLostSignal = registerSignal("moveLost");
+    noMoveSignal = registerSignal("noMove");
     // DBG
     _x = avatar->GetX();
     _y = avatar->GetY();
@@ -196,6 +199,7 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
         ack_msg->setMovedID(sourceID);
         ack_msg->setIsMoveComplete(false);
         ack_msg->setServerID(serverID);
+        send(ack_msg, "wanIO$o");
     }
     delete msg;
 }
@@ -208,14 +212,7 @@ DVEClient::handleACKMessage(cMessage *msg)
     {
         ready = true;
         ackReceived++;
-        if (frozen)
-        {
-            frozen = false;
-            EV << "Move lost!"; // DBG
-            simtime_t response = simTime() - timeRequest;
-            EV << "\t response time: " <<response <<endl; // DBG
-            emit(systemResponseSignal, response);
-        }
+        frozen = false;
         simtime_t response = simTime() - timeRequest;
         EV << "\t response time: " <<response <<endl; // DBG
         emit(systemResponseSignal, response);
@@ -254,6 +251,8 @@ DVEClient::makeMove()
         EV << "Location unchanged.\n"; // DBG
         EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
         EV << "To: <" <<x <<", " <<y <<">";
+        nomoves++;
+        emit(noMoveSignal, nomoves);
         ready = true;
         return;
     }
@@ -261,7 +260,7 @@ DVEClient::makeMove()
     {
         // DBG
         EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
-        EV << "To: <" <<x <<", " <<y <<">";
+        EV << "To: <" <<x <<", " <<y <<">" <<endl;
         MoveMsg* move = new MoveMsg();
         move->setX(x);
         move->setY(y);
