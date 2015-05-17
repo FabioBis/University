@@ -163,6 +163,8 @@ void
 DVEClient::handleUpdateMessage(cMessage * msg)
 {
     ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
+    EV <<"client[" <<getIndex() <<"] (" <<su_msg->getClientDest() <<")"
+            <<" new server id: " <<su_msg->getServerID() <<endl;
     serverID = su_msg->getServerID();
     delete msg;
 }

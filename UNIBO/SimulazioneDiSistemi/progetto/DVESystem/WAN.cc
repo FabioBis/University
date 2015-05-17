@@ -123,6 +123,7 @@ WAN::handleUpdateMessage(cMessage * msg)
         else
         {
             // DBG
+            EV << "Client " << su_msg->getClientDest() <<"\t";
             EV << "WAN: Name Gate Error! " <<gate->getName() <<endl;
         }
     }

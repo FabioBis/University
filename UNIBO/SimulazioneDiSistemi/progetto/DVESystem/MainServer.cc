@@ -250,14 +250,25 @@ MainServer::updatePartition()
                 unsigned int size;
                 ve_->GetAvatarAndSizeAt(i, j, &avatars, size);
                 EV <<"Server " << k <<" cell [" <<i <<", " <<j <<"], size: " <<size <<endl; // DBG
-                update->setClientsArraySize(update->getClientsArraySize() + size);
-                for (unsigned int index = 0; index < size; index++)
+                unsigned int index = update->getClientsArraySize();
+                unsigned int new_size = index + size;
+                update->setClientsArraySize(new_size);
+                for (; index < new_size; index++)
                 {
+                    EV <<"\tClient connected: " <<avatars[index] <<endl;
                     update->setClients(index, avatars[index]);
+                    EV <<"\tClient connected: " <<update->getClients(index) <<endl;
                 }
             }
         }
         // Sending update message through LAN to partition server k.
+        unsigned int size = update->getClientsArraySize();
+        EV <<"Client size: " <<size <<endl;
+        for (unsigned int i = 0; i < size; i++)
+        {
+            int clientID = update->getClients(i);
+            EV  <<i <<" client id: " <<clientID <<endl;
+        }
         send(update, "lanOut");
     }
 }

@@ -173,15 +173,19 @@ DVEServer::handleUpdateMessage(cMessage * msg)
     int partitionID = su_msg->getServerID();
     if (partitionID == getIndex())
     {
+        EV <<"Server " <<getIndex() <<", partition id: " <<partitionID <<endl; //DBG
         servedClients_.clear();
         clients_ = 0;
         unsigned int size = su_msg->getClientsArraySize();
+        EV <<"Client size: " <<size <<endl;
         for (unsigned int i = 0; i < size; i++)
         {
             int clientID = su_msg->getClients(i);
+            EV <<"client id: " <<clientID <<endl;
             servedClients_.push_back(clientID);
             ServerUpdateMsg* new_msg = su_msg->dup();
             new_msg->setClientDest(clientID);
+            new_msg->setServerID(partitionID);
             send(new_msg, "wanIO$o");
             clients_++;
         }
