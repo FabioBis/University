@@ -23,7 +23,6 @@ WAN::initialize()
     ;
 }
 
-
 void
 WAN::handleMessage(cMessage *msg)
 {
@@ -71,7 +70,6 @@ WAN::handleMessage(cMessage *msg)
     delete msg;
 }
 
-
 void
 WAN::handleLoginMessage(cMessage *msg)
 {
@@ -99,7 +97,6 @@ WAN::handleLoginMessage(cMessage *msg)
         EV << "Null Gate " <<gate->getName() <<endl;
     }
 }
-
 
 void
 WAN::handleUpdateMessage(cMessage * msg)
@@ -133,7 +130,6 @@ WAN::handleUpdateMessage(cMessage * msg)
         EV << "WAN: Arrival Gate Error! "  <<gate->getName() <<endl;
     }
 }
-
 
 void
 WAN::handleMoveMessage(cMessage *msg)

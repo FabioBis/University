@@ -35,7 +35,6 @@ MainServer::initialize()
     moves_n = 0;
 }
 
-
 void
 MainServer::handleMessage(cMessage *msg)
 {
@@ -78,7 +77,6 @@ MainServer::handleMessage(cMessage *msg)
     delete msg;
 }
 
-
 void
 MainServer::handleUpdateAoIMessage(cMessage * msg)
 {
@@ -86,7 +84,6 @@ MainServer::handleUpdateAoIMessage(cMessage * msg)
     UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
     send(aoi_msg, "lanOut");
 }
-
 
 void
 MainServer::handleLoginMessage(cMessage *msg)
@@ -126,7 +123,6 @@ MainServer::handleLoginMessage(cMessage *msg)
     send(ack, "wanIO$o");
 }
 
-
 void
 MainServer::handleUpdateMessage(cMessage * msg)
 {
@@ -134,7 +130,6 @@ MainServer::handleUpdateMessage(cMessage * msg)
     ServerUpdateMsg* su_msg = check_and_cast<ServerUpdateMsg*>(msg);
     send(su_msg, "lanOut");
 }
-
 
 void
 MainServer::handleMoveMessage(cMessage *msg)
@@ -165,6 +160,7 @@ MainServer::handleMove(int clientID, int x, int y) {
     {
         update->setAoi(index, newAoi[index]);
     }
+    update->setIsNeighborNotification(false);
     send(update, "lanOut");
     // Updates VA and VE.
     VirtualAvatar* avatar = connectedAvatars_[clientID];
@@ -189,7 +185,6 @@ MainServer::handleMove(int clientID, int x, int y) {
         ack_registry_.insert(std::pair<int, acknowledgment*>(clientID, ack));
     }
 }
-
 
 void
 MainServer::handleACKMessage(cMessage *msg)
@@ -232,7 +227,6 @@ MainServer::getPartitionServerID(int x, int y)
     return -1;
 }
 
-
 void
 MainServer::updatePartition()
 {
@@ -272,7 +266,6 @@ MainServer::updatePartition()
         send(update, "lanOut");
     }
 }
-
 
 void
 MainServer::partitioner()

@@ -22,7 +22,6 @@ VirtualEnvironment::GetIndexMax() {
     return this->NUM_CELLS;
 }
 
-
 void
 VirtualEnvironment::add(VirtualAvatar* avatar) {
     int avatarID = avatar->GetID();
@@ -38,7 +37,6 @@ VirtualEnvironment::add(VirtualAvatar* avatar) {
             <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
 }
 
-
 void
 VirtualEnvironment::remove(VirtualAvatar* avatar)
 {
@@ -48,7 +46,6 @@ VirtualEnvironment::remove(VirtualAvatar* avatar)
     EV << "Erase:: cell size after: "
             <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
 }
-
 
 void
 VirtualEnvironment::move(VirtualAvatar *avatar, int x, int y)
@@ -66,14 +63,12 @@ VirtualEnvironment::move(VirtualAvatar *avatar, int x, int y)
     add(avatar);
 }
 
-
 void
 VirtualEnvironment::erase(VirtualAvatar* avatar)
 {
     remove(avatar);
     delete avatar;
 }
-
 
 void
 VirtualEnvironment::GetAvatarAndSizeAt(int x, int y, int *avatars[], unsigned int& size)

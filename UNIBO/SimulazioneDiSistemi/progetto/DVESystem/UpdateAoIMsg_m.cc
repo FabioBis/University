@@ -58,6 +58,7 @@ Register_Class(UpdateAoIMsg);
 UpdateAoIMsg::UpdateAoIMsg(const char *name, int kind) : ::cMessage(name,kind)
 {
     this->clientMoved_var = 0;
+    this->isNeighborNotification_var = 0;
     this->clientDest_var = 0;
     this->serverID_var = 0;
     aoi_arraysize = 0;
@@ -87,6 +88,7 @@ UpdateAoIMsg& UpdateAoIMsg::operator=(const UpdateAoIMsg& other)
 void UpdateAoIMsg::copy(const UpdateAoIMsg& other)
 {
     this->clientMoved_var = other.clientMoved_var;
+    this->isNeighborNotification_var = other.isNeighborNotification_var;
     this->clientDest_var = other.clientDest_var;
     this->serverID_var = other.serverID_var;
     delete [] this->aoi_var;
@@ -100,6 +102,7 @@ void UpdateAoIMsg::parsimPack(cCommBuffer *b)
 {
     ::cMessage::parsimPack(b);
     doPacking(b,this->clientMoved_var);
+    doPacking(b,this->isNeighborNotification_var);
     doPacking(b,this->clientDest_var);
     doPacking(b,this->serverID_var);
     b->pack(aoi_arraysize);
@@ -110,6 +113,7 @@ void UpdateAoIMsg::parsimUnpack(cCommBuffer *b)
 {
     ::cMessage::parsimUnpack(b);
     doUnpacking(b,this->clientMoved_var);
+    doUnpacking(b,this->isNeighborNotification_var);
     doUnpacking(b,this->clientDest_var);
     doUnpacking(b,this->serverID_var);
     delete [] this->aoi_var;
@@ -130,6 +134,16 @@ int UpdateAoIMsg::getClientMoved() const
 void UpdateAoIMsg::setClientMoved(int clientMoved)
 {
     this->clientMoved_var = clientMoved;
+}
+
+bool UpdateAoIMsg::getIsNeighborNotification() const
+{
+    return isNeighborNotification_var;
+}
+
+void UpdateAoIMsg::setIsNeighborNotification(bool isNeighborNotification)
+{
+    this->isNeighborNotification_var = isNeighborNotification;
 }
 
 int UpdateAoIMsg::getClientDest() const
@@ -229,7 +243,7 @@ const char *UpdateAoIMsgDescriptor::getProperty(const char *propertyname) const
 int UpdateAoIMsgDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount(object) : 4;
+    return basedesc ? 5+basedesc->getFieldCount(object) : 5;
 }
 
 unsigned int UpdateAoIMsgDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -244,9 +258,10 @@ unsigned int UpdateAoIMsgDescriptor::getFieldTypeFlags(void *object, int field) 
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
 const char *UpdateAoIMsgDescriptor::getFieldName(void *object, int field) const
@@ -259,11 +274,12 @@ const char *UpdateAoIMsgDescriptor::getFieldName(void *object, int field) const
     }
     static const char *fieldNames[] = {
         "clientMoved",
+        "isNeighborNotification",
         "clientDest",
         "serverID",
         "aoi",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : NULL;
+    return (field>=0 && field<5) ? fieldNames[field] : NULL;
 }
 
 int UpdateAoIMsgDescriptor::findField(void *object, const char *fieldName) const
@@ -271,9 +287,10 @@ int UpdateAoIMsgDescriptor::findField(void *object, const char *fieldName) const
     cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount(object) : 0;
     if (fieldName[0]=='c' && strcmp(fieldName, "clientMoved")==0) return base+0;
-    if (fieldName[0]=='c' && strcmp(fieldName, "clientDest")==0) return base+1;
-    if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+2;
-    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+3;
+    if (fieldName[0]=='i' && strcmp(fieldName, "isNeighborNotification")==0) return base+1;
+    if (fieldName[0]=='c' && strcmp(fieldName, "clientDest")==0) return base+2;
+    if (fieldName[0]=='s' && strcmp(fieldName, "serverID")==0) return base+3;
+    if (fieldName[0]=='a' && strcmp(fieldName, "aoi")==0) return base+4;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -287,11 +304,12 @@ const char *UpdateAoIMsgDescriptor::getFieldTypeString(void *object, int field) 
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "bool",
         "int",
         "int",
         "int",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<5) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *UpdateAoIMsgDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -317,7 +335,7 @@ int UpdateAoIMsgDescriptor::getArraySize(void *object, int field) const
     }
     UpdateAoIMsg *pp = (UpdateAoIMsg *)object; (void)pp;
     switch (field) {
-        case 3: return pp->getAoiArraySize();
+        case 4: return pp->getAoiArraySize();
         default: return 0;
     }
 }
@@ -333,9 +351,10 @@ std::string UpdateAoIMsgDescriptor::getFieldAsString(void *object, int field, in
     UpdateAoIMsg *pp = (UpdateAoIMsg *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getClientMoved());
-        case 1: return long2string(pp->getClientDest());
-        case 2: return long2string(pp->getServerID());
-        case 3: return long2string(pp->getAoi(i));
+        case 1: return bool2string(pp->getIsNeighborNotification());
+        case 2: return long2string(pp->getClientDest());
+        case 3: return long2string(pp->getServerID());
+        case 4: return long2string(pp->getAoi(i));
         default: return "";
     }
 }
@@ -351,9 +370,10 @@ bool UpdateAoIMsgDescriptor::setFieldAsString(void *object, int field, int i, co
     UpdateAoIMsg *pp = (UpdateAoIMsg *)object; (void)pp;
     switch (field) {
         case 0: pp->setClientMoved(string2long(value)); return true;
-        case 1: pp->setClientDest(string2long(value)); return true;
-        case 2: pp->setServerID(string2long(value)); return true;
-        case 3: pp->setAoi(i,string2long(value)); return true;
+        case 1: pp->setIsNeighborNotification(string2bool(value)); return true;
+        case 2: pp->setClientDest(string2long(value)); return true;
+        case 3: pp->setServerID(string2long(value)); return true;
+        case 4: pp->setAoi(i,string2long(value)); return true;
         default: return false;
     }
 }

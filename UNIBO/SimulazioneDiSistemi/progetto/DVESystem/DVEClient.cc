@@ -35,28 +35,31 @@ DVEClient::initialize()
     avatar = new Avatar(getIndex(), intuniform(0, 8), intuniform(0, 8));
     logged = false;
     ready = false;
-    frozen = false;
     WATCH(ready);
+    frozen = false;
     serverID = 0;
     WATCH(serverID);
     movesLoss = 0;
     WATCH(movesLoss);
+    moveLostSignal = registerSignal("moveLost");
     moves = 0;
     WATCH(moves);
+    moveSignal = registerSignal("move");
     nomoves = 0;
     WATCH(nomoves);
+    noMoveSignal = registerSignal("noMove");
     ackReceived = 0;
     WATCH(ackReceived);
     systemResponseSignal = registerSignal("sysResponse");
-    moveLostSignal = registerSignal("moveLost");
-    noMoveSignal = registerSignal("noMove");
+    presenceFactor = avatar->GetAoISize();
+    WATCH(presenceFactor);
+    presenceFactorSignal = registerSignal("presenceFactor");
     // DBG
     _x = avatar->GetX();
     _y = avatar->GetY();
     WATCH(_x);
     WATCH(_y);
 }
-
 
 void
 DVEClient::handleMessage(cMessage *msg)
@@ -104,7 +107,6 @@ DVEClient::handleMessage(cMessage *msg)
             // Let's move!
             bubble("Let's move!");
             makeMove();
-            moves++;
         }
         else
         {
@@ -152,6 +154,8 @@ DVEClient::handleMoveMessage(cMessage *msg)
     {
         // Message from a client: remove from the current AoI.
         avatar->removeFromAOI(avatarID);
+        presenceFactor = avatar->GetAoISize();
+        emit(presenceFactorSignal,presenceFactor);
         ACKMsg* ack_msg = new ACKMsg();
         ack_msg->setMovedID(avatarID);
         ack_msg->setServerID(serverID);
@@ -160,7 +164,6 @@ DVEClient::handleMoveMessage(cMessage *msg)
     }
     delete msg;
 }
-
 
 void
 DVEClient::handleUpdateMessage(cMessage * msg)
@@ -171,7 +174,6 @@ DVEClient::handleUpdateMessage(cMessage * msg)
     serverID = su_msg->getServerID();
     delete msg;
 }
-
 
 void
 DVEClient::handleUpdateAoIMessage(cMessage * msg)
@@ -201,6 +203,8 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
         ack_msg->setServerID(serverID);
         send(ack_msg, "wanIO$o");
     }
+    presenceFactor = avatar->GetAoISize();
+    emit(presenceFactorSignal, presenceFactor);
     delete msg;
 }
 
@@ -258,6 +262,8 @@ DVEClient::makeMove()
     }
     else
     {
+        moves++;
+        emit(moveSignal, moves);
         // DBG
         EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
         EV << "To: <" <<x <<", " <<y <<">" <<endl;
@@ -282,7 +288,6 @@ DVEClient::makeMove()
         _y = avatar->GetY();
     }
 }
-
 
 void
 DVEClient::computeCoordinate(int src, int &dest)

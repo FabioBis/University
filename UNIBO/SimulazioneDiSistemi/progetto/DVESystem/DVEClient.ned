@@ -29,6 +29,12 @@ simple DVEClient
     	@signal[noMove](type="int");
     	@statistic[clientNoMoves](title="No moves"; source="noMove"; record=vector,stats; interpolationmode=none);
     	
+    	@signal[move](type="int");
+    	@statistic[clientMoves](title="Moves"; source="move"; record=vector,stats; interpolationmode=none);
+    	
+    	@signal[presenceFactor](type="unsigned int");
+    	@statistic[clientPresenceFactor](title="Presence Factor"; source="presenceFactor"; record=vector,stats; interpolationmode=none);
+    	
     	@display("i=device/pc");
     gates:
         inout wanIO;

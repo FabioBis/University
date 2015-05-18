@@ -40,14 +40,17 @@ private:
     bool frozen;
 
     // Statistics.
-    simsignal_t systemResponseSignal;
-    simsignal_t moveLostSignal;
-    simsignal_t noMoveSignal;
     simtime_t timeRequest;
-    int movesLoss;
-    int moves;
-    int nomoves;
+    simsignal_t systemResponseSignal;
     int ackReceived;
+    simsignal_t moveLostSignal;
+    int movesLoss;
+    simsignal_t noMoveSignal;
+    int nomoves;
+    simsignal_t moveSignal;
+    int moves;
+    simsignal_t presenceFactorSignal;
+    unsigned int presenceFactor;
 
     void makeMove();
     void handleLoginMessage(cMessage *msg);

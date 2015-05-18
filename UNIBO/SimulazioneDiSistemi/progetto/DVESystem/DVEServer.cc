@@ -24,7 +24,6 @@ DVEServer::initialize()
     WATCH(clients_);
 }
 
-
 void
 DVEServer::handleMessage(cMessage *msg)
 {
@@ -66,7 +65,6 @@ DVEServer::handleMessage(cMessage *msg)
     delete msg;
 }
 
-
 /*
  * Notify the moving avatar the new AoI and forward the message to all new
  * neighbors that will add to their AoI.
@@ -80,6 +78,8 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
 {
     UpdateAoIMsg* aoi_msg = check_and_cast<UpdateAoIMsg*>(msg);
     unsigned int aoiSize = aoi_msg->getAoiArraySize();
+    EV <<"Server[" <<getIndex() <<"]::UpdateAoI: AoI size = " <<aoiSize
+            <<endl; // DBG
     if (aoiSize != 0)
     {
         // Phase 1: notify new AoI avatars.
@@ -88,6 +88,7 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         for (unsigned int i = 0; i < aoiSize; i++)
         {
             int neighborID = aoi_msg->getAoi(i);
+            EV <<"neighbor[" << neighborID <<"] "; //DBG
             std::vector<int>::iterator it;
             it = std::find(
                     servedClients_.begin(),
@@ -95,13 +96,24 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
                     neighborID);
             if (it != servedClients_.end())
             {
+                EV <<"is served." <<endl; //DBG
                 servedNeighbors++;
-                UpdateAoIMsg *new_msg = aoi_msg->dup();
+                UpdateAoIMsg *new_msg = new UpdateAoIMsg();
+                new_msg->setClientMoved(aoi_msg->getClientMoved());
+                new_msg->setAoiArraySize(aoiSize);
+                for (unsigned int index = 0; index < aoiSize; index++)
+                {
+                    EV <<index <<": client[" <<aoi_msg->getAoi(index)
+                            <<"] added to AoI update." <<endl;
+                    new_msg->setAoi(index, aoi_msg->getAoi(index));
+                }
                 new_msg->setClientDest(neighborID);
+                new_msg->setIsNeighborNotification(true);
                 send(new_msg, "wanIO$o");
             }
             else
             {
+                EV <<"is NOT served." <<endl; //DBG
                 nonServedNeighbors.push_back(neighborID);
             }
         }
@@ -109,21 +121,30 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
         {
             // Partition server has served some clients, update the list of
             // clients to be notified and forward the message.
+
             unsigned int newSize = aoiSize - servedNeighbors;
-            aoi_msg->setAoiArraySize(newSize);
-            for (unsigned int i = 0; i < newSize; i++)
+            if (newSize > 0)
             {
-                aoi_msg->setAoi(i, nonServedNeighbors.back());
+                UpdateAoIMsg *new_msg = new UpdateAoIMsg();
+                new_msg->setClientMoved(aoi_msg->getClientMoved());
+                new_msg->setAoiArraySize(newSize);
+                for (unsigned int i = 0; i < newSize; i++)
+                {
+                    new_msg->setAoi(i, nonServedNeighbors.back());
+                }
+                // Forward the move message until no more clients must be notified.
+                new_msg->setIsNeighborNotification(true);
+                send(new_msg, "lanOut");
             }
-            // Forward the move message until no more clients must be notified.
-            send(aoi_msg, "lanOut");
         }
         else
         {
-            send(aoi_msg, "lanOut");
+            UpdateAoIMsg *new_msg = aoi_msg->dup();
+            new_msg->setIsNeighborNotification(true);
+            send(new_msg, "lanOut");
         }
     } // fi aoiSize != 0.
-    else
+    if (!aoi_msg->getIsNeighborNotification())
     {
         // Phase 2: notify the moving avatar.
         int movingAvatar = aoi_msg->getClientMoved();
@@ -145,7 +166,6 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
     }
 }
 
-
 void
 DVEServer::handleLoginMessage(cMessage *msg)
 {
@@ -164,7 +184,6 @@ DVEServer::handleLoginMessage(cMessage *msg)
         send(l_msg, "lanOut");
     }
 }
-
 
 void
 DVEServer::handleUpdateMessage(cMessage * msg)
@@ -197,7 +216,6 @@ DVEServer::handleUpdateMessage(cMessage * msg)
         send(su_msg, "lanOut");
     }
 }
-
 
 void
 DVEServer::handleMoveMessage(cMessage *msg)
@@ -266,7 +284,6 @@ DVEServer::handleACKMessage(cMessage *msg)
         }
     }
 }
-
 
 void
 DVEServer::addClient(int clientID) {
