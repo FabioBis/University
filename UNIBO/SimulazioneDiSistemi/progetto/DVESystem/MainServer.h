@@ -17,6 +17,7 @@
 #define MAINSERVER_H_
 
 #include <omnetpp.h>
+#include <map>
 #include <algorithm>
 #include <VirtualEnvironment.h>
 #include <ServerUpdateMsg_m.h>
@@ -39,13 +40,13 @@ struct part_indexes {
     int length;
 };
 
-struct acknowledgment {
+class Acknowledgment {
+public:
     // Current acks.
     int current;
     // Total acks.
     int total;
-
-    public:
+    Acknowledgment();
     void Ack();
     bool IsComplete();
 };
@@ -59,7 +60,7 @@ private:
     // The collection of clients logged in.
     std::map<int, VirtualAvatar*> connectedAvatars_;
     // The set of acknowledgments the server is waiting for.
-    std::map<int, acknowledgment*> ack_registry_;
+    std::map<int, Acknowledgment*> ack_registry_;
     // The virtual environment.
     VirtualEnvironment* ve_;
     // An array of indexes representing the ve partition among servers.

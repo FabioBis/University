@@ -179,10 +179,10 @@ MainServer::handleMove(int clientID, int x, int y) {
     else
     {
         // Insert the new ack into the registry.
-        acknowledgment* ack = new acknowledgment();
+        Acknowledgment* ack = new Acknowledgment();
         ack->current = 0;
         ack->total = newAoiSize + oldAoiSize;
-        ack_registry_.insert(std::pair<int, acknowledgment*>(clientID, ack));
+        ack_registry_.insert(std::pair<int, Acknowledgment*>(clientID, ack));
     }
 }
 
@@ -192,18 +192,27 @@ MainServer::handleACKMessage(cMessage *msg)
     ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
     if (!ack_msg->getIsMoveComplete())
     {
-        EV << "ACK msg to main server. (if)\n";
-        acknowledgment* ack = ack_registry_[ack_msg->getMovedID()];
-        ack->Ack();
-        if (ack->IsComplete())
+        EV << "ACK msg to main server. (if)\n"; // DBG
+        std::map<int, Acknowledgment*>::iterator it;
+        it = ack_registry_.find(ack_msg->getMovedID());
+        if (it != ack_registry_.end())
         {
-            ack_msg->setIsMoveComplete(true);
-            send(ack_msg, "lanOut");
+            Acknowledgment* ack = ack_registry_[ack_msg->getMovedID()];
+            ack->Ack();
+            if (ack->IsComplete())
+            {
+                ack_msg->setIsMoveComplete(true);
+                send(ack_msg, "lanOut");
+            }
+        }
+        else
+        {
+            delete msg;
         }
     }
     else
     {
-        EV << "ACK msg to main server. (else) Possible error?\n";
+        EV << "ACK msg to main server. (else) Possible error?\n"; // DBG
         send(ack_msg, "lanOut");
     }
 }
@@ -514,12 +523,19 @@ MainServer::partitioner()
     }
 }
 
+
+Acknowledgment::Acknowledgment()
+{
+    this->current = 0;
+    this->total = 0;
+}
+
 void
-acknowledgment::Ack() {
+Acknowledgment::Ack() {
     this->current++;
 }
 
 bool
-acknowledgment::IsComplete() {
+Acknowledgment::IsComplete() {
     return this->current >= this->total;
 }
