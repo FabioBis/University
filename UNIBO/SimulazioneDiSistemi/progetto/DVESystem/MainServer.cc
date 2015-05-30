@@ -247,11 +247,12 @@ MainServer::updatePartition()
                 unsigned int index = update->getClientsArraySize();
                 unsigned int new_size = index + size;
                 update->setClientsArraySize(new_size);
-                for (; index < new_size; index++)
+                for (unsigned int i = 0; i < size; i++)
                 {
-                    EV <<"\tClient connected: " <<avatars[index] <<endl;
-                    update->setClients(index, avatars[index]);
-                    EV <<"\tClient connected: " <<update->getClients(index) <<endl;
+                    EV <<"\tClient connected: " <<avatars[i] <<endl;
+                    update->setClients(index, avatars[i]);
+                    EV <<"\tClient added to msg: " <<update->getClients(index) <<endl;
+                    index++;
                 }
             }
         }

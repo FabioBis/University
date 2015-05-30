@@ -253,7 +253,8 @@ DVEClient::makeMove()
     {
         // No moves.
         EV << "Location unchanged.\n"; // DBG
-        EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
+        EV <<"Avatar " <<avatar->GetID() <<" <" <<avatar->GetX() <<", "
+                <<avatar->GetY() <<">.\n";
         EV << "To: <" <<x <<", " <<y <<">";
         nomoves++;
         emit(noMoveSignal, nomoves);
@@ -265,7 +266,8 @@ DVEClient::makeMove()
         moves++;
         emit(moveSignal, moves);
         // DBG
-        EV <<"Avatar(" <<avatar->GetX() <<", " <<avatar->GetY() <<").\n";
+        EV <<"Avatar " <<avatar->GetID() <<" <" <<avatar->GetX() <<", "
+                <<avatar->GetY() <<">.\n";
         EV << "To: <" <<x <<", " <<y <<">" <<endl;
         MoveMsg* move = new MoveMsg();
         move->setX(x);

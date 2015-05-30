@@ -33,6 +33,10 @@ VirtualEnvironment::add(VirtualAvatar* avatar) {
     {
         EV <<"Insertion failed. Key was present" <<endl; // DBG.
     }
+    else
+    {
+        EV <<"Insertion of Avatar " <<avatarID <<" completed." <<endl; // DBG.
+    }
     EV << "Add:: cell size after: "
             <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
 }
@@ -40,6 +44,7 @@ VirtualEnvironment::add(VirtualAvatar* avatar) {
 void
 VirtualEnvironment::remove(VirtualAvatar* avatar)
 {
+    EV << "Removing Avatar " <<avatar->GetID() <<"." <<endl; // DBG
     EV << "Erase:: cell size before: "
             <<cells_[avatar->GetX()][avatar->GetY()].size() <<endl; // DBG.
     cells_[avatar->GetX()][avatar->GetY()].erase(avatar->GetID());
