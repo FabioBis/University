@@ -123,19 +123,27 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
             // clients to be notified and forward the message.
 
             unsigned int newSize = aoiSize - servedNeighbors;
+            UpdateAoIMsg *new_msg = new UpdateAoIMsg();
+            new_msg->setClientMoved(aoi_msg->getClientMoved());
+            new_msg->setAoiArraySize(newSize);
             if (newSize > 0)
             {
-                UpdateAoIMsg *new_msg = new UpdateAoIMsg();
-                new_msg->setClientMoved(aoi_msg->getClientMoved());
-                new_msg->setAoiArraySize(newSize);
+                EV <<"Served: " <<servedNeighbors <<" remaining avatars: "  <<newSize <<endl; //DBG
                 for (unsigned int i = 0; i < newSize; i++)
                 {
                     new_msg->setAoi(i, nonServedNeighbors.back());
                 }
                 // Forward the move message until no more clients must be notified.
                 new_msg->setIsNeighborNotification(true);
-                send(new_msg, "lanOut");
             }
+            else
+            {
+                EV <<"Served: " <<servedNeighbors <<" remaining avatars: "  <<newSize <<endl; //DBG
+                // No more clients must be notified, starting phase 2:
+                //   aoi empty and no neighbors notification.
+                new_msg->setIsNeighborNotification(false);
+            }
+            send(new_msg, "lanOut");
         }
         else
         {
@@ -144,7 +152,7 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
             send(new_msg, "lanOut");
         }
     } // fi aoiSize != 0.
-    if (!aoi_msg->getIsNeighborNotification())
+    else if (!aoi_msg->getIsNeighborNotification())
     {
         // Phase 2: notify the moving avatar.
         int movingAvatar = aoi_msg->getClientMoved();

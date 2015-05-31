@@ -201,6 +201,7 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
         ack_msg->setMovedID(sourceID);
         ack_msg->setIsMoveComplete(false);
         ack_msg->setServerID(serverID);
+        EV <<"client[" <<getIndex() <<"] sending update AoI ack." <<endl; // DBG
         send(ack_msg, "wanIO$o");
     }
     presenceFactor = avatar->GetAoISize();
@@ -220,6 +221,9 @@ DVEClient::handleACKMessage(cMessage *msg)
         simtime_t response = simTime() - timeRequest;
         EV << "\t response time: " <<response <<endl; // DBG
         emit(systemResponseSignal, response);
+        // Movement complete: update presence factor.
+        presenceFactor = avatar->GetAoISize();
+        emit(presenceFactorSignal, presenceFactor);
     }
     else
     {
