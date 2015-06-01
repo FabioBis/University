@@ -17,6 +17,8 @@ message UpdateAoIMsg
 {
     // The source of the movement (client index).
 	int clientMoved;
+	int x;
+	int y;
 	// is a neighbor notification?
 	bool isNeighborNotification;
 	// The destination of this message.

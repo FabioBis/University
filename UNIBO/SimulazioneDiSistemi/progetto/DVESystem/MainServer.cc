@@ -136,7 +136,7 @@ MainServer::handleMoveMessage(cMessage *msg)
 {
     moves_n++;
     MoveMsg* m_msg = check_and_cast<MoveMsg*>(msg);
-    handleMove(m_msg->getClientID(), m_msg->getX(), m_msg->getY());
+    handleMove(m_msg->getClientID(), m_msg->getX(), m_msg->getY(), m_msg->getAoiArraySize());
     // When client's moves reach a given threshold the partition need to be updated.
     if (moves_n >= MOVESMAX)
     {
@@ -148,13 +148,15 @@ MainServer::handleMoveMessage(cMessage *msg)
 }
 
 void
-MainServer::handleMove(int clientID, int x, int y) {
+MainServer::handleMove(int clientID, int x, int y, unsigned int msgAoISize) {
     int* newAoi = NULL;
     unsigned int newAoiSize;
     ve_->GetAvatarAndSizeAt(x, y, &newAoi, newAoiSize);
     EV << "New AoI size: " << newAoiSize << endl;
     UpdateAoIMsg* update = new UpdateAoIMsg();
     update->setClientMoved(clientID);
+    update->setX(x);
+    update->setY(y);
     update->setAoiArraySize(newAoiSize);
     for (unsigned int index = 0; index < newAoiSize; index++)
     {
@@ -168,7 +170,9 @@ MainServer::handleMove(int clientID, int x, int y) {
     avatar->move(x, y);
     // Handle acknowledges.
     EV << "Old AoI size: " << oldAoiSize << endl;
-    if (newAoiSize + oldAoiSize == 0)
+    int aksRequired = (msgAoISize <= oldAoiSize) ? msgAoISize + newAoiSize
+            : newAoiSize + oldAoiSize;
+    if (aksRequired == 0)
     {
         // No client to be notified, send the ack to client moved.
         ACKMsg* ack_msg = new ACKMsg();
@@ -181,7 +185,8 @@ MainServer::handleMove(int clientID, int x, int y) {
         // Insert the new ack into the registry.
         Acknowledgment* ack = new Acknowledgment();
         ack->current = 0;
-        ack->total = newAoiSize + oldAoiSize;
+        ack->total = aksRequired;
+        EV <<"Insert new ack, total: " <<ack->total <<endl; // DBG
         ack_registry_.insert(std::pair<int, Acknowledgment*>(clientID, ack));
     }
 }

@@ -56,7 +56,11 @@ Avatar::updateAOI(int* newAoI, int aoiSize)
     aoi_.clear();
     for (int i = 0; i < aoiSize; i++)
     {
-        aoi_.push_back(newAoI[i]);
+        if (newAoI[i] != ID_)
+        {
+            // Ensure Avatar AoI does not contains Avatar itself.
+            aoi_.push_back(newAoI[i]);
+        }
     }
 }
 
@@ -74,5 +78,9 @@ Avatar::removeFromAOI(int avatarID)
 void
 Avatar::addToAOI(int avatarID)
 {
-    aoi_.push_back(avatarID);
+    if (avatarID != ID_)
+    {
+        // Ensure Avatar AoI does not contains Avatar itself.
+        aoi_.push_back(avatarID);
+    }
 }

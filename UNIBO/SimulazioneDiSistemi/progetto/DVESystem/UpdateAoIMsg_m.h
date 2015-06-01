@@ -22,6 +22,8 @@
  * {
  *     
  * 	int clientMoved;
+ * 	int x;
+ * 	int y;
  * 	
  * 	bool isNeighborNotification;
  * 	
@@ -38,6 +40,8 @@ class UpdateAoIMsg : public ::cMessage
 {
   protected:
     int clientMoved_var;
+    int x_var;
+    int y_var;
     bool isNeighborNotification_var;
     int clientDest_var;
     int serverID_var;
@@ -63,6 +67,10 @@ class UpdateAoIMsg : public ::cMessage
     // field getter/setter methods
     virtual int getClientMoved() const;
     virtual void setClientMoved(int clientMoved);
+    virtual int getX() const;
+    virtual void setX(int x);
+    virtual int getY() const;
+    virtual void setY(int y);
     virtual bool getIsNeighborNotification() const;
     virtual void setIsNeighborNotification(bool isNeighborNotification);
     virtual int getClientDest() const;

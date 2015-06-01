@@ -195,7 +195,15 @@ DVEClient::handleUpdateAoIMessage(cMessage * msg)
     else
     {
         // Message from a client: add to the current AoI.
-        avatar->addToAOI(sourceID);
+        if (aoi_msg->getX() ==  avatar->GetX() && aoi_msg->getY() ==  avatar->GetY())
+        {
+            // If the avatar is not in the same location he's already moved away...
+            avatar->addToAOI(sourceID);
+        }
+        else
+        {
+            EV <<"DBG" <<endl;
+        }
         // Send ACK message to the server.
         ACKMsg* ack_msg = new ACKMsg();
         ack_msg->setMovedID(sourceID);

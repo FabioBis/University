@@ -81,7 +81,7 @@ private:
     void handleACKMessage(cMessage *msg);
 
     // Virtual environment helpers.
-    void handleMove(int clientID, int x, int y);
+    void handleMove(int clientID, int x, int y, unsigned int msgAoISize);
 
 protected:
     ~MainServer();
