@@ -26,6 +26,7 @@
 
 class WAN : public cSimpleModule {
 private:
+    double mean;
     // handleMessage() helpers.
     void handleLoginMessage(cMessage *msg);
     void handleUpdateMessage(cMessage * msg);

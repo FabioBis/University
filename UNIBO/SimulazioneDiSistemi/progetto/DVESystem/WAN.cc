@@ -20,7 +20,7 @@ Define_Module(WAN);
 void
 WAN::initialize()
 {
-    ;
+    mean = par("delayMean");
 }
 
 void
@@ -80,11 +80,11 @@ WAN::handleLoginMessage(cMessage *msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            sendDelayed(l_msg, exponential(0.10), "toMainServer$o");
+            sendDelayed(l_msg, exponential(mean), "toMainServer$o");
         }
         else if (strcmp(gateName,"toMainServer$i") == 0)
         {
-            sendDelayed(l_msg, exponential(0.10), "toClient$o", l_msg->getID());
+            sendDelayed(l_msg, exponential(mean), "toClient$o", l_msg->getID());
         }
         else {
             // DBG
@@ -109,13 +109,13 @@ WAN::handleUpdateMessage(cMessage * msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            sendDelayed(msg, exponential(0.10), "toServer$o", su_msg->getServerID());
+            sendDelayed(msg, exponential(mean), "toServer$o", su_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             EV <<"server side" <<endl;
             // ACK message from a server: notify the client.
-            sendDelayed(su_msg, exponential(0.10), "toClient$o", su_msg->getClientDest());
+            sendDelayed(su_msg, exponential(mean), "toClient$o", su_msg->getClientDest());
         }
         else
         {
@@ -142,21 +142,13 @@ WAN::handleMoveMessage(cMessage *msg)
         if (strcmp(gateName, "toClient$i") == 0)
         {
             // Move message from a client: forward to servers.
-            sendDelayed(m_msg, exponential(0.10), "toServer$o", m_msg->getServerID());
+            sendDelayed(m_msg, exponential(mean), "toServer$o", m_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
-//            // Move message from a server: notify all client within AoI.
-//            unsigned int size = m_msg->getAoiArraySize();
-//            for (unsigned int i = 0; i < size; i++)
-//            {
-//                MoveMsg* notify = new MoveMsg();
-//                notify->setClientID(m_msg->getClientID());
-//                sendDelayed(notify, par("delay"), "toClient$o", m_msg->getAoi(i));
-//            }
             MoveMsg* notify = new MoveMsg();
             notify->setClientID(m_msg->getClientID());
-            sendDelayed(notify, exponential(0.10), "toClient$o", m_msg->getClientDest());
+            sendDelayed(notify, exponential(mean), "toClient$o", m_msg->getClientDest());
             delete msg;
         }
         else
@@ -187,12 +179,12 @@ WAN::handleUpdateAoIMessage(cMessage *msg)
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            sendDelayed(aoi_msg, exponential(0.10), "toServer$o", aoi_msg->getServerID());
+            sendDelayed(aoi_msg, exponential(mean), "toServer$o", aoi_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             // ACK message from a server: notify the client.
-            sendDelayed(aoi_msg, exponential(0.10), "toClient$o", aoi_msg->getClientDest());
+            sendDelayed(aoi_msg, exponential(mean), "toClient$o", aoi_msg->getClientDest());
         }
         else
         {
@@ -217,17 +209,17 @@ WAN::handleACKMessage(cMessage *msg)
     cGate* gate = msg->getArrivalGate();
     if (gate != NULL)
     {
-        // ACK message from a client: forward to servers.
         ACKMsg* ack_msg = check_and_cast<ACKMsg*>(msg);
         const char* gateName = gate->getName();
         if (strcmp(gateName, "toClient$i") == 0)
         {
-            sendDelayed(ack_msg, exponential(0.10), "toServer$o", ack_msg->getServerID());
+            // ACK message from a client: forward to servers.
+            sendDelayed(ack_msg, exponential(mean), "toServer$o", ack_msg->getServerID());
         }
         else if (strcmp(gateName,"toServer$i") == 0)
         {
             // ACK message from a server: notify the client.
-            sendDelayed(ack_msg, exponential(0.10), "toClient$o", ack_msg->getMovedID());
+            sendDelayed(ack_msg, exponential(mean), "toClient$o", ack_msg->getMovedID());
         }
         else
         {
