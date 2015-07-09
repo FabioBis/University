@@ -207,6 +207,7 @@ MainServer::handleACKMessage(cMessage *msg)
             if (ack->IsComplete())
             {
                 ack_msg->setIsMoveComplete(true);
+                ack_registry_.erase(ack_msg->getMovedID());
                 send(ack_msg, "lanOut");
             }
         }

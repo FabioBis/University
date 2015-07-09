@@ -185,27 +185,7 @@ DVEServer::handleUpdateAoIMessage(cMessage * msg)
             new_msg->setIsNeighborNotification(true);
             send(new_msg, "lanOut");
         }
-    } // fi aoiSize != 0.
-//    else if (!aoi_msg->getIsNeighborNotification())
-//    {
-//        // Phase 2: notify the moving avatar.
-//        int movingAvatar = aoi_msg->getClientMoved();
-//        std::vector<int>::iterator it;
-//        it = std::find(
-//                servedClients_.begin(),
-//                servedClients_.end(),
-//                movingAvatar);
-//        if (it != servedClients_.end())
-//        {
-//            // This server serves the moving avatar.
-//            aoi_msg->setClientDest(*it);
-//            send(aoi_msg, "wanIO$o");
-//        }
-//        else
-//        {
-//            send(aoi_msg, "lanOut");
-//        }
-//    }
+    }
 }
 
 void
