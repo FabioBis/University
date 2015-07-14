@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{GamePattern}
+R.~Nystrom.
+\newblock {\em Game Programming Patterns}.
+\newblock Genever Benning, 2014.
+
+\bibitem{IDVE}
+P.Morillo, J.M.Orduna, M.Fernandez, and J.Duato.
+\newblock {Improving the Performance of Distributed Virtual Environment
+  Systems}.
+\newblock {\em IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS}, 16(7),
+  2005.
+
+\end{thebibliography}
