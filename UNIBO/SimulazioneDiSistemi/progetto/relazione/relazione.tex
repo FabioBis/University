@@ -89,7 +89,7 @@
  %frameround = tttt,
  frame = L %shadowbox
 }
-\renewcommand{\lstlistingname}{Codice}
+%\renewcommand{\lstlistingname}{}
 
 \author{Fabio Biselli}
 \title{Relazione di Progetto (bozza)}
@@ -459,8 +459,8 @@ effettuare il nuovo movimento (effetto \emph{lag}).
 \item \textbf{Movimenti nulli}: conta i movimenti non effettuati ``volutamente''
 dall'utente.
 \item \textbf{Movimenti}: conta i movimenti effettuati con successo.
-\item \textbf{Presence Factor}: tiene conto della numerosità di altri avatar
-nella AoI.
+\item \textbf{Presence Factor}: conta la ``numerosità'' della AoI, ovvero
+il numero di altri avatar nella medesima zona..
 \end{itemize}
 Come si può notare nel listato \ref{clientNED} ogni voce di cui sopra è
 realizzata mediante il meccanismo del \emph{signaling}, utilizzando un
@@ -810,12 +810,109 @@ Analogamente alle altre classi, implementa la logica per la comunicazione.
 L'unica differenza fondamentale che la caratterizza è l'utilizzo della
 primitiva di invio dei messaggi. Mentre tutte le classi utilizzando il metodo
 \texttt{send}, questa sfrutta la \texttt{sendDelayed} con un parametro
-di ritardo di tipo esponenziale. In questo modo ogni messaggio inviato dal
-modulo subisce un ritardo variabile, imitando il comportamento della rete
+di ritardo: una variabile aleatoria di tipo esponenziale.
+In questo modo ogni messaggio inviato dal
+modulo subisce un ritardo variabile, simulando il comportamento della rete
 Internet.
 
-\chapter{Analisi dei risultati}\label{analisi}
+\begin{lstlisting}[title = {\texttt{omnetpp.ini}: definizione della media},
+                  ]
+DVESystem.wan.delayMean = 0.10s
+\end{lstlisting}
 
+\begin{lstlisting}[title = {\texttt{WAN.cc}: inizializzazione della media},
+                  ]
+WAN::initialize()
+{
+    mean = par("delayMean");
+}
+\end{lstlisting}
+
+\begin{lstlisting}[title = {\texttt{WAN.cc}: tipico meccanismo di routing},
+                  ]
+  const char* gateName = gate->getName();
+  if (strcmp(gateName, "toClient\$i") == 0)
+  {
+    sendDelayed(l_msg, exponential(mean), "toMainServer\$o");
+  }
+  else if (strcmp(gateName,"toMainServer\$i") == 0)
+  {
+    sendDelayed(l_msg, exponential(mean), "toClient\$o", l_msg->getID());
+  }
+\end{lstlisting}
+
+\chapter{Simulazione ed analisi dei risultati}\label{analisi}
+Lo sviluppo del modello mediante \texttt{Omnet++} consente di estrapolare
+i dati voluti in modo semplice ed automatico. Come si è evidenziato nel
+capitolo precedente, l'utilizzo del meccanismo di ``signaling'' consente di
+registrare i dati voluti senza modificare il modello. \`E stato quindi
+sufficiente aggiungere i segnali desiderati nei moduli client (\texttt{NED} e
+\texttt{C++}) e registre la raccolta di statistiche nel file
+\texttt{omnetpp.ini} come segue:
+\begin{lstlisting}
+
+*.client[*].dveResponse.result-recording-modes = default
+*.client[*].clientMovesLost.result-recording-modes = default
+*.client[*].clientNoMoves.result-recording-modes = default
+*.client[*].clientMoves.result-recording-modes = default
+*.client[*].clientPresenceFactor.result-recording-modes = default
+\end{lstlisting}
+
+All'avvio della simulazione il framework si occupa quindi di generare i
+risultati sotto forma di scalari, vettori o istogrammi. \`E anche possibile
+generare grafici, manipolare dati ed esportarli in formati adatti a tool
+esterni quali Octave o Matlab.
+
+\section{Simulazione}
+La simulazione consiste in un unica ``run'' del modello proposto. Questa
+scelta deriva in primo luogo dal fatto che il medesimo approccio è stato
+adottato dagli autori di \cite{IDVE}, ed in secondo luogo dal fatto che
+la simulazione consta di 180 client che generano circa 80-90 response per
+un totale dell'ordine delle 15000 variabili. Può quindi essere considerato
+un lungo run di simulazione ed è possibile utilizzare il metodo \emph{Batch}
+per le stime statistiche, considerando ogni client un batch a sè stante.
+
+\section{Valutazioni}
+L'idea di analizzare il modello dal punto di vista della rete suggerisce di
+focalizzarsi su tre dei parametri sopra riportati: \texttt{dveResponse},
+\texttt{clientMovesLost} e \texttt{clientPresenceFactor}.
+
+Il tempo di risposta del server calcola il tempo che trascorre dal momento in
+cui il client si muove al momento in cui tutto il sistema ha registrato e
+notificato il movimento. Il numero di mosse che il client perde è strettamente
+correlato a questo parametro in quanto misura il numero di volte in cui
+la risposta supera il limite stabilito: due secondi.
+
+L'ultimo parametro indica il numero dei vicini di ciascun avatar, questo
+indica il numero di client che devono essere notificati quando esso
+entra o esce da un settore. Una domanda che sorge spontanea è quanto il
+Presence Factor influisca sul tempo di risposta del server.
+
+\subsection{Mosse perse}
+Il primo fatto che balza all'occhio analizzando i dati ottenuti è la totale
+assenza di mosse perdute dai client. Avendo imposto come valor medio di delay
+della rete $0.1$ secondi (che è un valore considerato accettabile, mentre un
+valore desiderato è di circa $0.02$ secondi) questo risultato afferma che il
+modello descritto risulta stabile da questo punto di vista.
+
+\subsection{Tempo di risposta}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{response.jpeg}
+\end{center}
+\caption{Il \emph{Response Time} di un client.}
+\label{response}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{responseVSpresence.jpeg}
+\end{center}
+\caption{Mancanza di correlazione tra \emph{Response Time} e
+\emph{Presence Factor}.}
+\label{responseVSPresence}
+\end{figure}
 
 \chapter{Conclusioni}\label{conclusioni}
 
