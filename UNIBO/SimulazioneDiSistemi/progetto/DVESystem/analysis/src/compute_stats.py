@@ -24,8 +24,9 @@ def main(args):
         n = 0
         for row in respReader:
             if row[0] != 'time':
-                x_bar_i += float(row[1])
-                n += 1
+                if float(row[0]) > 20.0 and float(row[0]) < 180.0:
+                    x_bar_i += float(row[1])
+                    n += 1
         x_bar.append(x_bar_i / n)
     mu = 0
     for x_i in x_bar:
@@ -34,11 +35,12 @@ def main(args):
     
     sigma2 = 0
     for x_i in x_bar:
-        sigma2 += (x_i - mu)**2 / (BATCH - 1)
+        sigma2 += (x_i - mu)**2
+    sigma2 /= (BATCH - 1)
     print('Varianza campionaria: ' + str(sigma2))
     
-    a = mu - 1.96 * (sqrt(sigma2) / sqrt(n))
-    b = mu + 1.96 * (sqrt(sigma2) / sqrt(n))
+    a = mu - 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+    b = mu + 1.96 * (sqrt(sigma2) / sqrt(BATCH))
     print('Intervallo di confidenza: (' + str(a) + ', ' + str(b) + ')')
     
     # Compute mean
@@ -65,8 +67,8 @@ def main(args):
         sigma2 += (x_i - mu)**2 / (BATCH - 1)
     print('Varianza campionaria: ' + str(sigma2))
     
-    a = mu - 1.96 * (sqrt(sigma2) / sqrt(n))
-    b = mu + 1.96 * (sqrt(sigma2) / sqrt(n))
+    a = mu - 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+    b = mu + 1.96 * (sqrt(sigma2) / sqrt(BATCH))
     print('Intervallo di confidenza: (' + str(a) + ', ' + str(b) + ')')
     
 if __name__ == '__main__':
