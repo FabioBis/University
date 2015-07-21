@@ -1,5 +1,16 @@
 \begin{thebibliography}{1}
 
+\bibitem{ghosh}
+C.~Ghosh, R.~Wiegand, B.~Goldiez, and T.Dere.
+\newblock {An Architecture Supporting Large Scale MMOGs}.
+\newblock {\em 3rd International ICST Conference on Simulation Tools and
+  Technique}, 2010.
+
+\bibitem{van}
+S.~V. Houten and P.~Jacobs.
+\newblock {An Architecture for Distribuited Simulation Games}.
+\newblock In {\em Winter Simulation Conference}, 2004.
+
 \bibitem{GamePattern}
 R.~Nystrom.
 \newblock {\em Game Programming Patterns}.
@@ -11,5 +22,10 @@ P.Morillo, J.M.Orduna, M.Fernandez, and J.Duato.
   Systems}.
 \newblock {\em IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS}, 16(7),
   2005.
+
+\bibitem{zyda}
+M.~Zyda.
+\newblock {From Visual Simulation to Virtual Reality to Games}.
+\newblock {\em IEE Computer Society}, September 2005.
 
 \end{thebibliography}
