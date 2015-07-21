@@ -191,7 +191,7 @@ Grazie a risultati evidenziati nel suddetto articolo è possibile trascurare
 il problema del carico dei server assumendo che, grazie all'algoritmo di
 partizione, il \emph{delay} delle comuncazioni sia influenzato in modo
 trascurabile. Nonostante questo si è comunque deciso di implementare un
-semplice algoritmo di partizionamento per il modello, in modo da poter valutare
+semplice algoritmo di partizionamento per il modello, per poter valutare
 il traffico dati relativo all'aggiornamento sia dei server che dei client
 del sistema.
 
@@ -266,7 +266,7 @@ sistema descritto in figura \ref{fig2} nel seguente modo:
 $1$ Main Server che si occupa del login dei client e della gestione
 dell'ambiente simulato;
 \item
-$k \in \{1, \ldots, 9\}$ server di partizione che si occupano di gestire i
+$k \in \{1, \ldots, 9\}$ Server di Partizione che si occupano di gestire i
 messaggi tra client ed aggiornare il Main Server;
 \item
 $n$ client che controllano un distinto avatar nel mondo virtuale;
@@ -278,8 +278,8 @@ unidirezionale;
 \item
 un ambiente virtuale (\texttt{VirtualEnvironment});
 \item
-un metodo di partizionamento statico, dipendente dal numero di server di
-partizione, che il Main Server utilizza per suddividere il carico.
+un metodo di partizionamento statico, dipendente dal numero di Server di
+Partizione, che il Main Server utilizza per suddividere il carico.
 \end{itemize}
 
 \subsection{Impostazioni iniziali}
@@ -315,7 +315,7 @@ rispettivamente.
 
 \subsection{Gestione dell'ambiente e dei movimenti}
 L'ambiente virtuale viene modificato dal Main Server tramite messaggi da parte
-dei server di Partizione che, grazie alle notifiche dei
+dei Server di Partizione che, grazie alle notifiche dei
 movimenti da parte dei client, rimuovono l'avatar dalla vecchia cella
 e lo assegnano a quella di destinazione.
 
@@ -375,7 +375,8 @@ dopo un tempo variabile. A questo scopo è stato introdotto un secondo tipo
 di evento: il login. All'avvio della simulazione l'ambiente virtuale
 risulta vuoto, si popola man mano che i client effettuano il login.
 Dopo il login ogni avatar esegue un movimento ogni due secondi come previsto
-dal modello originale.
+dal modello originale. Tutti i client previsti per la simulazione si
+attivano entro i primi $10$ secondi.
 
 \chapter{Implementazione del modello}\label{impl}
 L'implementazione del modello proposto è stata realizzata mediante il framework
@@ -656,7 +657,7 @@ I moduli implementati sono di due tipi: il Main Server che si occupa di gestire
 l'ambiente virtuale e la partizione ed i Server di Partizione che si occupano
 di gestire le comunicazioni con i client in base al partizionamento.
 
-L'utente può specificare il numero di server di partizione
+L'utente può specificare il numero di Server di Partizione
 utilizzando il file di configurazione, vengono quindi creati tanti moduli
 \texttt{DVEServer} quanti richiesti (da $1$ a $9$ per semplicità
 indotta dal sistema statico di partizionamento).
@@ -676,8 +677,8 @@ Il modulo è connesso alla LAN in sola uscita (anello unidirezionale) al primo
 dei server (in ordine di id) ed in sola entrata all'ultimo. Un ulteriore
 collegamento (bidirezionale) viene utilizzato per collegare direttamente
 il server principale ai client, questo consente lo scambio di messaggi per
-il login, quando ancora i client non sono stati assegnato ad un server di
-partizione.
+il login, quando ancora i client non sono stati assegnato ad un Server di
+Partizione.
 \begin{lstlisting}
 simple MainServer
 {
@@ -721,7 +722,7 @@ partizioni. I parametri \texttt{MOVESMAX} e \texttt{moves\_n} hanno questo
 scopo.
 
 \subsubsection{Movimento}
-Quando un messaggio di movimento arriva al Server Principale, innazitutto
+Quando un messaggio di movimento arriva al server principale, innazitutto
 questo si occupa di notificare la nuova AoI al client:
 \begin{lstlisting}
   int* newAoi = NULL;
@@ -745,10 +746,11 @@ Quindi aggiorna il mondo virtuale (il suo stato interno):
     VirtualAvatar* avatar = connectedAvatars_[clientID];
     avatar->move(x, y);
 \end{lstlisting}
-Infine gestisce gli acknowledges, se non ci sono vicini nè nella vecchia AoI
-nè in quella nuova notifica l'ACK al client, altrimenti genera un nuovo
-\texttt{Acknowledgment} che si occupa di memorizzare gli ACK da parte dei
-vicini. Quando il numero degli ACK ricevuto per il movimento è pari alla somma
+Infine gestisce gli acknowledges: se non ci sono vicini nè nella vecchia AoI
+nè in quella nuova notifica direttamente l'ACK al client, altrimenti genera un
+nuovo \texttt{Acknowledgment} che si occupa di memorizzare gli ACK pendenti da
+parte dei vicini.
+Quando il numero degli ACK ricevuto per il movimento è pari alla somma
 delle due AoI viene generato ed inviato l'ACK per il client che potrà calcolare
 così il tempo di risposta del sistema.
 
@@ -803,7 +805,7 @@ channel LAN extends ned.DelayChannel
 
 \subsubsection{Modulo \texttt{NED}}
 Il modulo è sostanzialmente un router per i messaggi, ha semplicemente tre
-canali bidirezionali collegati ai client, ai server di partizione ed al server
+canali bidirezionali collegati ai client, ai Server di Partizione ed al server
 principale.
 \subsubsection{Classe \texttt{WAN}}
 Analogamente alle altre classi, implementa la logica per la comunicazione.
@@ -844,8 +846,8 @@ WAN::initialize()
 \chapter{Simulazione ed analisi dei risultati}\label{analisi}
 Lo sviluppo del modello mediante \texttt{Omnet++} consente di estrapolare
 i dati voluti in modo semplice ed automatico. Come si è evidenziato nel
-capitolo precedente, l'utilizzo del meccanismo di ``signaling'' consente di
-registrare i dati voluti senza modificare il modello. \`E stato quindi
+capitolo precedente, l'utilizzo del meccanismo di ``signaling'' permette la
+registrazione dei dati senza modificare il modello. \`E stato quindi
 sufficiente aggiungere i segnali desiderati nei moduli client (\texttt{NED} e
 \texttt{C++}) e registre la raccolta di statistiche nel file
 \texttt{omnetpp.ini} come segue:
@@ -864,7 +866,7 @@ generare grafici, manipolare dati ed esportarli in formati adatti a tool
 esterni quali Octave o Matlab.
 
 \section{Simulazione}
-La simulazione consiste in un unica ``run'' del modello proposto. Questa
+La simulazione consiste in un'unica ``run'' del modello proposto. Questa
 scelta deriva in primo luogo dal fatto che il medesimo approccio è stato
 adottato dagli autori di \cite{IDVE}, ed in secondo luogo dal fatto che
 la simulazione consta di 180 client che generano circa 80-90 response per
@@ -895,15 +897,110 @@ della rete $0.1$ secondi (che è un valore considerato accettabile, mentre un
 valore desiderato è di circa $0.02$ secondi) questo risultato afferma che il
 modello descritto risulta stabile da questo punto di vista.
 
-\subsection{Tempo di risposta}
-
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.4]{response.jpeg}
 \end{center}
-\caption{Il \emph{Response Time} di un client.}
+\caption{Il \emph{Response Time} del client 175.}
 \label{response}
 \end{figure}
+
+\subsection{Tempo di risposta}
+Il secondo passo per valutare le prestazioni del sistema è capire come si
+comporta il tempo di risposta del DVE. Dalla sezione precedente possiamo
+dedurre che ogni client coinvolto non supera mai il limite impostato di 2
+secondi, mentre la figura \ref{response} mostra che il tempo di risposta
+oscilla tra $0.2$ e $0.9$ secondi, con rari picchi oltre il secondo.
+
+Sebbene i grafici siano chiari ed aiutino a capire l'andamento del tempo
+di risposta, per valutarne effettivamente l'andamento occorre affidarsi alla
+statistica. \`E possibile quindi calcolare media e varianza campionaria
+mediante il metodo Batch, assumendo che ogni client sia un Batch differente.
+
+Per poter stimare in modo più preciso media e varianza occorre eliminare
+il transiente iniziale e quello finale di ogni Batch. Solitamente viene
+eliminato il solo transiente iniziale, ma data la natura della simulazione
+(login in momenti variabili e conseguente termine variabile per ogni client)
+si è scelto di eliminare i primi ed ultimi 20 secondi di ogni client.
+
+I dati vengono suddivisi in 180 batch, in ciascuno sono quindi presenti un
+numero $n_i$ variabile di osservazioni ($i \in \{1, \ldots, 180\}$).
+
+All'interno del batch $i$ viene calcolata la media:
+\[
+\bar{X_i} = \frac{1}{n_i} \sum_{j=1}^{n_i} X_{ij}
+\]
+
+Si calcola quindi la stima puntuale della media:
+\[
+\hat{\mu} = \frac{1}{180}\sum_{i=1}^{180}\bar{X_i}
+\]
+
+Ed infine la varianza campionaria:
+\[
+S^2 = \frac{1}{179} \sum_{i=1}^{180}\left( \bar{X_i} - \hat{\mu}\right)^2
+\]
+
+Esportando i dati ottenuti dalla simulazione in formato \texttt{CVS} è stato
+possibile effettuare questi calcoli comodamente mediante uno script
+\texttt{Phyton}\footnote{L'appendice \ref{script} riporta lo script utilizzato
+per il calcolo dei risultati.}
+con i seguenti risultati:
+\begin{itemize}
+\item
+Stima puntuale della media $\hat{\mu} = 0.4993s$;
+\item
+Varianza campionaria $S^2 = 0.0008s$.
+\end{itemize}
+Con un livello di confidenza del $95$\% si ha il seguente intervallo di
+confidenza:
+\[
+0.4928 \le \hat{\mu} \le 0.5058
+\]
+
+\subsection{Presence Factor}
+L'ultimo parametro che consente di capire meglio cosa accade nel sistema
+quando un avatar si muove consiste nel \emph{Presence Factor}. Questo parametro
+cambia molto più frequentemente rispetto al tempo di risposta per ogni client,
+in quanto il segnale viene emesso ad ogni modifica della relativa AoI.
+
+Il grafico in figura \ref{presence} mostra il Presence Factor del client 175.
+Si può notare come questo oscilli molto frequentemente, ma si mantenga spesso
+al di sotto delle 5 unità
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{presence.jpeg}
+\end{center}
+\caption{Il \emph{Presence Factor} del client 175.}
+\label{presence}
+\end{figure}
+
+Il grafico in figura \ref{maxPresence} invece offre una panoramica più ampia.
+Questo mostra, tra tutti i client coinvolti, il massimo tra i relativi
+Presence Factor evidenziando la generale congestione del mondo. Quando si ha un
+picco siamo di fronte al fenomeno della ``Crowded zone'', mentre nei punti
+di minimo la distribuzione degli avatar risulta omogenea.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{maxPresenceFactor.jpeg}
+\end{center}
+\caption{Massimo valore di \emph{Presence Factor} dei client.}
+\label{maxPresence}
+\end{figure}
+
+\subsubsection{Response vs Presence Factor}
+L'ultimo grafico che si vuole mostrare in figura \ref{responseVSPresence}
+evidenzia la mancanza di una correlazione tra \emph{Response Time} (RT) e
+\emph{Presence Factor} (PF). La linea verde rappresenta il PF mentre quella
+rossa il RT\footnote{I valori del RT sono stati aumentati di un fattore $10$ per
+rendere più chiaro e comprensibile il grafico}, entrambi i dati sono relativi al
+medesimo client (175).
+Si possono qui notare due casi ($t = 46$ e $t = 131$) in cui ad un picco
+del RT non corrisponde ad un picco del PF e viceversa, due casi
+($t = 64$ e $t = 153$) in cui ad un picco del PF non corrisponde un picco
+del RT.
 
 \begin{figure}
 \begin{center}
@@ -914,10 +1011,106 @@ modello descritto risulta stabile da questo punto di vista.
 \label{responseVSPresence}
 \end{figure}
 
-\chapter{Conclusioni}\label{conclusioni}
+\subsection{Cosa accade aumentando gli uteni?}
+Al fine di comprendere meglio la robustezza del sistema è stato effettuato
+un altro test raddoppiando il numero di avatar coinvolti e mantenendo il numero
+di Server di Partizione invariato. Con $3$ server e $360$ client si evidenziano
+i seguenti risultati:
+\begin{itemize}
+\item
+Stima puntuale della media $\hat{\mu} = 0.5405s$;
+\item
+Varianza campionaria $S^2 = 0.0024s$.
+\end{itemize}
+Con un livello di confidenza del $95$\% si ha il seguente intervallo di
+confidenza:
+\[
+0.5354 \le \hat{\mu} \le 0.5456
+\]
+Si può notare un evidente aumento della variaza (che triplica), mentre si ha
+un leggero aumento della media e dell'intervallo di confidenza, che risulta
+non lineare nel numero dei client connessi.
 
-%%\backmatter
-%%\include{biblio}
+\chapter{Conclusioni}\label{conclusioni}
+Per la realizzazione del progetto per l'esame di Simulazione di Sistemi
+sono stati dapprima studiati gli articoli \cite{van}, \cite{zyda} e \cite{ghosh}
+sui quali è stato quindi tenuto un seminario. Questo lavoro è stato utile per
+capire le origini e alcune problematiche degli ambienti virtuali distribuiti.
+
+Dopo lo studio preliminare è stata condotta un'analisi dell'articolo
+\cite{IDVE} che si basa principalmente sul problema della partizione. In questo
+contesto si è valutato principalmente il modello proposto, volendo focalizzare
+la simulazione sulla valutazione del traffico di rete.
+
+\`E stato quindi creato un modello sulla base di quello proposto (con alcune
+modifiche) utilizzando il framework \texttt{OMNeT++}. Il modello realizzato,
+grazie ai risultati evidenziati in \cite{IDVE}, assume che il sistema di
+partizione mantenga l'utilizzo delle \texttt{CPU} di ogni server al di sotto
+della soglia in cui le prestazioni del DVE degradano velocemente.
+Grazie a questi risultati è possibile concentrare lo studio sulla rete e la
+struttura di comunicazione del sistema.
+
+Terminata la realizzazione del modello, il passo conclusivo è stato quello di
+eseguire la simulazione ed analizzarne i dati. La simulazione del DVE proposto
+utilizzando i settaggi di \cite{IDVE} hanno evidenziato robustezza, non avendo
+ottenuto nessuna perdita di movimenti ed una buona efficienza, ottenendo un
+tempo di risposta medio di circa $0.5$s considerando una latenza della rete
+abbastanza pessimistica. Una seconda simulazione, con un considerevole aumento
+di avatar coinvolti, ha evidenziato che non c'è linearità tra il Presence
+Factor ed il Response Time. Sia $P$ il Presence Factor, $t_c$ il tempo
+del messaggio inviato dal client per il movimento, $t_s$ il tempo del messaggio
+di risposta inviato dal server e $t_i = t_{c_i} + t_{s_i}$ il tempo di risposta
+dei vicini (AoI), si può definire il Response Time $T$ come:
+\[
+T = t_c + t_s + \max\left\{t_1, \ldots, t_{P}\right\}
+\]
+
+\appendix
+\chapter{Script}\label{script}
+\begin{lstlisting}[language = Python,
+                   title = {Calcolo di media, varianza e intervalli di
+confidenza.}
+                  ]
+import sys
+import csv
+from math import sqrt
+
+BATCH = 180
+
+def main(args):
+  x_bar = []
+
+  # Compute mean
+  print('\n-----------------------------')
+  print('Tempo di risposta del server.')
+  print('-----------------------------')
+  for current in range(1, BATCH + 1):
+    responseFile = 'responses-' + str(current) + '.csv'
+    respReader = csv.reader(open('../data/' + responseFile), delimiter = ',')
+    x_bar_i = 0
+    n = 0
+    for row in respReader:
+      if row[0] != 'time':
+        if float(row[0]) > 20.0 and float(row[0]) < 180.0:
+          x_bar_i += float(row[1])
+          n += 1
+    x_bar.append(x_bar_i / n)
+  mu = 0
+  for x_i in x_bar:
+    mu += x_i / BATCH
+  print('Stima puntuale della media: ' + str(mu))
+
+  sigma2 = 0
+  for x_i in x_bar:
+    sigma2 += (x_i - mu)**2
+  sigma2 /= (BATCH - 1)
+  print('Varianza campionaria: ' + str(sigma2))
+
+  a = mu - 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+  b = mu + 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+  print('Intervallo di confidenza: (' + str(a) + ', ' + str(b) + ')')
+\end{lstlisting}
+
 \bibliographystyle{abbrv}
 \bibliography{relazione}
 \end{document}
