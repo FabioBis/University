@@ -154,7 +154,7 @@ semipersistenti in un DVE.
 tra di loro e come questo influenzi le performance del sistema.
 \item
 \emph{View Consistency:} mira ad assicurare che ogni avatar che condividono
-un'area comune abbiano la medesima percezione degli oggetti presenti.
+un'area comune abbia la medesima percezione degli oggetti presenti.
 \item
 \emph{Network Traffic Reduction:} mantenere un basso numero di messaggi
 permette ai sistemi DVE di scalare in modo efficiente con il numero
@@ -171,8 +171,8 @@ studiato per il progetto, su cui si basa
 principalmente il modello proposto,
 studia il problema della partizione. Gli autori descrivono un modello di DVE
 (sintetizzato nella sezione \ref{modello_orig}) sperimentando mediante
-la simulazione la correlazione tra la \emph{funzione di qualità}
-\footnote{La funzione di qualità $C_P$ è definita come:
+simulazione la correlazione tra la \emph{funzione di qualità}\footnote{La
+funzione di qualità $C_P$ è definita come:
 $C_P = W_1 \cdot C_P^W + W_2 \cdot C_P^L$,  dove $W_1 + W_2 = 1$. $W_1$ e $W_2$
 sono due coefficienti relativi al peso del lavoro di computazione e di
 comunicazione rispettivamente.} proposta nella
@@ -191,7 +191,7 @@ Grazie a risultati evidenziati nel suddetto articolo è possibile trascurare
 il problema del carico dei server assumendo che, grazie all'algoritmo di
 partizione, il \emph{delay} delle comuncazioni sia influenzato in modo
 trascurabile. Nonostante questo si è comunque deciso di implementare un
-semplice algoritmo di partizionamento per il modello, per poter valutare
+semplice algoritmo di partizionamento per il modello, al fine di  valutare
 il traffico dati relativo all'aggiornamento sia dei server che dei client
 del sistema.
 
@@ -291,15 +291,15 @@ possa specificarne il numero (file \texttt{.ini}).
 Si suppone che inizialmente gli avatar siano distribuiti nell'ambiente virtuale
 con una distribuzione casuale uniforme e che non siano già presenti nella
 suddetta ma debbano effettuare il login sul server principale con un ritardo
-variabile (distribuzione esponenziale) dall'inizio della simulazione.
+variabile dall'inizio della simulazione.
 
 \subsection{Ambiente virtuale}
 L'ambiente virtuale è una semplicissima struttura: un array
 bidimensionale di mappe di Avatar
 (\texttt{$\langle$id, VirtualAvatar$\rangle$}).
 Questa ``simula'' un'area in cui gli avatar possono muoversi liberamente e
-senza collisioni. Per l'implementazione si utilizzano due classi distinte
-per gli avatar: \texttt{Avatar} utilizzata dai client e
+senza collisioni. Per l'implementazione degli avatar si utilizzano due classi
+distinte: \texttt{Avatar} utilizzata dai client e
 \texttt{VirtualAvatar} utilizzata dal Main Server.
 
 \subsection{Avatar e VirtualAvatar}
@@ -314,7 +314,8 @@ rispettivamente.
 %% rappresentano id e coordinate utilizza un puntatore all'ambiente virtuale.
 
 \subsection{Gestione dell'ambiente e dei movimenti}
-L'ambiente virtuale viene modificato dal Main Server tramite messaggi da parte
+L'ambiente virtuale viene modificato dal Main Server sfruttando messaggi da
+parte
 dei Server di Partizione che, grazie alle notifiche dei
 movimenti da parte dei client, rimuovono l'avatar dalla vecchia cella
 e lo assegnano a quella di destinazione.
@@ -442,7 +443,7 @@ privo di latenza.
 \subsection{\texttt{DVEClient}}
 Il client vero e proprio è definito dal modulo \texttt{DVEClient} e dalla
 relativa classe \texttt{C++} che ne definisce il comportamento.
-\subsubsection{Modulo \files{NED}}
+\subsubsection{Modulo \files{DVEClient.ned}}
 Il modulo è connesso, oltre che al suddetto \texttt{Source} in solo ingresso,
 ad un modulo che simula la rete (\texttt{WAN}) mediante un canale bidirezionale.
 Il canale è privo di latenza in quanto, come descritto nella relativa sezione,
@@ -455,13 +456,13 @@ del sistema, ovvero ad ogni movimento del client misura il tempo impiegato
 per notificare tutti i client (vicini nuovi e vecchi) e server coinvolti.
 \item \textbf{Movimenti persi}: tiene conto dei movimenti persi di ogni client.
 Quando un nuovo \texttt{job} arriva al client per effettuare un movimento, se
-non è ancora arrivata la notifica (ACK) del movimento precedente non è possibile
-effettuare il nuovo movimento (effetto \emph{lag}).
+non è ancora arrivata la notifica (ACK) di quello precedente non è possibile
+effettuare il nuovo.
 \item \textbf{Movimenti nulli}: conta i movimenti non effettuati ``volutamente''
 dall'utente.
 \item \textbf{Movimenti}: conta i movimenti effettuati con successo.
 \item \textbf{Presence Factor}: conta la ``numerosità'' della AoI, ovvero
-il numero di altri avatar nella medesima zona..
+il numero di altri avatar nella medesima zona.
 \end{itemize}
 Come si può notare nel listato \ref{clientNED} ogni voce di cui sopra è
 realizzata mediante il meccanismo del \emph{signaling}, utilizzando un
@@ -502,7 +503,7 @@ class DVEClient : public cSimpleModule {
 private:
   ...
 \end{lstlisting}
-Questo pattern è stato utilizzato per ogni modulo \texttt{NED} realizzato e
+Questo pattern è stato utilizzato per ogni classe \texttt{C++} realizzata e
 verrà pertanto omesso da qui in avanti.
 \begin{lstlisting}
   // The game avatar.
@@ -535,7 +536,7 @@ del client e se l'ultimo tentativo di movimento non è andato a buon fine.
   unsigned int presenceFactor;
 \end{lstlisting}
 Per la gestione delle statistiche la classe include una variabile per ogni
-statistica registrata nel modulo ed il segnale rispettivo.
+statistica registrata nel modulo ed il rispettivo segnale.
 \begin{lstlisting}
   void makeMove();
   void handleLoginMessage(cMessage *msg);
@@ -610,7 +611,7 @@ da \texttt{Source} può invocare il metodo \texttt{makemove()}.
   timeRequest = simTime();
 \end{lstlisting}
 Una volta calcolate le nuove coordinate, se non sono identiche a quelle
-attuali, vengono aggiornate il numero di mosse, lo stato dell'avatar ed il
+attuali, vengono aggiornati il numero di mosse, lo stato dell'avatar ed il
 tempo simulato di invio della richiesta
 (\texttt{timeRequest}), che sarà utile per calcolare il
 tempo di risposta del sistema. Viene inoltre spedito un messaggio di movimento
@@ -666,18 +667,19 @@ indotta dal sistema statico di partizionamento).
 \subsection{Main Server}
 Il server principale è composto da un modulo \texttt{NED} con la relativa
 implementazione \texttt{C++} nella quale sono inclusi una struttura dati per
-la partizione del carico e l'ambiente virtuale in cui gli avatar virtuali
+la partizione e l'ambiente virtuale in cui gli avatar virtuali
 compiono i loro movimenti. Per l'implementazione dell'ambiente virtuale è stato
 sfruttato un Design Pattern noto nell'industria videoludica
 \cite{GamePattern}
 come \emph{Spatial Pattern}.
 
-\subsubsection{Modulo \texttt{NED}}
+\subsubsection{Modulo \texttt{MainServer.ned}}
 Il modulo è connesso alla LAN in sola uscita (anello unidirezionale) al primo
 dei server (in ordine di id) ed in sola entrata all'ultimo. Un ulteriore
 collegamento (bidirezionale) viene utilizzato per collegare direttamente
+(tramite WAN)
 il server principale ai client, questo consente lo scambio di messaggi per
-il login, quando ancora i client non sono stati assegnato ad un Server di
+il login, quando ancora i client non sono stati assegnati ad un Server di
 Partizione.
 \begin{lstlisting}
 simple MainServer
@@ -760,7 +762,7 @@ comunicazioni tra i client ed il server principale. Il suo nome deriva
 dall'approccio utilizzato per ridurre ed ottimizzare il tempo di risposta della
 rete e del sistema.
 
-\subsubsection{Modulo \texttt{NED}}
+\subsubsection{Modulo \texttt{DVEServer.ned}}
 Il modulo è connesso alla LAN in sola uscita (anello unidirezionale) al
 successore dei server (in ordine di id) o al Main Server se il server in
 questione è quello con id più alto. \`E connesso in sola entrata al
@@ -803,7 +805,7 @@ channel LAN extends ned.DelayChannel
 }
 \end{lstlisting}
 
-\subsubsection{Modulo \texttt{NED}}
+\subsubsection{Modulo \texttt{WAN.ned}}
 Il modulo è sostanzialmente un router per i messaggi, ha semplicemente tre
 canali bidirezionali collegati ai client, ai Server di Partizione ed al server
 principale.
@@ -915,13 +917,14 @@ oscilla tra $0.2$ e $0.9$ secondi, con rari picchi oltre il secondo.
 Sebbene i grafici siano chiari ed aiutino a capire l'andamento del tempo
 di risposta, per valutarne effettivamente l'andamento occorre affidarsi alla
 statistica. \`E possibile quindi calcolare media e varianza campionaria
-mediante il metodo Batch, assumendo che ogni client sia un Batch differente.
+mediante il metodo Batch, assumendo che ogni client rappresenti un Batch
+differente.
 
 Per poter stimare in modo più preciso media e varianza occorre eliminare
 il transiente iniziale e quello finale di ogni Batch. Solitamente viene
 eliminato il solo transiente iniziale, ma data la natura della simulazione
 (login in momenti variabili e conseguente termine variabile per ogni client)
-si è scelto di eliminare i primi ed ultimi 20 secondi di ogni client.
+si è scelto di eliminare i primi ed ultimi 20 secondi di simulazione.
 
 I dati vengono suddivisi in 180 batch, in ciascuno sono quindi presenti un
 numero $n_i$ variabile di osservazioni ($i \in \{1, \ldots, 180\}$).
@@ -1029,7 +1032,7 @@ confidenza:
 \]
 Si può notare un evidente aumento della variaza (che triplica), mentre si ha
 un leggero aumento della media e dell'intervallo di confidenza, che risulta
-non lineare nel numero dei client connessi.
+quindi non lineare nel numero dei client connessi.
 
 \chapter{Conclusioni}\label{conclusioni}
 Per la realizzazione del progetto per l'esame di Simulazione di Sistemi
@@ -1039,10 +1042,11 @@ capire le origini e alcune problematiche degli ambienti virtuali distribuiti.
 
 Dopo lo studio preliminare è stata condotta un'analisi dell'articolo
 \cite{IDVE} che si basa principalmente sul problema della partizione. In questo
-contesto si è valutato principalmente il modello proposto, volendo focalizzare
-la simulazione sulla valutazione del traffico di rete.
+contesto si è valutato il modello proposto, volendo focalizzare
+la simulazione sul traffico di rete e la comunicazione.
 
-\`E stato quindi creato un modello sulla base di quello proposto (con alcune
+\`E stato quindi creato un nuovo modello sulla base di quello proposto
+(con alcune
 modifiche) utilizzando il framework \texttt{OMNeT++}. Il modello realizzato,
 grazie ai risultati evidenziati in \cite{IDVE}, assume che il sistema di
 partizione mantenga l'utilizzo delle \texttt{CPU} di ogni server al di sotto
@@ -1064,6 +1068,13 @@ dei vicini (AoI), si può definire il Response Time $T$ come:
 \[
 T = t_c + t_s + \max\left\{t_1, \ldots, t_{P}\right\}
 \]
+
+Il modello realizzato rappresenta un'astrazione realistica di ciò che accade
+in un vero DVE, tuttavia sarebbe possibile aumentare il realismo introducendo
+anche un meccanismo di logout e di re-login. Per quanto riguarda le statistiche,
+grazie alla flessibilità del sistema di signaling, è possibile aggiungerne
+senza modificare il modello. Potrebbe essere interessante capire quanto il
+sistema di partizionamento influisca sulla comunicazione.
 
 \appendix
 \chapter{Script}\label{script}

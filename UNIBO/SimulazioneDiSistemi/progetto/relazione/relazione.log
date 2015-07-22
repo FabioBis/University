@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.6.1)  14 JUL 2015 16:00
+This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.6.1)  22 JUL 2015 12:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -715,7 +715,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 
 ]
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 175.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 174.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 178.
 
@@ -727,18 +727,18 @@ Package Fancyhdr Warning: \headheight is too small (12.5pt):
 
 [3]
 Capitolo 2.
-<schema.jpeg, id=158, 604.50844pt x 405.01312pt>
+<schema.jpeg, id=194, 604.50844pt x 405.01312pt>
 File: schema.jpeg Graphic file (type jpg)
  <use schema.jpeg>
 Package pdftex.def Info: schema.jpeg used on input line 253.
 (pdftex.def)             Requested size: 302.25348pt x 202.50606pt.
  [4
 
-] [5 <./schema.jpeg>] [6] <schemaRing.jpeg, id=182, 554.07pt x 437.38406pt>
+] [5 <./schema.jpeg>] [6] <schemaRing.jpeg, id=217, 554.07pt x 437.38406pt>
 File: schemaRing.jpeg Graphic file (type jpg)
 
 <use schemaRing.jpeg>
-Package pdftex.def Info: schemaRing.jpeg used on input line 356.
+Package pdftex.def Info: schemaRing.jpeg used on input line 357.
 (pdftex.def)             Requested size: 277.03432pt x 218.69148pt.
  [7 <./schemaRing.jpeg>] [8]
 Capitolo 3.
@@ -746,67 +746,117 @@ Capitolo 3.
 
 ]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 420.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 422.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 444.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 446.
  [10]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 473.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 475.
  [11] [12] [13] [14] [15] [16] [17] [18]
 Capitolo 4.
 [19
 
-]
+] <response.jpeg, id=485, 933.086pt x 451.286pt>
+File: response.jpeg Graphic file (type jpg)
+ <use response.jpeg>
+Package pdftex.def Info: response.jpeg used on input line 904.
+(pdftex.def)             Requested size: 373.22778pt x 180.51118pt.
+
+Overfull \hbox (13.22778pt too wide) in paragraph at lines 904--905
+ [] 
+ []
+
+[20 <./response.jpeg>] [21] <presence.jpeg, id=504, 933.086pt x 451.286pt>
+File: presence.jpeg Graphic file (type jpg)
+
+<use presence.jpeg>
+Package pdftex.def Info: presence.jpeg used on input line 976.
+(pdftex.def)             Requested size: 373.22778pt x 180.51118pt.
+
+Overfull \hbox (13.22778pt too wide) in paragraph at lines 976--977
+ [] 
+ []
+
+<maxPresenceFactor.jpeg, id=506, 933.086pt x 451.286pt>
+File: maxPresenceFactor.jpeg Graphic file (type jpg)
+
+<use maxPresenceFactor.jpeg>
+Package pdftex.def Info: maxPresenceFactor.jpeg used on input line 990.
+(pdftex.def)             Requested size: 373.22778pt x 180.51118pt.
+
+Overfull \hbox (13.22778pt too wide) in paragraph at lines 990--991
+ [] 
+ []
+
+<responseVSpresence.jpeg, id=509, 888.921pt x 451.286pt>
+File: responseVSpresence.jpeg Graphic file (type jpg)
+
+<use responseVSpresence.jpeg>
+Package pdftex.def Info: responseVSpresence.jpeg used on input line 1010.
+(pdftex.def)             Requested size: 355.5621pt x 180.51118pt.
+ [22 <./presence.jpeg>] [23 <./maxPresenceFactor.jpeg> <./responseVSpresence.jp
+eg>] [24]
 Capitolo 5.
-(./relazione.bbl [20
+[25
 
-])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 825.
- [21
+] [26]
+Appendice A.
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+) [27
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 825.
+(./relazione.bbl [28])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1127.
+ [29
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1127.
  (./relazione.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 825.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 825.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1127.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1127.
+
 Package rerunfilecheck Info: File `relazione.out' has not changed.
-(rerunfilecheck)             Checksum: BF0E2193E4A6E1B85E1A542AB162F9FD;1449.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 825.
+(rerunfilecheck)             Checksum: FFCBC21F49EC7567FB6EBAA85C115F88;1915.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1127.
  ) 
 Here is how much of TeX's memory you used:
- 9967 strings out of 495063
- 136940 string characters out of 3182195
- 330200 words of memory out of 3000000
- 12752 multiletter control sequences out of 15000+200000
+ 10215 strings out of 495063
+ 140164 string characters out of 3182195
+ 348200 words of memory out of 3000000
+ 12906 multiletter control sequences out of 15000+200000
  22448 words of font info for 59 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 33i,12n,58p,243b,1854s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 33i,12n,58p,243b,1928s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/cm-super/sfit0900.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/cm-super/sfrm0900.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/cm-super/sfrm1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm
--super/sfrm1440.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/
-sfti1095.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sftt090
-0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on relazione.pdf (22 pages, 521748 bytes).
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/cm-super/sfbx2074.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/cm-super/sfbx2488.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm
+-super/sfit0900.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/
+sfrm0900.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm109
+5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on relazione.pdf (30 pages, 1069023 bytes).
 PDF statistics:
- 560 PDF objects out of 1000 (max. 8388607)
- 505 compressed objects within 6 object streams
- 232 named destinations out of 1000 (max. 500000)
- 187 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 749 PDF objects out of 1000 (max. 8388607)
+ 678 compressed objects within 7 object streams
+ 320 named destinations out of 1000 (max. 500000)
+ 263 words of extra memory for PDF output out of 10000 (max. 10000000)
 

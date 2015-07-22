@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: relazione.aux
 The style file: abbrv.bst
 Database file #1: relazione.bib
-You've used 2 entries,
+You've used 5 entries,
             2118 wiz_defined-function locations,
-            510 strings with 3977 characters,
-and the built_in function-call counts, 546 in all, are:
-= -- 47
-> -- 30
+            525 strings with 4361 characters,
+and the built_in function-call counts, 1326 in all, are:
+= -- 117
+> -- 73
 < -- 0
-+ -- 12
-- -- 10
-* -- 35
-:= -- 105
-add.period$ -- 6
-call.type$ -- 2
-change.case$ -- 10
++ -- 29
+- -- 24
+* -- 79
+:= -- 246
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 26
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 22
-empty$ -- 41
-format.name$ -- 10
-if$ -- 107
+cite$ -- 5
+duplicate$ -- 56
+empty$ -- 103
+format.name$ -- 24
+if$ -- 265
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 3
-newline$ -- 13
-num.names$ -- 4
-pop$ -- 13
+int.to.str$ -- 5
+missing$ -- 6
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 33
 preamble$ -- 1
-purify$ -- 9
+purify$ -- 22
 quote$ -- 0
-skip$ -- 14
+skip$ -- 36
 stack$ -- 0
-substring$ -- 10
-swap$ -- 2
+substring$ -- 25
+swap$ -- 6
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 6
+type$ -- 18
 warning$ -- 0
-while$ -- 4
-width$ -- 3
-write$ -- 23
+while$ -- 10
+width$ -- 6
+write$ -- 53
