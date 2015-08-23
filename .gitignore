@@ -1,4 +1,8 @@
 UNIBO/SimulazioneDiSistemi/progetto/relazione.synctex.gz
 *.vci
 *.vci
+*.aux
+*.log
+*.out
+*~
 UNIBO/SimulazioneDiSistemi/OMNet/esercizio/Multitask/results/Multitask30-23.vci
