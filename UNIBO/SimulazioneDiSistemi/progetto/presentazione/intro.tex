@@ -1,0 +1,113 @@
+\subsection*{Studi preliminari}
+
+%% Slide 1.
+\begin{frame}
+\frametitle{Studi preliminari}
+\begin{thebibliography}{}
+\bibitem{zyda} M. Zyda, \emph{From Visual Simulation to Virtual Reality to
+Games}, IEE Computer Society, September 2005;
+\bibitem{van} S.A. van Houten, P.H.M. Jacobs, \emph{An Architecture for
+Distribuited Simulation Games},
+Proceedings of the 2004 \emph{Winter Simulation Conference};
+\bibitem{ghosh} C. Ghosh, R.P. Wiegand, B. Goldiez, T.Dere, \emph{An
+Architecture Supporting Large Scale MMOGs},
+Proceedings of the 3rd International ICST Conference on Simulation Tools
+and Technique, 2010.
+\end{thebibliography}
+\end{frame}
+
+%% Slide 2.
+\begin{frame}
+\frametitle{Gli articoli in sintesi}
+\begin{itemize}%[<+->]
+\item
+Creare una scienza dei giochi ed una ``Research Agenda'';
+\item
+La tecnologia è considerata la ``spinta''  che guida lo sviluppo e
+l'implementazione di un'architettura per un DVE;
+\item
+I requisiti per l'architettura le 3 U: \alert{uselfulness}, \alert{usability} e
+\alert{usage};
+\item
+Proposta di un'architettura di giochi distribuiti;
+\item
+Proposta di un'architettura di giochi distribuiti su larga scala basata
+sul concetto di ``overlapping zone''.
+\end{itemize}
+\end{frame}
+
+
+\subsection*{Prestazioni dei DVE} %% Articolo P.Morillo et all
+
+%% Slide 3.
+\begin{frame}
+\frametitle{Improving the Performance of DVE Systems}
+\begin{thebibliography}{}
+\bibitem{IDVE}
+P.Morillo, J.M.Orduna, M.Fernandez, and J.Duato.
+\newblock {Improving the Performance of Distributed Virtual Environment
+  Systems}.
+\newblock {\em IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS}, 16(7),
+  2005.
+\end{thebibliography}
+\end{frame}
+
+%% Slide 4.
+\begin{frame}
+\frametitle{Improving the Performance of DVE Systems}
+\begin{itemize}[<+->]
+\item
+\emph{Data Model:} descrive alcuni metodi per distribuire dati persistenti o
+semipersistenti in un DVE;
+\item
+\emph{Communication Model:} analizza i metodi con cui gli avatar comunicano
+tra di loro;
+\item
+\emph{View Consistency:} mira ad assicurare che ogni avatar che condividono
+un'area comune abbia la medesima percezione degli oggetti presenti;
+\item
+\emph{Network Traffic Reduction:} mantenere un basso numero di messaggi
+permette ai sistemi DVE di scalare in modo efficiente con il numero
+degli avatar connessi.
+\end{itemize}
+\end{frame}
+
+%% Slide 5.
+\begin{frame}
+\frametitle{Risultati di P.Morillo et al.}
+\begin{block}{Intenti}
+Valutazione del \alert{Partitioning Problem} che è un punto chiave per il
+design di DVE scalabili. L'obiettivo è individuare un modo efficiente per
+assegnare a più server la gestione degli avatar.
+\end{block}
+\pause
+\begin{block}{Risultati}
+\begin{itemize}
+\item
+Assenza di correlazione ed un comportamento non-lineare in relazione
+al numero degli avatar della \alert{funzione di qualità} proposta in
+letteratura;
+\item
+con nuovo metodo di partizione, basato sul bilanciamento del carico dei server,
+è possibile mantenere il carico al di sotto della soglia in cui
+le prestazioni medie del DVE degradano velocemente.
+\end{itemize}
+\end{block}
+\end{frame}
+
+%% Slide 6.
+\begin{frame}
+\frametitle{Obiettivi del progetto}
+\begin{itemize}%[<+->]
+\item
+P.Morillo et al. propongono un modello di DVE producendo alcuni risultati
+importanti;
+\item
+grazie a questi è si propone un nuovo modello in cui si trascura il problema
+del carico dei server;
+\item
+si focalizza l'attenzione sul traffico di rete e la comunicazione;
+\item
+c'è una relazione tra numero di utenti e le prestazioni?
+\end{itemize}
+\end{frame}

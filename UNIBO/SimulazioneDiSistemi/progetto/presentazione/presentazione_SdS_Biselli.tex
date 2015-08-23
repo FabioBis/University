@@ -1,0 +1,171 @@
+\documentclass[xcolor={usenames,dvipsnames}]{beamer}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\lstloadlanguages{C++}
+%\usepackage{amssymb}
+%\usepackage{stmaryrd}
+%\usepackage{fancybox}
+%\usepackage[beamer,slides]{vaucanson-g}
+%\usepackage{listings}
+
+\definecolor{orange}{rgb}{1,0.5,0}
+
+%\lstset{ language=C++, basicstyle=\ttfamily\small,
+%  keywordstyle=\bfseries, commentstyle=\color{brown}, frameround=tttt,
+%  frame=trBL }
+
+% General command to set parameter(s).
+\lstset{
+ basicstyle=\tiny,
+ keywordstyle=\bfseries\color{Purple},
+ commentstyle=\itshape\color{ForestGreen},
+ identifierstyle=\color{blue},
+ stringstyle=\color{orange},
+ breakindent = 20pt,
+ breakautoindent = True,
+ postbreak=\space,
+ breaklines,
+ frameround = tttt,
+ frame = single,
+ language = C++,
+ otherkeywords={simple, gates, parameters, simtime_t, simsignal_t, cMessage, channel},
+%linewidth = 200pt,
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newcommand*{\blockbreak}{\usebeamertemplate{block
+    end}\framebreak\usebeamertemplate{block begin}}
+
+%% C++
+\newcommand*{\Cplusplus}{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{
+\tiny\bf ++}}}
+
+%\newgray{dgray}{.5} \newgray{fglightgray}{.8} \newgray{bggray}{.8}
+%\newcmykcolor{lightgreen}{.25 0 .25 0}
+%\newcmykcolor{ultralightgreen}{.12 0 .12 0}
+%\newcmykcolor{lightmag}{.05 .25 0 0} \newcmykcolor{altlightgreen}{.3 0
+%  .1 0} \newcmykcolor{lightyellow}{0 0 .5 0} \newcmykcolor{magg}{.3 1
+%  0 0} \newcmykcolor{dgreen}{1 0 .6 .3} \newcmykcolor{dblue}{1 1 0 .3}
+%\newcmykcolor{lightblue}{.5 .5 0 .1} \newcmykcolor{ultralightblue}{.12
+%  .12 0 0} \newcmykcolor{dorange}{0 .6 .8 .3}
+%
+%\definecolor{TitleColor}{rgb}{0.126,0.263,0.361}
+%
+%\DeclareFontFamily{OT1}{cmrx}{}
+%\DeclareFontShape{OT1}{cmrx}{m}{n}{<->cmr10}{}
+%\let\saveLongrightarrow\Longrightarrow \makeatletter
+
+
+\mode<presentation> {
+
+  \usetheme{Warsaw}
+  \setbeamertemplate{navigation symbols}{}
+
+  \setbeamertemplate{headline}%
+  {%
+    \leavevmode%
+    \begin{beamercolorbox}[wd=.65\paperwidth,ht=2.5ex,dp=1.125ex]{section in head/foot}%
+      \hbox to .65\paperwidth{\hfil\insertsectionhead\hfil}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.5ex,dp=1.125ex]{subsection in head/foot}%
+      \hbox to .35\paperwidth{\hfil\insertsubsectionhead\hfil}%
+    \end{beamercolorbox}%
+  }%
+
+  \setbeamertemplate{footline}%
+  {%
+    \leavevmode%
+    \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.5ex,dp=1.125ex, center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshortauthor%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.7\paperwidth,ht=2.5ex,dp=1.125ex, center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}\insertshorttitle\hspace*{3em}%
+    \end{beamercolorbox}%
+  }%
+  % fix clipped headline (bug with Warsaw/infolines)
+  \addtobeamertemplate{headline}{}{\vskip2pt}%
+}
+
+
+%\setbeamertemplate{footline}[page number]
+%\setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
+
+
+\title[Simulazione di un DVE]{Simulazione di un ambiente \\
+virtuale distribuito}
+\author[Fabio Biselli]{Fabio Biselli}
+\institute{%\includegraphics[scale=.3]{alma_mater_logo.eps} \\
+  {\large Universit\`a di Bologna} \\
+  {\large Laurea Magistrale in Informatica} \\
+  Corso di Simulazione di Sistemi }
+\date{Bologna, 27 Luglio 2015}
+
+\subject{Talks}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Sommario}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+%% \AtBeginSubsection[]
+%% {
+%%   \begin{frame}<beamer>
+%%     \frametitle{Plan}
+%%     \tableofcontents[currentsection,currentsubsection]
+%%   \end{frame}
+%% }
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+% Since this a solution template for a generic talk, very little can
+% be said about how it should be structured. However, the talk length
+% of between 15min and 45min and the theme suggest that you stick to
+% the following rules:
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}%[allowframebreaks]
+\frametitle{Sommario} \tableofcontents
+\end{frame}
+
+\section{Introduzione}
+
+\input intro
+
+\section{Caratterizzazione e Setup}
+
+\input setup
+
+\section{Implementazione del modello}
+
+\input impl
+
+\section{Simulazione ed analisi dei risultati}
+
+\input sim
+
+\section{Conclusioni}
+
+\input conclusion
+
+\end{document}

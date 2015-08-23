@@ -1,0 +1,80 @@
+%% Slide 130.
+\begin{frame}
+\frametitle{Conclusioni e lavori futuri}
+\begin{itemize}[<+->]
+\item
+Studiati alcuni articoli sui DVE;
+\item
+\`E stato creato un nuovo modello sulla base di quello proposto;
+\item
+Eseguite due simulazioni con $180$ e $360$ client coinvolti;
+\item
+L'analisi dei risultati ha evidenziato robustezza, non avendo
+ottenuto nessuna perdita di movimenti ed una buona efficienza;
+\item
+In futuro si potrebbe espandere il modello;
+\item
+Analizzare più approfonditamente il sistema di partizionamento.
+\end{itemize}
+\end{frame}
+
+%% Slide 31.
+\begin{frame}
+\frametitle{Riferimenti}
+\begin{thebibliography}{}
+\bibitem{I}
+P.Morillo, J.M.Orduna, M.Fernandez, and J.Duato.
+\emph{Improving the Performance of Distributed Virtual Environment
+  Systems}.
+IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, 16(7),
+  2005.
+\bibitem{z} M. Zyda, \emph{From Visual Simulation to Virtual Reality to
+Games}, Computer Society, September 2005;
+\bibitem{v} S.A. van Houten, P.H.M. Jacobs, \emph{An Architecture for
+Distribuited Simulation Games},
+Proceedings of the 2004 \emph{Winter Simulation Conference};
+\bibitem{g} C. Ghosh, R.P. Wiegand, B. Goldiez, T.Dere, \emph{An
+Architecture Supporting Large Scale MMOGs},
+Proceedings of the 3rd International ICST Conference on Simulation Tools
+and Technique, 2010.
+\end{thebibliography}
+\end{frame}
+
+
+
+\appendix
+\begin{frame}[fragile]
+\begin{lstlisting}[language = python]
+BATCH = 180
+
+def main(args):
+  x_bar = []
+
+  # Compute mean
+  for current in range(1, BATCH + 1):
+    responseFile = 'responses-' + str(current) + '.csv'
+    respReader = csv.reader(open('../data/' + responseFile), delimiter = ',')
+    x_bar_i = 0
+    n = 0
+    for row in respReader:
+      if row[0] != 'time':
+        if float(row[0]) > 20.0 and float(row[0]) < 180.0:
+          x_bar_i += float(row[1])
+          n += 1
+    x_bar.append(x_bar_i / n)
+  mu = 0
+  for x_i in x_bar:
+    mu += x_i / BATCH
+  print('Stima puntuale della media: ' + str(mu))
+
+  sigma2 = 0
+  for x_i in x_bar:
+    sigma2 += (x_i - mu)**2
+  sigma2 /= (BATCH - 1)
+  print('Varianza campionaria: ' + str(sigma2))
+
+  a = mu - 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+  b = mu + 1.96 * (sqrt(sigma2) / sqrt(BATCH))
+  print('Intervallo di confidenza: (' + str(a) + ', ' + str(b) + ')')
+\end{lstlisting}
+\end{frame}
