@@ -27,17 +27,18 @@ int dominates(float x_a, float y_a, float z_a, float x_b, float y_b, float z_b)
     && ( x_a > x_b || y_a > y_b || z_a > z_b);
 }
 
-void skyline(float *x_in, float *y_in,float *z_in, int size_in,
-             int *out, int *skyline_size)
+
+void skyline(float *x_in, float *y_in,float *z_in, long int size_in,
+             int *out, long int *skyline_size)
 {
-  int i;
+  long int i;
   for (i = 0 ; i < size_in; i++)
   {
     out[i] = 1;
   }
 
   /* Compute skyline. */
-  int j, k;
+  long int j, k;
   for (j = 0; j < size_in; j++)
   {
     for (k = 0; k < size_in; k++)
@@ -52,7 +53,7 @@ void skyline(float *x_in, float *y_in,float *z_in, int size_in,
     }
   }
   *skyline_size = 0;
-  int l;
+  long int l;
   for (l = 0; l < size_in; l++)
   {
     *skyline_size += out[l]; /* Counting skyline elements. */
@@ -60,14 +61,15 @@ void skyline(float *x_in, float *y_in,float *z_in, int size_in,
   return;
 }
 
-void getDataSize(int *size_out)
+
+void getDataSize(long int *size_out)
 {
   FILE *f;
 
   f = fopen ("in.txt","r");  /* Input file. */
   if (f == NULL)
   {
-    printf ("Errore durante l'apertura del file\n");
+    printf ("Open file error.\n");
     return;
   }
 
@@ -76,20 +78,21 @@ void getDataSize(int *size_out)
   input_string = (char *) malloc (bytes + 1);
   getline(&input_string, &bytes, f);
 
-  *size_out = atoi(input_string);
+  *size_out = strtol(input_string, NULL, 10);
   free(input_string);
   fclose(f);
   return;
 }
 
-void getData(float *x_out, float *y_out, float *z_out, int size)
+
+void getData(float *x_out, float *y_out, float *z_out, long int size)
 {
   FILE *f;
 
   f = fopen ("in.txt","r");  /* Input file. */
   if (f == NULL)
   {
-    printf ("Errore durante l'apertura del file\n");
+    printf ("Open file error.\n");
     return;
   }
 
@@ -98,9 +101,9 @@ void getData(float *x_out, float *y_out, float *z_out, int size)
   input_string = (char *) malloc (bytes + 1);
   getline(&input_string, &bytes, f);
 
-  int size_in = atoi(input_string);
+  long int size_in = strtol(input_string, NULL, 10);
 
-  int i;
+  long int i;
   for (i = 0; i < size; i++)
   {
     if (i < size_in)
@@ -110,7 +113,7 @@ void getData(float *x_out, float *y_out, float *z_out, int size)
       strcpy(str, input_string);
 
       float coordinates[3];
-      int j;
+      long int j;
       for (j = 0; j < 3; j++)
       {
         t = strtok(s, " ");
@@ -134,19 +137,20 @@ void getData(float *x_out, float *y_out, float *z_out, int size)
   return;
 }
 
-void saveData(float *x_out, float *y_out, float *z_out, int size)
+
+void saveData(float *x_out, float *y_out, float *z_out, long int size)
 {
   FILE *f;
 
   f = fopen ("out.txt","w");  /* Output file. */
   if (f == NULL)
   {
-    printf ("Errore durante l'apertura del file\n");
+    printf ("Open file error.\n");
     return;
   }
 
-  fprintf(f, "%d\n", size);
-  int i;
+  fprintf(f, "%lu\n", size);
+  long int i;
   for (i = 0; i < size; i++)
   {
     fprintf(f, "%f %f %f\n", x_out[i], y_out[i], z_out[i]);
@@ -156,12 +160,14 @@ void saveData(float *x_out, float *y_out, float *z_out, int size)
   return;
 }
 
+
 /*
  *  Main program.
  */
 int main( int argc, char* argv[] )
 {
-  int my_rank, comm_sz, input_size, partition_size;
+  int my_rank, comm_sz;
+  long int input_size, partition_size;
   double time_start0, time_stop0, time_start1, time_stop1,
     time_start2, time_stop2, total_time = 0.0;
 
@@ -176,7 +182,8 @@ int main( int argc, char* argv[] )
     getDataSize(&input_size);
     time_start0 = MPI_Wtime(); /* T0: broadcast time. */
   }
-  MPI_Bcast(&input_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  /* Broadcast data size to all processes. */
+  MPI_Bcast(&input_size, 1, MPI_LONG, 0, MPI_COMM_WORLD);
 
   partition_size = input_size / comm_sz;
 
@@ -194,8 +201,10 @@ int main( int argc, char* argv[] )
     getData(x, y, z, input_size);
   }
 
+  /* Phase 1: qualify tournament. */
   time_start1 = MPI_Wtime(); /* T1: computation time. */
 
+  /* Distribution of partitioned data among presesses. */
   MPI_Scatter(x, partition_size, MPI_FLOAT,
               local_x, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
@@ -206,9 +215,10 @@ int main( int argc, char* argv[] )
               local_z, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
 
-
+  /* Computing local skyline support array. */
   int local_skyline[partition_size];
-  int local_skyline_size, *actual_skyline;
+  long int local_skyline_size;
+  int *actual_skyline;
   skyline(local_x, local_y, local_z, partition_size,
           local_skyline, &local_skyline_size);
 
@@ -216,14 +226,18 @@ int main( int argc, char* argv[] )
   {
     actual_skyline = (int *)malloc(input_size*sizeof(int));
   }
+  /* Gathering the computed data on server process (rank 0). */
   MPI_Gather(local_skyline, partition_size, MPI_INT,
              actual_skyline, partition_size, MPI_INT,
              0, MPI_COMM_WORLD);
 
-  int actual_skyline_size;
-  MPI_Reduce(&local_skyline_size, &actual_skyline_size, 1, MPI_INT, MPI_SUM,
+  /* Computing the number of  winners. */
+  long int actual_skyline_size;
+  MPI_Reduce(&local_skyline_size, &actual_skyline_size, 1, MPI_LONG, MPI_SUM,
              0, MPI_COMM_WORLD);
 
+
+  /* Computing the elapsed time of phase 1. */
   time_stop1 = MPI_Wtime();
   double local_elapse = time_stop1 - time_start1;
   MPI_Reduce(&local_elapse, &total_time, 1, MPI_DOUBLE, MPI_MAX,
@@ -231,15 +245,16 @@ int main( int argc, char* argv[] )
 
   if (my_rank == 0)
   {
+    /* Phase 2: Final tournament. */
     time_start2 = MPI_Wtime(); /* T2: final round time. */
 
     actual_skyline_size += input_size % comm_sz;
     float x_tmp[actual_skyline_size];
     float y_tmp[actual_skyline_size];
     float z_tmp[actual_skyline_size];
-    int global_index = input_size - 1;
-    int tmp_index = actual_skyline_size - 1;
-    int limit = partition_size * comm_sz - 1;
+    long int global_index = input_size - 1;
+    long int tmp_index = actual_skyline_size - 1;
+    long int limit = partition_size * comm_sz - 1;
 
     for(; global_index > limit; global_index--)
     {
@@ -251,7 +266,7 @@ int main( int argc, char* argv[] )
       z_tmp[tmp_index] = z[global_index];
       tmp_index--;
     }
-    int i, tmp_size = 0;
+    long int i, tmp_size = 0;
     for (i = 0; i < input_size; i++)
     {
       if (actual_skyline[i] == 1)
@@ -264,12 +279,12 @@ int main( int argc, char* argv[] )
     }
 
     int skyline_tmp[tmp_size];
-    int skyline_size;
+    long int skyline_size;
     skyline(x_tmp, y_tmp, z_tmp, tmp_size, skyline_tmp, &skyline_size);
     float x_skyline[skyline_size];
     float y_skyline[skyline_size];
     float z_skyline[skyline_size];
-    int j = 0;
+    long int j = 0;
     for (i = 0; i < tmp_size; i++)
     {
       if (skyline_tmp[i] == 1)
