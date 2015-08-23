@@ -1,0 +1,331 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{makeidx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage[symbol]{footmisc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{enumerate}
+\usepackage{multirow}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\usepackage{hyperref}
+
+\makeatletter
+\renewcommand*{\ALG@name}{Pseudocodice}
+\makeatother
+
+\definecolor{orange}{rgb}{1,0.5,0}
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\newcommand{\files}[1]{\texttt{#1}}
+
+
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\rr}{\mathbb{R}}
+
+\frenchspacing
+
+\newenvironment{dimo}{\textbf{Dimostrazione.\ }}{\samepage
+\begin{flushright}$\blacksquare$\end{flushright}}
+
+\newtheorem{teo}{Teorema}[section]
+\newtheorem{prop}[teo]{Proposizione}
+\newtheorem{cor}[teo]{Corollario}
+\newtheorem{lemma}[teo]{Lemma}
+
+
+\theoremstyle{definition}
+\newtheorem{defi}[teo]{Definizione}
+\newtheorem{osse}[teo]{Osservazione}
+\newtheorem*{exe}{Esercizio}
+\newtheorem*{ese}{Esempio}
+\newtheorem*{notabene}{Nota Bene}
+\newtheorem*{nota}{Nota}
+
+\theoremstyle{remark}
+\newtheorem*{notazione}{Notazione}
+
+% General command to set parameter(s).
+\lstset{
+ %belowcaptionskip=1\baselineskip,
+ basicstyle=\footnotesize\ttfamily,
+ keywordstyle=\bfseries\color{Purple},
+ commentstyle=\itshape\color{ForestGreen},
+ identifierstyle=\color{blue},
+ stringstyle=\color{orange},
+ showstringspaces=false,
+ otherkeywords={},
+ %breakindent = 20pt,
+ breakautoindent = True,
+ postbreak=\space,
+ breaklines,
+ tabsize = 2,
+ language = C,
+ %frameround = tttt,
+ frame = L %shadowbox
+}
+%\renewcommand{\lstlistingname}{}
+
+\author{Fabio Biselli -- Mat: 0000734326}
+\title{Algoritmi Avanzati -- Relazione di Progetto: ``Skyline''}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduzione}
+Il progetto proposto riguarda l'implementazione di un algoritmo parallelo
+per determinare lo \emph{skyline} di un isieme di punti nello spazio,
+su architetture a memoria distribuita utilizzando il linguaggio \texttt{C} e
+la libreria \texttt{MPI}. Il processo principale deve leggere le coordinate
+dei punti in input da un file di testo \texttt{in.txt} composto da $N + 1$ righe
+in cui la prima specifica il numero di punti ($N$), e le successive contengono
+le coordinate di ogni punto. Al termine dell'esecuzione l'insieme dello
+skyline deve essere salvato con le medesime caratteristiche nel file
+\texttt{out.txt}. Si assume che i punti in input appartengano allo spazio
+euclideo a tre dimensioni e che il loro numero sia sempre (molto) maggiore
+del numero di processi \texttt{MPI}.
+
+\begin{defi}
+Sia $P = \left\{ p_0, p_1, \ldots, p_{N-1}\right\}$ un insieme di punti in tre
+dimensioni ($p_i = \langle x_i, y_i, z_i\rangle \in \rr^3$). Si dice che $p_i$
+\emph{domina} $p_j$, e scriveremo $p_i \succ p_j$,
+se si verificano le seguenti condizioni:
+\begin{itemize}
+\item
+$x_i \ge x_j, y_i \ge y_j, z_i \ge z_j$;
+\item
+Esiste almeno una coordinata per cui la disuguaglianza valga in senso stretto.
+\end{itemize}
+\end{defi}
+
+\begin{prop}
+Transitività della relazione $\succ$.
+\[
+\forall p, q, r \in P,\quad
+p \succ q\ \text{e}\ q \succ r \Rightarrow p \succ r.
+\]
+\end{prop}
+
+\begin{defi}
+Sia $P$ un insieme di punti, si definisce lo \emph{skyline} di $P$ l'insieme
+$Sk(P)$ composto da tutti i punti di $P$ che non sono dominati da alcun altro
+punto di $P$.
+\[
+Sk(P) := \left\{
+s \in P \colon \neg \exists\ t \in P \colon t \not\succ s
+\right\}.
+\]
+\end{defi}
+Si noti che per definizione nessun punto domina se stesso.
+
+
+\section{Implementazione}
+L'implementazione sequenziale (descritta nello pseudocodice \ref{seq})
+suggerita per questo algoritmo prevede l'utilizzo
+di un array di interi $S$ di lunghezza pari al numero dei punti in input.
+Questo viene inizializzato impostando tutti i valori ad $1$. In seguito
+vengono confrontati tutti i punti mediante un operatore binario $\succ$
+(domina), ogni
+punto viene confrontato con tutti gli altri per un totale di $O(N^2)$ chiamate.
+Se $p_i \succ p_j$, il relativo valore in $S$ ($S[j]$) viene impostato a $0$.
+Al termine della procedura l'array $S$ conterrà le posizioni della skyline:
+se $S[i] = 1$ allora $p_i \in Sk(P)$.
+
+\begin{algorithm}
+\caption{Skyline sequenziale.}
+\label{seq}
+\begin{algorithmic}
+\Function{Skyline}{$x[N]$, $y[N]$, $z[N]$}
+\State int $S[N]$;
+\For{$i \gets 0$ to $N-1$}
+  \State{$S[i] \gets 1$;}
+\EndFor
+
+\For{$i \gets 0$ to $N-1$}
+   \For{$j \gets 0$ to $N-1$}
+      \If{$\langle x[i],y[i],z[i]\rangle \succ \langle x[j],y[j],z[j]\rangle$}
+         \State $S[j] \gets 0$;
+      \EndIf
+   \EndFor
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+La soluzione parallela implementata sfrutta la transitività della relazione
+\emph{domina}, in sostanza l'algoritmo è suddiviso in due fasi. Nella
+prima fase i dati in input vengono partizionati in base al numero di processi
+disponibili ed inviati ai processi client (server compreso),
+in ogni partizione è quindi utilizzato l'algoritmo sequenziale proposto.
+Ogni processo invia la propria parte di array $S$  (di dimesione fissata)
+al processo ``server''.
+
+Nella seconda fase, che riguarda il solo processo server,
+vengono creati gli array dei punti ottenuti dalla prima,
+a cui vengono eventualmente aggiunti quelli in avanzo dalla procedura di
+partizione dei dati in input. Infatti se il numero di processi $p$ non divide
+il numero di punti in input $N$ si ottiene un insieme di punti di ``resto'' che
+devono essere aggiunti in questa fase. Tale numero è comunque compreso tra $1$
+e $p-1$, quindi possiamo assumere che sia irrilevante in termini di complessità
+computazionale. A questo punto si utilizza nuovamente l'algoritmo sequenziale
+sull'insieme di punti per ottenere la skyline finale.
+
+Si può vedere questo algoritmo come una specie di torneo, in cui si hanno un
+numero $p$ di gironi di qualificazione (in cui però non è dato sapere a priori
+il numero di vincitori) ed un girone finale in cui partecipano tutti i
+qualificati più le ``teste di serie'' (l'eventuale resto).
+
+\section{Analisi}
+Il punto di forza di questo algoritmo è dato dalla transitività della relazione
+\emph{domina} ($\succ$) che consente di ridurre notevolmente il numero totale di
+confronti. Questo approccio funziona molto bene con insiemi di punti densi, in
+cui il numero di ``vincitori'' per ogni partizione è basso rispetto al numero
+totale, e quindi si comporta molto bene nel caso medio. D'altra parte, nel
+caso pessimo (quello in cui tutti i punti in input appartengono alla skyline) si
+comporta peggio di quello sequenziale, dovendo aggiungere al tempo sequenziale
+il tempo relativo alla prima fase.
+
+\subsection{Scalabilità}
+L'algoritmo parallelo proposto ed implementato riduce drasticamente i tempi di
+calcolo rispetto alla versione sequenziale proposta. Questo è dovuto al fatto
+che il secondo agisce ``a forza bruta'', mentre il primo, oltre a suddividere
+il carico della computazione su più processi, sfrutta la transitività di
+$\succ$. Utilizzando l'algoritmo \texttt{MPI} implementato con \textbf{N} $= 1$
+per l'analisi infatti si ottengono risultati non obiettivi, con \emph{speedup}
+ed \emph{efficienza} esageratamente alte. Al fine di generare dati compatibili
+si è implementato un algoritmo sequenziale che potesse sfruttare il
+partizionamento.
+I dati riportati nelle tabelle \ref{t3} e \ref{t4} sono stati ottenuti
+confrontando i tempi dell'algoritmo seriale riportati nella tabella \ref{t1},
+in cui \textbf{N} rappresenta il numero di partizioni, ed i tempi dell'algoritmo
+parallelo riportati nella tabella \ref{t2}, in cui \texttt{comm\_sz} rappresenta
+il numero di processi.
+
+La tabella \ref{t3} mostra la \emph{speedup} ottenuta. Si può notare che,
+fissato il numero dei processi, questa aumenti all'aumentare dei dati in input
+e quindi all'aumentare della dimensione delle partizioni. A prima vista
+potrebbe sembrare un comportamento anomalo, in realtà ciò è dovuto all'aumento
+della densità delle partizioni. Ovviamente questo comportamento è strettamente
+legato alla ``qualità'' dei punti in input, mi aspetto che per insiemi di punti
+meno densi il fenomeno sia minore e che comunque, all'aumentare dei dati si
+superi la soglia ottimale e lo speedup dimunisca.
+
+Fissando ora il numero di dati input si può notare un comportamento che avvalora
+la tesi di cui sopra. In generale all'aumento dei processi corrisponde un
+aumento della speedup, ma abbiamo un'eccezione nella prima colonna ($3500$) in
+cui lo speedup diminusice utilizzando $8$ processi, in questo caso
+probabilmente la soglia ottimale del rapporto ``Numero di punti'' /
+\texttt{comm\_sz} è stata superata.
+
+Ulteriori test con \texttt{comm\_sz} $> 8$ sono stati eseguiti, ed in tutti i
+casi si è notato una stabilizzazione dei tempi di risposta ed un corrispondente
+degrado della speedup, ma questo potrebbe essere dovuto anche alla macchina su
+cui sono stati effettuati i test (Intel® Core™ i7-3630QM CPU @
+2.40GHz$\times$8).
+
+Infine la tabella \ref{t4} mostra l'efficienza dell'algoritmo, evidenziando
+il fatto che questa aumenti con l'aumento del rapporto ``Numero di punti'' /
+\texttt{comm\_sz}.
+
+\subsection{Speedup superlineare}
+Un dato che balza all'occhio guardando le tabelle è la presenza di alcuni casi
+di speedup superlienare e
+la relativa efficienza $>1$. Solitamente, dati $p$ processi, la speedup
+$S(p)$ è minore o uguale a $p$, il caso ottimo si ha quando $S(p) = p$ e di
+conseguenza l'efficienza $E(p) = 1$. In genere questo fenomeno si verifica
+conseguentemente all'utilizzo della cache di memoria, tuttavia osservando i dati
+sembra che anche la densità dei punti, in questo specifico caso, possa dare
+il proprio contributo.
+
+\begin{table}
+\centering
+\setlength\tabcolsep{4pt}
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tabular}{c|cccc}
+\multirow{2}{*}{\textbf{N}}
+  & \multicolumn{4}{c}{\textbf{Numero di punti}} \\
+  & $3500$ & $7500$ & $15000$ & $25000$ \\
+\hline
+$2$ & $0.11$ & $0.46$ & $1.81$ & $5.00$ \\
+$3$ & $0.07$ & $0.31$ & $1.21$ & $3.33$ \\
+$4$ & $0.05$ & $0.23$ & $0.91$ & $2.50$ \\
+$8$ & $0.03$ & $0.12$ & $0.46$ & $1.25$ \\
+\end{tabular}
+\caption{Esecuzione seriale}
+\label{t1}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tabular}{c|cccc}
+\multirow{2}{*}{\texttt{comm\_sz}}
+  & \multicolumn{4}{c}{\textbf{Numero di punti}} \\
+  & $3500$ & $7500$ & $15000$ & $25000$ \\
+\hline
+$2$ & $0.05$ & $0.21$ & $0.82$ & $2.22$ \\
+$3$ & $0.03$ & $0.10$ & $0.38$ & $1.04$ \\
+$4$ & $0.02$ & $0.06$ & $0.22$ & $0.59$ \\
+$8$ & $0.014$ & $0.03$ & $0.10$ & $0.25$ \\
+\end{tabular}
+\caption{Esecuzione parallela}
+\label{t2}
+\end{minipage}
+
+\end{table}
+
+
+\begin{table}
+\centering
+\setlength\tabcolsep{4pt}
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tabular}{c|cccc}
+\multirow{2}{*}{\texttt{comm\_sz}}
+  & \multicolumn{4}{c}{\textbf{Numero di punti}} \\
+  & $3500$ & $7500$ & $15000$ & $25000$ \\
+\hline
+$2$ & $2.2$ & $2.2$ & $2.2$ & $2.25$ \\
+$3$ & $2.3$ & $3.1$ & $3.18$ & $3.20$ \\
+$4$ & $2.5$ & $3.83$ & $4.13$ & $4.23$ \\
+$8$ & $2.14$ & $4.0$ & $4.6$ & $5.0$ \\
+\end{tabular}
+\caption{Speedup}
+\label{t3}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tabular}{c|cccc}
+\multirow{2}{*}{\texttt{comm\_sz}}
+  & \multicolumn{4}{c}{\textbf{Numero di punti}} \\
+  & $3500$ & $7500$ & $15000$ & $25000$ \\
+\hline
+$2$ & $1.10$ & $1.10$ & $1.10$ & $1.12$ \\
+$3$ & $0.77$ & $1.03$ & $1.06$ & $1.06$ \\
+$4$ & $0.63$ & $0.95$ & $1.03$ & $1.05$ \\
+$8$ & $0.26$ & $0.50$ & $0.57$ & $0.62$ \\
+\end{tabular}
+\caption{Efficienza}
+\label{t4}
+\end{minipage}
+\end{table}
+
+
+
+\end{document}
