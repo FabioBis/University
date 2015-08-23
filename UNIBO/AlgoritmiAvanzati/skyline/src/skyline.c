@@ -4,8 +4,9 @@
  *	Matricola: 0000734326
  *	e-mail: fabio.biselli@studio.unibo.it
  *
+ *  Load mpi: module load mpi/openmpi-$(uname -i)
  *	Compile: mpicc -Wall skyline.c -o skyline
- *	Run:
+ *	Run: mpirun -n <N> ./skyline
  */
 
 #include <mpi.h>
@@ -16,40 +17,19 @@
 #include <string.h>
 #include <time.h>
 
-typedef struct Point3D
-{
-  float x;
-  float y;
-  float z;
-} Point3D;
-
 /*
-	Return 1 if A dominates B, 0 otherwise.
+ *  Given two point: A(x_a, y_a, z_a) and B(x_b, y_b, z_b), returns 1
+ *  iff A dominataes B, 0 otherwise.
  */
 int dominates(float x_a, float y_a, float z_a, float x_b, float y_b, float z_b)
 {
-  return
-	(
-     x_a >= x_b &&
-     y_a >= y_b &&
-     z_a >= z_b
-     )
-    &&
-	(
-     x_a > x_b ||
-     y_a > y_b ||
-     z_a > z_b
-     );
+  return (x_a >= x_b && y_a >= y_b && z_a >= z_b)
+    && ( x_a > x_b || y_a > y_b || z_a > z_b);
 }
 
 void skyline(float *x_in, float *y_in,float *z_in, int size_in,
              int *out, int *skyline_size)
 {
-  /*
-    Initialize support array s. It contains each position of skyline
-    elements inside input array In. If s[i] == 1, In[i] represent a skyline
-    point of array In.
-  */
   int i;
   for (i = 0 ; i < size_in; i++)
   {
@@ -65,9 +45,9 @@ void skyline(float *x_in, float *y_in,float *z_in, int size_in,
       if (k != j)
       {
         if (dominates(x_in[j], y_in[j], z_in[j], x_in[k], y_in[k], z_in[k]))
-          {
-            out[k] = 0;
-          }
+        {
+          out[k] = 0;
+        }
       }
     }
   }
@@ -84,7 +64,7 @@ void getDataSize(int *size_out)
 {
   FILE *f;
 
-  f = fopen ("test.txt","r");  /* Input file. */
+  f = fopen ("in.txt","r");  /* Input file. */
   if (f == NULL)
   {
     printf ("Errore durante l'apertura del file\n");
@@ -106,7 +86,7 @@ void getData(float *x_out, float *y_out, float *z_out, int size)
 {
   FILE *f;
 
-  f = fopen ("test.txt","r");  /* Input file. */
+  f = fopen ("in.txt","r");  /* Input file. */
   if (f == NULL)
   {
     printf ("Errore durante l'apertura del file\n");
@@ -154,50 +134,55 @@ void getData(float *x_out, float *y_out, float *z_out, int size)
   return;
 }
 
+void saveData(float *x_out, float *y_out, float *z_out, int size)
+{
+  FILE *f;
+
+  f = fopen ("out.txt","w");  /* Output file. */
+  if (f == NULL)
+  {
+    printf ("Errore durante l'apertura del file\n");
+    return;
+  }
+
+  fprintf(f, "%d\n", size);
+  int i;
+  for (i = 0; i < size; i++)
+  {
+    fprintf(f, "%f %f %f\n", x_out[i], y_out[i], z_out[i]);
+  }
+
+  fclose(f);
+  return;
+}
+
+/*
+ *  Main program.
+ */
 int main( int argc, char* argv[] )
 {
   int my_rank, comm_sz, input_size, partition_size;
+  double time_start0, time_stop0, time_start1, time_stop1,
+    time_start2, time_stop2, total_time = 0.0;
 
   MPI_Init(NULL, NULL);
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
   MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
-  int active_proc = comm_sz;
 
   MPI_Barrier(MPI_COMM_WORLD);
 
   if (my_rank == 0)
   {
     getDataSize(&input_size);
+    time_start0 = MPI_Wtime(); /* T0: broadcast time. */
   }
   MPI_Bcast(&input_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  printf("Process %d:\n", my_rank);  /* DBG */
-  printf("Input size: %d.\n", input_size);  /* DBG */
+  partition_size = input_size / comm_sz;
 
-  int actual_size, part_tag = 0;
-  if (input_size % comm_sz == 0)
-  {
-    partition_size = input_size / comm_sz;
-    actual_size = input_size;
-  }
-  else
-  {
-    partition_size = input_size / comm_sz + 1;
-    if (partition_size * (comm_sz + 1) == input_size)
-    {
-      part_tag = 1;
-      active_proc -=1;
-    }
-    else
-    {
-      part_tag = 2;
-    }
-    actual_size = partition_size * comm_sz;
-  }
-
-  float x[actual_size];
-  float y[actual_size];
-  float z[actual_size];
+  float x[input_size];
+  float y[input_size];
+  float z[input_size];
 
   float local_x[partition_size];
   float local_y[partition_size];
@@ -205,24 +190,104 @@ int main( int argc, char* argv[] )
 
   if (my_rank == 0)
   {
-    getData(x, y, z, actual_size);
+    time_stop0 = MPI_Wtime();
+    getData(x, y, z, input_size);
   }
-  MPI_Scatter(x, partition_size, MPI_FLOAT, local_x, partition_size, MPI_FLOAT,
+
+  time_start1 = MPI_Wtime(); /* T1: computation time. */
+
+  MPI_Scatter(x, partition_size, MPI_FLOAT,
+              local_x, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
-  MPI_Scatter(y, partition_size, MPI_FLOAT, local_y, partition_size, MPI_FLOAT,
+  MPI_Scatter(y, partition_size, MPI_FLOAT,
+              local_y, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
-  MPI_Scatter(z, partition_size, MPI_FLOAT, local_z, partition_size, MPI_FLOAT,
+  MPI_Scatter(z, partition_size, MPI_FLOAT,
+              local_z, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
 
-  /* DBG */
-  printf("Process %d:\n", my_rank);
-  int i;
-  for (i = 0; i < partition_size; i++)
+
+  int local_skyline[partition_size];
+  int local_skyline_size, *actual_skyline;
+  skyline(local_x, local_y, local_z, partition_size,
+          local_skyline, &local_skyline_size);
+
+  if (my_rank == 0)
   {
-    printf("P%d[%d] = <%f, %f, %f>\n", my_rank, i, local_x[i], local_y[i],
-           local_z[i]);
+    actual_skyline = (int *)malloc(input_size*sizeof(int));
   }
-  /* DBG */
+  MPI_Gather(local_skyline, partition_size, MPI_INT,
+             actual_skyline, partition_size, MPI_INT,
+             0, MPI_COMM_WORLD);
+
+  int actual_skyline_size;
+  MPI_Reduce(&local_skyline_size, &actual_skyline_size, 1, MPI_INT, MPI_SUM,
+             0, MPI_COMM_WORLD);
+
+  time_stop1 = MPI_Wtime();
+  double local_elapse = time_stop1 - time_start1;
+  MPI_Reduce(&local_elapse, &total_time, 1, MPI_DOUBLE, MPI_MAX,
+             0, MPI_COMM_WORLD);
+
+  if (my_rank == 0)
+  {
+    time_start2 = MPI_Wtime(); /* T2: final round time. */
+
+    actual_skyline_size += input_size % comm_sz;
+    float x_tmp[actual_skyline_size];
+    float y_tmp[actual_skyline_size];
+    float z_tmp[actual_skyline_size];
+    int global_index = input_size - 1;
+    int tmp_index = actual_skyline_size - 1;
+    int limit = partition_size * comm_sz - 1;
+
+    for(; global_index > limit; global_index--)
+    {
+      /* If we have some remanents points to check, we put them
+         at the end the buffers for the 'final round'. */
+      actual_skyline[global_index] = 0;
+      x_tmp[tmp_index] = x[global_index];
+      y_tmp[tmp_index] = y[global_index];
+      z_tmp[tmp_index] = z[global_index];
+      tmp_index--;
+    }
+    int i, tmp_size = 0;
+    for (i = 0; i < input_size; i++)
+    {
+      if (actual_skyline[i] == 1)
+      {
+        x_tmp[tmp_size] = x[i];
+        y_tmp[tmp_size] = y[i];
+        z_tmp[tmp_size] = z[i];
+        tmp_size++;
+      }
+    }
+
+    int skyline_tmp[tmp_size];
+    int skyline_size;
+    skyline(x_tmp, y_tmp, z_tmp, tmp_size, skyline_tmp, &skyline_size);
+    float x_skyline[skyline_size];
+    float y_skyline[skyline_size];
+    float z_skyline[skyline_size];
+    int j = 0;
+    for (i = 0; i < tmp_size; i++)
+    {
+      if (skyline_tmp[i] == 1)
+      {
+        x_skyline[j] = x_tmp[i];
+        y_skyline[j] = y_tmp[i];
+        z_skyline[j] = z_tmp[i];
+        j++;
+      }
+    }
+    time_stop2 = MPI_Wtime();
+
+    total_time += time_stop0 - time_start0 + time_stop2 - time_start2;
+
+    /* Saving and Printing results. */
+    printf("Time: %f\n", total_time);
+    saveData(x_skyline, y_skyline, z_skyline, skyline_size);
+  }
 
   MPI_Finalize();
 
