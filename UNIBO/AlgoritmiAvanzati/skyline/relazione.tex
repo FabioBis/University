@@ -142,7 +142,8 @@ Questo viene inizializzato impostando tutti i valori ad $1$. In seguito
 vengono confrontati tutti i punti mediante un operatore binario $\succ$
 (domina), ogni
 punto viene confrontato con tutti gli altri per un totale di $O(N^2)$ chiamate.
-Se $p_i \succ p_j$, il relativo valore in $S$ ($S[j]$) viene impostato a $0$.
+Se $p_i \succ p_j$, il relativo valore di $p_j$ in $S$ ($S[j]$) viene impostato
+a $0$.
 Al termine della procedura l'array $S$ conterrà le posizioni della skyline:
 se $S[i] = 1$ allora $p_i \in Sk(P)$.
 

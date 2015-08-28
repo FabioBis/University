@@ -4,7 +4,7 @@
  *	Matricola: 0000734326
  *	e-mail: fabio.biselli@studio.unibo.it
  *
- *  Load mpi: module load mpi/openmpi-$(uname -i)
+ *  Load mpi (Fedora 18): module load mpi/openmpi-$(uname -i)
  *	Compile: mpicc -Wall skyline.c -o skyline
  *	Run: mpirun -n <N> ./skyline
  */
@@ -18,8 +18,8 @@
 #include <time.h>
 
 /*
- *  Given two point: A(x_a, y_a, z_a) and B(x_b, y_b, z_b), returns 1
- *  iff A dominataes B, 0 otherwise.
+ *  Given two points: A(x_a, y_a, z_a) and B(x_b, y_b, z_b), returns 1
+ *  iff A dominates B, 0 otherwise.
  */
 int dominates(float x_a, float y_a, float z_a, float x_b, float y_b, float z_b)
 {
@@ -85,7 +85,7 @@ void getDataSize(long int *size_out)
 }
 
 
-void getData(float *x_out, float *y_out, float *z_out, long int size)
+void getData(float *x_out, float *y_out, float *z_out)
 {
   FILE *f;
 
@@ -104,32 +104,23 @@ void getData(float *x_out, float *y_out, float *z_out, long int size)
   long int size_in = strtol(input_string, NULL, 10);
 
   long int i;
-  for (i = 0; i < size; i++)
+  for (i = 0; i < size_in; i++)
   {
-    if (i < size_in)
-    {
-      getline(&input_string, &bytes, f);
-      char str[50], *s = str, *t = NULL;
-      strcpy(str, input_string);
+    getline(&input_string, &bytes, f);
+    char str[50], *s = str, *t = NULL;
+    strcpy(str, input_string);
 
-      float coordinates[3];
-      long int j;
-      for (j = 0; j < 3; j++)
-      {
-        t = strtok(s, " ");
-        s = NULL;
-        coordinates[j] = atof(t);
-      }
-      x_out[i] = coordinates[0];
-      y_out[i] = coordinates[1];
-      z_out[i] = coordinates[2];
-    }
-    else
+    float coordinates[3];
+    long int j;
+    for (j = 0; j < 3; j++)
     {
-      x_out[i] = -FLT_MAX;
-      y_out[i] = -FLT_MAX;
-      z_out[i] = -FLT_MAX;
+      t = strtok(s, " ");
+      s = NULL;
+      coordinates[j] = atof(t);
     }
+    x_out[i] = coordinates[0];
+    y_out[i] = coordinates[1];
+    z_out[i] = coordinates[2];
   }
 
   free(input_string);
@@ -198,13 +189,13 @@ int main( int argc, char* argv[] )
   if (my_rank == 0)
   {
     time_stop0 = MPI_Wtime();
-    getData(x, y, z, input_size);
+    getData(x, y, z);
   }
 
   /* Phase 1: qualify tournament. */
   time_start1 = MPI_Wtime(); /* T1: computation time. */
 
-  /* Distribution of partitioned data among presesses. */
+  /* Distribution of partitioned data among processes. */
   MPI_Scatter(x, partition_size, MPI_FLOAT,
               local_x, partition_size, MPI_FLOAT,
               0, MPI_COMM_WORLD);
@@ -302,6 +293,8 @@ int main( int argc, char* argv[] )
     /* Saving and Printing results. */
     printf("Time: %f\n", total_time);
     saveData(x_skyline, y_skyline, z_skyline, skyline_size);
+
+    free(actual_skyline);
   }
 
   MPI_Finalize();
