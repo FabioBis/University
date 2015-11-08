@@ -1,0 +1,945 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     37562,        935]
+NotebookOptionsPosition[     33288,        788]
+NotebookOutlinePosition[     34235,        821]
+CellTagsIndexPosition[     34027,        813]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"?", "Import"}]], "Input",
+ CellChangeTimes->{{3.6514068239875245`*^9, 3.651406827087594*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox["\<\"\\!\\(\\*RowBox[{\\\"Import\\\", \\\"[\\\", StyleBox[\\\"\\\\\
+\\\"\\\\!\\\\(\\\\*StyleBox[\\\\\\\"file\\\\\\\",\\\\\\\"TI\\\\\\\"]\\\\)\\\\\
+\\\"\\\", ShowStringCharacters->True], \\\"]\\\"}]\\) imports data from a \
+file, returning a complete \\!\\(\\*StyleBox[\\\"Wolfram Language\\\", \
+\\\"RebrandingTerm\\\"]\\) version of it. \\n\\!\\(\\*RowBox[{\\\"Import\\\", \
+\\\"[\\\", \
+RowBox[{StyleBox[\\\"\\\\\\\"\\\\!\\\\(\\\\*StyleBox[\\\\\\\"file\\\\\\\",\\\\\
+\\\"TI\\\\\\\"]\\\\)\\\\\\\"\\\", ShowStringCharacters->True], \\\",\\\", \
+StyleBox[\\\"elements\\\", \\\"TI\\\"]}], \\\"]\\\"}]\\) imports the \
+specified elements from a file.\\n\\!\\(\\*RowBox[{\\\"Import\\\", \\\"[\\\", \
+RowBox[{StyleBox[\\\"\\\\\\\"http://\\\\!\\\\(\\\\*StyleBox[\\\\\\\"url\\\\\\\
+\",\\\\\\\"TI\\\\\\\"]\\\\)\\\\\\\"\\\",ShowStringCharacters->True], \
+\\\",\\\", StyleBox[\\\"\[Ellipsis]\\\", \\\"TR\\\"]}], \\\"]\\\"}]\\) and \
+\\!\\(\\*RowBox[{\\\"Import\\\", \\\"[\\\", \
+RowBox[{StyleBox[\\\"\\\\\\\"ftp://\\\\!\\\\(\\\\*StyleBox[\\\\\\\"url\\\\\\\"\
+,\\\\\\\"TI\\\\\\\"]\\\\)\\\\\\\"\\\",ShowStringCharacters->True], \\\",\\\", \
+StyleBox[\\\"\[Ellipsis]\\\", \\\"TR\\\"]}], \\\"]\\\"}]\\) imports from any \
+accessible URL. \"\>", "MSG"], "\[NonBreakingSpace]", 
+  ButtonBox[
+   StyleBox["\[RightSkeleton]", "SR"],
+   Active->True,
+   BaseStyle->"Link",
+   ButtonData->"paclet:ref/Import"]}]], "Print", "PrintUsage",
+ CellChangeTimes->{3.6514068283574276`*^9},
+ CellTags->"Info3651414028-3713272"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"path", " ", "=", " ", 
+  RowBox[{"FindFile", "[", "\"\<circularity.m\>\"", "]"}]}]], "Input",
+ CellChangeTimes->{{3.651406893477872*^9, 3.6514068989595175`*^9}, {
+  3.651406959546938*^9, 3.651406980141663*^9}}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.651406982179021*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["Path"], "Input",
+ CellChangeTimes->{{3.651407059918871*^9, 3.651407060587319*^9}}],
+
+Cell[BoxData["Path"], "Output",
+ CellChangeTimes->{3.65140706154097*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$Path"], "Input",
+ CellChangeTimes->{{3.651407070727092*^9, 3.6514070725072775`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\
+\\\\SystemFiles\\\\Links\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Kernel\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Autoload\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Applications\"\>", ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Applications\"\>", 
+   ",", "\<\".\"\>", ",", "\<\"C:\\\\Users\\\\fabio\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\LegacyPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\ExtraPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Kernel\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\Documentation\\\\English\\\\System\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Data\\\\ICC\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{3.6514070736060033`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", 
+  "\"\<C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.6514071155239625`*^9, 3.6514071238685226`*^9}, {
+  3.651407419625784*^9, 3.6514074325364065`*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\"\>"], "Output",
+ CellChangeTimes->{3.65140743529425*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$Path"], "Input",
+ CellChangeTimes->{{3.6514074450017214`*^9, 3.6514074472071905`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\
+\\\\SystemFiles\\\\Links\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Kernel\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Autoload\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Applications\"\>", ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Applications\"\>", 
+   ",", "\<\".\"\>", ",", "\<\"C:\\\\Users\\\\fabio\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\LegacyPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\ExtraPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Kernel\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\Documentation\\\\English\\\\System\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Data\\\\ICC\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{3.6514074486341486`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"path", " ", "=", " ", 
+  RowBox[{"FindFile", "[", "\"\<circularity.m\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\\\\circularity.m\"\>"], "Output",
+ CellChangeTimes->{3.6514074736138077`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"Import", "[", "\"\<circularity.m\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.651407485629818*^9, 3.651407506168517*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"circularity", "[", 
+  RowBox[{
+   GraphicsBox[
+    TagBox[RasterBox[CompressedData["
+1:eJztnQlIVVkYx0vb9yBaCFJTi0ArsQXaSFspgnIqWplsRtssy9EsZ5gWHCtC
+JiK0BSeiGKVo1SIt0sxpUamolIrKjfZ936xv/J+ZJz59T9973ne/83znB/96
++u69eP7fu/e+c853vusxPzwo1KVRo0a/tKj4Jyg4OiAiInj1D00qfghcHRky
+37XiRViFfqoQfkkKhUKhUCgUCoVCoVAoFAqFwiypqam0Y8cOCgsLo549ewr1
+69ePEhISxO8NOnnyJPef2iDJzMykmJgY6tixI2E40xI1btxY7HPgwAG6cOEC
+dxMcHny+R4wYQS4uLhbHoKoM+zVt2pRiY2O5m+PQeHl52RQDU+rSpQu9ffuW
+u0kOi5axMGjMmDH0/Plz7qY5HBs2bNA8FlDz5s3p9u3b3M1zKHBNWbt2rc33
+i9qk7ue2ERgYqGkcunfvTg8ePOBulnTcvXuX8vPzjXTnzh2jbXB+DBs2TJM4
+dO3alW7evMnUWjn59u0bBQcHi2t3db88PT3p6tWrRtu/fv2amjVrVu9YHD16
+1Oi4165do7Fjx9Lo0aMpOztbTwuk4eDBg7V65u3tTdevXzfaJzw8vF5xwP4G
+njx5QocOHaLOnTtXvh8QEEDFxcV6W8HGlStXaMuWLRZ9xqdNm2a0L8Y1bI2D
+h4cHff/+XRwH/y9YsMDkdjg/Pn78yGGNrpw+fZpatmxpsX8Yx4CHSUlJYv8P
+Hz5Q69atbYrFihUrxDEQh6VLl9a6LfqFOC+rXycbCvisdevWzSYfXV1dafv2
+7eI4M2fOtHr/Hj16UFFRkYgDxhQt3W/u3LnMrmlPRkaGVeN65mTrMQ4fPmx1
+HKAWLVpQXFwcffr0idtCTUAcrLkuaS1c0zDmYW0cqsrHx4e+fPnCbWW9GT58
+OFsctFTbtm1pz5493HbazI0bN8R4NbePWmnAgAH05s0bblutBvNsAwcOZPdP
+a7Vr145ycnK47bUYfGfCNZbbN3tp6NCh9PnzZ26bLaKgoIDdL3tr3bp13DZb
+xK5du9i9sreGDBlC5eXl3FbXyaxZs9i90kMvXrzgtrpOnCUWK1eu5La6Tpwl
+Fk2aNOG2ulaysrLE+A+3T3pJVt6/f09ubm7s/qhYED169IjdGxWL/8jLy2P3
+Rm+VlZVx214DjNNw+8KhVq1acVtfA+QGcPvCIYzJy0Z8fDy7Lxxavnw5t/U1
+iIyMZPdFb6F/IVvfe+/evTbnBDiyMFdoADl3z549Y4zCf2zcuJHdFw61adNG
+5PBAyDGSYd4PfTxuX7iFOf3CwkLuUIixY24vuLVo0SLuMAicPRbLli2rzEnk
+xpljERISIvK0ZWLQoEHsvuitoKAgac4HA6by9p1BWFsu23iUs8YCwvpO5MNj
+zoYbfI9D7jG3J1zCd1nk+e7evZs7FCJXiNsPvdW+fXsaPHiwyH1/+PAhdwgq
+OXHiBLs3egrzllg/ICOdOnVi90dPXbx4kdtysxw7dozdH72EdVL37t3jttwk
+WBOKekHcHumlKVOmcFtulq1bt7L7o5fQl5VtrqIq+/btY/dID2Hd5bt377jt
+rhX0/xcvXszulb2FNeC4L5oC68RlmLcAznLvnjBhQo22Iw6+vr6irxsdHV2j
+NoDebN68md0njlg8ffqU+vbta7QN9/mRkpLC7pMe8vPzo69fv4o243yoHgcZ
+YgGcZWzw8uXL9PjxY3Fdqv4exqRwrnAzcuRITdbSyy6sRerdu7fJ92QYpzXg
+LPdwcxo/fjx3CAQzZsygDh06sPvBJVwTZOl/oG4Gtx9cwr0SY9WygOuTFjXP
+HFHHjx/ntr8GqBEYGhraoGpO1CXkDcoKxs5QA4vbIz00efJkkUMrK8jZ4vZI
+D02cOFH6Gkb1qdHkKPL39xe19mQnNzeXxo0bx+6XPTVv3jxum63m1KlTDe67
+LuoVnT9/nttaq3n16pXJcRtHFeYwHDEOO3fuFOs7uf3TSpMmTZL+Xm2O2bNn
+s/unlbD2zZHrnyOXa//+/UK21JOVSajv3FBYv349u5/1UVpaGreFmoD+BvK7
+DO1CDcL09HRRw53bY0vUp08f6da52AJqDlaNg7u7OyUnJ4v3zpw5Q6NGjZJ6
+7Ar1aBtKPXOsBUAsINwzTM0/RkREsHtuTlFRUQyu2Q+s2alt3Q6e97JkyRK7
+PA/JVmFeaM2aNdKt/dKLkpISkZsnQ26u4XkCzg76U1jfw3WeTJ061WnPB3Pg
++T2m8o/sKYxx3Lp1i7vpUoJ5KdTe0WMsBc8Wk6F+hOyg9oy97+8yrzWSkcTE
+RKP+ihbC+jasW1BYz7Zt2zStU7Vp0ybuJjk0eP4dnuldnxigD7Fq1Sr1nUkj
+8GxbzB0eOXLEqu9cCxcupNLSUu4/v8GCzzf6inXFISYmhvtPdQoQD4zPozZH
+dU2fPl08z0xdkxQKhUKhUCgUCucAc7GY6zesoTZHSXEx5eflGeXxFRcVi+dv
+oP+A15i7Bf/k5IhcUhyz/Gu5UNU+hqljOTt/xsdTVmYmlZaUUHRkFL18+dLk
+dnGxf1BGejrdv39fbGfIvf85eD55urlTfx9f+v3X30S9XDyH1Mvdg3p5elIf
+715C/v396OX/tW7MHcuZKSstpR/nzKn8OS01VcSmOrmXLtGMij60gcSEBPor
+KUm8Tvk7WeSZVPWzsKCAzmWfqzwPMFeUffZsncfi5F+zrW0N
+      "], {{0, 108}, {99, 0}}, {0, 255},
+      ColorFunction->RGBColor],
+     BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+     Selectable->False],
+    BaseStyle->"ImageGraphics",
+    ImageSizeRaw->{99, 108},
+    PlotRange->{{0, 99}, {0, 108}}], ",", " ", "\"\<test\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6514075580601254`*^9, 3.6514075643593283`*^9}, {
+  3.651407605901025*^9, 3.6514076186014957`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"circularity", "[", 
+  RowBox[{
+   GraphicsBox[
+    TagBox[RasterBox[CompressedData["
+1:eJztnQlIVVkYx0vb9yBaCFJTi0ArsQXaSFspgnIqWplsRtssy9EsZ5gWHCtC
+JiK0BSeiGKVo1SIt0sxpUamolIrKjfZ936xv/J+ZJz59T9973ne/83znB/96
++u69eP7fu/e+c853vusxPzwo1KVRo0a/tKj4Jyg4OiAiInj1D00qfghcHRky
+37XiRViFfqoQfkkKhUKhUCgUCoVCoVAoFAqFwiypqam0Y8cOCgsLo549ewr1
+69ePEhISxO8NOnnyJPef2iDJzMykmJgY6tixI2E40xI1btxY7HPgwAG6cOEC
+dxMcHny+R4wYQS4uLhbHoKoM+zVt2pRiY2O5m+PQeHl52RQDU+rSpQu9ffuW
+u0kOi5axMGjMmDH0/Plz7qY5HBs2bNA8FlDz5s3p9u3b3M1zKHBNWbt2rc33
+i9qk7ue2ERgYqGkcunfvTg8ePOBulnTcvXuX8vPzjXTnzh2jbXB+DBs2TJM4
+dO3alW7evMnUWjn59u0bBQcHi2t3db88PT3p6tWrRtu/fv2amjVrVu9YHD16
+1Oi4165do7Fjx9Lo0aMpOztbTwuk4eDBg7V65u3tTdevXzfaJzw8vF5xwP4G
+njx5QocOHaLOnTtXvh8QEEDFxcV6W8HGlStXaMuWLRZ9xqdNm2a0L8Y1bI2D
+h4cHff/+XRwH/y9YsMDkdjg/Pn78yGGNrpw+fZpatmxpsX8Yx4CHSUlJYv8P
+Hz5Q69atbYrFihUrxDEQh6VLl9a6LfqFOC+rXycbCvisdevWzSYfXV1dafv2
+7eI4M2fOtHr/Hj16UFFRkYgDxhQt3W/u3LnMrmlPRkaGVeN65mTrMQ4fPmx1
+HKAWLVpQXFwcffr0idtCTUAcrLkuaS1c0zDmYW0cqsrHx4e+fPnCbWW9GT58
+OFsctFTbtm1pz5493HbazI0bN8R4NbePWmnAgAH05s0bblutBvNsAwcOZPdP
+a7Vr145ycnK47bUYfGfCNZbbN3tp6NCh9PnzZ26bLaKgoIDdL3tr3bp13DZb
+xK5du9i9sreGDBlC5eXl3FbXyaxZs9i90kMvXrzgtrpOnCUWK1eu5La6Tpwl
+Fk2aNOG2ulaysrLE+A+3T3pJVt6/f09ubm7s/qhYED169IjdGxWL/8jLy2P3
+Rm+VlZVx214DjNNw+8KhVq1acVtfA+QGcPvCIYzJy0Z8fDy7Lxxavnw5t/U1
+iIyMZPdFb6F/IVvfe+/evTbnBDiyMFdoADl3z549Y4zCf2zcuJHdFw61adNG
+5PBAyDGSYd4PfTxuX7iFOf3CwkLuUIixY24vuLVo0SLuMAicPRbLli2rzEnk
+xpljERISIvK0ZWLQoEHsvuitoKAgac4HA6by9p1BWFsu23iUs8YCwvpO5MNj
+zoYbfI9D7jG3J1zCd1nk+e7evZs7FCJXiNsPvdW+fXsaPHiwyH1/+PAhdwgq
+OXHiBLs3egrzllg/ICOdOnVi90dPXbx4kdtysxw7dozdH72EdVL37t3jttwk
+WBOKekHcHumlKVOmcFtulq1bt7L7o5fQl5VtrqIq+/btY/dID2Hd5bt377jt
+rhX0/xcvXszulb2FNeC4L5oC68RlmLcAznLvnjBhQo22Iw6+vr6irxsdHV2j
+NoDebN68md0njlg8ffqU+vbta7QN9/mRkpLC7pMe8vPzo69fv4o243yoHgcZ
+YgGcZWzw8uXL9PjxY3Fdqv4exqRwrnAzcuRITdbSyy6sRerdu7fJ92QYpzXg
+LPdwcxo/fjx3CAQzZsygDh06sPvBJVwTZOl/oG4Gtx9cwr0SY9WygOuTFjXP
+HFHHjx/ntr8GqBEYGhraoGpO1CXkDcoKxs5QA4vbIz00efJkkUMrK8jZ4vZI
+D02cOFH6Gkb1qdHkKPL39xe19mQnNzeXxo0bx+6XPTVv3jxum63m1KlTDe67
+LuoVnT9/nttaq3n16pXJcRtHFeYwHDEOO3fuFOs7uf3TSpMmTZL+Xm2O2bNn
+s/unlbD2zZHrnyOXa//+/UK21JOVSajv3FBYv349u5/1UVpaGreFmoD+BvK7
+DO1CDcL09HRRw53bY0vUp08f6da52AJqDlaNg7u7OyUnJ4v3zpw5Q6NGjZJ6
+7Ar1aBtKPXOsBUAsINwzTM0/RkREsHtuTlFRUQyu2Q+s2alt3Q6e97JkyRK7
+PA/JVmFeaM2aNdKt/dKLkpISkZsnQ26u4XkCzg76U1jfw3WeTJ061WnPB3Pg
++T2m8o/sKYxx3Lp1i7vpUoJ5KdTe0WMsBc8Wk6F+hOyg9oy97+8yrzWSkcTE
+RKP+ihbC+jasW1BYz7Zt2zStU7Vp0ybuJjk0eP4dnuldnxigD7Fq1Sr1nUkj
+8GxbzB0eOXLEqu9cCxcupNLSUu4/v8GCzzf6inXFISYmhvtPdQoQD4zPozZH
+dU2fPl08z0xdkxQKhUKhUCgUCucAc7GY6zesoTZHSXEx5eflGeXxFRcVi+dv
+oP+A15i7Bf/k5IhcUhyz/Gu5UNU+hqljOTt/xsdTVmYmlZaUUHRkFL18+dLk
+dnGxf1BGejrdv39fbGfIvf85eD55urlTfx9f+v3X30S9XDyH1Mvdg3p5elIf
+715C/v396OX/tW7MHcuZKSstpR/nzKn8OS01VcSmOrmXLtGMij60gcSEBPor
+KUm8Tvk7WeSZVPWzsKCAzmWfqzwPMFeUffZsncfi5F+zrW0N
+      "], {{0, 108}, {99, 0}}, {0, 255},
+      ColorFunction->RGBColor],
+     BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+     Selectable->False],
+    BaseStyle->"ImageGraphics",
+    ImageSizeRaw->{99, 108},
+    PlotRange->{{0, 99}, {0, 108}}], ",", "\<\"test\"\>"}], "]"}]], "Output",
+ CellChangeTimes->{3.651407619948394*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"Import", "[", 
+   RowBox[{"\"\<circularity.m\>\"", ",", "\"\<InactivatedExpressions\>\""}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{
+  3.6514076249627476`*^9, {3.651407679339016*^9, 3.651407685845354*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellChangeTimes->{3.6514076886882505`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FindFile", "[", "\"\<circularity.m\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.651407730180927*^9, 3.651407738357368*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\\\\circularity.m\"\>"], "Output",
+ CellChangeTimes->{3.65140773909587*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "circularity"}]], "Input",
+ CellChangeTimes->{{3.6514077626485806`*^9, 3.651407764984126*^9}}],
+
+Cell["Global`circularity", "Print", "PrintUsage",
+ CellChangeTimes->{3.651407765940776*^9},
+ CellTags->"Info3651414965-3713272"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "[", 
+  RowBox[{"\"\<circularity.m\>\"", ",", "\"\<InactivatedExpressions\>\""}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellChangeTimes->{3.6514078225154977`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "[", 
+  RowBox[{"\"\<circularity.m\>\"", ",", "\"\<Circularity`\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6514078982920513`*^9, 3.65140790310726*^9}, 
+   3.651407948556564*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "noelem"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The Import element \
+\\\"\[NoBreak]\\!\\(\\\"Circularity`\\\"\\)\[NoBreak]\\\" is not present when \
+importing as \[NoBreak]\\!\\(\\\"Package\\\"\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/Import\\\", ButtonNote -> \
+\\\"Import::noelem\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{{3.65140792963696*^9, 3.651407950395796*^9}}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{{3.651407929637948*^9, 3.6514079503978024`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6514080481720114`*^9, 3.6514080523858256`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"AppendTo", "[", 
+  RowBox[{"$Path", ",", " ", 
+   RowBox[{"ToFileName", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Directory", "[", "]"}], ",", " ", "\"\<Circularity`\>\""}], 
+     "}"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6514080628878307`*^9, 3.651408147482242*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\
+\\\\SystemFiles\\\\Links\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Kernel\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Autoload\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Applications\"\>", ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Applications\"\>", 
+   ",", "\<\".\"\>", ",", "\<\"C:\\\\Users\\\\fabio\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\LegacyPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\ExtraPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Kernel\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\Documentation\\\\English\\\\System\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Data\\\\ICC\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\\\\Circularity`\\\\\"\>"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.6514081508935156`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"AppendTo", "[", 
+  RowBox[{"$Path", ",", " ", 
+   RowBox[{"ToFileName", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Directory", "[", "]"}], ",", " ", "\"\<\>\""}], "}"}], "]"}]}],
+   "]"}]], "Input",
+ CellChangeTimes->{{3.651408192081998*^9, 3.651408193810151*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\
+\\\\SystemFiles\\\\Links\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Kernel\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Autoload\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\AppData\\\\Roaming\\\\Mathematica\\\\\
+Applications\"\>", ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Applications\"\>", 
+   ",", "\<\".\"\>", ",", "\<\"C:\\\\Users\\\\fabio\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\LegacyPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\AddOns\\\\ExtraPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Kernel\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\Documentation\\\\English\\\\System\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram Research\\\\Mathematica\\\\10.0\\\
+\\SystemFiles\\\\Data\\\\ICC\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\\\\Circularity`\\\\\"\>", 
+   ",", "\<\"C:\\\\Users\\\\fabio\\\\workbench\\\\University\\\\UNIBO\\\\\
+MatematicaComputazionale\\\\circularity\\\\\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{3.65140819665005*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "[", 
+  RowBox[{"\"\<circularity.m\>\"", ",", "\"\<Circularity`\>\""}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "noelem"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The Import element \
+\\\"\[NoBreak]\\!\\(\\\"Circularity`\\\"\\)\[NoBreak]\\\" is not present when \
+importing as \[NoBreak]\\!\\(\\\"Package\\\"\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/Import\\\", ButtonNote -> \
+\\\"Import::noelem\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.651408214027629*^9}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.6514082140286303`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Import", "[", "\"\<circularity\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.651408219737444*^9, 3.6514082287394485`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "nffil"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"File not found during \[NoBreak]\\!\\(Import\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/Import/nffil\\\", \
+ButtonNote -> \\\"Import::nffil\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.651408229617033*^9}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.651408229618024*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"Import", "[", "\"\<circularity.m\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.6514082412487803`*^9, 3.6514082415219746`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "circularity"}]], "Input",
+ CellChangeTimes->{{3.6514082479272447`*^9, 3.65140826115407*^9}, {
+  3.65140829169744*^9, 3.651408298356882*^9}}],
+
+Cell["Global`circularity", "Print", "PrintUsage",
+ CellChangeTimes->{3.651408308636737*^9},
+ CellTags->"Info3651415508-6192657"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "Circularity`circularity"}]], "Input",
+ CellChangeTimes->{{3.651408329596718*^9, 3.6514083543041983`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Information", "::", "notfound"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Symbol \[NoBreak]\\!\\(\\\"Circularity`circularity\\\"\\)\
+\[NoBreak] not found. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/notfound\\\", ButtonNote -> \
+\\\"Information::notfound\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.651408357359235*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6514082887354536`*^9, 3.651408288751475*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Import", "[", "\"\<circularity.m\>\"", "]"}]], "Input",
+ CellChangeTimes->{3.6514082861757507`*^9, 3.651408391713148*^9},
+ NumberMarks->False],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"circularity", "[", 
+   RowBox[{"1", ",", "1"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.65140840071515*^9, 3.6514084249763207`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"circularity", "[", 
+  RowBox[{"1", ",", "1"}], "]"}]], "Output",
+ CellChangeTimes->{3.651408425701822*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"MyCircularity", "[", 
+  RowBox[{"1", ",", "1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6514084344816723`*^9, 3.6514084439049563`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"MyCircularity", "[", 
+  RowBox[{"1", ",", "1"}], "]"}]], "Output",
+ CellChangeTimes->{3.6514084445023603`*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.6514082832638044`*^9, 3.65140828328583*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Import", "[", "\"\<circularity.m\>\"", "]"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"Import", "[", 
+   RowBox[{"\"\<circularity.m\>\"", ",", " ", "\"\<Circularity`\>\""}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.651408504570418*^9, 3.6514085144159746`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "noelem"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The Import element \
+\\\"\[NoBreak]\\!\\(\\\"Circularity`\\\"\\)\[NoBreak]\\\" is not present when \
+importing as \[NoBreak]\\!\\(\\\"Package\\\"\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/Import\\\", ButtonNote -> \
+\\\"Import::noelem\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6514085162642126`*^9}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.6514085162652264`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"<<", "circularity.m"}]], "Input",
+ CellChangeTimes->{{3.6514087692959833`*^9, 3.651408778717269*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"<<", "prova.m"}]], "Input",
+ CellChangeTimes->{{3.651408809147561*^9, 3.651408811996461*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Get", "::", "noopen"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Cannot open \[NoBreak]\\!\\(\\\"prova.m\\\"\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/noopen\\\", \
+ButtonNote -> \\\"Get::noopen\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.651408813213273*^9}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.6514088132142735`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"MyCircularity", "[", 
+  RowBox[{
+   GraphicsBox[
+    TagBox[RasterBox[CompressedData["
+1:eJztnQlIVVkYx0vb9yBaCFJTi0ArsQXaSFspgnIqWplsRtssy9EsZ5gWHCtC
+JiK0BSeiGKVo1SIt0sxpUamolIrKjfZ936xv/J+ZJz59T9973ne/83znB/96
++u69eP7fu/e+c853vusxPzwo1KVRo0a/tKj4Jyg4OiAiInj1D00qfghcHRky
+37XiRViFfqoQfkkKhUKhUCgUCoVCoVAoFAqFwiypqam0Y8cOCgsLo549ewr1
+69ePEhISxO8NOnnyJPef2iDJzMykmJgY6tixI2E40xI1btxY7HPgwAG6cOEC
+dxMcHny+R4wYQS4uLhbHoKoM+zVt2pRiY2O5m+PQeHl52RQDU+rSpQu9ffuW
+u0kOi5axMGjMmDH0/Plz7qY5HBs2bNA8FlDz5s3p9u3b3M1zKHBNWbt2rc33
+i9qk7ue2ERgYqGkcunfvTg8ePOBulnTcvXuX8vPzjXTnzh2jbXB+DBs2TJM4
+dO3alW7evMnUWjn59u0bBQcHi2t3db88PT3p6tWrRtu/fv2amjVrVu9YHD16
+1Oi4165do7Fjx9Lo0aMpOztbTwuk4eDBg7V65u3tTdevXzfaJzw8vF5xwP4G
+njx5QocOHaLOnTtXvh8QEEDFxcV6W8HGlStXaMuWLRZ9xqdNm2a0L8Y1bI2D
+h4cHff/+XRwH/y9YsMDkdjg/Pn78yGGNrpw+fZpatmxpsX8Yx4CHSUlJYv8P
+Hz5Q69atbYrFihUrxDEQh6VLl9a6LfqFOC+rXycbCvisdevWzSYfXV1dafv2
+7eI4M2fOtHr/Hj16UFFRkYgDxhQt3W/u3LnMrmlPRkaGVeN65mTrMQ4fPmx1
+HKAWLVpQXFwcffr0idtCTUAcrLkuaS1c0zDmYW0cqsrHx4e+fPnCbWW9GT58
+OFsctFTbtm1pz5493HbazI0bN8R4NbePWmnAgAH05s0bblutBvNsAwcOZPdP
+a7Vr145ycnK47bUYfGfCNZbbN3tp6NCh9PnzZ26bLaKgoIDdL3tr3bp13DZb
+xK5du9i9sreGDBlC5eXl3FbXyaxZs9i90kMvXrzgtrpOnCUWK1eu5La6Tpwl
+Fk2aNOG2ulaysrLE+A+3T3pJVt6/f09ubm7s/qhYED169IjdGxWL/8jLy2P3
+Rm+VlZVx214DjNNw+8KhVq1acVtfA+QGcPvCIYzJy0Z8fDy7Lxxavnw5t/U1
+iIyMZPdFb6F/IVvfe+/evTbnBDiyMFdoADl3z549Y4zCf2zcuJHdFw61adNG
+5PBAyDGSYd4PfTxuX7iFOf3CwkLuUIixY24vuLVo0SLuMAicPRbLli2rzEnk
+xpljERISIvK0ZWLQoEHsvuitoKAgac4HA6by9p1BWFsu23iUs8YCwvpO5MNj
+zoYbfI9D7jG3J1zCd1nk+e7evZs7FCJXiNsPvdW+fXsaPHiwyH1/+PAhdwgq
+OXHiBLs3egrzllg/ICOdOnVi90dPXbx4kdtysxw7dozdH72EdVL37t3jttwk
+WBOKekHcHumlKVOmcFtulq1bt7L7o5fQl5VtrqIq+/btY/dID2Hd5bt377jt
+rhX0/xcvXszulb2FNeC4L5oC68RlmLcAznLvnjBhQo22Iw6+vr6irxsdHV2j
+NoDebN68md0njlg8ffqU+vbta7QN9/mRkpLC7pMe8vPzo69fv4o243yoHgcZ
+YgGcZWzw8uXL9PjxY3Fdqv4exqRwrnAzcuRITdbSyy6sRerdu7fJ92QYpzXg
+LPdwcxo/fjx3CAQzZsygDh06sPvBJVwTZOl/oG4Gtx9cwr0SY9WygOuTFjXP
+HFHHjx/ntr8GqBEYGhraoGpO1CXkDcoKxs5QA4vbIz00efJkkUMrK8jZ4vZI
+D02cOFH6Gkb1qdHkKPL39xe19mQnNzeXxo0bx+6XPTVv3jxum63m1KlTDe67
+LuoVnT9/nttaq3n16pXJcRtHFeYwHDEOO3fuFOs7uf3TSpMmTZL+Xm2O2bNn
+s/unlbD2zZHrnyOXa//+/UK21JOVSajv3FBYv349u5/1UVpaGreFmoD+BvK7
+DO1CDcL09HRRw53bY0vUp08f6da52AJqDlaNg7u7OyUnJ4v3zpw5Q6NGjZJ6
+7Ar1aBtKPXOsBUAsINwzTM0/RkREsHtuTlFRUQyu2Q+s2alt3Q6e97JkyRK7
+PA/JVmFeaM2aNdKt/dKLkpISkZsnQ26u4XkCzg76U1jfw3WeTJ061WnPB3Pg
++T2m8o/sKYxx3Lp1i7vpUoJ5KdTe0WMsBc8Wk6F+hOyg9oy97+8yrzWSkcTE
+RKP+ihbC+jasW1BYz7Zt2zStU7Vp0ybuJjk0eP4dnuldnxigD7Fq1Sr1nUkj
+8GxbzB0eOXLEqu9cCxcupNLSUu4/v8GCzzf6inXFISYmhvtPdQoQD4zPozZH
+dU2fPl08z0xdkxQKhUKhUCgUCucAc7GY6zesoTZHSXEx5eflGeXxFRcVi+dv
+oP+A15i7Bf/k5IhcUhyz/Gu5UNU+hqljOTt/xsdTVmYmlZaUUHRkFL18+dLk
+dnGxf1BGejrdv39fbGfIvf85eD55urlTfx9f+v3X30S9XDyH1Mvdg3p5elIf
+715C/v396OX/tW7MHcuZKSstpR/nzKn8OS01VcSmOrmXLtGMij60gcSEBPor
+KUm8Tvk7WeSZVPWzsKCAzmWfqzwPMFeUffZsncfi5F+zrW0N
+      "], {{0, 108}, {99, 0}}, {0, 255},
+      ColorFunction->RGBColor],
+     BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+     Selectable->False],
+    BaseStyle->"ImageGraphics",
+    ImageSizeRaw->{99, 108},
+    PlotRange->{{0, 99}, {0, 108}}], ",", " ", "\"\<test\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.651408817688258*^9, 3.6514088403523645`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"MyCircularity", "[", 
+  RowBox[{
+   GraphicsBox[
+    TagBox[RasterBox[CompressedData["
+1:eJztnQlIVVkYx0vb9yBaCFJTi0ArsQXaSFspgnIqWplsRtssy9EsZ5gWHCtC
+JiK0BSeiGKVo1SIt0sxpUamolIrKjfZ936xv/J+ZJz59T9973ne/83znB/96
++u69eP7fu/e+c853vusxPzwo1KVRo0a/tKj4Jyg4OiAiInj1D00qfghcHRky
+37XiRViFfqoQfkkKhUKhUCgUCoVCoVAoFAqFwiypqam0Y8cOCgsLo549ewr1
+69ePEhISxO8NOnnyJPef2iDJzMykmJgY6tixI2E40xI1btxY7HPgwAG6cOEC
+dxMcHny+R4wYQS4uLhbHoKoM+zVt2pRiY2O5m+PQeHl52RQDU+rSpQu9ffuW
+u0kOi5axMGjMmDH0/Plz7qY5HBs2bNA8FlDz5s3p9u3b3M1zKHBNWbt2rc33
+i9qk7ue2ERgYqGkcunfvTg8ePOBulnTcvXuX8vPzjXTnzh2jbXB+DBs2TJM4
+dO3alW7evMnUWjn59u0bBQcHi2t3db88PT3p6tWrRtu/fv2amjVrVu9YHD16
+1Oi4165do7Fjx9Lo0aMpOztbTwuk4eDBg7V65u3tTdevXzfaJzw8vF5xwP4G
+njx5QocOHaLOnTtXvh8QEEDFxcV6W8HGlStXaMuWLRZ9xqdNm2a0L8Y1bI2D
+h4cHff/+XRwH/y9YsMDkdjg/Pn78yGGNrpw+fZpatmxpsX8Yx4CHSUlJYv8P
+Hz5Q69atbYrFihUrxDEQh6VLl9a6LfqFOC+rXycbCvisdevWzSYfXV1dafv2
+7eI4M2fOtHr/Hj16UFFRkYgDxhQt3W/u3LnMrmlPRkaGVeN65mTrMQ4fPmx1
+HKAWLVpQXFwcffr0idtCTUAcrLkuaS1c0zDmYW0cqsrHx4e+fPnCbWW9GT58
+OFsctFTbtm1pz5493HbazI0bN8R4NbePWmnAgAH05s0bblutBvNsAwcOZPdP
+a7Vr145ycnK47bUYfGfCNZbbN3tp6NCh9PnzZ26bLaKgoIDdL3tr3bp13DZb
+xK5du9i9sreGDBlC5eXl3FbXyaxZs9i90kMvXrzgtrpOnCUWK1eu5La6Tpwl
+Fk2aNOG2ulaysrLE+A+3T3pJVt6/f09ubm7s/qhYED169IjdGxWL/8jLy2P3
+Rm+VlZVx214DjNNw+8KhVq1acVtfA+QGcPvCIYzJy0Z8fDy7Lxxavnw5t/U1
+iIyMZPdFb6F/IVvfe+/evTbnBDiyMFdoADl3z549Y4zCf2zcuJHdFw61adNG
+5PBAyDGSYd4PfTxuX7iFOf3CwkLuUIixY24vuLVo0SLuMAicPRbLli2rzEnk
+xpljERISIvK0ZWLQoEHsvuitoKAgac4HA6by9p1BWFsu23iUs8YCwvpO5MNj
+zoYbfI9D7jG3J1zCd1nk+e7evZs7FCJXiNsPvdW+fXsaPHiwyH1/+PAhdwgq
+OXHiBLs3egrzllg/ICOdOnVi90dPXbx4kdtysxw7dozdH72EdVL37t3jttwk
+WBOKekHcHumlKVOmcFtulq1bt7L7o5fQl5VtrqIq+/btY/dID2Hd5bt377jt
+rhX0/xcvXszulb2FNeC4L5oC68RlmLcAznLvnjBhQo22Iw6+vr6irxsdHV2j
+NoDebN68md0njlg8ffqU+vbta7QN9/mRkpLC7pMe8vPzo69fv4o243yoHgcZ
+YgGcZWzw8uXL9PjxY3Fdqv4exqRwrnAzcuRITdbSyy6sRerdu7fJ92QYpzXg
+LPdwcxo/fjx3CAQzZsygDh06sPvBJVwTZOl/oG4Gtx9cwr0SY9WygOuTFjXP
+HFHHjx/ntr8GqBEYGhraoGpO1CXkDcoKxs5QA4vbIz00efJkkUMrK8jZ4vZI
+D02cOFH6Gkb1qdHkKPL39xe19mQnNzeXxo0bx+6XPTVv3jxum63m1KlTDe67
+LuoVnT9/nttaq3n16pXJcRtHFeYwHDEOO3fuFOs7uf3TSpMmTZL+Xm2O2bNn
+s/unlbD2zZHrnyOXa//+/UK21JOVSajv3FBYv349u5/1UVpaGreFmoD+BvK7
+DO1CDcL09HRRw53bY0vUp08f6da52AJqDlaNg7u7OyUnJ4v3zpw5Q6NGjZJ6
+7Ar1aBtKPXOsBUAsINwzTM0/RkREsHtuTlFRUQyu2Q+s2alt3Q6e97JkyRK7
+PA/JVmFeaM2aNdKt/dKLkpISkZsnQ26u4XkCzg76U1jfw3WeTJ061WnPB3Pg
++T2m8o/sKYxx3Lp1i7vpUoJ5KdTe0WMsBc8Wk6F+hOyg9oy97+8yrzWSkcTE
+RKP+ihbC+jasW1BYz7Zt2zStU7Vp0ybuJjk0eP4dnuldnxigD7Fq1Sr1nUkj
+8GxbzB0eOXLEqu9cCxcupNLSUu4/v8GCzzf6inXFISYmhvtPdQoQD4zPozZH
+dU2fPl08z0xdkxQKhUKhUCgUCucAc7GY6zesoTZHSXEx5eflGeXxFRcVi+dv
+oP+A15i7Bf/k5IhcUhyz/Gu5UNU+hqljOTt/xsdTVmYmlZaUUHRkFL18+dLk
+dnGxf1BGejrdv39fbGfIvf85eD55urlTfx9f+v3X30S9XDyH1Mvdg3p5elIf
+715C/v396OX/tW7MHcuZKSstpR/nzKn8OS01VcSmOrmXLtGMij60gcSEBPor
+KUm8Tvk7WeSZVPWzsKCAzmWfqzwPMFeUffZsncfi5F+zrW0N
+      "], {{0, 108}, {99, 0}}, {0, 255},
+      ColorFunction->RGBColor],
+     BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+     Selectable->False],
+    BaseStyle->"ImageGraphics",
+    ImageSizeRaw->{99, 108},
+    PlotRange->{{0, 99}, {0, 108}}], ",", "\<\"test\"\>"}], "]"}]], "Output",
+ CellChangeTimes->{3.6514088412379713`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "MyCircularity"}]], "Input",
+ CellChangeTimes->{{3.6514089865808935`*^9, 3.6514089891326065`*^9}}],
+
+Cell["Global`MyCircularity", "Print", "PrintUsage",
+ CellChangeTimes->{3.6514089903424025`*^9},
+ CellTags->"Info3651416190-6192657"]
+}, Open  ]]
+},
+WindowSize->{767, 852},
+WindowMargins->{{Automatic, 191}, {58, Automatic}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3651414028-3713272"->{
+  Cell[700, 26, 1532, 26, 81, "Print",
+   CellTags->"Info3651414028-3713272"]},
+ "Info3651414965-3713272"->{
+  Cell[15049, 338, 128, 2, 42, "Print",
+   CellTags->"Info3651414965-3713272"]},
+ "Info3651415508-6192657"->{
+  Cell[22897, 539, 128, 2, 42, "Print",
+   CellTags->"Info3651415508-6192657"]},
+ "Info3651416190-6192657"->{
+  Cell[33140, 783, 132, 2, 42, "Print",
+   CellTags->"Info3651416190-6192657"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3651414028-3713272", 33594, 798},
+ {"Info3651414965-3713272", 33703, 801},
+ {"Info3651415508-6192657", 33813, 804},
+ {"Info3651416190-6192657", 33923, 807}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 117, 2, 31, "Input"],
+Cell[700, 26, 1532, 26, 81, "Print",
+ CellTags->"Info3651414028-3713272"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2269, 57, 234, 4, 31, "Input"],
+Cell[2506, 63, 76, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2619, 69, 96, 1, 31, "Input"],
+Cell[2718, 72, 72, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2827, 78, 99, 1, 31, "Input"],
+Cell[2929, 81, 1754, 31, 312, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4720, 117, 297, 5, 72, "Input"],
+Cell[5020, 124, 177, 2, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5234, 131, 101, 1, 31, "Input"],
+Cell[5338, 134, 1754, 31, 312, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7129, 170, 117, 2, 31, "Input"],
+Cell[7249, 174, 197, 2, 52, "Output"]
+}, Open  ]],
+Cell[7461, 179, 145, 2, 31, "Input"],
+Cell[CellGroupData[{
+Cell[7631, 185, 3282, 59, 71, "Input"],
+Cell[10916, 246, 3196, 57, 71, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14149, 308, 265, 6, 52, "Input"],
+Cell[14417, 316, 89, 2, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14543, 323, 147, 2, 31, "Input"],
+Cell[14693, 327, 194, 2, 52, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14924, 334, 122, 2, 31, "Input"],
+Cell[15049, 338, 128, 2, 42, "Print",
+ CellTags->"Info3651414965-3713272"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15214, 345, 134, 3, 31, "Input"],
+Cell[15351, 350, 89, 2, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15477, 357, 217, 5, 31, "Input"],
+Cell[15697, 364, 550, 11, 21, "Message"],
+Cell[16250, 377, 102, 1, 31, "Output"]
+}, Open  ]],
+Cell[16367, 381, 96, 1, 31, "Input"],
+Cell[CellGroupData[{
+Cell[16488, 386, 315, 8, 31, "Input"],
+Cell[16806, 396, 1899, 34, 352, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18742, 435, 298, 8, 31, "Input"],
+Cell[19043, 445, 2019, 35, 372, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21099, 485, 124, 3, 31, "Input"],
+Cell[21226, 490, 527, 11, 21, "Message"],
+Cell[21756, 503, 78, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21871, 509, 145, 2, 31, "Input"],
+Cell[22019, 513, 438, 9, 21, "Message"],
+Cell[22460, 524, 76, 1, 31, "Output"]
+}, Open  ]],
+Cell[22551, 528, 149, 2, 31, "Input"],
+Cell[CellGroupData[{
+Cell[22725, 534, 169, 3, 31, "Input"],
+Cell[22897, 539, 128, 2, 42, "Print",
+ CellTags->"Info3651415508-6192657"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23062, 546, 134, 2, 31, "Input"],
+Cell[23199, 550, 480, 10, 21, "Message"]
+}, Open  ]],
+Cell[23694, 563, 94, 1, 31, InheritFromParent],
+Cell[23791, 566, 166, 3, 31, "Input"],
+Cell[CellGroupData[{
+Cell[23982, 573, 191, 4, 52, "Input"],
+Cell[24176, 579, 130, 3, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24343, 587, 159, 3, 31, "Input"],
+Cell[24505, 592, 134, 3, 31, "Output"]
+}, Open  ]],
+Cell[24654, 598, 93, 1, 31, InheritFromParent],
+Cell[24750, 601, 79, 1, 31, "Input"],
+Cell[CellGroupData[{
+Cell[24854, 606, 235, 5, 52, "Input"],
+Cell[25092, 613, 529, 11, 21, "Message"],
+Cell[25624, 626, 78, 1, 31, "Output"]
+}, Open  ]],
+Cell[25717, 630, 125, 2, 31, "Input"],
+Cell[CellGroupData[{
+Cell[25867, 636, 117, 2, 31, "Input"],
+Cell[25987, 640, 435, 9, 21, "Message"],
+Cell[26425, 651, 78, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26540, 657, 3231, 58, 71, "Input"],
+Cell[29774, 717, 3200, 57, 71, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33011, 779, 126, 2, 31, "Input"],
+Cell[33140, 783, 132, 2, 42, "Print",
+ CellTags->"Info3651416190-6192657"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

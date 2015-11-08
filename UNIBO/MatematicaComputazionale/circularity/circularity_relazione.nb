@@ -1,0 +1,115 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3560,        106]
+NotebookOptionsPosition[      3212,         89]
+NotebookOutlinePosition[      3552,        104]
+CellTagsIndexPosition[      3509,        101]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+ StyleBox["Matematica Computazionale\n",
+  FontSize->30,
+  FontWeight->"Bold",
+  Background->RGBColor[1, 0.9, 0.8]],
+ StyleBox["Progetto: Measuring Shape Circularity", "Subsection",
+  FontSize->24,
+  FontWeight->"Bold",
+  Background->RGBColor[1, 0.9, 0.8]]
+}], "Section",
+ CellChangeTimes->{{3.6505183838266945`*^9, 3.650518396814382*^9}, {
+  3.650518431582596*^9, 3.650518518811863*^9}, {3.650518583660159*^9, 
+  3.6505186049553857`*^9}, {3.650518663019162*^9, 3.6505186661712646`*^9}, {
+  3.6505186991473*^9, 3.6505187015148706`*^9}, {3.650518794107711*^9, 
+  3.65051880780287*^9}, {3.6513140204433537`*^9, 3.651314083546452*^9}},
+ FontSize->12,
+ Background->RGBColor[1, 0.9, 0.8]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.650519174814975*^9, 3.6505191766812334`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"shape", " ", "=", " ", 
+     RowBox[{"MorphologicalBinarize", "[", "image", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"shape", " ", "=", " ", 
+     RowBox[{"DeleteSmallComponents", "[", "shape", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"area", " ", "=", " ", 
+    RowBox[{"ComponentMeasurements", "[", 
+     RowBox[{"shape", ",", " ", "\"\<Area\>\""}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"area", " ", "=", " ", 
+    RowBox[{"area", " ", "/.", " ", 
+     RowBox[{"Rule", " ", "\[Rule]", " ", 
+      RowBox[{"(", 
+       RowBox[{"#2", "&"}], ")"}]}]}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"area", " ", "=", " ", 
+     RowBox[{"area", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+    RowBox[{"perimeter", " ", "=", " ", 
+     RowBox[{"ComponentMeasurements", "[", 
+      RowBox[{"%", ",", " ", "\"\<PerimeterLength\>\""}], "]"}]}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"perimeter", " ", "=", " ", 
+    RowBox[{"perimeter", "/.", " ", 
+     RowBox[{"Rule", " ", "\[Rule]", " ", 
+      RowBox[{"(", 
+       RowBox[{"#2", "&"}], ")"}]}]}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"perimeter", " ", "=", " ", 
+     RowBox[{"perimeter", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ",", 
+    "\[IndentingNewLine]"}]}]}]], "Input",
+ CellChangeTimes->{{3.650528509738535*^9, 3.6505285179310102`*^9}, 
+   3.650529649763915*^9, {3.6505298463061914`*^9, 3.650529848309517*^9}, {
+   3.6505317032363825`*^9, 3.6505317186606846`*^9}, {3.651142228963021*^9, 
+   3.6511422711721644`*^9}, {3.6511449477123423`*^9, 
+   3.6511449892800674`*^9}, {3.6511453551670914`*^9, 3.651145364015995*^9}, {
+   3.651146555508681*^9, 3.651146674580109*^9}}]
+}, Open  ]]
+},
+WindowSize->{948, 905},
+WindowMargins->{{Automatic, 5}, {18, Automatic}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 699, 16, 101, "Section"],
+Cell[1282, 40, 94, 1, 31, "Input"],
+Cell[1379, 43, 1817, 43, 212, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

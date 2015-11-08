@@ -1,0 +1,118 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4075,        108]
+NotebookOptionsPosition[      3835,         95]
+NotebookOutlinePosition[      4177,        110]
+CellTagsIndexPosition[      4134,        107]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BeginPackage", "[", "\"\<Circularity`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"circularity", "::", "usage"}], " ", 
+    "\"\<circularity[image, method] gives the circularity mesurements of the \
+main shape in the figure 'image' using the method 'method'\>\""}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Begin", "[", 
+  RowBox[{"\[OpenCurlyDoubleQuote]", "Private`", "\[CloseCurlyDoubleQuote]"}],
+   "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"circularity", "[", 
+   RowBox[{"image_", ",", " ", "method_"}], "]"}], " ", ":=", " ", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"img", " ", "=", " ", "image"}], ",", " ", 
+      RowBox[{"algo", " ", "=", " ", "method"}], ",", " ", "shape", ",", " ", 
+      "area", ",", " ", "perimeter"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"shape", " ", "=", " ", 
+      RowBox[{"MorphologicalBinarize", "[", "image", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"shape", " ", "=", " ", 
+      RowBox[{"DeleteSmallComponents", "[", "shape", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"area", " ", "=", " ", 
+      RowBox[{"ComponentMeasurements", "[", 
+       RowBox[{"shape", ",", " ", "\"\<Area\>\""}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"area", " ", "=", " ", 
+      RowBox[{"area", " ", "/.", " ", 
+       RowBox[{"Rule", " ", "\[Rule]", " ", 
+        RowBox[{"(", 
+         RowBox[{"#2", "&"}], ")"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"area", " ", "=", " ", 
+      RowBox[{"area", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"perimeter", " ", "=", " ", 
+      RowBox[{"ComponentMeasurements", "[", 
+       RowBox[{"%", ",", " ", "\"\<PerimeterLength\>\""}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"perimeter", " ", "=", " ", 
+      RowBox[{"perimeter", "/.", " ", 
+       RowBox[{"Rule", " ", "\[Rule]", " ", 
+        RowBox[{"(", 
+         RowBox[{"#2", "&"}], ")"}]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"perimeter", " ", "=", " ", 
+      RowBox[{"perimeter", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Plain", " ", "Circularity"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"4", "*", "Pi", "*", 
+      RowBox[{"area", "/", 
+       RowBox[{"perimeter", "^", "2"}]}]}]}]}], "\[IndentingNewLine]", 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"End", "[", "]"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"EndPackage", "[", "]"}]}], "Input",
+ CellChangeTimes->{{3.651316000483989*^9, 3.651316061568721*^9}, {
+  3.651316111274882*^9, 3.651316236219218*^9}, {3.651316306800288*^9, 
+  3.651316408009796*^9}, {3.6513167934188404`*^9, 3.651316828055954*^9}, {
+  3.6513172227892284`*^9, 3.6513172432848988`*^9}, {3.65131729345935*^9, 
+  3.6513173121648397`*^9}, {3.6513178415238934`*^9, 3.6513178514565167`*^9}, {
+  3.651317905985899*^9, 3.651317939071966*^9}, {3.6513179762717752`*^9, 
+  3.6513180449595776`*^9}}]
+},
+WindowSize->{767, 852},
+WindowMargins->{{239, Automatic}, {32, Automatic}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 3273, 73, 492, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
+
